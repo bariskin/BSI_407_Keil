@@ -1,3 +1,11 @@
+MDK-ARM/BSI_407/*.o
+MDK-ARM/BSI_407/*.crf
+MDK-ARM/BSI_407/*.dgit 
+MDK-ARM/BSI_407/*.hex
+MDK-ARM/BSI_407/*.d
+# Object files
+
+
 # Prerequisites
 *.d
 
