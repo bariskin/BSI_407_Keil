@@ -18,15 +18,20 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "cmsis_os.h"
 #include "i2c.h"
 #include "rtc.h"
 #include "sdio.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "ModbusSettings.h"
+#include "mb.h"
+#include "mbport.h"
+#include "user_mb_app.h"
+#include  "stdbool.h"
 
 /* USER CODE END Includes */
 
@@ -48,12 +53,14 @@
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
-
+extern TIM_HandleTypeDef *ModBusSlaveTimer;
+extern uint16_t ModBusSlaveTimeout;
+extern volatile uint16_t ModBusSlaveCounter;
+extern uint8_t ModBusSlaveDefaultDeviceAddr;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
-void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -69,6 +76,7 @@ void MX_FREERTOS_Init(void);
   */
 int main(void)
 {
+
   /* USER CODE BEGIN 1 */
 
   /* USER CODE END 1 */
@@ -98,20 +106,21 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
   MX_I2C2_Init();
+  MX_TIM6_Init();
+  MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-
+	/* *************MODBUS init****************** */
+	eMBErrorCode   eStatus = eMBInit( MB_RTU, ModBusSlaveDefaultDeviceAddr, &huart2, 9600 , &htim6 );
+	eMBEnable( );		
   /* USER CODE END 2 */
 
-  /* Call init function for freertos objects (in freertos.c) */
-  MX_FREERTOS_Init();
-
-  /* Start scheduler */
-  osKernelStart();
-  /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+		
+		eMBPoll();
+    HAL_Delay(2);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -186,6 +195,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
+  else if(htim->Instance == ModBusSlaveTimer->Instance)
+		{
+			if((++ModBusSlaveCounter) >= ModBusSlaveTimeout)
+				pxMBPortCBTimerExpired();
+	}
 
   /* USER CODE END Callback 1 */
 }
