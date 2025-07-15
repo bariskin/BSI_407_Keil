@@ -35,8 +35,13 @@ USHORT   usSRegInBuf[S_REG_INPUT_NREGS]               ;
 
 //Slave mode:HoldingRegister variables
 #if S_REG_HOLDING_NREGS > 0
-USHORT   usSRegHoldStart                              = S_REG_HOLDING_START;
-USHORT   usSRegHoldBuf[S_REG_HOLDING_NREGS]           ;
+//USHORT   usSRegHoldStart                              = S_REG_HOLDING_START;
+//USHORT   usSRegHoldBuf[S_REG_HOLDING_NREGS]           ;
+
+ // Два массива для хранения регистров
+uint16_t holdingRegsPart1[MAX_MODBUS_REGS_PART];  // Адреса 1-120
+uint16_t holdingRegsPart2[TOTAL_HOLDING_REGS - MAX_MODBUS_REGS_PART]; // Адреса 160 - 120
+
 #endif
 /*------------------------Slave user code----------------------*/
 
@@ -106,57 +111,55 @@ eMBErrorCode eMBRegInputCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNReg
 eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode)
 {
 #if S_REG_HOLDING_NREGS > 0
-    eMBErrorCode    eStatus = MB_ENOERR;
-    USHORT          iRegIndex;
-    USHORT *        pusRegHoldingBuf;
-    USHORT          REG_HOLDING_START;
-    USHORT          REG_HOLDING_NREGS;
-    USHORT          usRegHoldStart;
-
-    pusRegHoldingBuf = usSRegHoldBuf;
-    REG_HOLDING_START = S_REG_HOLDING_START;
-    REG_HOLDING_NREGS = S_REG_HOLDING_NREGS;
-    usRegHoldStart = usSRegHoldStart;
-
 	
+    eMBErrorCode    eStatus = MB_ENOERR;
+ 
     /* it already plus one in modbus function method. */
     usAddress--;
+	
+	  // Проверка границ запрашиваемых регистров
+    if ((usAddress + usNRegs) > TOTAL_HOLDING_REGS) {
+        return MB_ENOREG;
+    }
 
-    if ((usAddress >= REG_HOLDING_START) && (usAddress + usNRegs <= REG_HOLDING_START + REG_HOLDING_NREGS))
-    {
-        iRegIndex = usAddress - usRegHoldStart;
         switch (eMode)
         {
         /* read current register values from the protocol stack. */
         case MB_REG_READ:
-            while (usNRegs > 0)
-            {		
-                *pucRegBuffer++ = (UCHAR) (pusRegHoldingBuf[iRegIndex] >> 8);
-                *pucRegBuffer++ = (UCHAR) (pusRegHoldingBuf[iRegIndex] & 0xFF);
-							
-                iRegIndex++;
-                  usNRegs--;
+               for (USHORT i = 0; i < usNRegs; i++) {
+                uint16_t regValue;
+                USHORT currentAddr = usAddress + i;
+                
+                // Выбираем нужный массив в зависимости от адреса
+                if (currentAddr < MAX_MODBUS_REGS_PART) {
+                    regValue = holdingRegsPart1[currentAddr];
+                } else {
+                    regValue = holdingRegsPart2[currentAddr - MAX_MODBUS_REGS_PART];
+                }
+                
+                // Записываем в буфер в формате big-endian
+                *pucRegBuffer++ = (UCHAR)(regValue >> 8);
+                *pucRegBuffer++ = (UCHAR)(regValue & 0xFF);
             }
             break;
 
         /* write current register values with new values from the protocol stack. */
         case MB_REG_WRITE:
-            while (usNRegs > 0)
-            {
-					
-                pusRegHoldingBuf[iRegIndex] = *pucRegBuffer++ << 8;
-                pusRegHoldingBuf[iRegIndex] |= *pucRegBuffer++;
-							
-							  iRegIndex++;
-                usNRegs--;
+              for (USHORT i = 0; i < usNRegs; i++) {
+                USHORT currentAddr = usAddress + i;
+                uint16_t regValue = *pucRegBuffer++ << 8;
+                regValue |= *pucRegBuffer++;
+                
+                // Выбираем нужный массив в зависимости от адреса
+                if (currentAddr < MAX_MODBUS_REGS_PART) {
+                    holdingRegsPart1[currentAddr] = regValue;
+                } else {
+                    holdingRegsPart2[currentAddr - MAX_MODBUS_REGS_PART] = regValue;
+                }
             }
             break;
         }
-    }
-    else
-    {
-        eStatus = MB_ENOREG;
-    }
+
     return eStatus;
 #else
 	return MB_ENOREG;
