@@ -29,6 +29,7 @@
 /* USER CODE BEGIN Includes */
 #include "ModbusSettings.h"
 #include "mb.h"
+#include "mb_m.h"
 #include "mbport.h"
 #include "user_mb_app.h"
 #include  "stdbool.h"
@@ -57,6 +58,9 @@ extern TIM_HandleTypeDef *ModBusSlaveTimer;
 extern uint16_t ModBusSlaveTimeout;
 extern volatile uint16_t ModBusSlaveCounter;
 extern uint8_t ModBusSlaveDefaultDeviceAddr;
+
+extern uint16_t timerPeriod;
+extern volatile uint16_t timerCounter;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -108,10 +112,19 @@ int main(void)
   MX_I2C2_Init();
   MX_TIM6_Init();
   MX_USART1_UART_Init();
+  MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
 	/* *************MODBUS init****************** */
 	eMBErrorCode   eStatus = eMBInit( MB_RTU, ModBusSlaveDefaultDeviceAddr, &huart1, 9600 , &htim6 );
-	eMBEnable( );		
+	eMBEnable( );
+
+  eStatus = eMBMasterInit(MB_RTU, 0, 9600, MB_PAR_NONE);
+  eStatus = eMBMasterEnable();
+  if (eStatus != MB_ENOERR)
+   {
+    // Error handling
+    }
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -119,8 +132,13 @@ int main(void)
   while (1)
   {
 		
-		eMBPoll();
-    HAL_Delay(4);
+		//eMBPoll();
+    HAL_Delay(1000);
+		
+		
+		eMBMasterPoll();
+    eMBMasterReqWriteHoldingRegister(0x0A, 0x1234, 0x5678, 1000);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -175,6 +193,41 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+/*----------------------------------------------------------------------------*/
+eMBErrorCode eMBMasterRegInputCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs)
+{
+  eMBErrorCode eStatus = MB_ENOERR;
+  return eStatus;
+}
+
+
+
+/*----------------------------------------------------------------------------*/
+eMBErrorCode eMBMasterRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode)
+{
+  eMBErrorCode eStatus = MB_ENOERR;
+  return eStatus;
+}
+
+
+
+/*----------------------------------------------------------------------------*/
+eMBErrorCode eMBMasterRegCoilsCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegisterMode eMode)
+{
+  eMBErrorCode eStatus = MB_ENOERR;
+  return eStatus;
+}
+
+
+
+/*----------------------------------------------------------------------------*/
+eMBErrorCode eMBMasterRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
+{
+  eMBErrorCode eStatus = MB_ENOERR;
+  return eStatus;
+}
+
+/*----------------------------------------------------------------------------*/
 
 /* USER CODE END 4 */
 
@@ -200,6 +253,17 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			if((++ModBusSlaveCounter) >= ModBusSlaveTimeout)
 				pxMBPortCBTimerExpired();
 	}
+		
+	else if (htim->Instance == htim10.Instance)
+  {
+    timerCounter++;
+
+    if (timerCounter == timerPeriod)
+    {
+      //prvvTIMERExpiredISR();
+			 ( void )pxMBMasterPortCBTimerExpired();
+    }
+  }
 
   /* USER CODE END Callback 1 */
 }

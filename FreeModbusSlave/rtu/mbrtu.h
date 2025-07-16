@@ -49,7 +49,7 @@ BOOL            xMBRTUTimerT15Expired( void );
 BOOL            xMBRTUTimerT35Expired( void );
 
 #if MB_MASTER_RTU_ENABLED > 0
-eMBErrorCode    eMBMasterRTUInit( void *dHUART, ULONG ulBaudRate, void *dHTIM );
+eMBErrorCode    eMBMasterRTUInit( UCHAR ucPort, ULONG ulBaudRate,eMBParity eParity );
 void            eMBMasterRTUStart( void );
 void            eMBMasterRTUStop( void );
 eMBErrorCode    eMBMasterRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLength );

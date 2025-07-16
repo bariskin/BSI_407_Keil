@@ -119,7 +119,7 @@ INLINE BOOL     xMBPortSerialPutByte( CHAR ucByte );
 
 INLINE BOOL     xMBPortSerialPutBytes( volatile UCHAR *ucByte, USHORT usSize );
 
-BOOL            xMBMasterPortSerialInit( void *dHUART, ULONG ulBaudRate, void *dHTIM );
+BOOL            xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,eMBParity eParity);
 
 void            vMBMasterPortClose( void );
 
@@ -142,7 +142,7 @@ INLINE void     vMBPortTimersEnable( void );
 
 INLINE void     vMBPortTimersDisable( void );
 
-BOOL            xMBMasterPortTimersInit( USHORT usTimeOut50us, void *dHTIM );
+BOOL            xMBMasterPortTimersInit( USHORT usTimeOut50us );
 
 void            xMBMasterPortTimersClose( void );
 

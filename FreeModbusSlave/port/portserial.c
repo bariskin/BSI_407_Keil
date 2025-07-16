@@ -8,7 +8,8 @@
 UART_HandleTypeDef *slaveUart;
 volatile uint8_t singlechar;
 
-//extern UART_HandleTypeDef huart2;
+
+extern UART_HandleTypeDef* modbusUartMaster ;
 /* ----------------------- User defenitions ---------------------------------*/
 #define RS485_RD_LOW	  HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_RESET)
 #define RS485_RD_HIGH 	HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_SET)
@@ -69,11 +70,16 @@ BOOL xMBPortSerialGetByte(CHAR * pucByte)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	
-if(huart->Instance == slaveUart->Instance)
+  if(huart->Instance == slaveUart->Instance)
 		{
 		 pxMBFrameCBByteReceived();
 		 HAL_UART_Receive_IT(slaveUart, (uint8_t *)&singlechar, 1);
 		}
+	else	if (huart->Instance == modbusUartMaster->Instance)
+  {
+    //prvvUARTRxISR();
+		pxMBMasterFrameCBByteReceived();
+  }
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
@@ -82,6 +88,11 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 	{
 		pxMBFrameCBTransmitterEmpty();
 	}
+	else if (huart->Instance == modbusUartMaster->Instance)
+  {
+    //prvvUARTTxReadyISR();
+		 pxMBMasterFrameCBTransmitterEmpty();
+  }
 }
 
 #endif
