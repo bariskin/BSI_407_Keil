@@ -5,18 +5,18 @@
 #if MB_SLAVE_RTU_ENABLED > 0 || MB_SLAVE_ASCII_ENABLED > 0
 
 /* ----------------------- Static variables ---------------------------------*/
-UART_HandleTypeDef *uart2;
+UART_HandleTypeDef *slaveUart;
 volatile uint8_t singlechar;
 
 //extern UART_HandleTypeDef huart2;
 /* ----------------------- User defenitions ---------------------------------*/
-#define RS485_RD_LOW	  HAL_GPIO_WritePin(USART2_RD_GPIO_Port, USART2_RD_Pin, GPIO_PIN_RESET)
-#define RS485_RD_HIGH 	HAL_GPIO_WritePin(USART2_RD_GPIO_Port, USART2_RD_Pin, GPIO_PIN_SET)
+#define RS485_RD_LOW	  HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_RESET)
+#define RS485_RD_HIGH 	HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_SET)
 
 /* ----------------------- Start implementation -----------------------------*/
 BOOL xMBPortSerialInit( void *dHUART, ULONG ulBaudRate, void *dHTIM )
 {																																		 
-	uart2 = (UART_HandleTypeDef *)dHUART;
+	slaveUart = (UART_HandleTypeDef *)dHUART;
 	return TRUE;
 }
 
@@ -25,11 +25,11 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 	if(xRxEnable)
 	{
 		RS485_RD_LOW;
-		HAL_UART_Receive_IT(uart2, (uint8_t*)&singlechar, 1);
+		HAL_UART_Receive_IT(slaveUart, (uint8_t*)&singlechar, 1);
 	}	
 	else
 	{
-		HAL_UART_AbortReceive_IT(uart2);
+		HAL_UART_AbortReceive_IT(slaveUart);
 	}
 
 	if(xTxEnable)
@@ -39,25 +39,25 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 	}
 	else
 	{
-		HAL_UART_AbortTransmit_IT(uart2);
+		HAL_UART_AbortTransmit_IT(slaveUart);
 	}
 }
 
 void vMBPortClose(void)
 {
-	HAL_UART_AbortReceive_IT(uart2);
-	HAL_UART_AbortTransmit_IT(uart2);
+	HAL_UART_AbortReceive_IT(slaveUart);
+	HAL_UART_AbortTransmit_IT(slaveUart);
 }
 
 BOOL xMBPortSerialPutByte(CHAR ucByte)
 {
-	HAL_UART_Transmit_IT(uart2, (uint8_t*)&ucByte, 1);
+	HAL_UART_Transmit_IT(slaveUart, (uint8_t*)&ucByte, 1);
 	return TRUE;
 }
 
 BOOL xMBPortSerialPutBytes(volatile UCHAR *ucByte, USHORT usSize)
 {
-	HAL_UART_Transmit_IT(uart2, (uint8_t *)ucByte, usSize);
+	HAL_UART_Transmit_IT(slaveUart, (uint8_t *)ucByte, usSize);
 	return TRUE;
 }
 
@@ -69,16 +69,16 @@ BOOL xMBPortSerialGetByte(CHAR * pucByte)
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	
-if(huart->Instance == uart2->Instance)
+if(huart->Instance == slaveUart->Instance)
 		{
 		 pxMBFrameCBByteReceived();
-		 HAL_UART_Receive_IT(uart2, (uint8_t *)&singlechar, 1);
+		 HAL_UART_Receive_IT(slaveUart, (uint8_t *)&singlechar, 1);
 		}
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
-	if(huart->Instance == uart2->Instance)
+	if(huart->Instance == slaveUart->Instance)
 	{
 		pxMBFrameCBTransmitterEmpty();
 	}

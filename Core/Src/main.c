@@ -110,7 +110,7 @@ int main(void)
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
 	/* *************MODBUS init****************** */
-	eMBErrorCode   eStatus = eMBInit( MB_RTU, ModBusSlaveDefaultDeviceAddr, &huart2, 9600 , &htim6 );
+	eMBErrorCode   eStatus = eMBInit( MB_RTU, ModBusSlaveDefaultDeviceAddr, &huart1, 9600 , &htim6 );
 	eMBEnable( );		
   /* USER CODE END 2 */
 
@@ -120,7 +120,7 @@ int main(void)
   {
 		
 		eMBPoll();
-    HAL_Delay(2);
+    HAL_Delay(4);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
