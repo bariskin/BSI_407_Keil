@@ -10,11 +10,19 @@
 /* ------------------------External variables -------------------------*/
 
 /* ------------------------Global variables----------------------------*/
-/*  ModBus variable  */
+/*  ModBus Slave variable  */
 TIM_HandleTypeDef *ModBusSlaveTimer;
 uint16_t ModBusSlaveTimeout;
 volatile uint16_t ModBusSlaveCounter;
 uint8_t ModBusSlaveDefaultDeviceAddr = 0x01;
+
+
+TIM_HandleTypeDef* ModBusMasterTimer;
+uint16_t ModBusMasterTimeout = 0;
+volatile uint16_t ModBusMasterCounter = 0;
+
+
+
 /* ------------------------Locale variables----------------------------*/
 
 /* ------------------------Functions-----------------------------------*/

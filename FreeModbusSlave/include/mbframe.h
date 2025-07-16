@@ -84,6 +84,5 @@ typedef void( *pvMBFrameClose ) ( void );
 #ifdef __cplusplus
 PR_END_EXTERN_C
 #endif
-#endif	
-
+#endif
 																				 

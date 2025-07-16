@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../FreeModbusSlave/include;../FreeModbusSlave/app;../FreeModbusSlave/port;../FreeModbusSlave/rtu;../ModbusSetting/Inc;..\HoldingRegisterSlave\Inc</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../FreeModbusSlave/include;../FreeModbusSlave/app;../FreeModbusSlave/port;../FreeModbusSlave/rtu;../ModbusSetting/Inc;../HoldingRegisterSlave/Inc;../FreeModbusMaster/include/mb_m;../FreeModbusMaster/port/m_port</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -686,11 +686,6 @@
               <FilePath>..\FreeModbusSlave\app\user_mb_app.c</FilePath>
             </File>
             <File>
-              <FileName>user_mb_app.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>..\FreeModbusSlave\app\user_mb_app.h</FilePath>
-            </File>
-            <File>
               <FileName>mbfunccoils.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModbusSlave\functions\mbfunccoils.c</FilePath>
@@ -819,6 +814,63 @@
         </Group>
         <Group>
           <GroupName>FreeModbusMaster</GroupName>
+          <Files>
+            <File>
+              <FileName>mb_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbusMaster\mb_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>mbrtu_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbusMaster\rtu\mbrtu_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>mbfuncholding_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbusMaster\functions\mbfuncholding_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>mbfunccoils_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbusMaster\functions\mbfunccoils_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>mbfuncinput_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbusMaster\functions\mbfuncinput_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>mbfuncdisc_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbusMaster\functions\mbfuncdisc_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>portevent_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbusMaster\port\portevent_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>portserial_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbusMaster\port\portserial_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>porttimer_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbusMaster\port\porttimer_m.c</FilePath>
+            </File>
+            <File>
+              <FileName>mt_port.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbusMaster\port\mt_port.c</FilePath>
+            </File>
+            <File>
+              <FileName>user_mb_app_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbusMaster\app\user_mb_app_m.c</FilePath>
+            </File>
+          </Files>
         </Group>
         <Group>
           <GroupName>HoldingRegisterSlave</GroupName>

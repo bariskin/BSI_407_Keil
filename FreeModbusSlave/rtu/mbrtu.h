@@ -29,8 +29,6 @@
  * File: $Id: mbrtu.h,v 1.60 2013/08/17 13:11:42 Armink Add Master Functions $
  */
 #include "mbconfig.h"
-#include "port.h"
-#include "mb.h"
 
 #ifndef _MB_RTU_H
 #define _MB_RTU_H
@@ -49,7 +47,7 @@ BOOL            xMBRTUTimerT15Expired( void );
 BOOL            xMBRTUTimerT35Expired( void );
 
 #if MB_MASTER_RTU_ENABLED > 0
-eMBErrorCode    eMBMasterRTUInit( void *dHUART, ULONG ulBaudRate, void *dHTIM );
+eMBErrorCode    eMBMasterRTUInit(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity );
 void            eMBMasterRTUStart( void );
 void            eMBMasterRTUStop( void );
 eMBErrorCode    eMBMasterRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLength );

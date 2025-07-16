@@ -30,6 +30,11 @@ extern "C" {
  extern uint16_t ModBusSlaveTimeout;
  extern volatile uint16_t ModBusSlaveCounter;
  extern uint8_t ModBusDefaultDeviceAddr; 
+ 
+ 
+ extern  TIM_HandleTypeDef* ModBusMasterTimer;
+ extern  uint16_t ModBusMasterTimeout;
+ extern  volatile uint16_t ModBusMasterCounter;
   /** @addtogroup modbus_settings
   * @{
   */

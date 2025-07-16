@@ -32,7 +32,8 @@
 #include "mbport.h"
 #include "user_mb_app.h"
 #include  "stdbool.h"
-
+#include "mt_port.h"
+#include "mb_m.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -108,10 +109,23 @@ int main(void)
   MX_I2C2_Init();
   MX_TIM6_Init();
   MX_USART1_UART_Init();
+  MX_TIM14_Init();
   /* USER CODE BEGIN 2 */
-	/* *************MODBUS init****************** */
-	eMBErrorCode   eStatus = eMBInit( MB_RTU, ModBusSlaveDefaultDeviceAddr, &huart2, 9600 , &htim6 );
-	eMBEnable( );		
+	/* *************MODBUS SlAVE init****************** */
+	eMBErrorCode   eStatus = eMBInit( MB_RTU, ModBusSlaveDefaultDeviceAddr, &huart1, 9600 , &htim6 );
+	eMBEnable( );	
+
+
+  MT_PORT_SetTimerModule(&htim14);
+  MT_PORT_SetUartModule(&huart2);
+	
+  
+  eStatus = eMBMasterInit(MB_RTU, 0, 9600, MB_PAR_NONE);
+  eStatus = eMBMasterEnable();
+   if (eStatus != MB_ENOERR)
+   {
+    // Error handling
+    }
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -120,7 +134,15 @@ int main(void)
   {
 		
 		eMBPoll();
-    HAL_Delay(2);
+   
+	
+		eMBMasterPoll();
+		eMBMasterReqWriteHoldingRegister(0x04, 0x1234, 0x5678, 1000);
+		
+	
+		HAL_Delay(3);
+
+		
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -195,10 +217,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
   /* USER CODE BEGIN Callback 1 */
-  else if(htim->Instance == ModBusSlaveTimer->Instance)
+  else if(htim->Instance == ModBusSlaveTimer->Instance)   //ModBusSlaveTimer
 		{
 			if((++ModBusSlaveCounter) >= ModBusSlaveTimeout)
 				pxMBPortCBTimerExpired();
+	}
+	else if(htim->Instance == ModBusMasterTimer->Instance)  //ModBusMasterTimer
+	{		
+		if((++ModBusMasterCounter) >= ModBusMasterTimeout){
+		  pxMBMasterPortCBTimerExpired();
+		}
 	}
 
   /* USER CODE END Callback 1 */

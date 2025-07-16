@@ -89,8 +89,6 @@ void Error_Handler(void);
 #define TX_debug_GPIO_Port GPIOC
 #define RX_debug_Pin GPIO_PIN_7
 #define RX_debug_GPIO_Port GPIOC
-#define USART1_RD_Pin GPIO_PIN_10
-#define USART1_RD_GPIO_Port GPIOA
 #define UART4_RD_Pin GPIO_PIN_11
 #define UART4_RD_GPIO_Port GPIOA
 #define USART2_RD_Pin GPIO_PIN_12
