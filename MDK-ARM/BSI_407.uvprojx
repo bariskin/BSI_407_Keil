@@ -921,6 +921,11 @@
               <FileType>1</FileType>
               <FilePath>..\FreeModbusMaster\mb_m.c</FilePath>
             </File>
+            <File>
+              <FileName>user_mb_app_m.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbusMaster\user_mb_app\user_mb_app_m.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
