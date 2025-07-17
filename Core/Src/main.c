@@ -117,13 +117,13 @@ int main(void)
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
 	/* *************MODBUS init****************** */
-	eMBErrorCode   eStatus = eMBInit( MB_RTU, ModBusSlaveDefaultDeviceAddr, &huart1, 115200 , &htim6 );
+	eMBErrorCode   eStatus = eMBInit( MB_RTU, ModBusSlaveDefaultDeviceAddr, &huart1, 9600 , &htim6 );
 	eMBEnable( );
 
    vMBMasterSetDestAddress(ModBusSlaveDefaultDeviceAddr);
   
 
-  eStatus = eMBMasterInit(MB_RTU, 0, 115200, MB_PAR_NONE);
+  eStatus = eMBMasterInit(MB_RTU, 0, 9600, MB_PAR_NONE);
   eStatus = eMBMasterEnable();
   if (eStatus != MB_ENOERR)
    {
