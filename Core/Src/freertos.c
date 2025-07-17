@@ -136,7 +136,7 @@ void SlaveModbusTaskFunction(void const * argument)
   for(;;)
   {
 		eMBPoll();
-    osDelay(3);
+    osDelay(2);
   }
   /* USER CODE END SlaveModbusTaskFunction */
 }
@@ -156,9 +156,10 @@ void MasterModbusTaskFunction(void const * argument)
   {
 		
 		eMBMasterPoll();
-    eMBMasterReqWriteHoldingRegister(ModBusSlaveDefaultDeviceAddr, 10, 0x5678, 100);
-		//eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, 0, 20, 100 );
-    osDelay(50);
+		eMBMasterPoll();
+    //eMBMasterReqWriteHoldingRegister(ModBusSlaveDefaultDeviceAddr, 10, 0x5678, 100);
+		eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, 0, 100, 100 );
+    osDelay(10);
   }
   /* USER CODE END MasterModbusTaskFunction */
 }

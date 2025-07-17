@@ -94,13 +94,13 @@ PR_BEGIN_EXTERN_C
 /*! \brief If the <em>Write Multiple registers</em> function should be enabled. */
 #define MB_FUNC_WRITE_MULTIPLE_HOLDING_ENABLED  (  1 )
 /*! \brief If the <em>Read Coils</em> function should be enabled. */
-#define MB_FUNC_READ_COILS_ENABLED              (  1 )
+#define MB_FUNC_READ_COILS_ENABLED              ( 0  )
 /*! \brief If the <em>Write Coils</em> function should be enabled. */
-#define MB_FUNC_WRITE_COIL_ENABLED              (  1 )
+#define MB_FUNC_WRITE_COIL_ENABLED              (  0 )
 /*! \brief If the <em>Write Multiple Coils</em> function should be enabled. */
-#define MB_FUNC_WRITE_MULTIPLE_COILS_ENABLED    (  1 )
+#define MB_FUNC_WRITE_MULTIPLE_COILS_ENABLED    (  0 )
 /*! \brief If the <em>Read Discrete Inputs</em> function should be enabled. */
-#define MB_FUNC_READ_DISCRETE_INPUTS_ENABLED    (  1 )
+#define MB_FUNC_READ_DISCRETE_INPUTS_ENABLED    (  0 )
 /*! \brief If the <em>Read/Write Multiple Registers</em> function should be enabled. */
 #define MB_FUNC_READWRITE_HOLDING_ENABLED       (  1 )
 /*! @} */
@@ -119,7 +119,7 @@ PR_BEGIN_EXTERN_C
 #define MB_MASTER_TIMEOUT_MS_RESPOND            (100 )
 /*! \brief The total slaves in Modbus Master system. Default 16.
  * \note : The slave ID must be continuous from 1.*/
-#define MB_MASTER_TOTAL_SLAVE_NUM               ( 16 )
+#define MB_MASTER_TOTAL_SLAVE_NUM               ( 5 )
 #endif
 
 #endif
