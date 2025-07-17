@@ -46,7 +46,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
-
+extern uint8_t ModBusSlaveDefaultDeviceAddr;
 /* USER CODE END Variables */
 osThreadId SlaveModbusTaskHandle;
 uint32_t defaultTaskBuffer[ 256 ];
@@ -156,8 +156,9 @@ void MasterModbusTaskFunction(void const * argument)
   {
 		
 		eMBMasterPoll();
-    eMBMasterReqWriteHoldingRegister(0x0A, 0x1234, 0x5678, 1000);
-    osDelay(200);
+    eMBMasterReqWriteHoldingRegister(ModBusSlaveDefaultDeviceAddr, 10, 0x5678, 100);
+		//eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, 0, 20, 100 );
+    osDelay(50);
   }
   /* USER CODE END MasterModbusTaskFunction */
 }

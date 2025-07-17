@@ -9,7 +9,7 @@
 /* -----------------------Slave Defines -------------------------------------*/
     
 #define S_REG_INPUT_START              0
-#define S_REG_INPUT_NREGS             26
+#define S_REG_INPUT_NREGS             50
 
 #define S_REG_HOLDING_START           0
 #define S_REG_HOLDING_NREGS           180

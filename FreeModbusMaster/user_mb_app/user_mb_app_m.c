@@ -18,7 +18,7 @@
  *
  * File: $Id: user_mb_app_m.c,v 1.60 2013/11/23 11:49:05 Armink $
  */
-#include "user_mb_app.h"
+#include "user_mb_app_m.h"
 #include "mb_m.h"
 /*-----------------------Master mode use these variables----------------------*/
 #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0

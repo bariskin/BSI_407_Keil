@@ -117,10 +117,13 @@ int main(void)
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
 	/* *************MODBUS init****************** */
-	eMBErrorCode   eStatus = eMBInit( MB_RTU, ModBusSlaveDefaultDeviceAddr, &huart1, 9600 , &htim6 );
+	eMBErrorCode   eStatus = eMBInit( MB_RTU, ModBusSlaveDefaultDeviceAddr, &huart1, 115200 , &htim6 );
 	eMBEnable( );
 
-  eStatus = eMBMasterInit(MB_RTU, 0, 9600, MB_PAR_NONE);
+   vMBMasterSetDestAddress(ModBusSlaveDefaultDeviceAddr);
+  
+
+  eStatus = eMBMasterInit(MB_RTU, 0, 115200, MB_PAR_NONE);
   eStatus = eMBMasterEnable();
   if (eStatus != MB_ENOERR)
    {
@@ -196,38 +199,38 @@ void SystemClock_Config(void)
 
 /* USER CODE BEGIN 4 */
 /*----------------------------------------------------------------------------*/
-eMBErrorCode eMBMasterRegInputCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs)
-{
-  eMBErrorCode eStatus = MB_ENOERR;
-  return eStatus;
-}
+//eMBErrorCode eMBMasterRegInputCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs)
+//{
+//  eMBErrorCode eStatus = MB_ENOERR;
+//  return eStatus;
+//}
 
 
 
-/*----------------------------------------------------------------------------*/
-eMBErrorCode eMBMasterRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode)
-{
-  eMBErrorCode eStatus = MB_ENOERR;
-  return eStatus;
-}
+///*----------------------------------------------------------------------------*/
+//eMBErrorCode eMBMasterRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode)
+//{
+//  eMBErrorCode eStatus = MB_ENOERR;
+//  return eStatus;
+//}
 
 
 
-/*----------------------------------------------------------------------------*/
-eMBErrorCode eMBMasterRegCoilsCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegisterMode eMode)
-{
-  eMBErrorCode eStatus = MB_ENOERR;
-  return eStatus;
-}
+///*----------------------------------------------------------------------------*/
+//eMBErrorCode eMBMasterRegCoilsCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegisterMode eMode)
+//{
+//  eMBErrorCode eStatus = MB_ENOERR;
+//  return eStatus;
+//}
 
 
 
-/*----------------------------------------------------------------------------*/
-eMBErrorCode eMBMasterRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
-{
-  eMBErrorCode eStatus = MB_ENOERR;
-  return eStatus;
-}
+///*----------------------------------------------------------------------------*/
+//eMBErrorCode eMBMasterRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
+//{
+//  eMBErrorCode eStatus = MB_ENOERR;
+//  return eStatus;
+//}
 
 /*----------------------------------------------------------------------------*/
 
