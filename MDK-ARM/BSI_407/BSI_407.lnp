@@ -60,6 +60,7 @@
 "bsi_407\mbrtu_m.o"
 "bsi_407\mb_m.o"
 "bsi_407\user_mb_app_m.o"
+"bsi_407\modbusaddrconverter.o"
 "bsi_407\holdingregisterslavehandler.o"
 "bsi_407\croutine.o"
 "bsi_407\event_groups.o"

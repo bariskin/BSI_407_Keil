@@ -11,8 +11,8 @@ volatile uint8_t singlechar;
 
 extern UART_HandleTypeDef* modbusUartMaster ;
 /* ----------------------- User defenitions ---------------------------------*/
-#define RS485_RD_LOW	  HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_RESET)
-#define RS485_RD_HIGH 	HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_SET)
+#define RS485_RD_LOW_SLAVE	  HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_RESET)
+#define RS485_RD_HIGH_SLAVE 	HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_SET)
 
 /* ----------------------- Start implementation -----------------------------*/
 BOOL xMBPortSerialInit( void *dHUART, ULONG ulBaudRate, void *dHTIM )
@@ -25,7 +25,7 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 {
 	if(xRxEnable)
 	{
-		RS485_RD_LOW;
+		RS485_RD_LOW_SLAVE;
 		HAL_UART_Receive_IT(slaveUart, (uint8_t*)&singlechar, 1);
 	}	
 	else
@@ -35,7 +35,7 @@ void vMBPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 
 	if(xTxEnable)
 	{
-		RS485_RD_HIGH;
+		RS485_RD_HIGH_SLAVE;
 		pxMBFrameCBTransmitterEmpty();
 	}
 	else

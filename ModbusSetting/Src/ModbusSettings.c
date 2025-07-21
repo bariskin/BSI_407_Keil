@@ -14,7 +14,7 @@
 TIM_HandleTypeDef *ModBusSlaveTimer;
 uint16_t ModBusSlaveTimeout;
 volatile uint16_t ModBusSlaveCounter;
-uint8_t ModBusSlaveDefaultDeviceAddr = 0x03;
+uint8_t ModBusSlaveDefaultDeviceAddr = 0x01;
 /* ------------------------Locale variables----------------------------*/
 
 /* ------------------------Functions-----------------------------------*/

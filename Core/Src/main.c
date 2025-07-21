@@ -105,8 +105,8 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_RTC_Init();
-  MX_SDIO_SD_Init();
+  //MX_RTC_Init();
+  //MX_SDIO_SD_Init();
   MX_UART4_Init();
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
@@ -196,41 +196,6 @@ void SystemClock_Config(void)
     Error_Handler();
   }
 }
-
-/* USER CODE BEGIN 4 */
-/*----------------------------------------------------------------------------*/
-//eMBErrorCode eMBMasterRegInputCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs)
-//{
-//  eMBErrorCode eStatus = MB_ENOERR;
-//  return eStatus;
-//}
-
-
-
-///*----------------------------------------------------------------------------*/
-//eMBErrorCode eMBMasterRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode)
-//{
-//  eMBErrorCode eStatus = MB_ENOERR;
-//  return eStatus;
-//}
-
-
-
-///*----------------------------------------------------------------------------*/
-//eMBErrorCode eMBMasterRegCoilsCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNCoils, eMBRegisterMode eMode)
-//{
-//  eMBErrorCode eStatus = MB_ENOERR;
-//  return eStatus;
-//}
-
-
-
-///*----------------------------------------------------------------------------*/
-//eMBErrorCode eMBMasterRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
-//{
-//  eMBErrorCode eStatus = MB_ENOERR;
-//  return eStatus;
-//}
 
 /*----------------------------------------------------------------------------*/
 

@@ -27,6 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "mb.h"
 #include "mb_m.h"
+#include "ModBusAddrConverter.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -183,8 +184,6 @@ void MasterModbusTaskFunction(void const * argument)
 	   
 		     eMBMasterPoll();
 			   eMBMasterPoll();
-	
-		  
 			  // Освобождаем мьюте
        osMutexRelease(myMutex01Handle);
 		 }
@@ -217,16 +216,28 @@ void HoldingHandlerFunction(void const * argument)
   {	// Пытаемся захватить мьютекс (ждём 10 мс)
      osStatus status = osMutexWait(myMutex01Handle, 50);
 		 if (status == osOK) {
-			 if(SelectRunFlag == 0)
-			 {
-			  eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, 0, 100, 200 );
-				SelectRunFlag = 1;
-			 }
-			else if(SelectRunFlag == 1)
-			 { 
-			  eMBMasterReqReadInputRegister( ModBusSlaveDefaultDeviceAddr, 0, 50, 200 );
-				SelectRunFlag = 0;
-			 }
+				 if(SelectRunFlag == 0)
+				 {   
+					eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, (DEVICE_MODEL_CODE - 1),5, 200 );
+					SelectRunFlag = 1;
+				 }
+				else if(SelectRunFlag == 1)
+				 { 
+					//eMBMasterReqReadInputRegister( ModBusSlaveDefaultDeviceAddr, 0, 50, 200 );
+					 
+					eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, VERSION_ID - 1 ,3, 200 );
+					SelectRunFlag = 2;
+				 }				 
+				else if (SelectRunFlag == 2)
+					{
+					 eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, CALIBRATION_ZERO_POINT - 1, 2, 200 );
+					 SelectRunFlag = 3;
+					}
+				else if (SelectRunFlag == 3)
+					{
+					 eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, SENSOR_SCALE_MIN_HIGH - 1, 5, 200 );
+					 SelectRunFlag = 0;
+					} 	
 			//Освобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }
@@ -237,7 +248,7 @@ void HoldingHandlerFunction(void const * argument)
 		 
 		 } 
 			 
-    osDelay(250);
+    osDelay(80);
 		taskYIELD();
   }
   /* USER CODE END HoldingHandlerFunction */

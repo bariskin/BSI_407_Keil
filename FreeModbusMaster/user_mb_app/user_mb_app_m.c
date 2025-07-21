@@ -20,6 +20,7 @@
  */
 #include "user_mb_app_m.h"
 #include "mb_m.h"
+#include "ModBusAddrConverter.h"
 /*-----------------------Master mode use these variables----------------------*/
 #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
 //Master mode:DiscreteInputs variables
@@ -67,6 +68,8 @@ eMBErrorCode eMBMasterRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT
     usRegInStart = usMRegInStart;
 
     /* it already plus one in modbus function method. */
+	  //uint16_t internValue = convertModBusAddr(usAddress);
+	 // usAddress = internValue; 
     usAddress--;
 
     if ((usAddress >= REG_INPUT_START)
@@ -116,6 +119,10 @@ eMBErrorCode eMBMasterRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
     /* if mode is read, the master will write the received date to buffer. */
     eMode = MB_REG_WRITE;
 
+	   uint16_t internValue = convertModBusAddr(usAddress);
+	   usAddress = internValue; 
+	
+	
     /* it already plus one in modbus function method. */
     usAddress--;
 

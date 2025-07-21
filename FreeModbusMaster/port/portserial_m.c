@@ -25,13 +25,11 @@
 #include "mb.h"
 #include "mbport.h"
 #include "stm32f4xx_hal.h"
-
+#include "main.h"
 
 /* ----------------------- static functions ---------------------------------*/
 static void prvvUARTTxReadyISR(void);
 static void prvvUARTRxISR(void);
-
-
 
 /* ----------------------- Variables ----------------------------------------*/
 
@@ -39,31 +37,42 @@ extern UART_HandleTypeDef huart2;
 UART_HandleTypeDef* modbusUartMaster = &huart2;
 static uint8_t txByte = 0x00;
 static volatile uint8_t rxByte = 0x00;
+
+extern UART_HandleTypeDef* modbusUartMaster ;
+/* ----------------------- User defenitions ---------------------------------*/
+#define RS485_RD_LOW_MASTER	  HAL_GPIO_WritePin(RDen2_GPIO_Port, RDen2_Pin, GPIO_PIN_RESET)
+#define RS485_RD_HIGH_MASTER 	HAL_GPIO_WritePin(RDen2_GPIO_Port, RDen2_Pin, GPIO_PIN_SET)
 /* ----------------------- Start implementation -----------------------------*/
 
 /*----------------------------------------------------------------------------*/
 void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 {
-  if (xRxEnable == FALSE)
+	
+ if(xRxEnable) 
+  {
+		RS485_RD_LOW_MASTER;	
+    HAL_UART_Receive_IT(modbusUartMaster, (uint8_t*)&rxByte, 1);
+  }
+		
+ else
   {
     HAL_UART_AbortReceive_IT(modbusUartMaster);
   }
-  else
+ 
+	if(xTxEnable)
   {
-    HAL_UART_Receive_IT(modbusUartMaster, (uint8_t*)&rxByte, 1);
-  }
-
-  if (xTxEnable == FALSE)
+		//RS485_RD_HIGH_MASTER; 
+    if (modbusUartMaster->gState == HAL_UART_STATE_READY)
+    {
+			RS485_RD_HIGH_MASTER; 
+      prvvUARTTxReadyISR();
+    }
+	}
+  else
   {
     HAL_UART_AbortTransmit_IT(modbusUartMaster);
   }
-  else
-  {
-    if (modbusUartMaster->gState == HAL_UART_STATE_READY)
-    {
-      prvvUARTTxReadyISR();
-    }
-  }
+  
 }
 
 
@@ -84,8 +93,6 @@ BOOL xMBMasterPortSerialPutByte(CHAR ucByte)
   return TRUE;
 }
 
-
-
 /* --------------------------------------------------------------------------*/
 BOOL xMBMasterPortSerialGetByte( CHAR * pucByte )
 {
@@ -94,44 +101,16 @@ BOOL xMBMasterPortSerialGetByte( CHAR * pucByte )
   return TRUE;
 }
 
-
-
 /* --------------------------------------------------------------------------*/
 static void prvvUARTTxReadyISR(void)
 {
   pxMBMasterFrameCBTransmitterEmpty();
 }
 
-
-
 /* --------------------------------------------------------------------------*/
 static void prvvUARTRxISR(void)
 {
   pxMBMasterFrameCBByteReceived();
 }
-
-
-
-/* --------------------------------------------------------------------------*/
-//void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-//{
-//  if (huart->Instance == modbusUartMaster->Instance)
-//  {
-//    prvvUARTTxReadyISR();
-//  }
-//}
-
-
-
-///* --------------------------------------------------------------------------*/
-//void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
-//{
-//  if (huart->Instance == modbusUartMaster->Instance)
-//  {
-//    prvvUARTRxISR();
-//  }
-//}
-
-
 
 /* --------------------------------------------------------------------------*/
