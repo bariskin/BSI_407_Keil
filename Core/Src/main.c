@@ -33,8 +33,8 @@
 #include "mb_m.h"
 #include "mbport.h"
 #include "user_mb_app.h"
-#include  "stdbool.h"
-#include  "bsp.h"
+#include "stdbool.h"
+#include "bsp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

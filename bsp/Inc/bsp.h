@@ -25,6 +25,14 @@ extern "C" {
   * @}
   */
  /* ------------------------Defines ----------------------------------*/
+  typedef	struct
+  {
+    uint32_t ModBuAddrSetFlag;
+    uint32_t ModBusAddr;
+		uint32_t Reserved1;
+		uint32_t Reserved2;
+ } ModBusAddr_t ;
+	
   typedef struct
 	  {
 		  uint16_t DeviceStatus;

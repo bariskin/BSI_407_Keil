@@ -114,7 +114,6 @@ eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNR
 	
     eMBErrorCode    eStatus = MB_ENOERR;
  
-	 usAddress = 1;
     /* it already plus one in modbus function method. */
     usAddress--;
 	
@@ -154,9 +153,14 @@ eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNR
                 // Выбираем нужный массив в зависимости от адреса
                 if (currentAddr < MAX_MODBUS_REGS_PART) {
                     holdingRegsPart1[currentAddr] = regValue;
+									
+									  HoldingRegisterFromModbusStack(currentAddr, holdingRegsPart1[currentAddr]); // для выполения внутренней функциональности 
+									
                 } else {
                     holdingRegsPart2[currentAddr - MAX_MODBUS_REGS_PART] = regValue;
                 }
+								
+								
             }
             break;
         }

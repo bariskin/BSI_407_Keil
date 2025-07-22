@@ -26,18 +26,14 @@ extern "C" {
  #define HOLDING_REGISTER_IDX_1   (uint16_t)0x0000  // setting ModBus baud rate
  #define HOLDING_REGISTER_IDX_2   (uint16_t)0x0001	// setting ModBus parity
  #define HOLDING_REGISTER_IDX_3   (uint16_t)0x0002  // setting ModBus Stop Bits
- #define HOLDING_REGISTER_IDX_4   (uint16_t)0x0003  // setting FW revision
- #define HOLDING_REGISTER_IDX_5   (uint16_t)0x0004  // setting factory number
- #define HOLDING_REGISTER_IDX_6   (uint16_t)0x0005  // setting ModBus addr
- #define HOLDING_REGISTER_IDX_7   (uint16_t)0x0006  // setting DO
- #define HOLDING_REGISTER_IDX_8   (uint16_t)0x0007  // setting DI
+ #define HOLDING_REGISTER_IDX_4   (uint16_t)0x0003  // setting ModBus addr
+ 
  /* ------------------------External variables -------------------------*/
- extern volatile  uint32_t  MB_AddresseValue;
  extern volatile  uint32_t  MB_BaudRateValue;
  extern volatile  uint32_t  MB_ParityValue;
  extern volatile  uint32_t  MB_StopBitsValue;
- extern volatile  uint32_t  FW_ID;
- extern volatile  uint32_t  Factory_ID;  
+  extern volatile  uint32_t  MB_AddresseValue;
+
   /** @addtogroup holding_register_handler
   * @{
   */

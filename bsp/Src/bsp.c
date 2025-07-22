@@ -111,6 +111,3 @@ void setNextDeviceAddr(void)
 	}
  
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/
-
-
-
