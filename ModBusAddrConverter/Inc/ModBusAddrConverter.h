@@ -26,7 +26,7 @@ extern "C" {
   * @}
   */   
   
-/* ------------------------ Defines ------------------------------------*/
+/* ------------------------ Defines  HOLDING REGISTERS ------------------------------------*/
 #define HOLDING_OFFSET        (uint16_t)40000
 
 #define DEVICE_MODEL_CODE            (uint16_t)(40401 - 40000)
@@ -36,7 +36,7 @@ extern "C" {
 #define SENSOR_SCALE_MIN_HIGH        (uint16_t)(41001 - 40000)		
 
 
-/* ------------------------ Intern ------------------------------------*/
+/* ------------------------ Intern  for converter addr------------------------------------*/
 
 #define DEVICE_MODEL_CODE_INTERN      (uint16_t)(1)   // два адреса всего 
 #define DEVICE_ID_INTERN              (uint16_t)(3)   // три адреса всего 
@@ -45,7 +45,23 @@ extern "C" {
 #define SENSOR_SCALE_MIN_HIGH_INTERN  (uint16_t)(11)	// пять адресов всего 
 
          /*    PRIMARY SENSOR   */
-	 
+/* ------------------------ END HOLDING REGISTERS ------------------------------------*/	
+
+/* ------------------------ Defines INPUT REGISTERS ----------------------------------*/
+#define INPUT_OFFSET                   (uint16_t)30000
+
+#define DEVICE_STATUS                  (uint16_t)(31001 - 30000) // один адрес
+#define SENSOR_PRIMARY_VAUE_HIGH       (uint16_t)(33001 - 30000) // один адрес , концентрация 
+#define SENSOR_PRIMARY_VAUE_LOW        (uint16_t)(33002 - 30000) // один адрес , концентрация 
+#define SENSOR_PRIMARY_STATUS          (uint16_t)(33003 - 30000) // один адрес
+
+#define DEVICE_STATUS_INTERN            (uint16_t)(1) // один адрес
+#define SENSOR_PRIMARY_VAUE_HIGH_INTERN (uint16_t)(2) // один адрес , концентрация 
+#define SENSOR_PRIMARY_VAUE_LOW_INTERN  (uint16_t)(3) // один адрес , концентрация 
+#define SENSOR_PRIMARY_STATUS_INTERN    (uint16_t)(4) // один адрес
+
+
+/* ------------------------ END INPUT REGISTERS --------------------------------------*/	
 								 
 /* ------------------------Global variables----------------------------*/
 
@@ -57,8 +73,10 @@ extern "C" {
   * @{
   */
   
- uint16_t convertModBusAddr(uint16_t MBAddress);
- 
+ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress);
+ uint16_t convertModBusAddrInput_M(uint16_t MBAddress);
+ uint16_t convertModBusAddrHolding_S(uint16_t MBAddress);
+ uint16_t convertModBusAddrInput_S(uint16_t MBAddress);
   /**
   * @}
   */

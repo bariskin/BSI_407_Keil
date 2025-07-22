@@ -28,6 +28,7 @@
 #include "mb.h"
 #include "mb_m.h"
 #include "ModBusAddrConverter.h"
+#include "bsp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -37,7 +38,7 @@ uint8_t SelectaFlag = 0;
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+extern USHORT   usMRegInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS];
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -213,18 +214,19 @@ void HoldingHandlerFunction(void const * argument)
 	static uint8_t SelectRunFlag = 0;
   /* Infinite loop */
   for(;;)
-  {	// ѕытаемс€ захватить мьютекс (ждЄм 10 мс)
+  {	// ѕытаемс€ захватить мьютекс (ждЄм 50 мс)
      osStatus status = osMutexWait(myMutex01Handle, 50);
 		 if (status == osOK) {
+			 
+			
+			   /* *********************************  Handling HOLDING registers *************************** */
 				 if(SelectRunFlag == 0)
 				 {   
 					eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, (DEVICE_MODEL_CODE - 1),5, 200 );
 					SelectRunFlag = 1;
 				 }
-				else if(SelectRunFlag == 1)
-				 { 
-					//eMBMasterReqReadInputRegister( ModBusSlaveDefaultDeviceAddr, 0, 50, 200 );
-					 
+				 else if(SelectRunFlag == 1)
+				 { 	 
 					eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, VERSION_ID - 1 ,3, 200 );
 					SelectRunFlag = 2;
 				 }				 
@@ -236,8 +238,23 @@ void HoldingHandlerFunction(void const * argument)
 				else if (SelectRunFlag == 3)
 					{
 					 eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, SENSOR_SCALE_MIN_HIGH - 1, 5, 200 );
-					 SelectRunFlag = 0;
+					 SelectRunFlag = 4;
 					} 	
+					
+			   /* ********************************* Handling INPUT registers *************************** */
+				else if (SelectRunFlag == 4)
+					{
+					 eMBMasterReqReadInputRegister( ModBusSlaveDefaultDeviceAddr, DEVICE_STATUS  - 1, 4, 200 );
+					 SelectRunFlag = 5;
+					} 	
+				else if (SelectRunFlag == 5)
+				 {
+					 readCurrentSensorState(ModBusSlaveDefaultDeviceAddr,usMRegInBuf);
+					  
+				   setNextDeviceAddr();	       // set next device addr
+           SelectRunFlag = 0;
+				 }					
+			
 			//ќсвобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }

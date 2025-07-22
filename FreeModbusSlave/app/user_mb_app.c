@@ -114,6 +114,7 @@ eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNR
 	
     eMBErrorCode    eStatus = MB_ENOERR;
  
+	 usAddress = 1;
     /* it already plus one in modbus function method. */
     usAddress--;
 	

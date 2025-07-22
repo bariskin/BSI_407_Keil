@@ -1,0 +1,57 @@
+/**
+******************************************************************************
+* @file      bsp.h
+* @author    OnWert
+* @version   
+* @brief     This file contains defines and all the functions prototypes for the bsp.c
+******************************************************************************
+*/
+#ifndef _BOARD_SUPPORT_FILE_H
+#define _BOARD_SUPPORT_FILE_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+  
+ /* ------------------------Includes ----------------------------------*/
+ #include "stm32f4xx_hal.h"
+ #include "user_mb_app_m.h"
+ #include "ModBusAddrConverter.h"
+  /** @defgroup board_support
+  * @{
+  */
+  
+  /**
+  * @}
+  */
+ /* ------------------------Defines ----------------------------------*/
+  typedef struct
+	  {
+		  uint16_t DeviceStatus;
+			uint16_t AlarmStatus;
+			uint16_t Concentration_H;
+			uint16_t Concentration_L;
+		  uint16_t NotResponsCounter;
+			_Bool ErrorState;
+		}SensorState_t;
+ /* ------------------------External variables -------------------------*/
+extern  uint8_t NumberOffDevices;
+
+  /** @addtogroup board_support
+  * @{
+  */
+	
+		uint8_t getNumberDevices(void);
+    void setNumberDevices(uint8_t *numberDevices, uint8_t number);
+		void setNextDeviceAddr(void);
+		void initSensorStateArray(uint8_t numberdevices);
+		void readCurrentSensorState( uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS]);
+  /**
+  * @}
+  */
+  
+#ifdef __cplusplus
+}
+#endif
+
+#endif  /* _BOARD_SUPPORT_FILE_H */

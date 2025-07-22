@@ -104,16 +104,7 @@ extern uint16_t   usSRegHoldBuf[S_REG_HOLDING_NREGS];
 			
 		return	OutputValue;
 	}
-  
-
-
-
-
-
-
-					
-
-
+ 
 
 /************************ (C) COPYRIGHT @OnWert *****END OF FILE****/
 

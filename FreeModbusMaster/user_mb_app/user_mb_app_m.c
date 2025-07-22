@@ -66,7 +66,11 @@ eMBErrorCode eMBMasterRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT
     REG_INPUT_START = M_REG_INPUT_START;
     REG_INPUT_NREGS = M_REG_INPUT_NREGS;
     usRegInStart = usMRegInStart;
+	
 
+	   uint16_t internValue = convertModBusAddrInput_M(usAddress);
+	   usAddress = internValue;  
+	
     /* it already plus one in modbus function method. */
 	  //uint16_t internValue = convertModBusAddr(usAddress);
 	 // usAddress = internValue; 
@@ -119,7 +123,7 @@ eMBErrorCode eMBMasterRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
     /* if mode is read, the master will write the received date to buffer. */
     eMode = MB_REG_WRITE;
 
-	   uint16_t internValue = convertModBusAddr(usAddress);
+	   uint16_t internValue = convertModBusAddrHolding_M(usAddress);
 	   usAddress = internValue; 
 	
 	

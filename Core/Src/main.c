@@ -34,7 +34,7 @@
 #include "mbport.h"
 #include "user_mb_app.h"
 #include  "stdbool.h"
-
+#include  "bsp.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -116,20 +116,27 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
-	/* *************MODBUS init****************** */
-	eMBErrorCode   eStatus = eMBInit( MB_RTU, ModBusSlaveDefaultDeviceAddr, &huart1, 9600 , &htim6 );
+	
+	/* *************MODBUS SLAVE init******************** */
+	eMBErrorCode   eStatus = eMBInit( MB_RTU, 0x01, &huart1, 9600 , &htim6 );
 	eMBEnable( );
 
-   vMBMasterSetDestAddress(ModBusSlaveDefaultDeviceAddr);
-  
 
+  /* *************MODBUS MAASTER init****************** */
+
+  vMBMasterSetDestAddress(ModBusSlaveDefaultDeviceAddr);
+ 
   eStatus = eMBMasterInit(MB_RTU, 0, 9600, MB_PAR_NONE);
   eStatus = eMBMasterEnable();
   if (eStatus != MB_ENOERR)
    {
     // Error handling
-    }
-
+   }
+	 
+ /* ************  Sensors initialisation ********** */
+	 setNumberDevices(&NumberOffDevices, 5);// установка количества датчиков
+	 
+	 initSensorStateArray(5);               // инициализация струкутур для информации с датчиков
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
