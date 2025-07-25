@@ -65,6 +65,7 @@ BOOL xMBPortSerialPutBytes(volatile UCHAR *ucByte, USHORT usSize)
 BOOL xMBPortSerialGetByte(CHAR * pucByte)
 {
 	*pucByte = (uint8_t)(singlechar);
+	 HAL_UART_Receive_IT(slaveUart, (uint8_t *)&singlechar, 1);
 	return TRUE;
 }
 
@@ -73,7 +74,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
   if(huart->Instance == slaveUart->Instance)
 		{
 		 pxMBFrameCBByteReceived();
-		 HAL_UART_Receive_IT(slaveUart, (uint8_t *)&singlechar, 1);
+		 //HAL_UART_Receive_IT(slaveUart, (uint8_t *)&singlechar, 1);
 		}
 	else	if (huart->Instance == modbusUartMaster->Instance)
   {

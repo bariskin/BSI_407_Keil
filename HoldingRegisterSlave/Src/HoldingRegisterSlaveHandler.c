@@ -7,15 +7,21 @@
 */       
 /* ------------------------Includes ----------------------------------*/
 #include "HoldingRegisterSlaveHandler.h"
+#include "user_mb_app.h"
 #include "UARTSlaveSettings.h"
 #include "user_mb_app.h"
 #include "cmsis_os.h"
 #include "task.h"
-
+#include "FlashDriver.h"
+#include "bsp.h"
 /* ------------------------External variables -------------------------*/
 
 extern uint16_t holdingRegsPart1[MAX_MODBUS_REGS_PART];  // Àäðåñà 1-120
+extern volatile UART_Settings_t UartSlaveSetting; 
+extern volatile ModBusAddr_t  ModBusAddr; 
+extern volatile ModBusAddr_t  ModBusAddrDefault;
 
+extern osThreadId InputHandlerHandle;
 /* ------------------------Global variables----------------------------*/
 volatile uint32_t  MB_BaudRateValue = 0x00000000;
 volatile uint32_t  MB_ParityValue   = 0x00000000;
@@ -29,59 +35,61 @@ volatile uint32_t  MB_AddresseValue = 0x00000000;
 		switch(MBregIdx)
 		{ 
 			/* ************ baud rate************* */
-			case HOLDING_REGISTER_IDX_1 :
+			case HOLDING_REGISTER_SLAVE_IDX_1 :
 				
 				if(RegValue >= 1  && RegValue <= 6 )	
 				{
 			  	MB_BaudRateValue =  getBaudrate(RegValue);
+					xTaskNotify( InputHandlerHandle , HOLDING_REGISTER_SLAVE_IDX_1, eSetValueWithOverwrite); 
 				}
 		    else
         {
-			    holdingRegsPart1[HOLDING_REGISTER_IDX_1] = getBaudRateId(MB_BaudRateValue);
+			    holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_1] = getBaudRateId(MB_BaudRateValue);
 			  }			
 		  osDelay(1);
 			break;
 			/* ************* parity ************ */
-			case HOLDING_REGISTER_IDX_2:
+			case HOLDING_REGISTER_SLAVE_IDX_2:
 				
 			if((int8_t)RegValue >= (int8_t)0  && (uint8_t)RegValue <= 2 )
 		   {
 			  MB_ParityValue = getParity(RegValue);
-				
+				xTaskNotify( InputHandlerHandle , HOLDING_REGISTER_SLAVE_IDX_2, eSetValueWithOverwrite); 	
 		   }
 			else
 			 {
-         holdingRegsPart1[HOLDING_REGISTER_IDX_2] = getParityId(MB_ParityValue); 
+         holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_2] = getParityId(MB_ParityValue); 
 			 }	
 			 
 		   osDelay(1);
 			 break;
 			/* ************* stop bits************ */
-			case HOLDING_REGISTER_IDX_3: 
+			case HOLDING_REGISTER_SLAVE_IDX_3: 
 				
 			 if(RegValue >= 1  && RegValue <= 2 )
 		    {
-			   MB_StopBitsValue = getStopBits(RegValue); 
-		    }
+			   MB_StopBitsValue = getStopBits(RegValue);
+         xTaskNotify( InputHandlerHandle , HOLDING_REGISTER_SLAVE_IDX_3, eSetValueWithOverwrite); 
+		    }					 
 			 else
 			  {
-         holdingRegsPart1[HOLDING_REGISTER_IDX_3] = getStopBitsId(MB_StopBitsValue); 
-			  }
-			  
+         holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_3] = getStopBitsId(MB_StopBitsValue); 
+			  } 
         osDelay(1);				
 			 break;
 			/* ********* SLAVE ID (modbus addr) **** */ 
-			 case HOLDING_REGISTER_IDX_4: 
+			 case HOLDING_REGISTER_SLAVE_IDX_4: 
 				 
 			 if(RegValue >= 1  && RegValue <= 247 )
 			   { 
 			    MB_AddresseValue = RegValue;
 		    
-				  holdingRegsPart1[HOLDING_REGISTER_IDX_4] = MB_AddresseValue;
+					xTaskNotify(InputHandlerHandle, HOLDING_REGISTER_SLAVE_IDX_4, eSetValueWithOverwrite); 
+				  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_4] = MB_AddresseValue;
 		     } 
 			  else
 			  {
-			   holdingRegsPart1[HOLDING_REGISTER_IDX_4] =  MB_AddresseValue;
+			   holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_4] =  MB_AddresseValue;
 			  } 
 		   osDelay(1);				
 			 break;
@@ -96,34 +104,108 @@ volatile uint32_t  MB_AddresseValue = 0x00000000;
 		switch(MBregIdx)
       { 		
      		/* ************ baud rate************* */			
-			 case HOLDING_REGISTER_IDX_1 :
+			 case HOLDING_REGISTER_SLAVE_IDX_1 :
 				 
-				 OutputValue =  holdingRegsPart1[HOLDING_REGISTER_IDX_1];
+				 OutputValue =  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_1];
 			   osDelay(1);
 				 break;
 			 /* ************* parity ************ */
-			 case HOLDING_REGISTER_IDX_2 :
+			 case HOLDING_REGISTER_SLAVE_IDX_2 :
 				 
-				 OutputValue =  holdingRegsPart1[HOLDING_REGISTER_IDX_2];
+				 OutputValue =  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_2];
 			   osDelay(1);
 				 break;
 			 
 			 /* ************* stop bits************ */
-			 case HOLDING_REGISTER_IDX_3 :
+			 case HOLDING_REGISTER_SLAVE_IDX_3 :
 				
-			   OutputValue =  holdingRegsPart1[HOLDING_REGISTER_IDX_3];
+			   OutputValue =  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_3];
 			   osDelay(1);
 				 break;		 
 			 /* ********* SLAVE ID (modbus addr) **** */ 
-			 case HOLDING_REGISTER_IDX_4 :
+			 case HOLDING_REGISTER_SLAVE_IDX_4 :
 				
-			   OutputValue =  holdingRegsPart1[HOLDING_REGISTER_IDX_4];
+			   OutputValue =  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_4];
 			   osDelay(1);
 				 break;	
 			}		
 		return	OutputValue;
 	}
  
+	
+  void ModBusEventHoldingRegHandler(void)
+	 {
+		 	 uint32_t ulNotifiedValue = 0 ;
+		
+		 xTaskNotifyWait
+				(             
+				 0x00,             /* Don’t clear any notification bits on entry. */
+				 0xFFFFFFFFUL,     /* Reset the notification value to 0 on exit. */
+				 &ulNotifiedValue, /* Notified value pass out in ulNotifiedValue. */                      
+				 portMAX_DELAY     /* Block indefinitely. */
+					 );
+		 
+		 		if(ulNotifiedValue == HOLDING_REGISTER_SLAVE_IDX_1)      /* baud rate */
+			  	{ 
+			  		eMBDisable( );
+						
+						osDelay(1);
+				
+				  	UartSlaveSetting.BaudRateID = 	getBaudRateId(MB_BaudRateValue);
+					
+					  Flash_Write_Data(FLASH_SETTING_UART,(uint32_t *)&UartSlaveSetting, 5);
+		
+					  osDelay(10);
+					 
+            NVIC_SystemReset(); 
+				 }	
+
+         else if(ulNotifiedValue == HOLDING_REGISTER_SLAVE_IDX_2) /* parity */ 
+
+             {
+						   eMBDisable( );
+							 
+							 	osDelay(1);
+				
+				     	 UartSlaveSetting.ParityID = getParityId(MB_ParityValue);
+							 
+							 Flash_Write_Data(FLASH_SETTING_UART,(uint32_t *)&UartSlaveSetting, 5);
+							 
+							 osDelay(10);
+					
+					     NVIC_SystemReset(); 
+						 }	
+
+         else if(ulNotifiedValue == HOLDING_REGISTER_SLAVE_IDX_3)   /* stop bits */
+
+             {
+						  	eMBDisable( );
+							 	osDelay(1);
+				
+					      UartSlaveSetting.StopBitsID = getStopBitsId(MB_StopBitsValue);
+							 
+							  Flash_Write_Data(FLASH_SETTING_UART,(uint32_t *)&UartSlaveSetting, 5);
+							 
+							  osDelay(10);
+					
+					      NVIC_SystemReset(); 
+						 }
+          else if(ulNotifiedValue == HOLDING_REGISTER_SLAVE_IDX_4) /*  SLAVE ID (modbus addr)  */
+             {
+						 	  eMBDisable( );
+							 	osDelay(1);
+					
+				      	ModBusAddr.ModBuAddrSetFlag = 0x01;  
+			          ModBusAddr.ModBusAddr = MB_AddresseValue;  
+					      
+							  Flash_Write_Data (FLASH_SLAVE_MODBUS_ID,(uint32_t *)&ModBusAddr,4);
+							 						 
+							 	osDelay(10);
+				
+					      NVIC_SystemReset();	
+						 }						 
+				 
+	 }
 /************************ (C) COPYRIGHT @OnWert *****END OF FILE****/
 
 

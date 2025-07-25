@@ -29,12 +29,14 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "ModbusSettings.h"
+#include "UARTSlaveSettings.h"
 #include "mb.h"
 #include "mb_m.h"
 #include "mbport.h"
 #include "user_mb_app.h"
 #include "stdbool.h"
 #include "bsp.h"
+#include "HoldingRegisterSlaveHandler.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -117,10 +119,25 @@ int main(void)
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
 	
+	
+	setModBusAddr();
+	setModBusSetting();
+	
 	/* *************MODBUS SLAVE init******************** */
-	eMBErrorCode   eStatus = eMBInit( MB_RTU, 0x01, &huart1, 9600 , &htim6 );
+	
+		/* *************Deinit UART****************** */
+		
+	  if (HAL_UART_Init(&huart1) != HAL_OK)  /* restart  UART1 */
+        {
+           Error_Handler();
+        }
+		 
+		    HAL_Delay(10);
+	
+	
+	
+	eMBErrorCode   eStatus = eMBInit( MB_RTU, MB_AddresseValue, &huart1, MB_BaudRateValue, &htim6 );
 	eMBEnable( );
-
 
   /* *************MODBUS MAASTER init****************** */
 

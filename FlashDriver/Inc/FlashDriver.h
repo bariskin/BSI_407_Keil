@@ -18,22 +18,7 @@ extern "C" {
  /* ------------------------Includes ----------------------------------*/
  #include "stm32f4xx_hal.h"
  #include "UARTSlaveSettings.h"
- /*---------------------------------- STM32F401xE/STM32F411xE/STM32F446xx ------------------------------*/
-//#if defined(STM32F401xE) || defined(STM32F411xE) || defined(STM32F446xx)
-//#define FLASH_SECTOR_0     0U /*!< Sector Number 0   */
-//#define FLASH_SECTOR_1     1U /*!< Sector Number 1   */
-//#define FLASH_SECTOR_2     2U /*!< Sector Number 2   */
-//#define FLASH_SECTOR_3     3U /*!< Sector Number 3   */
-//#define FLASH_SECTOR_4     4U /*!< Sector Number 4   */
-//#define FLASH_SECTOR_5     5U /*!< Sector Number 5   */
-//#define FLASH_SECTOR_6     6U /*!< Sector Number 6   */
-//#define FLASH_SECTOR_7     7U /*!< Sector Number 7   */
-//#endif /* STM32F401xE || STM32F411xE || STM32F446xx */
 /*-----------------------------------------------------------------------------------------------------*/
- 
- 
- 
- 
   /** @defgroup flash_driver_file
   * @{
   */
@@ -47,14 +32,17 @@ extern "C" {
 #define FLASH_ADDR_SECTOR_2	  0x08008000 
 #define FLASH_ADDR_SECTOR_3   0x0800C000 
 #define FLASH_ADDR_SECTOR_4	  0x08010000 
-#define FLASH_ADDR_SECTOR_5	  0x08020000  //0x08020000 - 0x0803FFFF    131072  bytes 
-#define FLASH_ADDR_SECTOR_6	  0x08040000  //0x08040000 - 0x0805FFFF    131072  bytes 
-#define FLASH_ADDR_SECTOR_7	  0x08060000  //0x08060000 - 0x0807FFFF    131072  bytes 
+#define FLASH_ADDR_SECTOR_5	  0x08020000  // 128 kB
+#define FLASH_ADDR_SECTOR_6	  0x08040000  // 128 kB
+#define FLASH_ADDR_SECTOR_7	  0x08060000  // 128 kB
+#define FLASH_ADDR_SECTOR_8		0x08080000  // 128 kB
+#define FLASH_ADDR_SECTOR_9	  0x080A0000  // 128 kB
+#define FLASH_ADDR_SECTOR_10	0x080C0000  // 128 kB
+#define FLASH_ADDR_SECTOR_11	0x080E0000  // 128 kB
+
+#define FLASH_SLAVE_MODBUS_ID  	           FLASH_ADDR_SECTOR_9   // modbus addresse
+#define FLASH_SETTING_UART     	           FLASH_ADDR_SECTOR_10		// baud_rate, parity, stop bits
 		
-		
-#define FLASH_SLAVE_MODBUS_ID  	           FLASH_ADDR_SECTOR_5    // modbus addresse
-#define FLASH_SETTING_UART     	           FLASH_ADDR_SECTOR_6		// baud_rate, parity, stop bits
-#define FLASH_FW_ID_FACTORY_NUMBER         FLASH_ADDR_SECTOR_7	  // FW ID , factory ID  		
 		
  /* ------------------------External variables -------------------------*/
   

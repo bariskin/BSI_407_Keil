@@ -114,6 +114,8 @@ eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNR
 	
     eMBErrorCode    eStatus = MB_ENOERR;
  
+	  uint16_t MBValue = 0x0000;
+	
     /* it already plus one in modbus function method. */
     usAddress--;
 	
@@ -121,7 +123,6 @@ eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNR
     if ((usAddress + usNRegs) > TOTAL_HOLDING_REGS) {
         return MB_ENOREG;
     }
-
         switch (eMode)
         {
         /* read current register values from the protocol stack. */

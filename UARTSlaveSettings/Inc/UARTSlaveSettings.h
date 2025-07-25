@@ -29,30 +29,30 @@ extern "C" {
   typedef struct
   {
 	 uint32_t UartSetFlag;
-	 uint32_t BaudRateID;
-   uint32_t WordLengthID;
+	 uint32_t	BaudRateID; 
+	 uint32_t	WordLengthID;
 	 uint32_t ParityID;
    uint32_t StopBitsID;
   }UART_Settings_t; 
 	
  /* ------------------------External variables -------------------------*/
-  
-	
+ extern  volatile UART_Settings_t UartSettingDefault; 
+ extern 	volatile UART_Settings_t UartSlaveSetting;
   /** @addtogroup uart_settings
   * @{
   */	 
-    uint32_t Switch_Parity(uint8_t num);
-	  uint32_t Switch_StopBits(uint8_t num);
-	  void setUartSettings(void);
-	  uint32_t getBaudrate(uint8_t num);
-	  uint8_t getBaudRateId(uint32_t BaudRate);
-	  uint32_t getParityId(uint32_t parity);
-	  uint32_t getParity(uint32_t idparity);
-	  uint32_t getStopBits(uint32_t stopbits);
-	  uint32_t getStopBitsId(uint32_t stopbitsId);
-	  uint32_t getUartWordLength(uint32_t wordlength);
-	  uint32_t getUartWordLengthId(uint32_t wordlengthId);
-	  void updateUartSettings( UART_Settings_t *uartsetting );
+  uint32_t Switch_Parity(uint8_t num);
+	uint32_t Switch_StopBits(uint8_t num);
+	void setUartSettings(void);
+	uint32_t getBaudrate(uint8_t num);
+	uint8_t getBaudRateId(uint32_t BaudRate);
+	uint32_t getParityId(uint32_t parity);
+	uint32_t getParity(uint32_t idparity);
+	uint32_t getStopBits(uint32_t stopbits);
+	uint32_t getStopBitsId(uint32_t stopbitsId);
+	uint32_t getUartWordLength(uint32_t wordlength);
+	uint32_t getUartWordLengthId(uint32_t wordlengthId);
+	void updateUartSettings( UART_Settings_t *uartsetting );
 	/**
   * @
   */

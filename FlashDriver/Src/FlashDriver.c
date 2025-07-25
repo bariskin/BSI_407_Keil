@@ -88,38 +88,56 @@ uint32_t Flash_Write_Data (uint32_t StartSectorAddress, uint32_t *Data, uint16_t
 
 uint8_t getSector(uint32_t flashAddr)
 {
-  if(flashAddr == (uint32_t)0x08000000)
+  if(flashAddr == (uint32_t)FLASH_ADDR_SECTOR_0)
 	 {
 	   return FLASH_SECTOR_0 ;
 	 }
-	 else if (flashAddr == (uint32_t)0x08004000)
+	 else if (flashAddr == (uint32_t)FLASH_ADDR_SECTOR_1)
 	 {
 	  return FLASH_SECTOR_1 ;
 	 }	 
-	 else if(flashAddr == (uint32_t)0x08008000)
+	 else if(flashAddr == (uint32_t)FLASH_ADDR_SECTOR_2)
 	 {
 	  return FLASH_SECTOR_2 ;
 	 }
-	 else if (flashAddr == (uint32_t)0x0800C000)
+	 else if(flashAddr == (uint32_t)FLASH_ADDR_SECTOR_3)
 	 {
 		 return FLASH_SECTOR_3 ;
 	 } 
- 	 else if(flashAddr == (uint32_t)0x08010000)
+ 	 else if(flashAddr == (uint32_t)FLASH_ADDR_SECTOR_4)
 	 {
 	  return FLASH_SECTOR_4 ;
 	 }	
-	 else if (flashAddr == (uint32_t)0x08020000)
+	  
+	 else if (flashAddr == (uint32_t)FLASH_ADDR_SECTOR_5)
 	 {
 	  return FLASH_SECTOR_5 ;
 	 } 
-	 else if(flashAddr == (uint32_t)0x08040000)
+	 else if(flashAddr == (uint32_t)FLASH_ADDR_SECTOR_6)
 	 {
 	  return FLASH_SECTOR_6 ;
 	 }
-	 else if(flashAddr == (uint32_t)0x08060000)
+	 else if(flashAddr == (uint32_t)FLASH_ADDR_SECTOR_7)
 	 {
 	  return FLASH_SECTOR_7;
 	 }	 
+	 else if(flashAddr == (uint32_t)FLASH_ADDR_SECTOR_8)
+	 {
+	  return FLASH_SECTOR_8;
+	 }	 
+	 else if(flashAddr == (uint32_t)FLASH_ADDR_SECTOR_9)
+	 {
+	  return FLASH_SECTOR_9;
+	 }
+	 else if(flashAddr == (uint32_t)FLASH_ADDR_SECTOR_10)
+	 {
+	  return FLASH_SECTOR_10;
+	 }
+	 else if(flashAddr == (uint32_t)FLASH_ADDR_SECTOR_11)
+	 {
+	  return FLASH_SECTOR_11;
+	 }
+	 
 	 return FLASH_SECTOR_0;
 }
 

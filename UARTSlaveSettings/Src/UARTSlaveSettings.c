@@ -9,6 +9,7 @@
 #include "UARTSlaveSettings.h"
 #include "cmsis_os.h"
 /* ------------------------External variables -------------------------*/
+extern UART_HandleTypeDef huart1;
 extern void Error_Handler(void);
 extern UART_HandleTypeDef huart1;
 /* ------------------------Global variables----------------------------*/
@@ -17,12 +18,19 @@ volatile UART_Settings_t UartSettingDefault  =
 	{ 
     .UartSetFlag =  0x00000001, 
     .BaudRateID  =  0x00000003, 
-    .WordLengthID=  0x00000000, 
+		.WordLengthID=  0x00000000, 
     .ParityID    =  0x00000000,
 		.StopBitsID  =  0x00000001
   };
 
-volatile UART_Settings_t UartSetting  = {0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00000000};
+volatile UART_Settings_t UartSlaveSetting  = 
+	{
+     .UartSetFlag =  0x00000000, 
+     .BaudRateID  =  0x00000000, 
+		 .WordLengthID=  0x00000000, 
+     .ParityID    =  0x00000000,
+		 .StopBitsID  =  0x00000000
+	};
 /* ------------------------Locale variables----------------------------*/
 
 /* ------------------------Functions-----------------------------------*/
@@ -63,7 +71,6 @@ uint32_t getUartWordLength(uint32_t wordlength)
 	
   return ReturnValue;
  }
- 
 uint32_t getStopBits(uint32_t stopbits)
 {
  uint32_t ReturnValue = 0x00000000;
@@ -214,12 +221,12 @@ void updateUartSettings( UART_Settings_t *uartsetting )
 	 
 	 
 	 	           /* FOR PARITY */
-			 if(UartSetting.ParityID == 1 || UartSetting.ParityID == 2)
+			 if(UartSlaveSetting.ParityID == 1 || UartSlaveSetting.ParityID == 2)
 			 {
 			  huart1.Init.WordLength = getUartWordLength(1); //9 bits working with   8 bit host (even ,odd)
 			 }
 			 
-			 else if (UartSetting.ParityID == 0)
+			 else if (UartSlaveSetting.ParityID == 0)
 			 {
 			   huart1.Init.WordLength = getUartWordLength(0); //8 bits
 			 }

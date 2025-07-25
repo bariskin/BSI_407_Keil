@@ -29,6 +29,7 @@
 #include "mb_m.h"
 #include "ModBusAddrConverter.h"
 #include "bsp.h"
+#include "HoldingRegisterSlaveHandler.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -137,8 +138,8 @@ void MX_FREERTOS_Init(void) {
   HoldingHandlerHandle = osThreadCreate(osThread(HoldingHandler), NULL);
 
   /* definition and creation of InputHandler */
-  //osThreadStaticDef(InputHandler, InputHandlerFunction, osPriorityNormal, 0, 256, InputHandlerBuffer, &InputHandlerControlBlock);
-  //InputHandlerHandle = osThreadCreate(osThread(InputHandler), NULL);
+  osThreadStaticDef(InputHandler, InputHandlerFunction, osPriorityNormal, 0, 256, InputHandlerBuffer, &InputHandlerControlBlock);
+  InputHandlerHandle = osThreadCreate(osThread(InputHandler), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -160,7 +161,7 @@ void SlaveModbusTaskFunction(void const * argument)
   for(;;)
   {
 		eMBPoll();
-    osDelay(3);
+    osDelay(2);
 		taskYIELD();
   }
   /* USER CODE END SlaveModbusTaskFunction */
@@ -185,7 +186,7 @@ void MasterModbusTaskFunction(void const * argument)
 	   
 		     eMBMasterPoll();
 			   eMBMasterPoll();
-			  // Освобождаем мьюте
+			  // Освобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }
 		 
@@ -283,23 +284,10 @@ void InputHandlerFunction(void const * argument)
   /* USER CODE BEGIN InputHandlerFunction */
   /* Infinite loop */
   for(;;)
-  {// Пытаемся захватить мьютекс (ждём 10 мс)
-//     osStatus status = osMutexWait(myMutex01Handle, 50);
-//		 if (status == osOK) {
-//		  eMBMasterPoll();	
-//			 eMBMasterReqReadInputRegister( ModBusSlaveDefaultDeviceAddr, 0, 20, 100 );
-//			 eMBMasterPoll();
-//				  // Освобождаем мьютекс
-//       osMutexRelease(myMutex01Handle);
-//		 }
-//		 
-//		 else
-//		 {
-//		 
-//		 
-//		 } 
-			 
-    osDelay(500);
+  {
+		ModBusEventHoldingRegHandler();
+    osDelay(4);
+		taskYIELD()
   }
   /* USER CODE END InputHandlerFunction */
 }

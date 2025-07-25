@@ -54,7 +54,9 @@ extern  uint8_t NumberOffDevices;
 		void setNextDeviceAddr(void);
 		void initSensorStateArray(uint8_t numberdevices);
 		void readCurrentSensorState( uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS]);
-  /**
+  	void setModBusSetting(void);
+		void setModBusAddr(void);
+		/**
   * @}
   */
   
