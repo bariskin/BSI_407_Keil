@@ -3,7 +3,7 @@
 <title>Static Call Graph - [BSI_407\BSI_407.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image BSI_407\BSI_407.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Jul 25 15:37:03 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Jul 25 17:27:50 2025
 <BR><P>
 <H3>Maximum Stack Usage =        304 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1108,7 +1108,7 @@ Global Symbols
 <P><STRONG><a name="[10]"></a>HardFault_Handler</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f4xx_it.o(i.HardFault_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
-<P><STRONG><a name="[80]"></a>HoldingHandlerFunction</STRONG> (Thumb, 232 bytes, Stack size 0 bytes, freertos.o(i.HoldingHandlerFunction))
+<P><STRONG><a name="[80]"></a>HoldingHandlerFunction</STRONG> (Thumb, 236 bytes, Stack size 0 bytes, freertos.o(i.HoldingHandlerFunction))
 <BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = HoldingHandlerFunction &rArr; osMutexRelease &rArr; xQueueGenericSend &rArr; vTaskPlaceOnEventList &rArr; prvAddCurrentTaskToDelayedList &rArr; vListInsert
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextDeviceAddr
@@ -1394,13 +1394,11 @@ Global Symbols
 <LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterRTUInit
 </UL>
 
-<P><STRONG><a name="[12a]"></a>convertModBusAddrHolding_M</STRONG> (Thumb, 166 bytes, Stack size 8 bytes, modbusaddrconverter.o(i.convertModBusAddrHolding_M))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = convertModBusAddrHolding_M
-</UL>
-<BR>[Called By]<UL><LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterRegHoldingCB
+<P><STRONG><a name="[12a]"></a>convertModBusAddrHolding_M</STRONG> (Thumb, 224 bytes, Stack size 0 bytes, modbusaddrconverter.o(i.convertModBusAddrHolding_M))
+<BR><BR>[Called By]<UL><LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterRegHoldingCB
 </UL>
 
-<P><STRONG><a name="[12b]"></a>convertModBusAddrInput_M</STRONG> (Thumb, 48 bytes, Stack size 0 bytes, modbusaddrconverter.o(i.convertModBusAddrInput_M))
+<P><STRONG><a name="[12b]"></a>convertModBusAddrInput_M</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, modbusaddrconverter.o(i.convertModBusAddrInput_M))
 <BR><BR>[Called By]<UL><LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterRegInputCB
 </UL>
 
@@ -1487,7 +1485,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[a]"></a>eMBMasterFuncReadHoldingRegister</STRONG> (Thumb, 116 bytes, Stack size 32 bytes, mbfuncholding_m.o(i.eMBMasterFuncReadHoldingRegister))
-<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = eMBMasterFuncReadHoldingRegister &rArr; eMBMasterRegHoldingCB &rArr; convertModBusAddrHolding_M
+<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = eMBMasterFuncReadHoldingRegister &rArr; eMBMasterRegHoldingCB
 </UL>
 <BR>[Calls]<UL><LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prveMBError2Exception
 <LI><a href="#[10d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xMBMasterRequestIsBroadcast
@@ -1507,7 +1505,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> mb_m.o(.data)
 </UL>
 <P><STRONG><a name="[d]"></a>eMBMasterFuncReadWriteMultipleHoldingRegister</STRONG> (Thumb, 164 bytes, Stack size 40 bytes, mbfuncholding_m.o(i.eMBMasterFuncReadWriteMultipleHoldingRegister))
-<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = eMBMasterFuncReadWriteMultipleHoldingRegister &rArr; eMBMasterRegHoldingCB &rArr; convertModBusAddrHolding_M
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = eMBMasterFuncReadWriteMultipleHoldingRegister &rArr; eMBMasterRegHoldingCB
 </UL>
 <BR>[Calls]<UL><LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prveMBError2Exception
 <LI><a href="#[10d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xMBMasterRequestIsBroadcast
@@ -1517,7 +1515,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> mb_m.o(.data)
 </UL>
 <P><STRONG><a name="[c]"></a>eMBMasterFuncWriteHoldingRegister</STRONG> (Thumb, 66 bytes, Stack size 24 bytes, mbfuncholding_m.o(i.eMBMasterFuncWriteHoldingRegister))
-<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = eMBMasterFuncWriteHoldingRegister &rArr; eMBMasterRegHoldingCB &rArr; convertModBusAddrHolding_M
+<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = eMBMasterFuncWriteHoldingRegister &rArr; eMBMasterRegHoldingCB
 </UL>
 <BR>[Calls]<UL><LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prveMBError2Exception
 <LI><a href="#[10f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterRegHoldingCB
@@ -1525,7 +1523,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> mb_m.o(.data)
 </UL>
 <P><STRONG><a name="[b]"></a>eMBMasterFuncWriteMultipleHoldingRegister</STRONG> (Thumb, 114 bytes, Stack size 40 bytes, mbfuncholding_m.o(i.eMBMasterFuncWriteMultipleHoldingRegister))
-<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = eMBMasterFuncWriteMultipleHoldingRegister &rArr; eMBMasterRegHoldingCB &rArr; convertModBusAddrHolding_M
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = eMBMasterFuncWriteMultipleHoldingRegister &rArr; eMBMasterRegHoldingCB
 </UL>
 <BR>[Calls]<UL><LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prveMBError2Exception
 <LI><a href="#[10d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xMBMasterRequestIsBroadcast
@@ -1620,8 +1618,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> mb_m.o(i.eMBMasterInit)
 </UL>
-<P><STRONG><a name="[10f]"></a>eMBMasterRegHoldingCB</STRONG> (Thumb, 184 bytes, Stack size 48 bytes, user_mb_app_m.o(i.eMBMasterRegHoldingCB))
-<BR><BR>[Stack]<UL><LI>Max Depth = 56<LI>Call Chain = eMBMasterRegHoldingCB &rArr; convertModBusAddrHolding_M
+<P><STRONG><a name="[10f]"></a>eMBMasterRegHoldingCB</STRONG> (Thumb, 186 bytes, Stack size 48 bytes, user_mb_app_m.o(i.eMBMasterRegHoldingCB))
+<BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = eMBMasterRegHoldingCB
 </UL>
 <BR>[Calls]<UL><LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;convertModBusAddrHolding_M
 <LI><a href="#[116]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ucMBMasterGetDestAddress
@@ -1632,7 +1630,7 @@ Global Symbols
 <LI><a href="#[a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterFuncReadHoldingRegister
 </UL>
 
-<P><STRONG><a name="[110]"></a>eMBMasterRegInputCB</STRONG> (Thumb, 132 bytes, Stack size 48 bytes, user_mb_app_m.o(i.eMBMasterRegInputCB))
+<P><STRONG><a name="[110]"></a>eMBMasterRegInputCB</STRONG> (Thumb, 128 bytes, Stack size 48 bytes, user_mb_app_m.o(i.eMBMasterRegInputCB))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = eMBMasterRegInputCB
 </UL>
 <BR>[Calls]<UL><LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;convertModBusAddrInput_M
@@ -1920,7 +1918,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[15a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
 </UL>
 
-<P><STRONG><a name="[e1]"></a>readCurrentSensorState</STRONG> (Thumb, 154 bytes, Stack size 12 bytes, bsp.o(i.readCurrentSensorState))
+<P><STRONG><a name="[e1]"></a>readCurrentSensorState</STRONG> (Thumb, 130 bytes, Stack size 12 bytes, bsp.o(i.readCurrentSensorState))
 <BR><BR>[Stack]<UL><LI>Max Depth = 12<LI>Call Chain = readCurrentSensorState
 </UL>
 <BR>[Called By]<UL><LI><a href="#[80]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction

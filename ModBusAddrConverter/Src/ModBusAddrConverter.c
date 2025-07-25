@@ -32,81 +32,125 @@ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress)
     
     break;
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/  
-  case DEVICE_MODEL_CODE + 1:
+  case DEVICE_MODEL_CODE_2:
     
-    MBReg = DEVICE_MODEL_CODE_INTERN + 1; 
+    MBReg = DEVICE_MODEL_CODE_INTERN_2; 
     
     break;   
     /* ********************* */   
-  case  DEVICE_ID:
+  case  SENSOR_SCALE_MAX_HIGH:
   
-     MBReg = DEVICE_ID_INTERN;  
+     MBReg = SENSOR_SCALE_MAX_HIGH_INTERN;  
     break;
     /* ********************* */   
-  case  DEVICE_ID + 1:
+  case  SENSOR_SCALE_MAX_LOW:
 		
-     MBReg = DEVICE_ID_INTERN + 1;  
+     MBReg = SENSOR_SCALE_MAX_LOW_INTERN;  
     break;    
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
-  case DEVICE_ID + 2:
+  case SENSOR_SCALE_DIMENSTION:
     
-    MBReg = DEVICE_ID_INTERN + 3;  
+    MBReg = SENSOR_SCALE_DIMENSTION_INTERN;  
     break;
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
   
-	case  VERSION_ID:
+	case  SENSOR_THRESHOLD_WARNIGN_HIGN:
   
-     MBReg = VERSION_ID_INTERN;  
+     MBReg = SENSOR_THRESHOLD_WARNIGN_HIGN_INTERN;  
     break;
     /* ********************* */   
-  case  VERSION_ID + 1:
+  case  SENSOR_THRESHOLD_WARNIGN_LOW:
 		
-     MBReg = VERSION_ID_INTERN + 1;  
+     MBReg = SENSOR_THRESHOLD_WARNIGN_LOW_INTERN ;  
     break;    
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
-  case VERSION_ID + 2:
+  case SENSOR_THRESHOLD_ALARM_HIGH :
     
-    MBReg = VERSION_ID_INTERN + 3;  
+    MBReg = SENSOR_THRESHOLD_ALARM_HIGH_INTERN ;  
     break;
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
-   /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
+         
+	case  SENSOR_THRESHOLD_ALARM_LOW:
   
-	case  CALIBRATION_ZERO_POINT:
-  
-     MBReg = CALIBRATION_ZERO_POINT_INTERN;  
+     MBReg = SENSOR_THRESHOLD_ALARM_LOW_INTERN;  
     break;
     /* ********************* */   
-  case  CALIBRATION_ZERO_POINT + 1:
+  case  SENSOR_SUBSTANCE_CODE_1 :
 		
-     MBReg = CALIBRATION_ZERO_POINT_INTERN + 1;  
+     MBReg = SENSOR_SUBSTANCE_CODE_1_INTERN ;  
+    break;    
+    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
+     
+ case  SENSOR_SUBSTANCE_CODE_2:
+  
+     MBReg = SENSOR_SUBSTANCE_CODE_2_INTERN;  
+    break;
+    /* ********************* */   
+  case  SENSOR_SUBSTANCE_CODE_3 :
+		
+     MBReg = SENSOR_SUBSTANCE_CODE_3_INTERN ;  
     break;    
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
 
-    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
- case  SENSOR_SCALE_MIN_HIGH:
+	 case  SENSOR_SUBSTANCE_CODE_4:
   
-     MBReg = SENSOR_SCALE_MIN_HIGH_INTERN;  
+     MBReg = SENSOR_SUBSTANCE_CODE_4_INTERN;  
     break;
     /* ********************* */   
-  case  SENSOR_SCALE_MIN_HIGH + 1:
+  case  SENSOR_SUBSTANCE_CODE_5:
 		
-     MBReg = SENSOR_SCALE_MIN_HIGH_INTERN + 1;  
+     MBReg = SENSOR_SUBSTANCE_CODE_5_INTERN;  
     break;    
     /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
-
-	 case  SENSOR_SCALE_MIN_HIGH + 2:
-  
-     MBReg = SENSOR_SCALE_MIN_HIGH_INTERN + 2;  
-    break;
-    /* ********************* */   
-  case  SENSOR_SCALE_MIN_HIGH + 3:
+  case  SENSOR_SUBSTANCE_CODE_6:
 		
-     MBReg = SENSOR_SCALE_MIN_HIGH_INTERN + 3;  
-    break;    
-    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
-  case  SENSOR_SCALE_MIN_HIGH + 4:
+     MBReg = SENSOR_SUBSTANCE_CODE_6_INTERN;  
+    break; 
+	    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
+  case  SENSOR_SUBSTANCE_CODE_7:
 		
-     MBReg = SENSOR_SCALE_MIN_HIGH_INTERN + 4;  
+     MBReg = SENSOR_SUBSTANCE_CODE_7_INTERN ;  
+    break; 
+		    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
+  case  SENSOR_SUBSTANCE_CODE_8:
+		
+     MBReg = SENSOR_SUBSTANCE_CODE_8_INTERN ;  
+    break; 
+		    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
+  case  SENSOR_SUBSTANCE_CODE_9:
+		
+     MBReg = SENSOR_SUBSTANCE_CODE_9_INTERN;  
+    break; 
+		    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
+  case  SENSOR_SUBSTANCE_CODE_10:
+		
+     MBReg = SENSOR_SUBSTANCE_CODE_10_INTERN ;  
+    break; 
+		    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
+  case  SENSOR_SUBSTANCE_CODE_11:
+		
+     MBReg = SENSOR_SUBSTANCE_CODE_11_INTERN;  
+    break; 
+		    /* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/      
+  case  SENSOR_SUBSTANCE_CODE_12:
+		
+     MBReg = SENSOR_SUBSTANCE_CODE_12_INTERN;  
+    break; 
+	case  SENSOR_SUBSTANCE_CODE_13:
+		
+     MBReg = SENSOR_SUBSTANCE_CODE_13_INTERN;  
+    break; 
+	case  SENSOR_SUBSTANCE_CODE_14:
+		
+     MBReg = SENSOR_SUBSTANCE_CODE_14_INTERN;  
+    break; 
+	case  SENSOR_SUBSTANCE_CODE_15:
+		
+     MBReg = SENSOR_SUBSTANCE_CODE_15_INTERN;  
+    break; 
+	case  SENSOR_SUBSTANCE_CODE_16:
+		
+     MBReg = SENSOR_SUBSTANCE_CODE_16_INTERN;  
     break; 
 
 	} 
@@ -122,25 +166,19 @@ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress)
 	 
  switch(MBAddress)
   {
-	 case DEVICE_STATUS:
-    
-    MBReg = DEVICE_STATUS_INTERN; 
-    
-    break;
-		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
- case SENSOR_PRIMARY_VAUE_HIGH:
+	 case SENSOR_PRIMARY_VALUE_HIGH:
     
     MBReg = SENSOR_PRIMARY_VAUE_HIGH_INTERN; 
     
     break;
-		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
- case SENSOR_PRIMARY_VAUE_LOW:
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ case SENSOR_PRIMARY_VALUE_LOW:
     
     MBReg = SENSOR_PRIMARY_VAUE_LOW_INTERN; 
     
     break;
-		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/  
-		 case SENSOR_PRIMARY_STATUS:
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
+ case SENSOR_PRIMARY_STATUS:
     
     MBReg = SENSOR_PRIMARY_STATUS_INTERN; 
     

@@ -75,12 +75,12 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     sensor->DeviceStatus = 0x0000;
     
     // Read sensor data
-    sensor->DeviceStatus     = RegInputBuff[slave_idx][DEVICE_STATUS_INTERN - 1];
+    sensor->DeviceStatus    = RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN - 1];
     sensor->Concentration_H = RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_HIGH_INTERN - 1];
     sensor->Concentration_L = RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_LOW_INTERN - 1];
     
     // Clear the input buffer
-    RegInputBuff[slave_idx][DEVICE_STATUS_INTERN - 1]        = 0x0000;
+    RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN - 1]        = 0x0000;
     RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_HIGH_INTERN - 1] = 0x0000;
     RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_LOW_INTERN - 1]  = 0x0000;
     
