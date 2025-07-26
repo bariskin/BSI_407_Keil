@@ -30,6 +30,7 @@
 #include "ModBusAddrConverter.h"
 #include "bsp.h"
 #include "HoldingRegisterSlaveHandler.h"
+#include "stdbool.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,6 +41,7 @@ uint8_t SelectaFlag = 0;
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 extern USHORT   usMRegInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS];
+extern SensorState_t   SensorStateArray[NUMBER_SLAVE_DEVICES];
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -50,6 +52,7 @@ extern USHORT   usMRegInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS];
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
 extern uint8_t ModBusSlaveDefaultDeviceAddr;
+extern uint8_t ModBusSlaveCurrentDeviceAddr;
 /* USER CODE END Variables */
 osThreadId SlaveModbusTaskHandle;
 uint32_t defaultTaskBuffer[ 256 ];
@@ -126,7 +129,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of SlaveModbusTask */
-  osThreadStaticDef(SlaveModbusTask, SlaveModbusTaskFunction, osPriorityNormal, 0, 256, defaultTaskBuffer, &defaultTaskControlBlock);
+  osThreadStaticDef(SlaveModbusTask, SlaveModbusTaskFunction, osPriorityBelowNormal, 0, 256, defaultTaskBuffer, &defaultTaskControlBlock);
   SlaveModbusTaskHandle = osThreadCreate(osThread(SlaveModbusTask), NULL);
 
   /* definition and creation of MasterModbusTas */
@@ -138,7 +141,7 @@ void MX_FREERTOS_Init(void) {
   HoldingHandlerHandle = osThreadCreate(osThread(HoldingHandler), NULL);
 
   /* definition and creation of InputHandler */
-  osThreadStaticDef(InputHandler, InputHandlerFunction, osPriorityNormal, 0, 256, InputHandlerBuffer, &InputHandlerControlBlock);
+  osThreadStaticDef(InputHandler, InputHandlerFunction, osPriorityBelowNormal, 0, 256, InputHandlerBuffer, &InputHandlerControlBlock);
   InputHandlerHandle = osThreadCreate(osThread(InputHandler), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -213,49 +216,78 @@ void HoldingHandlerFunction(void const * argument)
   /* USER CODE BEGIN HoldingHandlerFunction */
 	
 	static uint8_t SelectRunFlag = 0;
+	static uint8_t HoldingPollsDone = 0;  // —чЄтчик выполненных опросов Holding-регистров
   /* Infinite loop */
   for(;;)
   {	// ѕытаемс€ захватить мьютекс (ждЄм 50 мс)
      osStatus status = osMutexWait(myMutex01Handle, 50);
 		 if (status == osOK) {
-			 
+			  
+			   if(HoldingPollsDone  < 3) // опрашиваем первые три раза все регистры 
+				 {	 
 			
-			   /* *********************************  Handling HOLDING registers *************************** */
-				 if(SelectRunFlag == 0)
-				 {   
-					eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, (DEVICE_MODEL_CODE - 1),2, 200 );
-					SelectRunFlag = 1;
-				 }
-				 else if(SelectRunFlag == 1)
-				 { 	 
-					eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, SENSOR_SCALE_MAX_HIGH - 1 ,3, 200 );
-					SelectRunFlag = 2;
-				 }				 
-				else if (SelectRunFlag == 2)
-					{
-					 eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 4, 200 );
-					 SelectRunFlag = 3;
-					}
-				else if (SelectRunFlag == 3)
-					{
-					 eMBMasterReqReadHoldingRegister( ModBusSlaveDefaultDeviceAddr, SENSOR_SUBSTANCE_CODE_1 - 1, 16, 200 );
-					 SelectRunFlag = 4;
-					} 	
-					
-			   /* ********************************* Handling INPUT registers *************************** */
-				else if (SelectRunFlag == 4)
-					{
-					 eMBMasterReqReadInputRegister( ModBusSlaveDefaultDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 500 );
-					 SelectRunFlag = 5;
-					} 	
-				else if (SelectRunFlag == 5)
+			     /* *********************************  Handling HOLDING registers *************************** */
+				    if(SelectRunFlag == 0)
+				     {   
+					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, (DEVICE_MODEL_CODE - 1),2, 200 );
+					    SelectRunFlag = 1;
+				     }
+				    else if(SelectRunFlag == 1)
+				     { 	 
+					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SCALE_MAX_HIGH - 1 ,3, 200 );
+					    SelectRunFlag = 2;
+				     }				 
+				    else if (SelectRunFlag == 2)
+					   {
+					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 4, 200 );
+					    SelectRunFlag = 3;
+					   }
+				    else if (SelectRunFlag == 3)
+					    {
+					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SUBSTANCE_CODE_1 - 1, 16, 200 );
+					     SelectRunFlag = 4;	
+					    } 	 
+			      /* ********************************* Handling INPUT registers *************************** */
+				     else if (SelectRunFlag == 4)
+					    {
+					     eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
+					     SelectRunFlag = 5;
+					    } 	
+				    /* ********************************* set next slave addr *************************** */	
+				     else if (SelectRunFlag == 5)
+				      {
+					     readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
+				       setNextDeviceAddr(&ModBusSlaveCurrentDeviceAddr);	       // set next device addr
+               SelectRunFlag = 0;
+					 
+					     HoldingPollsDone++;
+					 
+					       if(HoldingPollsDone == 3)
+					        {
+						       SelectRunFlag = 4;	
+						      }
+				       }					
+			   }		  
+			 else 
 				 {
-					 readCurrentSensorState(ModBusSlaveDefaultDeviceAddr,usMRegInBuf);
-					  
-				   setNextDeviceAddr();	       // set next device addr
-           SelectRunFlag = 0;
-				 }					
-			
+			        /* ********************************* Handling INPUT registers *************************** */
+				       if (SelectRunFlag == 4)
+				  	    {
+					       eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 500 );
+					       SelectRunFlag = 5;
+					      } 		
+				      /* ********************************* set next slave addr *************************** */	
+				       else if (SelectRunFlag == 5)
+				        {
+						     /* отправл€ем запрос только если девайс ответил */
+						     if(SensorStateArray[ModBusSlaveCurrentDeviceAddr - 1].ErrorState == false)
+						      {		 
+					         readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
+					        }
+				          setNextDeviceAddr(&ModBusSlaveCurrentDeviceAddr);	       // set next device addr
+                 SelectRunFlag = 4;
+				   }	
+			   }
 			//ќсвобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }
@@ -266,7 +298,7 @@ void HoldingHandlerFunction(void const * argument)
 		 
 		 } 
 			 
-    osDelay(100);
+    osDelay(250);
 		taskYIELD();
   }
   /* USER CODE END HoldingHandlerFunction */

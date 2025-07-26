@@ -37,7 +37,6 @@ extern "C" {
   typedef struct
 	  {
 		  uint16_t DeviceStatus;
-			uint16_t AlarmStatus;
 			uint16_t Concentration_H;
 			uint16_t Concentration_L;
 		  uint16_t NotResponsCounter;
@@ -52,7 +51,7 @@ extern  uint8_t NumberSlaveDevices;
 	
 		uint8_t getNumberDevices(void);
     void setNumberDevices(uint8_t *numberDevices, uint8_t number);
-		void setNextDeviceAddr(void);
+		void setNextDeviceAddr(uint8_t *currentAddr);
 		void initSensorStateArray(uint8_t numberdevices);
 		void readCurrentSensorState( uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS]);
   	void setModBusSlaveSetting(void);

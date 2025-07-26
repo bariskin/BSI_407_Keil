@@ -48,7 +48,6 @@ void initSensorStateArray(uint8_t numberdevices)
 		for(int i = 0; i < numberdevices; i++)
 		{
      SensorStateArray[i].DeviceStatus = 0x0000;
-		 SensorStateArray[i].AlarmStatus  = 0x0000;
 		 SensorStateArray[i].Concentration_H = 0x0000;
 		 SensorStateArray[i].Concentration_L = 0x0000;
 		 SensorStateArray[i].NotResponsCounter = 0x0000;
@@ -111,20 +110,20 @@ void setNumberDevices(uint8_t *numberDevices, uint8_t number)
   *numberDevices = number;
  }
  
-void setNextDeviceAddr(void)
+void setNextDeviceAddr(uint8_t *currentAddr)
  { 
-	 if(ModBusSlaveDefaultDeviceAddr < NumberSlaveDevices)
+	 if(*currentAddr < NumberSlaveDevices)
 	 {
-	   ModBusSlaveDefaultDeviceAddr++;
+	   (*currentAddr)++;
 	 }
 	 else 
 	 {
-	   ModBusSlaveDefaultDeviceAddr = 1;
+	   *currentAddr = 1;
 	 
 	 }
  		 eMBMasterDisable();
 	   osDelay(5);
-		 vMBMasterSetDestAddress(ModBusSlaveDefaultDeviceAddr);
+		 vMBMasterSetDestAddress(*currentAddr);
 		 osDelay(5);
 	   eMBMasterEnable();
 	   osDelay(5);
