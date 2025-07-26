@@ -152,10 +152,8 @@ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress)
 		
      MBReg = SENSOR_SUBSTANCE_CODE_16_INTERN;  
     break; 
-
 	} 
-  return MBReg; 
-  
+  return MBReg;  
 }
 
 
@@ -185,7 +183,6 @@ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress)
     break;
 		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
 	}
- 
    return MBReg;
  }
 
@@ -206,4 +203,3 @@ uint16_t convertModBusAddrInput_S(uint16_t MBAddress)
    uint16_t MBReg = 0x0000;
 	return MBReg;
  } 
-	 

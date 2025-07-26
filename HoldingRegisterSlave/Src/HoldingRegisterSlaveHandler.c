@@ -16,7 +16,7 @@
 #include "bsp.h"
 /* ------------------------External variables -------------------------*/
 
-extern uint16_t holdingRegsPart1[MAX_MODBUS_REGS_PART];  // Адреса 1-120
+extern uint16_t holdingRegsPart1[MAX_MODBUS_SLAVE_REGS_PART];  // Адреса 1-120
 extern volatile UART_Settings_t UartSlaveSetting; 
 extern volatile ModBusAddr_t  ModBusAddr; 
 extern volatile ModBusAddr_t  ModBusAddrDefault;
@@ -30,7 +30,7 @@ volatile uint32_t  MB_AddresseValue = 0x00000000;
 /* ------------------------Locale variables----------------------------*/
 
 /* ------------------------Functions-----------------------------------*/
-	void HoldingRegisterFromModbusStack(uint16_t MBregIdx, uint16_t RegValue)
+	void HoldingRegisterFromModbusSlaveStack(uint16_t MBregIdx, uint16_t RegValue)
 	{
 		switch(MBregIdx)
 		{ 
@@ -97,7 +97,7 @@ volatile uint32_t  MB_AddresseValue = 0x00000000;
 		
 	}
 	
- uint16_t WriteParamToModbusStack(uint16_t MBregIdx)
+ uint16_t WriteParamToModbusSlaveStack(uint16_t MBregIdx)
   {
 		uint16_t OutputValue = 0x0000;
 		
@@ -133,7 +133,7 @@ volatile uint32_t  MB_AddresseValue = 0x00000000;
 	}
  
 	
-  void ModBusEventHoldingRegHandler(void)
+  void ModBusSlaveEventHoldingRegHandler(void)
 	 {
 		 	 uint32_t ulNotifiedValue = 0 ;
 		

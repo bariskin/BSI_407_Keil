@@ -1,6 +1,6 @@
 #include "user_mb_app.h"
 #include "HoldingRegisterSlaveHandler.h"
-#include  "stdbool.h"
+//#include  "stdbool.h"
 
 #if (MB_SLAVE_ASCII_ENABLED > 0 || MB_SLAVE_RTU_ENABLED > 0 || MB_SLAVE_TCP_ENABLED > 0)
 
@@ -34,13 +34,13 @@ USHORT   usSRegInBuf[S_REG_INPUT_NREGS]               ;
 #endif
 
 //Slave mode:HoldingRegister variables
-#if S_REG_HOLDING_NREGS > 0
+#if TOTAL_HOLDING_SLAVE_REGS > 0
 //USHORT   usSRegHoldStart                              = S_REG_HOLDING_START;
 //USHORT   usSRegHoldBuf[S_REG_HOLDING_NREGS]           ;
 
  // Два массива для хранения регистров
-uint16_t holdingRegsPart1[MAX_MODBUS_REGS_PART];  // Адреса 1-120
-uint16_t holdingRegsPart2[TOTAL_HOLDING_REGS - MAX_MODBUS_REGS_PART]; // Адреса 160 - 120
+uint16_t holdingRegsPart1[MAX_MODBUS_SLAVE_REGS_PART];  // Адреса 1-100
+uint16_t holdingRegsPart2[TOTAL_HOLDING_SLAVE_REGS - MAX_MODBUS_SLAVE_REGS_PART]; // Адреса 140 - 100
 
 #endif
 /*------------------------Slave user code----------------------*/
@@ -110,17 +110,15 @@ eMBErrorCode eMBRegInputCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNReg
  */
 eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode)
 {
-#if S_REG_HOLDING_NREGS > 0
+#if TOTAL_HOLDING_SLAVE_REGS > 0
 	
     eMBErrorCode    eStatus = MB_ENOERR;
  
-	  uint16_t MBValue = 0x0000;
-	
     /* it already plus one in modbus function method. */
     usAddress--;
 	
 	  // Проверка границ запрашиваемых регистров
-    if ((usAddress + usNRegs) > TOTAL_HOLDING_REGS) {
+    if ((usAddress + usNRegs) > TOTAL_HOLDING_SLAVE_REGS) {
         return MB_ENOREG;
     }
         switch (eMode)
@@ -132,10 +130,10 @@ eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNR
                 USHORT currentAddr = usAddress + i;
                 
                 // Выбираем нужный массив в зависимости от адреса
-                if (currentAddr < MAX_MODBUS_REGS_PART) {
+                if (currentAddr < MAX_MODBUS_SLAVE_REGS_PART) {
                     regValue = holdingRegsPart1[currentAddr];
                 } else {
-                    regValue = holdingRegsPart2[currentAddr - MAX_MODBUS_REGS_PART];
+                    regValue = holdingRegsPart2[currentAddr - MAX_MODBUS_SLAVE_REGS_PART];
                 }
                 
                 // Записываем в буфер в формате big-endian
@@ -152,16 +150,15 @@ eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNR
                 regValue |= *pucRegBuffer++;
                 
                 // Выбираем нужный массив в зависимости от адреса
-                if (currentAddr < MAX_MODBUS_REGS_PART) {
+                if (currentAddr < MAX_MODBUS_SLAVE_REGS_PART) {
+									
                     holdingRegsPart1[currentAddr] = regValue;
 									
-									  HoldingRegisterFromModbusStack(currentAddr, holdingRegsPart1[currentAddr]); // для выполения внутренней функциональности 
+									  HoldingRegisterFromModbusSlaveStack(currentAddr, holdingRegsPart1[currentAddr]); // для выполения внутренней функциональности 
 									
                 } else {
-                    holdingRegsPart2[currentAddr - MAX_MODBUS_REGS_PART] = regValue;
-                }
-								
-								
+                    holdingRegsPart2[currentAddr - MAX_MODBUS_SLAVE_REGS_PART] = regValue;
+                }			
             }
             break;
         }

@@ -285,7 +285,7 @@ void InputHandlerFunction(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-		ModBusEventHoldingRegHandler();
+		ModBusSlaveEventHoldingRegHandler();
     osDelay(4);
 		taskYIELD()
   }

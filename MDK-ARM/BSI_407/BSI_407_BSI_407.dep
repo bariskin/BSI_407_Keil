@@ -1,7 +1,7 @@
 Dependencies for Project 'BSI_407', Target 'BSI_407': (DO NOT MODIFY !)
 CompilerVersion: 5060960::V5.06 update 7 (build 960)::.\ARMCC
 F (startup_stm32f407xx.s)(0x6878D957)(--cpu Cortex-M4.fp.sp -g --apcs=interwork -I ../Core/Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include--pd "__UVISION_VERSION SETA 535" --pd "_RTE_ SETA 1" --pd "STM32F407xx SETA 1" --pd "_RTE_ SETA 1"--list startup_stm32f407xx.lst --xref -o bsi_407\startup_stm32f407xx.o --depend bsi_407\startup_stm32f407xx.d)
-F (../Core/Src/main.c)(0x68837825)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\main.o --omf_browse bsi_407\main.crf --depend bsi_407\main.d)
+F (../Core/Src/main.c)(0x68848174)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\main.o --omf_browse bsi_407\main.crf --depend bsi_407\main.d)
 I (../Core/Inc/main.h)(0x687F922C)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
@@ -65,19 +65,20 @@ I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 I (../FreeModbusMaster/include/mb_m/mb_m.h)(0x6072611F)
-I (../FreeModbusSlave/app/user_mb_app.h)(0x6878FF24)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/app/user_mb_app.h)(0x68847E6E)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 I (../FreeModbusSlave/include/mbutils.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x602569CC)
-I (..\bsp\Inc\bsp.h)(0x68823DCA)
+I (..\bsp\Inc\bsp.h)(0x688480AA)
 I (..\FreeModbusMaster\user_mb_app\user_mb_app_m.h)(0x6883930C)
-I (..\ModBusAddrConverter\Inc\ModBusAddrConverter.h)(0x688392CB)
-I (../HoldingRegisterSlave/Inc/HoldingRegisterSlaveHandler.h)(0x68833A86)
+I (..\ModBusAddrConverter\Inc\ModBusAddrConverter.h)(0x68847F6F)
+I (../HoldingRegisterSlave/Inc/HoldingRegisterSlaveHandler.h)(0x68847AB2)
 F (../Core/Src/gpio.c)(0x68776253)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\gpio.o --omf_browse bsi_407\gpio.crf --depend bsi_407\gpio.d)
 I (../Core/Inc/gpio.h)(0x6842B147)
 I (../Core/Inc/main.h)(0x687F922C)
@@ -117,7 +118,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
-F (../Core/Src/freertos.c)(0x68839464)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\freertos.o --omf_browse bsi_407\freertos.crf --depend bsi_407\freertos.d)
+F (../Core/Src/freertos.c)(0x68847A71)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\freertos.o --omf_browse bsi_407\freertos.crf --depend bsi_407\freertos.d)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x6649BA27)
 I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
@@ -173,17 +174,18 @@ I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 I (../FreeModbusMaster/include/mb_m/mb_m.h)(0x6072611F)
-I (..\ModBusAddrConverter\Inc\ModBusAddrConverter.h)(0x688392CB)
-I (..\bsp\Inc\bsp.h)(0x68823DCA)
+I (..\ModBusAddrConverter\Inc\ModBusAddrConverter.h)(0x68847F6F)
+I (..\bsp\Inc\bsp.h)(0x688480AA)
 I (..\FreeModbusMaster\user_mb_app\user_mb_app_m.h)(0x6883930C)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 I (../FreeModbusSlave/include/mbutils.h)(0x683DA8FE)
-I (../HoldingRegisterSlave/Inc/HoldingRegisterSlaveHandler.h)(0x68833A86)
+I (../HoldingRegisterSlave/Inc/HoldingRegisterSlaveHandler.h)(0x68847AB2)
 F (../Core/Src/i2c.c)(0x6842B148)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\i2c.o --omf_browse bsi_407\i2c.crf --depend bsi_407\i2c.d)
 I (../Core/Inc/i2c.h)(0x6842B148)
 I (../Core/Inc/main.h)(0x687F922C)
@@ -1351,9 +1353,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -1389,22 +1390,23 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 I (../FreeModbusSlave/include/mbfunc.h)(0x683DA8FE)
 I (../FreeModbusSlave/rtu/mbrtu.h)(0x68776A3F)
-F (..\FreeModbusSlave\app\user_mb_app.c)(0x688220CA)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\user_mb_app.o --omf_browse bsi_407\user_mb_app.crf --depend bsi_407\user_mb_app.d)
-I (..\FreeModbusSlave\app\user_mb_app.h)(0x6878FF24)
+F (..\FreeModbusSlave\app\user_mb_app.c)(0x68847ED9)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\user_mb_app.o --omf_browse bsi_407\user_mb_app.crf --depend bsi_407\user_mb_app.d)
+I (..\FreeModbusSlave\app\user_mb_app.h)(0x68847E6E)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -1440,13 +1442,14 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 I (../FreeModbusSlave/include/mbutils.h)(0x683DA8FE)
-I (../HoldingRegisterSlave/Inc/HoldingRegisterSlaveHandler.h)(0x68833A86)
-I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x602569CC)
-F (..\FreeModbusSlave\app\user_mb_app.h)(0x6878FF24)()
+I (../HoldingRegisterSlave/Inc/HoldingRegisterSlaveHandler.h)(0x68847AB2)
+F (..\FreeModbusSlave\app\user_mb_app.h)(0x68847E6E)()
 F (..\FreeModbusSlave\functions\mbfunccoils.c)(0x683DA8FE)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\mbfunccoils.o --omf_browse bsi_407\mbfunccoils.crf --depend bsi_407\mbfunccoils.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x602569C4)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x602569CE)
@@ -1454,9 +1457,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -1492,11 +1494,13 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
-F (..\FreeModbusSlave\functions\mbfuncdiag.c)(0x683DA8FE)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\mbfuncdiag.o --omf_browse bsi_407\mbfuncdiag.crf --depend bsi_407\mbfuncdiag.d)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
+F (..\FreeModbusSlave\functions\mbfuncdiag.c)(0x688480DD)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\mbfuncdiag.o --omf_browse bsi_407\mbfuncdiag.crf --depend bsi_407\mbfuncdiag.d)
 F (..\FreeModbusSlave\functions\mbfuncdisc.c)(0x683DA8FE)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\mbfuncdisc.o --omf_browse bsi_407\mbfuncdisc.crf --depend bsi_407\mbfuncdisc.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x602569C4)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x602569CE)
@@ -1504,9 +1508,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -1542,10 +1545,12 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 F (..\FreeModbusSlave\functions\mbfuncholding.c)(0x683DA8FE)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\mbfuncholding.o --omf_browse bsi_407\mbfuncholding.crf --depend bsi_407\mbfuncholding.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x602569C4)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x602569CE)
@@ -1553,9 +1558,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -1591,10 +1595,12 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 F (..\FreeModbusSlave\functions\mbfuncinput.c)(0x683DA8FE)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\mbfuncinput.o --omf_browse bsi_407\mbfuncinput.crf --depend bsi_407\mbfuncinput.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x602569C4)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x602569CE)
@@ -1602,9 +1608,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -1640,10 +1645,12 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 F (..\FreeModbusSlave\functions\mbfuncother.c)(0x683DA8FE)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\mbfuncother.o --omf_browse bsi_407\mbfuncother.crf --depend bsi_407\mbfuncother.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x602569C4)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x602569CE)
@@ -1651,9 +1658,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -1689,10 +1695,12 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 F (..\FreeModbusSlave\functions\mbutils.c)(0x683DA8FE)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\mbutils.o --omf_browse bsi_407\mbutils.crf --depend bsi_407\mbutils.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x602569C4)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x602569CE)
@@ -1700,9 +1708,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -1738,12 +1745,14 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 F (..\FreeModbusSlave\include\mb.h)(0x683DA8FE)()
-F (..\FreeModbusSlave\include\mbconfig.h)(0x687A4A2E)()
-F (..\FreeModbusSlave\include\mbframe.h)(0x6877611D)()
+F (..\FreeModbusSlave\include\mbconfig.h)(0x688478FD)()
+F (..\FreeModbusSlave\include\mbframe.h)(0x68848085)()
 F (..\FreeModbusSlave\include\mbfunc.h)(0x683DA8FE)()
 F (..\FreeModbusSlave\include\mbproto.h)(0x683DA8FE)()
 F (..\FreeModbusSlave\include\mbutils.h)(0x683DA8FE)()
@@ -1794,9 +1803,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -1832,6 +1840,8 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 F (..\FreeModbusSlave\port\portserial.c)(0x688380F5)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\portserial.o --omf_browse bsi_407\portserial.crf --depend bsi_407\portserial.d)
@@ -1839,9 +1849,8 @@ I (..\FreeModbusSlave\port\port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (..\FreeModbusSlave\port\portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -1877,6 +1886,8 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (..\FreeModbusSlave\port\portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
@@ -1885,9 +1896,8 @@ I (..\FreeModbusSlave\port\port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (..\FreeModbusSlave\port\portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -1923,6 +1933,8 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (..\FreeModbusSlave\port\portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
@@ -1931,9 +1943,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -1969,6 +1980,8 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 F (..\FreeModbusSlave\rtu\mbcrc.h)(0x683DA8FE)()
 F (..\FreeModbusSlave\rtu\mbrtu.c)(0x683DA8FE)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\mbrtu.o --omf_browse bsi_407\mbrtu.crf --depend bsi_407\mbrtu.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x602569C4)
@@ -1977,9 +1990,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2015,11 +2027,13 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 I (..\FreeModbusSlave\rtu\mbrtu.h)(0x68776A3F)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 I (..\FreeModbusSlave\rtu\mbcrc.h)(0x683DA8FE)
 F (..\FreeModbusSlave\rtu\mbrtu.h)(0x68776A3F)()
 F (..\ModbusSetting\Src\ModbusSettings.c)(0x687A2D6B)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\modbussettings.o --omf_browse bsi_407\modbussettings.crf --depend bsi_407\modbussettings.d)
@@ -2067,9 +2081,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2105,11 +2118,13 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 I (../FreeModbusMaster/include/mb_m/mb_m.h)(0x6072611F)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 F (..\FreeModbusMaster\functions\mbfuncdisc_m.c)(0x62471FD3)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\mbfuncdisc_m.o --omf_browse bsi_407\mbfuncdisc_m.crf --depend bsi_407\mbfuncdisc_m.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x602569C4)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x602569CE)
@@ -2117,9 +2132,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2155,11 +2169,13 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 I (../FreeModbusMaster/include/mb_m/mb_m.h)(0x6072611F)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 F (..\FreeModbusMaster\functions\mbfuncholding_m.c)(0x62471FD3)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\mbfuncholding_m.o --omf_browse bsi_407\mbfuncholding_m.crf --depend bsi_407\mbfuncholding_m.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x602569C4)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x602569CE)
@@ -2167,9 +2183,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2205,11 +2220,13 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 I (../FreeModbusMaster/include/mb_m/mb_m.h)(0x6072611F)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 F (..\FreeModbusMaster\functions\mbfuncinput_m.c)(0x62471FD3)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\mbfuncinput_m.o --omf_browse bsi_407\mbfuncinput_m.crf --depend bsi_407\mbfuncinput_m.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x602569C4)
 I (C:\Keil_v5\ARM\ARMCC\include\string.h)(0x602569CE)
@@ -2217,9 +2234,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2255,20 +2271,21 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 I (../FreeModbusMaster/include/mb_m/mb_m.h)(0x6072611F)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 F (..\FreeModbusMaster\port\portevent_m.c)(0x6877679C)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\portevent_m.o --omf_browse bsi_407\portevent_m.crf --depend bsi_407\portevent_m.d)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2304,14 +2321,16 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 I (../FreeModbusMaster/include/mb_m/mb_m.h)(0x6072611F)
 I (..\FreeModbusMaster\port\port.h)(0x62472369)
 F (..\FreeModbusMaster\port\portserial_m.c)(0x687A3381)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\portserial_m.o --omf_browse bsi_407\portserial_m.crf --depend bsi_407\portserial_m.d)
 I (..\FreeModbusMaster\port\port.h)(0x62472369)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (..\FreeModbusMaster\port\mt_port.h)(0x6877679C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2348,6 +2367,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (..\FreeModbusMaster\port\mt_port.h)(0x6877679C)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
@@ -2355,10 +2375,10 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 I (../Core/Inc/main.h)(0x687F922C)
-F (..\FreeModbusMaster\port\porttimer_m.c)(0x6877736D)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\porttimer_m.o --omf_browse bsi_407\porttimer_m.crf --depend bsi_407\porttimer_m.d)
+F (..\FreeModbusMaster\port\porttimer_m.c)(0x68848606)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\porttimer_m.o --omf_browse bsi_407\porttimer_m.crf --depend bsi_407\porttimer_m.d)
 I (..\FreeModbusMaster\port\port.h)(0x62472369)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (..\FreeModbusMaster\port\mt_port.h)(0x6877679C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2395,6 +2415,7 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (..\FreeModbusMaster\port\mt_port.h)(0x6877679C)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
@@ -2409,9 +2430,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2447,12 +2467,14 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 I (../FreeModbusMaster/include/mb_m/mb_m.h)(0x6072611F)
 I (..\FreeModbusMaster\rtu\mbrtu.h)(0x6247225F)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 I (..\FreeModbusMaster\rtu\mbcrc.h)(0x6072611F)
 F (..\FreeModbusMaster\mb_m.c)(0x6878B107)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\mb_m.o --omf_browse bsi_407\mb_m.crf --depend bsi_407\mb_m.d)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x602569C4)
@@ -2461,9 +2483,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2499,11 +2520,13 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 I (../FreeModbusMaster/include/mb_m/mb_m.h)(0x6072611F)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 I (../FreeModbusSlave/include/mbfunc.h)(0x683DA8FE)
 I (../FreeModbusSlave/rtu/mbrtu.h)(0x68776A3F)
 F (..\FreeModbusMaster\user_mb_app\user_mb_app_m.c)(0x687F3434)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\user_mb_app_m.o --omf_browse bsi_407\user_mb_app_m.crf --depend bsi_407\user_mb_app_m.d)
@@ -2513,9 +2536,8 @@ I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2551,14 +2573,16 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 I (../FreeModbusMaster/include/mb_m/mb_m.h)(0x6072611F)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 I (../FreeModbusSlave/include/mbutils.h)(0x683DA8FE)
-I (..\ModBusAddrConverter\Inc\ModBusAddrConverter.h)(0x688392CB)
-F (..\ModBusAddrConverter\Src\ModBusAddrConverter.c)(0x688390D8)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\modbusaddrconverter.o --omf_browse bsi_407\modbusaddrconverter.crf --depend bsi_407\modbusaddrconverter.d)
-I (..\ModBusAddrConverter\Inc\ModBusAddrConverter.h)(0x688392CB)
+I (..\ModBusAddrConverter\Inc\ModBusAddrConverter.h)(0x68847F6F)
+F (..\ModBusAddrConverter\Src\ModBusAddrConverter.c)(0x688485CF)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\modbusaddrconverter.o --omf_browse bsi_407\modbusaddrconverter.crf --depend bsi_407\modbusaddrconverter.d)
+I (..\ModBusAddrConverter\Inc\ModBusAddrConverter.h)(0x68847F6F)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2595,8 +2619,8 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
-F (..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c)(0x688360AC)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\holdingregisterslavehandler.o --omf_browse bsi_407\holdingregisterslavehandler.crf --depend bsi_407\holdingregisterslavehandler.d)
-I (../HoldingRegisterSlave/Inc/HoldingRegisterSlaveHandler.h)(0x68833A86)
+F (..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c)(0x68847C4B)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\holdingregisterslavehandler.o --omf_browse bsi_407\holdingregisterslavehandler.crf --depend bsi_407\holdingregisterslavehandler.d)
+I (../HoldingRegisterSlave/Inc/HoldingRegisterSlaveHandler.h)(0x68847AB2)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2633,17 +2657,18 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
-I (../FreeModbusSlave/app/user_mb_app.h)(0x6878FF24)
+I (../FreeModbusSlave/app/user_mb_app.h)(0x68847E6E)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
 I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 I (../FreeModbusSlave/include/mbutils.h)(0x683DA8FE)
 I (..\UARTSlaveSettings\Inc\UARTSlaveSettings.h)(0x688231CE)
 I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h)(0x6649BA27)
@@ -2661,10 +2686,10 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6649BA27)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/semphr.h)(0x6649BA27)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/event_groups.h)(0x6649BA27)
 I (..\FlashDriver\Inc\FlashDriver.h)(0x68835D02)
-I (..\bsp\Inc\bsp.h)(0x68823DCA)
+I (..\bsp\Inc\bsp.h)(0x688480AA)
 I (..\FreeModbusMaster\user_mb_app\user_mb_app_m.h)(0x6883930C)
 I (../FreeModbusMaster/include/mb_m/mb_m.h)(0x6072611F)
-I (..\ModBusAddrConverter\Inc\ModBusAddrConverter.h)(0x688392CB)
+I (..\ModBusAddrConverter\Inc\ModBusAddrConverter.h)(0x68847F6F)
 F (../Middlewares/Third_Party/FreeRTOS/Source/croutine.c)(0x6649BA27)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\croutine.o --omf_browse bsi_407\croutine.crf --depend bsi_407\croutine.d)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x6649BA27)
 I (C:\Keil_v5\ARM\ARMCC\include\stddef.h)(0x602569CE)
@@ -2809,15 +2834,14 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h)(0x6649BA27)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x6649BA27)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6649BA27)
-F (..\bsp\Src\bsp.c)(0x68838F76)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\bsp.o --omf_browse bsi_407\bsp.crf --depend bsi_407\bsp.d)
+F (..\bsp\Src\bsp.c)(0x688485CF)(--c99 -c --cpu Cortex-M4.fp.sp -g -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../FreeModbusSlave/include -I ../FreeModbusSlave/app -I ../FreeModbusSlave/port -I ../FreeModbusSlave/rtu -I ../ModbusSetting/Inc -I ../HoldingRegisterSlave/Inc -I ../FreeModbusMaster/include/mb_m -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ..\ModBusAddrConverter\Inc -I ..\bsp\Inc -I ..\FreeModbusMaster\user_mb_app -I ..\UARTSlaveSettings\Inc -I ..\FlashDriver\Inc-I.\RTE\_BSI_407-IC:\Users\Alexander\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\Alexander\AppData\Local\Arm\Packs\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="535" -D_RTE_ -DSTM32F407xx -D_RTE_ -DUSE_HAL_DRIVER -DSTM32F407xx-o bsi_407\bsp.o --omf_browse bsi_407\bsp.crf --depend bsi_407\bsp.d)
 I (../FreeModbusSlave/include/mb.h)(0x683DA8FE)
 I (../FreeModbusSlave/port/port.h)(0x683DA8FE)
 I (C:\Keil_v5\ARM\ARMCC\include\assert.h)(0x602569C8)
 I (C:\Keil_v5\ARM\ARMCC\include\inttypes.h)(0x602569CE)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x602569CE)
-I (../FreeModbusSlave/include/mbconfig.h)(0x687A4A2E)
-I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
-I (../Core/Inc/main.h)(0x687F922C)
+I (../FreeModbusSlave/include/mbconfig.h)(0x688478FD)
+I (..\bsp\Inc\numberDevices.h)(0x68848042)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h)(0x6649BA25)
 I (../Core/Inc/stm32f4xx_hal_conf.h)(0x6873AA58)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h)(0x6649BA25)
@@ -2853,18 +2877,20 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_sdmmc.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6649BA25)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6649BA25)
+I (../FreeModbusSlave/port/portcritical.h)(0x683DA8FE)
+I (../Core/Inc/main.h)(0x687F922C)
 I (../FreeModbusSlave/include/mbport.h)(0x68776B6A)
 I (../FreeModbusSlave/include/mbproto.h)(0x683DA8FE)
 I (../FreeModbusMaster/include/mb_m/mb_m.h)(0x6072611F)
-I (..\bsp\Inc\bsp.h)(0x68823DCA)
+I (..\bsp\Inc\bsp.h)(0x688480AA)
 I (..\FreeModbusMaster\user_mb_app\user_mb_app_m.h)(0x6883930C)
-I (../FreeModbusSlave/include/mbframe.h)(0x6877611D)
+I (../FreeModbusSlave/include/mbframe.h)(0x68848085)
 I (../FreeModbusSlave/include/mbutils.h)(0x683DA8FE)
-I (..\ModBusAddrConverter\Inc\ModBusAddrConverter.h)(0x688392CB)
+I (..\ModBusAddrConverter\Inc\ModBusAddrConverter.h)(0x68847F6F)
 I (..\FlashDriver\Inc\FlashDriver.h)(0x68835D02)
 I (..\UARTSlaveSettings\Inc\UARTSlaveSettings.h)(0x688231CE)
-I (../HoldingRegisterSlave/Inc/HoldingRegisterSlaveHandler.h)(0x68833A86)
-I (../FreeModbusSlave/app/user_mb_app.h)(0x6878FF24)
+I (../HoldingRegisterSlave/Inc/HoldingRegisterSlaveHandler.h)(0x68847AB2)
+I (../FreeModbusSlave/app/user_mb_app.h)(0x68847E6E)
 I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h)(0x6649BA27)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h)(0x6649BA27)
 I (../Core/Inc/FreeRTOSConfig.h)(0x68777BBB)

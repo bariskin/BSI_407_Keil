@@ -37,6 +37,7 @@
 #include "stdbool.h"
 #include "bsp.h"
 #include "HoldingRegisterSlaveHandler.h"
+#include "numberDevices.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -118,28 +119,23 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
-	
-	
-	setModBusAddr();
-	setModBusSetting();
-	
+
 	/* *************MODBUS SLAVE init******************** */
 	
-		/* *************Deinit UART****************** */
-		
 	  if (HAL_UART_Init(&huart1) != HAL_OK)  /* restart  UART1 */
         {
            Error_Handler();
         }
 		 
 		    HAL_Delay(10);
-	
-	
+				
+	setModBusSlaveAddr();
+	setModBusSlaveSetting();			
 	
 	eMBErrorCode   eStatus = eMBInit( MB_RTU, MB_AddresseValue, &huart1, MB_BaudRateValue, &htim6 );
 	eMBEnable( );
 
-  /* *************MODBUS MAASTER init****************** */
+  /* *************MODBUS MASTER init****************** */
 
   vMBMasterSetDestAddress(ModBusSlaveDefaultDeviceAddr);
  
@@ -151,9 +147,12 @@ int main(void)
    }
 	 
  /* ************  Sensors initialisation ********** */
-	 setNumberDevices(&NumberOffDevices, 5);// установка количества датчиков
 	 
-	 initSensorStateArray(5);               // инициализация струкутур для информации с датчиков
+	 /* установка количества слайв устройств */ 
+	 setNumberDevices(&NumberSlaveDevices, NUMBER_SLAVE_DEVICES);
+	 
+	 /* инициализация струкутур для храения информации со слайв устройств  */
+	 initSensorStateArray(NUMBER_SLAVE_DEVICES);               
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
@@ -254,7 +253,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
     if (timerCounter == timerPeriod)
     {
-      //prvvTIMERExpiredISR();
 			 ( void )pxMBMasterPortCBTimerExpired();
     }
   }

@@ -25,6 +25,7 @@ extern "C" {
   * @}
   */
  /* ------------------------Defines ----------------------------------*/
+ 
   typedef	struct
   {
     uint32_t ModBuAddrSetFlag;
@@ -43,7 +44,7 @@ extern "C" {
 			_Bool ErrorState;
 		}SensorState_t;
  /* ------------------------External variables -------------------------*/
-extern  uint8_t NumberOffDevices;
+extern  uint8_t NumberSlaveDevices;
 
   /** @addtogroup board_support
   * @{
@@ -54,8 +55,8 @@ extern  uint8_t NumberOffDevices;
 		void setNextDeviceAddr(void);
 		void initSensorStateArray(uint8_t numberdevices);
 		void readCurrentSensorState( uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS]);
-  	void setModBusSetting(void);
-		void setModBusAddr(void);
+  	void setModBusSlaveSetting(void);
+		void setModBusSlaveAddr(void);
 		/**
   * @}
   */

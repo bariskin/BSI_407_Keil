@@ -29,12 +29,8 @@
 #include "mb_m.h"
 #include "stm32f4xx_hal.h"
 
-
-
 /* ----------------------- static functions ---------------------------------*/
-static void prvvTIMERExpiredISR(void);
-
-
+//static void prvvTIMERExpiredISR(void);
 
 /* ----------------------- Variables ----------------------------------------*/
 //extern TIM_HandleTypeDef* modbusTimer;
@@ -42,8 +38,6 @@ static void prvvTIMERExpiredISR(void);
 extern TIM_HandleTypeDef htim10;
 uint16_t timerPeriod = 0;
 volatile uint16_t timerCounter = 0;
-
-
 
 /* ----------------------- Start implementation -----------------------------*/
 
@@ -54,8 +48,6 @@ BOOL xMBMasterPortTimersInit(USHORT usTim1Timerout50us)
   return TRUE;
 }
 
-
-
 /* --------------------------------------------------------------------------*/
 inline void vMBMasterPortTimersT35Enable()
 {
@@ -63,41 +55,27 @@ inline void vMBMasterPortTimersT35Enable()
   timerCounter = 0;
   HAL_TIM_Base_Start_IT(&htim10);
 }
-
-
-
 /* --------------------------------------------------------------------------*/
 void vMBMasterPortTimersConvertDelayEnable()
 {
   vMBMasterSetCurTimerMode(MB_TMODE_CONVERT_DELAY);
 }
-
-
-
 /* --------------------------------------------------------------------------*/
 void vMBMasterPortTimersRespondTimeoutEnable()
 {
   vMBMasterSetCurTimerMode(MB_TMODE_RESPOND_TIMEOUT);
 }
-
-
-
 /* --------------------------------------------------------------------------*/
 inline void vMBMasterPortTimersDisable()
 {
   HAL_TIM_Base_Stop_IT(&htim10);
 }
 
-
-
 /* --------------------------------------------------------------------------*/
-static void prvvTIMERExpiredISR(void)
-{
-    ( void )pxMBMasterPortCBTimerExpired();
-}
-
-
-
+//static void prvvTIMERExpiredISR(void)
+//{
+//    ( void )pxMBMasterPortCBTimerExpired();
+//}
 /* --------------------------------------------------------------------------*/
 //void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 //{
@@ -111,7 +89,5 @@ static void prvvTIMERExpiredISR(void)
 //    }
 //  }
 //}
-
-
 
 /* --------------------------------------------------------------------------*/

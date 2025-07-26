@@ -32,6 +32,7 @@
 #ifndef _MB_CONFIG_H
 #define _MB_CONFIG_H
 
+#include "numberDevices.h"
 #ifdef __cplusplus
 PR_BEGIN_EXTERN_C
 #endif
@@ -119,7 +120,7 @@ PR_BEGIN_EXTERN_C
 #define MB_MASTER_TIMEOUT_MS_RESPOND            (100 )
 /*! \brief The total slaves in Modbus Master system. Default 16.
  * \note : The slave ID must be continuous from 1.*/
-#define MB_MASTER_TOTAL_SLAVE_NUM               (10)
+#define MB_MASTER_TOTAL_SLAVE_NUM               (NUMBER_SLAVE_DEVICES)
 #endif
 
 #endif

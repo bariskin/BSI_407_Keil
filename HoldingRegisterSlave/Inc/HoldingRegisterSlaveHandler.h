@@ -37,9 +37,9 @@ extern "C" {
   /** @addtogroup holding_register_handler
   * @{
   */
- void HoldingRegisterFromModbusStack(uint16_t MBregIdx, uint16_t RegValue);
- uint16_t WriteParamToModbusStack(uint16_t MBregIdx);
- void ModBusEventHoldingRegHandler(void);
+ void HoldingRegisterFromModbusSlaveStack(uint16_t MBregIdx, uint16_t RegValue);
+ uint16_t WriteParamToModbusSlaveStack(uint16_t MBregIdx);
+ void ModBusSlaveEventHoldingRegHandler(void);
 	
 	/**
   * @}

@@ -26,5 +26,4 @@
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  * File: $Id: mbfuncdiag.c,v 1.3 2006/12/07 22:10:34 wolti Exp $
- */
- 
+ */ 

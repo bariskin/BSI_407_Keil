@@ -9,6 +9,7 @@
 #include "mb.h"
 #include "mb_m.h"
 #include "bsp.h"
+#include "numberDevices.h"
 #include "FlashDriver.h"
 #include "UARTSlaveSettings.h"
 #include "HoldingRegisterSlaveHandler.h"
@@ -16,13 +17,13 @@
 #include "cmsis_os.h"
 #include "stdbool.h"
 /* ------------------------External variables -------------------------*/
-extern uint16_t holdingRegsPart1[MAX_MODBUS_REGS_PART];  // Адреса 1-120
+extern uint16_t holdingRegsPart1[MAX_MODBUS_SLAVE_REGS_PART];  // Адреса 1-120
 extern UART_HandleTypeDef huart1;
 extern uint8_t ModBusSlaveDefaultDeviceAddr;
 /* ------------------------Global variables----------------------------*/
-uint8_t NumberOffDevices = 0;
+uint8_t NumberSlaveDevices = 0;
 
-SensorState_t   SensorStateArray[5];
+SensorState_t   SensorStateArray[NUMBER_SLAVE_DEVICES] = {0};
 
 volatile ModBusAddr_t  ModBusAddr = 
 	    {
@@ -38,7 +39,6 @@ volatile ModBusAddr_t  ModBusAddrDefault =  // default modbus addr
 				  .Reserved1         =  0x00000000,
 				  .Reserved2         =  0x00000000
       };	
-
 /* ------------------------Locale variables----------------------------*/
 
 /* ------------------------Functions-----------------------------------*/
@@ -103,7 +103,7 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 
 uint8_t getNumberDevices(void)
  {
-   return NumberOffDevices;
+   return NumberSlaveDevices;
  }
  
 void setNumberDevices(uint8_t *numberDevices, uint8_t number)
@@ -112,10 +112,8 @@ void setNumberDevices(uint8_t *numberDevices, uint8_t number)
  }
  
 void setNextDeviceAddr(void)
- {
-	 eMBErrorCode   eStatus;
-	 
-	 if(ModBusSlaveDefaultDeviceAddr < NumberOffDevices)
+ { 
+	 if(ModBusSlaveDefaultDeviceAddr < NumberSlaveDevices)
 	 {
 	   ModBusSlaveDefaultDeviceAddr++;
 	 }
@@ -132,7 +130,7 @@ void setNextDeviceAddr(void)
 	   osDelay(5);
 	}
  
-	void setModBusSetting(void)
+	void setModBusSlaveSetting(void)
 	{
 		/* 1. reading setting for UART from flash */
 		Flash_Read_Data(FLASH_SETTING_UART, (uint32_t *)&UartSlaveSetting,5);
@@ -218,7 +216,7 @@ void setNextDeviceAddr(void)
 					
 	}
 	
-	void setModBusAddr(void)
+	void setModBusSlaveAddr(void)
 	{
 		
      Flash_Read_Data(FLASH_SLAVE_MODBUS_ID, (uint32_t *)&ModBusAddr,4);
