@@ -27,19 +27,21 @@ extern "C" {
  #define HOLDING_REGISTER_SLAVE_IDX_2   (uint16_t)0x0001	// setting ModBus parity
  #define HOLDING_REGISTER_SLAVE_IDX_3   (uint16_t)0x0002  // setting ModBus Stop Bits
  #define HOLDING_REGISTER_SLAVE_IDX_4   (uint16_t)0x0003  // setting ModBus addr
+ #define HOLDING_REGISTER_SLAVE_IDX_5   (uint16_t)0x0004  // setting the time step for reading the sensor
  
  /* ------------------------External variables -------------------------*/
  extern volatile  uint32_t  MB_BaudRateValue;
  extern volatile  uint32_t  MB_ParityValue;
  extern volatile  uint32_t  MB_StopBitsValue;
  extern volatile  uint32_t  MB_AddresseValue;
-
+ extern volatile  uint16_t  timeStep;
   /** @addtogroup holding_register_handler
   * @{
   */
  void HoldingRegisterFromModbusSlaveStack(uint16_t MBregIdx, uint16_t RegValue);
  uint16_t WriteParamToModbusSlaveStack(uint16_t MBregIdx);
  void ModBusSlaveEventHoldingRegHandler(void);
+ void setTimeStepReadingSensores(void);	
 	
 	/**
   * @}

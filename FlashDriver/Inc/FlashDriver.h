@@ -40,8 +40,10 @@ extern "C" {
 #define FLASH_ADDR_SECTOR_10	0x080C0000  // 128 kB
 #define FLASH_ADDR_SECTOR_11	0x080E0000  // 128 kB
 
-#define FLASH_SLAVE_MODBUS_ID  	           FLASH_ADDR_SECTOR_9   // modbus addresse
-#define FLASH_SETTING_UART     	           FLASH_ADDR_SECTOR_10		// baud_rate, parity, stop bits
+
+#define FLASH_TIME_STEP_READING   FLASH_ADDR_SECTOR_8	 // setting the time step for reading the sensor
+#define FLASH_SLAVE_MODBUS_ID  	  FLASH_ADDR_SECTOR_9  // modbus addresse
+#define FLASH_SETTING_UART     	  FLASH_ADDR_SECTOR_10 // baud_rate, parity, stop bits
 		
 		
  /* ------------------------External variables -------------------------*/

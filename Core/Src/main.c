@@ -130,7 +130,8 @@ int main(void)
 		    HAL_Delay(10);
 				
 	setModBusSlaveAddr();
-	setModBusSlaveSetting();			
+	setModBusSlaveSetting();
+  setTimeStepReadingSensores();					
 	
 	eMBErrorCode   eStatus = eMBInit( MB_RTU, MB_AddresseValue, &huart1, MB_BaudRateValue, &htim6 );
 	eMBEnable( );

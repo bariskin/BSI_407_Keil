@@ -42,6 +42,13 @@ extern "C" {
 		  uint16_t NotResponsCounter;
 			_Bool ErrorState;
 		}SensorState_t;
+		
+	typedef struct
+	  {
+		  uint32_t SetFlag;
+			uint32_t Timestep;
+		}TimeStepReadingSensores_t;	
+			
  /* ------------------------External variables -------------------------*/
 extern  uint8_t NumberSlaveDevices;
 

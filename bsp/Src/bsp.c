@@ -39,6 +39,18 @@ volatile ModBusAddr_t  ModBusAddrDefault =  // default modbus addr
 				  .Reserved1         =  0x00000000,
 				  .Reserved2         =  0x00000000
       };	
+			
+volatile 	TimeStepReadingSensores_t TimeStepDefault =	
+      {
+			    .SetFlag  =  0x00000001, 
+			    .Timestep =  80			
+			};
+			
+volatile 	TimeStepReadingSensores_t TimeStep =	
+      {
+			    .SetFlag  =  0x00000000, 
+			    .Timestep =  0x00000000		
+			};		
 /* ------------------------Locale variables----------------------------*/
 
 /* ------------------------Functions-----------------------------------*/
@@ -79,7 +91,7 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     sensor->Concentration_L = RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_LOW_INTERN - 1];
     
     // Clear the input buffer
-    RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN - 1]        = 0x0000;
+    RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN - 1]  = 0x0000;
     RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_HIGH_INTERN - 1] = 0x0000;
     RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_LOW_INTERN - 1]  = 0x0000;
     
@@ -241,6 +253,30 @@ void setNextDeviceAddr(uint8_t *currentAddr)
 		  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_4] = MB_AddresseValue;
 			
 	    HAL_Delay(5);		
-	}
+	}	
 	
+	void setTimeStepReadingSensores(void)	
+	 {
+	    Flash_Read_Data(FLASH_TIME_STEP_READING, (uint32_t *)&TimeStep,2);
+		 
+	   if(TimeStep.SetFlag == 1)
+		 {
+		   timeStep = TimeStep.Timestep;
+		 }
+	   else
+		 {	 
+			  Flash_Write_Data(FLASH_TIME_STEP_READING, (uint32_t *)&ModBusAddrDefault, 4);
+				
+				HAL_Delay(2);
+			 
+			  TimeStep.SetFlag	= TimeStepDefault.SetFlag;
+			  TimeStep.Timestep = TimeStepDefault.Timestep;
+			 
+			  timeStep = TimeStep.Timestep;
+		 } 
+		 
+		 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_5] = timeStep;
+			
+	   HAL_Delay(5);			 
+	 }
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/

@@ -223,7 +223,7 @@ void HoldingHandlerFunction(void const * argument)
      osStatus status = osMutexWait(myMutex01Handle, 50);
 		 if (status == osOK) {
 			  
-			   if(HoldingPollsDone  < 3) // опрашиваем первые три раза все регистры 
+			   if(HoldingPollsDone  < 3) // опрашиваем первые ТРИ РАЗА все регистры 
 				 {	 
 			
 			     /* *********************************  Handling HOLDING registers *************************** */
@@ -273,14 +273,14 @@ void HoldingHandlerFunction(void const * argument)
 			        /* ********************************* Handling INPUT registers *************************** */
 				       if (SelectRunFlag == 4)
 				  	    {
-					       eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 500 );
+					       eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
 					       SelectRunFlag = 5;
 					      } 		
 				      /* ********************************* set next slave addr *************************** */	
 				       else if (SelectRunFlag == 5)
 				        {
 						     /* отправляем запрос только если девайс ответил */
-						     if(SensorStateArray[ModBusSlaveCurrentDeviceAddr - 1].ErrorState == false)
+						    //if(SensorStateArray[ModBusSlaveCurrentDeviceAddr - 1].ErrorState == false)
 						      {		 
 					         readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
 					        }
@@ -298,7 +298,7 @@ void HoldingHandlerFunction(void const * argument)
 		 
 		 } 
 			 
-    osDelay(250);
+    osDelay(timeStep);
 		taskYIELD();
   }
   /* USER CODE END HoldingHandlerFunction */

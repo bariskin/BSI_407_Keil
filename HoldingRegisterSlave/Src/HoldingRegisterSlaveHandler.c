@@ -20,6 +20,8 @@ extern uint16_t holdingRegsPart1[MAX_MODBUS_SLAVE_REGS_PART];  // Адреса 1-120
 extern volatile UART_Settings_t UartSlaveSetting; 
 extern volatile ModBusAddr_t  ModBusAddr; 
 extern volatile ModBusAddr_t  ModBusAddrDefault;
+extern volatile TimeStepReadingSensores_t TimeStep;
+extern volatile TimeStepReadingSensores_t TimeStepDefault;
 
 extern osThreadId InputHandlerHandle;
 /* ------------------------Global variables----------------------------*/
@@ -27,6 +29,9 @@ volatile uint32_t  MB_BaudRateValue = 0x00000000;
 volatile uint32_t  MB_ParityValue   = 0x00000000;
 volatile uint32_t  MB_StopBitsValue = 0x00000000;
 volatile uint32_t  MB_AddresseValue = 0x00000000;
+
+volatile uint16_t  timeStep = 50; // ms
+
 /* ------------------------Locale variables----------------------------*/
 
 /* ------------------------Functions-----------------------------------*/
@@ -93,6 +98,22 @@ volatile uint32_t  MB_AddresseValue = 0x00000000;
 			  } 
 		   osDelay(1);				
 			 break;
+		 case HOLDING_REGISTER_SLAVE_IDX_5: 
+
+		 
+			 if(RegValue >= 50  && RegValue <= 2000)
+			   { 	 
+					 timeStep = RegValue; 
+					 xTaskNotify(InputHandlerHandle, HOLDING_REGISTER_SLAVE_IDX_5, eSetValueWithOverwrite); 
+				 }
+				 
+				else
+			  {
+			    holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_5] =  timeStep;
+			  } 			 
+		 osDelay(1);				
+			 break;
+						
 		}
 		
 	}
@@ -127,7 +148,14 @@ volatile uint32_t  MB_AddresseValue = 0x00000000;
 				
 			   OutputValue =  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_4];
 			   osDelay(1);
-				 break;	
+				 break;
+			 /* ********* the time step for reading the sensor **** */   
+			 case HOLDING_REGISTER_SLAVE_IDX_5 :
+				
+			   OutputValue =  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_5];
+			   osDelay(1);
+				 break;
+			 
 			}		
 		return	OutputValue;
 	}
@@ -203,7 +231,20 @@ volatile uint32_t  MB_AddresseValue = 0x00000000;
 							 	osDelay(10);
 				
 					      NVIC_SystemReset();	
-						 }						 
+						 }	
+					else if(ulNotifiedValue == HOLDING_REGISTER_SLAVE_IDX_5) 
+             {
+						 	  eMBDisable( );
+							 	osDelay(2);
+					
+				      	TimeStep.SetFlag = 0x01;  
+			          TimeStep.Timestep = timeStep; 
+							 			      
+							  Flash_Write_Data (FLASH_TIME_STEP_READING,(uint32_t *)&TimeStep,2);
+							 
+							 	eMBEnable( );					 
+							 	osDelay(10);
+						 }	 
 				 
 	 }
 /************************ (C) COPYRIGHT @OnWert *****END OF FILE****/
