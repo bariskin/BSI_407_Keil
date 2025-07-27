@@ -291,7 +291,7 @@ void setNextDeviceAddr(uint8_t *currentAddr)
 		 }
 	   else
 		 {	 
-			  Flash_Write_Data(FLASH_TIME_STEP_READING, (uint32_t *)&ModBusAddrDefault, 4);
+			  Flash_Write_Data(FLASH_TIME_STEP_READING, (uint32_t *)&TimeStepDefault, 2);
 				
 				HAL_Delay(2);
 			 

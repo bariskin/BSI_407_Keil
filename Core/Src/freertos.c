@@ -305,7 +305,7 @@ void HoldingHandlerFunction(void const * argument)
 		   }
 		  else
 		   {
-		   osDelay(150);       // для первых трех опросов всех датчкиков
+		   osDelay(200);       // для первых трех опросов всех датчкиков
 		   }
 		/* *************************************** */
 		taskYIELD();
