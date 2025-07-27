@@ -30,7 +30,7 @@ volatile uint32_t  MB_ParityValue   = 0x00000000;
 volatile uint32_t  MB_StopBitsValue = 0x00000000;
 volatile uint32_t  MB_AddresseValue = 0x00000000;
 
-volatile uint16_t  timeStep = 50; // ms
+volatile uint16_t  timeStep = 80; // ms
 
 /* ------------------------Locale variables----------------------------*/
 
@@ -101,7 +101,7 @@ volatile uint16_t  timeStep = 50; // ms
 		 case HOLDING_REGISTER_SLAVE_IDX_5: 
 
 		 
-			 if(RegValue >= 50  && RegValue <= 2000)
+			 if(RegValue >= 80  && RegValue <= 2000)
 			   { 	 
 					 timeStep = RegValue; 
 					 xTaskNotify(InputHandlerHandle, HOLDING_REGISTER_SLAVE_IDX_5, eSetValueWithOverwrite); 

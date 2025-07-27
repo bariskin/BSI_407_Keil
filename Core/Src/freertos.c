@@ -259,46 +259,55 @@ void HoldingHandlerFunction(void const * argument)
 					     readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
 				       setNextDeviceAddr(&ModBusSlaveCurrentDeviceAddr);	       // set next device addr
                SelectRunFlag = 0;
-					 
-					     HoldingPollsDone++;
-					 
-					       if(HoldingPollsDone == 3)
-					        {
-						       SelectRunFlag = 4;	
-						      }
+								
+								
+					     if(ModBusSlaveCurrentDeviceAddr == NUMBER_SLAVE_DEVICES)
+					     {
+							  HoldingPollsDone++;
+								ModBusSlaveCurrentDeviceAddr = 1; 
+							 }
+		 
+					     if(HoldingPollsDone == 3) // после трех проходов опредеояем наличие активных приборов
+					      {
+						      SelectRunFlag = 4;	
+								  ModBusSlaveCurrentDeviceAddr = 1;
+						     }
 				       }					
 			   }		  
-			 else 
+			 else   /* постоянный цикл опроса активных приборов */
 				 {
 			        /* ********************************* Handling INPUT registers *************************** */
 				       if (SelectRunFlag == 4)
 				  	    {
+								      	/* отправка  запроса на считываение регистров  */
 					       eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
 					       SelectRunFlag = 5;
 					      } 		
 				      /* ********************************* set next slave addr *************************** */	
 				       else if (SelectRunFlag == 5)
 				        {
-						     /* отправляем запрос только если девайс ответил */
-						    //if(SensorStateArray[ModBusSlaveCurrentDeviceAddr - 1].ErrorState == false)
-						      {		 
-					         readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
-					        }
-				          setNextDeviceAddr(&ModBusSlaveCurrentDeviceAddr);	       // set next device addr
-                 SelectRunFlag = 4;
+						    	/* считиваем регистры после запроса */
+					        readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
+									
+					        /* выбираем только адреса активных приборов */
+				          setNextActiveDeviceAddr(&ModBusSlaveCurrentDeviceAddr);	       // set next device addr
+                  SelectRunFlag = 4;
 				   }	
 			   }
 			//Освобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }
-		 
-		 else
-		 {
-		 
-		 
-		 } 
-			 
-    osDelay(timeStep);
+		  
+	 /* ************* osDelay()****************** */
+		  if(HoldingPollsDone == 3) 
+		   {
+        osDelay(timeStep);   // для постоянного опроса
+		   }
+		  else
+		   {
+		   osDelay(150);       // для первых трех опросов всех датчкиков
+		   }
+		/* *************************************** */
 		taskYIELD();
   }
   /* USER CODE END HoldingHandlerFunction */

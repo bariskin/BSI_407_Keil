@@ -112,34 +112,60 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     }
 }
 
+/**
+ * @brief Get the number of connected slave devices
+ * @return uint8_t - Current number of slave devices
+ */
 uint8_t getNumberDevices(void)
- {
+{
    return NumberSlaveDevices;
- }
- 
+}
+
+/**
+ * @brief Set the number of slave devices in the system
+ * @param numberDevices Pointer to store the number of devices
+ * @param number The new number of devices to set
+ */
 void setNumberDevices(uint8_t *numberDevices, uint8_t number)
- {
+{
   *numberDevices = number;
- }
- 
+}
+
+/**
+ * @brief Set the address of the next device to communicate with
+ * @param currentAddr Pointer to the current device address
+ * @note This function performs the following steps:
+ *       1. Increments the address (with wrap-around if needed)
+ *       2. Temporarily disables Modbus communication
+ *       3. Sets the new destination address
+ *       4. Re-enables Modbus communication
+ *       5. Includes small delays for hardware stabilization
+ */
 void setNextDeviceAddr(uint8_t *currentAddr)
- { 
-	 if(*currentAddr < NumberSlaveDevices)
-	 {
-	   (*currentAddr)++;
-	 }
-	 else 
-	 {
-	   *currentAddr = 1;
-	 
-	 }
- 		 eMBMasterDisable();
-	   osDelay(5);
-		 vMBMasterSetDestAddress(*currentAddr);
-		 osDelay(5);
-	   eMBMasterEnable();
-	   osDelay(5);
-	}
+{ 
+    // Increment address with wrap-around if needed
+    if(*currentAddr < NumberSlaveDevices)
+    {
+        (*currentAddr)++;
+    }
+    else 
+    {
+        // Wrap around to first device if we've reached the end
+        *currentAddr = 1;
+    }
+    
+    // Temporarily disable Modbus communication
+    eMBMasterDisable();
+    osDelay(5);  // Short delay for hardware stabilization
+    
+    // Set new destination address
+    vMBMasterSetDestAddress(*currentAddr);
+    osDelay(5);  // Short delay for hardware stabilization
+    
+    // Re-enable Modbus communication
+    eMBMasterEnable();
+    osDelay(5);  // Short delay for hardware stabilization
+}
  
 	void setModBusSlaveSetting(void)
 	{
@@ -279,4 +305,31 @@ void setNextDeviceAddr(uint8_t *currentAddr)
 			
 	   HAL_Delay(5);			 
 	 }
+	 
+void setNextActiveDeviceAddr(uint8_t *currentAddr) 
+{     
+    static uint8_t slave_idx = 0;
+    
+    // Iterate through all possible devices (1, 2, 3)
+    for (int attempt = 0; attempt < NUMBER_SLAVE_DEVICES; attempt++) 
+    {
+        // Move to next device (wrap around if needed)
+        slave_idx = (slave_idx % NUMBER_SLAVE_DEVICES) + 1;
+        
+        SensorState_t* sensor = &SensorStateArray[slave_idx - 1];
+        
+        // If device is error-free, use it
+        if (sensor->ErrorState == false) 
+        {
+            *currentAddr = slave_idx;
+            return;
+        }
+    }
+    
+    // If all devices have errors, return 0 or some error code
+    *currentAddr = 1;
+}
+	 
+	 
+	 
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/
