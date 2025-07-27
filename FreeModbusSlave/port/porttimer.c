@@ -22,13 +22,11 @@ BOOL xMBPortTimersInit( USHORT usTim1Timerout50us, void *dHTIM )
 inline void vMBPortTimersEnable(  )
 {
 	ModBusSlaveCounter = 0;
-	  //HAL_GPIO_WritePin(GPIOA, LED3_CNT_OUT1_Pin, GPIO_PIN_SET);
 	HAL_TIM_Base_Start_IT(ModBusSlaveTimer);
 }
 
 inline void vMBPortTimersDisable(  )
 {
-	   //HAL_GPIO_WritePin(GPIOA, LED3_CNT_OUT1_Pin, GPIO_PIN_RESET);
 	HAL_TIM_Base_Stop_IT(ModBusSlaveTimer);
 }
 #endif
