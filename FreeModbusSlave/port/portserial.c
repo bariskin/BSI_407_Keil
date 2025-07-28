@@ -11,8 +11,8 @@ volatile uint8_t singlechar;
 
 extern UART_HandleTypeDef* modbusUartMaster ;
 /* ----------------------- User defenitions ---------------------------------*/
-#define RS485_RD_LOW_SLAVE	  HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_RESET)
-#define RS485_RD_HIGH_SLAVE 	HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_SET)
+#define RS485_RD_LOW_SLAVE	  HAL_GPIO_WritePin(RDen2_GPIO_Port, RDen1_Pin, GPIO_PIN_RESET)
+#define RS485_RD_HIGH_SLAVE 	HAL_GPIO_WritePin(RDen2_GPIO_Port, RDen1_Pin, GPIO_PIN_SET)
 
 /* ----------------------- Start implementation -----------------------------*/
 BOOL xMBPortSerialInit( void *dHUART, ULONG ulBaudRate, void *dHTIM )

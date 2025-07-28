@@ -301,7 +301,8 @@ void HoldingHandlerFunction(void const * argument)
 	 /* ************* osDelay()****************** */
 		  if(HoldingPollsDone == 3) 
 		   {
-        osDelay(timeStep);   // для постоянного опроса
+				 // для постоянного опроса, делим timestep на два, так как порадаем в кейс отправки команды каждый второй раз 
+        osDelay(timeStep/2);   
 		   }
 		  else
 		   {
