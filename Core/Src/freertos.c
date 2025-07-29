@@ -193,12 +193,7 @@ void MasterModbusTaskFunction(void const * argument)
        osMutexRelease(myMutex01Handle);
 		 }
 		 
-		 else
-		 {
-		 
-		 
-		 }
-    osDelay(40);
+    osDelay(10);
 		taskYIELD();
   }
   /* USER CODE END MasterModbusTaskFunction */
@@ -217,10 +212,12 @@ void HoldingHandlerFunction(void const * argument)
 	
 	static uint8_t SelectRunFlag = 0;
 	static uint8_t HoldingPollsDone = 0;  // Счётчик выполненных опросов Holding-регистров
-  /* Infinite loop */
+  
+	osDelay(timeStep/2);
+	/* Infinite loop */
   for(;;)
   {	// Пытаемся захватить мьютекс (ждём 50 мс)
-     osStatus status = osMutexWait(myMutex01Handle, 50);
+     osStatus status = osMutexWait(myMutex01Handle, 100);
 		 if (status == osOK) {
 			  
 			   if(HoldingPollsDone  < 3) // опрашиваем первые ТРИ РАЗА все регистры 
@@ -302,11 +299,11 @@ void HoldingHandlerFunction(void const * argument)
 		  if(HoldingPollsDone == 3) 
 		   {
 				 // для постоянного опроса, делим timestep на два, так как порадаем в кейс отправки команды каждый второй раз 
-        osDelay(timeStep/2);   
-		   }
+        osDelay((timeStep + 10)/2);   //для соответствия реальному и вводимомоу. 
+		   } 
 		  else
 		   {
-		   osDelay(200);       // для первых трех опросов всех датчкиков
+		   osDelay(TIME_DEFAULT_1 + 10);       // для первых трех опросов всех датчкиков
 		   }
 		/* *************************************** */
 		taskYIELD();

@@ -43,7 +43,7 @@ volatile ModBusAddr_t  ModBusAddrDefault =  // default modbus addr
 volatile 	TimeStepReadingSensores_t TimeStepDefault =	
       {
 			    .SetFlag  =  0x00000001, 
-			    .Timestep =  80			
+			    .Timestep =  TIME_STEP_DEFAULT_2			
 			};
 			
 volatile 	TimeStepReadingSensores_t TimeStep =	
@@ -313,6 +313,7 @@ void setNextActiveDeviceAddr(uint8_t *currentAddr)
     // Iterate through all possible devices (1, 2, 3)
     for (int attempt = 0; attempt < NUMBER_SLAVE_DEVICES; attempt++) 
     {
+
         // Move to next device (wrap around if needed)
         slave_idx = (slave_idx % NUMBER_SLAVE_DEVICES) + 1;
         
