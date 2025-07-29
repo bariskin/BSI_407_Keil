@@ -1,4 +1,13 @@
 
+## 2025-07-28
+
+### changed:
+
+####   #define TIME_DEFAULT_1       60
+####	 #define TIME_STEP_MIN_2      40
+####   #define TIME_STEP_DEFAULT_2  60
+#### NUMBER_SLAVE_DEVICES           50
+
 ## 2025-07-27
 
 ### Added:

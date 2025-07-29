@@ -52,16 +52,17 @@ volatile 	TimeStepReadingSensores_t TimeStep =
 			    .Timestep =  0x00000000		
 			};		
 /* ------------------------Locale variables----------------------------*/
-
+ union ShortsToFloat converter;
 /* ------------------------Functions-----------------------------------*/
 
 void initSensorStateArray(uint8_t numberdevices)
   {
 		for(int i = 0; i < numberdevices; i++)
 		{
-     SensorStateArray[i].DeviceStatus = 0x0000;
+     SensorStateArray[i].DeviceStatus =    0x0000;
 		 SensorStateArray[i].Concentration_H = 0x0000;
 		 SensorStateArray[i].Concentration_L = 0x0000;
+		 SensorStateArray[i].Concentration =   0.00;
 		 SensorStateArray[i].NotResponsCounter = 0x0000;
 		 SensorStateArray[i].ErrorState = false;
 		}
@@ -74,6 +75,8 @@ void initSensorStateArray(uint8_t numberdevices)
  */
 void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS])
 {
+	  uint32_t combined;   // Объединённые 32 бита
+	  float result;        // Результат
     // Validate slave address
     if (slaveaddr < 1 || slaveaddr > MB_MASTER_TOTAL_SLAVE_NUM) {
         return; // or handle error appropriately
@@ -89,7 +92,13 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     sensor->DeviceStatus    = RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN - 1];
     sensor->Concentration_H = RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_HIGH_INTERN - 1];
     sensor->Concentration_L = RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_LOW_INTERN - 1];
-    
+		  // Собираем 32 бита из двух 16-битных short
+    combined = ((uint32_t)(uint16_t)sensor->Concentration_H ) << 16 | (uint16_t)  sensor->Concentration_L;
+
+    // Копируем биты в float (аналог reinterpret_cast в C++)
+    *(uint32_t*)&result = combined;
+    sensor->Concentration   = result;
+		
     // Clear the input buffer
     RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN - 1]  = 0x0000;
     RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_HIGH_INTERN - 1] = 0x0000;

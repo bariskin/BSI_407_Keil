@@ -31,6 +31,14 @@ extern "C" {
   #define TIME_STEP_DEFAULT_2  60
 	
 	
+	union ShortsToFloat {
+    struct {
+        short a;
+        short b;
+    } shorts;
+    float f;
+};
+	
   typedef	struct
   {
     uint32_t ModBuAddrSetFlag;
@@ -44,6 +52,7 @@ extern "C" {
 		  uint16_t DeviceStatus;
 			uint16_t Concentration_H;
 			uint16_t Concentration_L;
+			float  Concentration;
 		  uint16_t NotResponsCounter;
 			_Bool ErrorState;
 		}SensorState_t;
