@@ -22,25 +22,19 @@ Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
 D:\59_BSI_407_Keil\MDK-ARM\BSI_407.uvprojx
-Project File Date:  07/22/2025
+Project File Date:  07/30/2025
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'BSI_407'
-compiling portserial_m.c...
-..\FreeModbusMaster\port\port.h(35): warning:  #1295-D: Deprecated declaration EnterCriticalSection - give arg types
-  extern void EnterCriticalSection();
-..\FreeModbusMaster\port\port.h(36): warning:  #1295-D: Deprecated declaration ExitCriticalSection - give arg types
-  extern void ExitCriticalSection();
-..\FreeModbusMaster\port\portserial_m.c(111): warning:  #177-D: function "prvvUARTRxISR"  was declared but never referenced
-  static void prvvUARTRxISR(void)
-..\FreeModbusMaster\port\portserial_m.c: 3 warnings, 0 errors
-compiling portserial.c...
-compiling freertos.c...
+compiling DisplayDriver.c...
+..\DisplayDriver\Inc\DisplayDriver.h(42): warning:  #1-D: last line of file ends without a newline
+  #endif  /* _DISPLAY_DRIVER_H */
+..\DisplayDriver\Src\DisplayDriver.c: 1 warning, 0 errors
 linking...
 Program Size: Code=29564 RO-data=1144 RW-data=680 ZI-data=31600  
 FromELF: creating hex file...
-"BSI_407\BSI_407.axf" - 0 Error(s), 3 Warning(s).
+"BSI_407\BSI_407.axf" - 0 Error(s), 1 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -64,7 +58,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:06
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>
