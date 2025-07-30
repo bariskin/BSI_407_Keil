@@ -28,7 +28,7 @@ extern "C" {
   
 	#define TIME_DEFAULT_1       60
 	#define TIME_STEP_MIN_2      40
-  #define TIME_STEP_DEFAULT_2  60
+  #define TIME_STEP_DEFAULT_2  40
 	
 	
 	union ShortsToFloat {

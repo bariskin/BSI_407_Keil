@@ -27,14 +27,20 @@ Project File Date:  07/22/2025
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'BSI_407'
-compiling bsp.c...
-..\bsp\Src\bsp.c(345): warning:  #1-D: last line of file ends without a newline
-  /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/
-..\bsp\Src\bsp.c: 1 warning, 0 errors
+compiling portserial_m.c...
+..\FreeModbusMaster\port\port.h(35): warning:  #1295-D: Deprecated declaration EnterCriticalSection - give arg types
+  extern void EnterCriticalSection();
+..\FreeModbusMaster\port\port.h(36): warning:  #1295-D: Deprecated declaration ExitCriticalSection - give arg types
+  extern void ExitCriticalSection();
+..\FreeModbusMaster\port\portserial_m.c(111): warning:  #177-D: function "prvvUARTRxISR"  was declared but never referenced
+  static void prvvUARTRxISR(void)
+..\FreeModbusMaster\port\portserial_m.c: 3 warnings, 0 errors
+compiling portserial.c...
+compiling freertos.c...
 linking...
 Program Size: Code=29564 RO-data=1144 RW-data=680 ZI-data=31600  
 FromELF: creating hex file...
-"BSI_407\BSI_407.axf" - 0 Error(s), 1 Warning(s).
+"BSI_407\BSI_407.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -58,7 +64,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:06
 </pre>
 </body>
 </html>

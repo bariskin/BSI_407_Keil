@@ -30,7 +30,7 @@ volatile uint32_t  MB_ParityValue   = 0x00000000;
 volatile uint32_t  MB_StopBitsValue = 0x00000000;
 volatile uint32_t  MB_AddresseValue = 0x00000000;
 
-volatile uint16_t  timeStep = TIME_STEP_MIN_2; // ms
+volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
 
 /* ------------------------Locale variables----------------------------*/
 
