@@ -38,6 +38,7 @@
 #include "bsp.h"
 #include "HoldingRegisterSlaveHandler.h"
 #include "numberDevices.h"
+#include "DisplayDriver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -119,6 +120,9 @@ int main(void)
   MX_USART1_UART_Init();
   MX_TIM10_Init();
   /* USER CODE BEGIN 2 */
+	
+  /* *************start display receiving******************** */
+  UART_Display_StartReceiving();
 
 	/* *************MODBUS SLAVE init******************** */
 	

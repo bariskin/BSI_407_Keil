@@ -22,6 +22,7 @@
 #include "stm32f4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "DisplayDriver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -41,7 +42,8 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+extern volatile char arrDisplayRX[ARRAY_RX_SIZE];
+extern  uint8_t rxIdxDisplayUart;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -228,7 +230,20 @@ void USART2_IRQHandler(void)
 void USART3_IRQHandler(void)
 {
   /* USER CODE BEGIN USART3_IRQn 0 */
-
+	
+ // Проверяем, не переполнен ли буфер
+   if (rxIdxDisplayUart < ARRAY_RX_SIZE - 1)
+     {
+       rxIdxDisplayUart++;  // Переходим к следующей позиции          
+         // Продолжаем приём следующего байта
+       HAL_UART_Receive_IT(&huart3, (uint8_t *)&arrDisplayRX[rxIdxDisplayUart], 1);
+     }
+    else
+     {
+  // Буфер переполнен, сбрасываем индекс
+       rxIdxDisplayUart = 0;
+       HAL_UART_Receive_IT(&huart3, (uint8_t *)&arrDisplayRX[rxIdxDisplayUart], 1);
+     }	
   /* USER CODE END USART3_IRQn 0 */
   HAL_UART_IRQHandler(&huart3);
   /* USER CODE BEGIN USART3_IRQn 1 */

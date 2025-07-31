@@ -1,6 +1,6 @@
 /**
 ******************************************************************************
-* @file      number_devices.h
+* @file      numberDevices.h
 * @author    OnWert
 * @version   
 * @brief     This file contains defines and all the functions prototypes 

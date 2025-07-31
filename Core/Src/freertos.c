@@ -31,6 +31,7 @@
 #include "bsp.h"
 #include "HoldingRegisterSlaveHandler.h"
 #include "stdbool.h"
+#include "DisplayDriver.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

@@ -23,14 +23,20 @@ extern "C" {
   * @}
   */
  /* ------------------------Defines ----------------------------------*/
-    
+  #define ARRAY_TX_SIZE		100
+  #define ARRAY_RX_SIZE		100 
  /* ------------------------External variables -------------------------*/
   
 
   /** @addtogroup display_driver
   * @{
   */
-
+	 void Init_qDev(void);
+	 void UART_Display_StartReceiving(void);
+	 uint8_t Nextion_ParseMsgAndExecute(uint8_t* data);
+	 void FixRussianEncodingForNextion (char *str);
+   void SendNextionCommand(const char* format, ...);
+	 void InitNextionDisplayWithDeviceData(void);
   /**
   * @}
   */

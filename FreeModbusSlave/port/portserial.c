@@ -89,7 +89,6 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 	}
 	else if (huart->Instance == modbusUartMaster->Instance)
   {
-    //prvvUARTTxReadyISR();
 		 pxMBMasterFrameCBTransmitterEmpty();
   }
 }
