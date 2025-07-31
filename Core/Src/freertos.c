@@ -43,6 +43,8 @@ uint8_t SelectaFlag = 0;
 /* USER CODE BEGIN PD */
 extern USHORT   usMRegInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS];
 extern SensorState_t   SensorStateArray[NUMBER_SLAVE_DEVICES];
+
+extern volatile char arrDisplayRX[ARRAY_RX_SIZE];
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -67,6 +69,12 @@ osStaticThreadDef_t HoldingHandlerControlBlock;
 osThreadId InputHandlerHandle;
 uint32_t InputHandlerBuffer[ 256 ];
 osStaticThreadDef_t InputHandlerControlBlock;
+osThreadId SlaveEventTaskHandle;
+uint32_t SlaveEventTaskBuffer[ 256 ];
+osStaticThreadDef_t SlaveEventTaskControlBlock;
+osThreadId DisplayTaskHandle;
+uint32_t DisplayTaskBuffer[ 256 ];
+osStaticThreadDef_t DisplayTaskControlBlock;
 osMutexId myMutex01Handle;
 osStaticMutexDef_t myMutex01ControlBlock;
 
@@ -79,6 +87,8 @@ void SlaveModbusTaskFunction(void const * argument);
 void MasterModbusTaskFunction(void const * argument);
 void HoldingHandlerFunction(void const * argument);
 void InputHandlerFunction(void const * argument);
+void SlaveEventFunction(void const * argument);
+void DisplayTaskFunction(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -142,8 +152,16 @@ void MX_FREERTOS_Init(void) {
   HoldingHandlerHandle = osThreadCreate(osThread(HoldingHandler), NULL);
 
   /* definition and creation of InputHandler */
-  osThreadStaticDef(InputHandler, InputHandlerFunction, osPriorityBelowNormal, 0, 256, InputHandlerBuffer, &InputHandlerControlBlock);
-  InputHandlerHandle = osThreadCreate(osThread(InputHandler), NULL);
+  //osThreadStaticDef(InputHandler, InputHandlerFunction, osPriorityBelowNormal, 0, 256, InputHandlerBuffer, &InputHandlerControlBlock);
+  //InputHandlerHandle = osThreadCreate(osThread(InputHandler), NULL);
+
+  /* definition and creation of SlaveEventTask */
+  osThreadStaticDef(SlaveEventTask, SlaveEventFunction, osPriorityBelowNormal, 0, 256, SlaveEventTaskBuffer, &SlaveEventTaskControlBlock);
+  SlaveEventTaskHandle = osThreadCreate(osThread(SlaveEventTask), NULL);
+
+  /* definition and creation of DisplayTask */
+  osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 256, DisplayTaskBuffer, &DisplayTaskControlBlock);
+  DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -319,17 +337,67 @@ void HoldingHandlerFunction(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_InputHandlerFunction */
-void InputHandlerFunction(void const * argument)
+//void InputHandlerFunction(void const * argument)
+//{
+//  /* USER CODE BEGIN InputHandlerFunction */
+//  /* Infinite loop */
+//  for(;;)
+//  {
+//		ModBusSlaveEventHoldingRegHandler();
+//    osDelay(4);
+//		taskYIELD()
+//  }
+  /* USER CODE END InputHandlerFunction */
+//}
+
+/* USER CODE BEGIN Header_SlaveEventFunction */
+/**
+* @brief Function implementing the SlaveEventTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_SlaveEventFunction */
+void SlaveEventFunction(void const * argument)
 {
-  /* USER CODE BEGIN InputHandlerFunction */
+  /* USER CODE BEGIN SlaveEventFunction */
   /* Infinite loop */
   for(;;)
   {
-		ModBusSlaveEventHoldingRegHandler();
+    ModBusSlaveEventHoldingRegHandler();
     osDelay(4);
 		taskYIELD()
   }
-  /* USER CODE END InputHandlerFunction */
+  /* USER CODE END SlaveEventFunction */
+}
+
+/* USER CODE BEGIN Header_DisplayTaskFunction */
+/**
+* @brief Function implementing the DisplayTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_DisplayTaskFunction */
+void DisplayTaskFunction(void const * argument)
+{
+  /* USER CODE BEGIN DisplayTaskFunction */
+	
+	 SendNextionCommand("Init.qDev.txt=\"%d\"ÿÿÿ", 20); // for testing    	
+	 while(1)
+    {
+	    if (Nextion_ParseMsgAndExecute((uint8_t *)arrDisplayRX) == START_INIT_BYTE)
+			{
+			   break;
+			}
+			osDelay(50);
+	  }
+  /* Infinite loop */
+  for(;;)
+  {
+		
+    osDelay(50);
+		taskYIELD()
+  }
+  /* USER CODE END DisplayTaskFunction */
 }
 
 /* Private application code --------------------------------------------------*/

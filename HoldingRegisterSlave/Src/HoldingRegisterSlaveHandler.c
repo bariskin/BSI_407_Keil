@@ -23,7 +23,8 @@ extern volatile ModBusAddr_t  ModBusAddrDefault;
 extern volatile TimeStepReadingSensores_t TimeStep;
 extern volatile TimeStepReadingSensores_t TimeStepDefault;
 
-extern osThreadId InputHandlerHandle;
+//extern osThreadId InputHandlerHandle;
+extern osThreadId SlaveEventTaskHandle;
 /* ------------------------Global variables----------------------------*/
 volatile uint32_t  MB_BaudRateValue = 0x00000000;
 volatile uint32_t  MB_ParityValue   = 0x00000000;
@@ -45,7 +46,7 @@ volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
 				if(RegValue >= 1  && RegValue <= 6 )	
 				{
 			  	MB_BaudRateValue =  getBaudrate(RegValue);
-					xTaskNotify( InputHandlerHandle , HOLDING_REGISTER_SLAVE_IDX_1, eSetValueWithOverwrite); 
+					xTaskNotify( SlaveEventTaskHandle , HOLDING_REGISTER_SLAVE_IDX_1, eSetValueWithOverwrite); 
 				}
 		    else
         {
@@ -59,7 +60,7 @@ volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
 			if((int8_t)RegValue >= (int8_t)0  && (uint8_t)RegValue <= 2 )
 		   {
 			  MB_ParityValue = getParity(RegValue);
-				xTaskNotify( InputHandlerHandle , HOLDING_REGISTER_SLAVE_IDX_2, eSetValueWithOverwrite); 	
+				xTaskNotify( SlaveEventTaskHandle , HOLDING_REGISTER_SLAVE_IDX_2, eSetValueWithOverwrite); 	
 		   }
 			else
 			 {
@@ -74,7 +75,7 @@ volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
 			 if(RegValue >= 1  && RegValue <= 2 )
 		    {
 			   MB_StopBitsValue = getStopBits(RegValue);
-         xTaskNotify( InputHandlerHandle , HOLDING_REGISTER_SLAVE_IDX_3, eSetValueWithOverwrite); 
+         xTaskNotify( SlaveEventTaskHandle , HOLDING_REGISTER_SLAVE_IDX_3, eSetValueWithOverwrite); 
 		    }					 
 			 else
 			  {
@@ -89,7 +90,7 @@ volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
 			   { 
 			    MB_AddresseValue = RegValue;
 		    
-					xTaskNotify(InputHandlerHandle, HOLDING_REGISTER_SLAVE_IDX_4, eSetValueWithOverwrite); 
+					xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_4, eSetValueWithOverwrite); 
 				  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_4] = MB_AddresseValue;
 		     } 
 			  else
@@ -104,7 +105,7 @@ volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
 			 if(RegValue >= TIME_STEP_MIN_2  && RegValue <= 2000)
 			   { 	 
 					 timeStep = RegValue; 
-					 xTaskNotify(InputHandlerHandle, HOLDING_REGISTER_SLAVE_IDX_5, eSetValueWithOverwrite); 
+					 xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_5, eSetValueWithOverwrite); 
 				 }
 				 
 				else

@@ -25,6 +25,7 @@ extern "C" {
  /* ------------------------Defines ----------------------------------*/
   #define ARRAY_TX_SIZE		100
   #define ARRAY_RX_SIZE		100 
+	#define START_INIT_BYTE	0x10
  /* ------------------------External variables -------------------------*/
   
 
