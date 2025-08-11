@@ -27,7 +27,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
-
+extern volatile uint8_t startDisplayFlag;
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/
@@ -42,7 +42,6 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-extern volatile char arrDisplayRX[ARRAY_RX_SIZE];
 extern  uint8_t rxIdxDisplayUart;
 /* USER CODE END PV */
 
@@ -67,7 +66,19 @@ extern UART_HandleTypeDef huart6;
 extern TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN EV */
+                   // Максимальный размер буфера
+#define PACKET_END_MARKER 0xFFFFF             // Маркер конца пакета (0xFF 0xFF 0xFF)
 
+extern volatile uint8_t arrDisplayRX[ARRAY_RX_SIZE];   // Буфер приёма
+volatile uint16_t rx_index = 0;               // Текущая позиция в буфере
+volatile uint8_t packet_ready = 0;            // Флаг завершённого пакета
+volatile uint32_t end_marker_counter = 0;     // Счётчик для детектирования 0xFF 0xFF 0xFF
+volatile uint8_t displayResponse = 0;
+volatile uint8_t displayStartedFlag = 0;
+
+uint8_t tx_buffer[ARRAY_TX_SIZE + 3]; // Основной буфер + 3 байта маркера конца
+volatile uint16_t tx_index = 0;
+volatile uint16_t tx_size = 0;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -227,28 +238,57 @@ void USART2_IRQHandler(void)
 /**
   * @brief This function handles USART3 global interrupt.
   */
-void USART3_IRQHandler(void)
-{
-  /* USER CODE BEGIN USART3_IRQn 0 */
-	
- // Проверяем, не переполнен ли буфер
-   if (rxIdxDisplayUart < ARRAY_RX_SIZE - 1)
-     {
-       rxIdxDisplayUart++;  // Переходим к следующей позиции          
-         // Продолжаем приём следующего байта
-       HAL_UART_Receive_IT(&huart3, (uint8_t *)&arrDisplayRX[rxIdxDisplayUart], 1);
-     }
-    else
-     {
-  // Буфер переполнен, сбрасываем индекс
-       rxIdxDisplayUart = 0;
-       HAL_UART_Receive_IT(&huart3, (uint8_t *)&arrDisplayRX[rxIdxDisplayUart], 1);
-     }	
-  /* USER CODE END USART3_IRQn 0 */
-  HAL_UART_IRQHandler(&huart3);
-  /* USER CODE BEGIN USART3_IRQn 1 */
 
-  /* USER CODE END USART3_IRQn 1 */
+void USART3_IRQHandler(void) {
+    // Проверяем флаг прерывания по приёму данных (RXNE)
+    if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_RXNE)) {
+        uint8_t byte = (uint8_t)(huart3.Instance->DR & 0xFF);  // Читаем принятый байт
+
+        // Если буфер не переполнен
+        if (rx_index < ARRAY_RX_SIZE - 1) {
+            arrDisplayRX[rx_index++] = byte;  // Сохраняем байт в буфер
+
+            // Проверяем, является ли текущий байт частью маркера конца (0xFF)
+            if (byte == 0xFF) {
+                end_marker_counter++;  // Увеличиваем счётчик подряд идущих 0xFF
+            } else {
+                end_marker_counter = 0; // Сброс, если байт не 0xFF
+            }
+
+            // Если обнаружено три 0xFF подряд (конец пакета)
+            if (end_marker_counter >= 3) {
+                arrDisplayRX[rx_index - 3] = '\0';  // Удаляем маркер конца и добавляем нуль-терминатор
+                packet_ready = 1;                   // Устанавливаем флаг готовности пакета
+                displayResponse =  arrDisplayRX[rx_index - 4];
+							  rx_index = 0;                       // Сбрасываем индекс для нового пакета
+                end_marker_counter = 0;             // Сбрасываем счётчик
+            }
+        } else {
+            // Переполнение буфера — сбрасываем
+            rx_index = 0;
+            end_marker_counter = 0;
+        }
+				
+		     // Перезапускаем приём следующего байта
+        huart3.Instance->CR1 |= USART_CR1_RXNEIE;  // Включаем прерывание		
+    }
+
+		   // Обработка передачи
+    if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_TXE) && 
+        (huart3.Instance->CR1 & USART_CR1_TXEIE)) {
+        if (tx_index < tx_size) {
+            huart3.Instance->DR = tx_buffer[tx_index++];
+        } else {
+            // Все данные переданы - выключаем прерывание передачи
+            huart3.Instance->CR1 &= ~USART_CR1_TXEIE;
+        }
+    }	
+    // Обработка ошибок UART (опционально)
+    if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_ORE | UART_FLAG_FE | UART_FLAG_NE)) {
+        __HAL_UART_CLEAR_FLAG(&huart3, UART_FLAG_ORE | UART_FLAG_FE | UART_FLAG_NE);
+        rx_index = 0;  // Сброс буфера при ошибке
+        end_marker_counter = 0;
+    }
 }
 
 /**

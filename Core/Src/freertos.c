@@ -32,11 +32,17 @@
 #include "HoldingRegisterSlaveHandler.h"
 #include "stdbool.h"
 #include "DisplayDriver.h"
+#include "stdio.h"
+#include "stdlib.h"
+#include <string.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 uint8_t SelectaFlag = 0;
+extern volatile uint8_t startDisplayFlag;
+extern volatile uint8_t packet_ready;   
+extern UART_HandleTypeDef huart3;
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -45,6 +51,11 @@ extern USHORT   usMRegInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS];
 extern SensorState_t   SensorStateArray[NUMBER_SLAVE_DEVICES];
 
 extern volatile char arrDisplayRX[ARRAY_RX_SIZE];
+extern volatile uint8_t displayResponse;
+extern volatile uint8_t displayStartedFlag ;
+
+uint8_t  numberOfDevices = 20;
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -380,19 +391,32 @@ void SlaveEventFunction(void const * argument)
 void DisplayTaskFunction(void const * argument)
 {
   /* USER CODE BEGIN DisplayTaskFunction */
-	
-	 SendNextionCommand("Init.qDev.txt=\"%d\"€€€", 20); // for testing    	
-	 while(1)
-    {
-	    if (Nextion_ParseMsgAndExecute((uint8_t *)arrDisplayRX) == START_INIT_BYTE)
-			{
-			   break;
-			}
-			osDelay(50);
-	  }
+
   /* Infinite loop */
   for(;;)
   {
+			if(packet_ready)	
+        {
+				   packet_ready = 0;
+           memset((void*)arrDisplayRX, 0, ARRAY_RX_SIZE);
+           switch(displayResponse)
+					 {
+						 case 0x88:   // первый ответ после старта диспле€  0x88 0xFF 0xFF 0xFF
+							 displayStartedFlag++;
+						 
+							 SendNextionCommand("Init.qDev.txt=\"%d\"", numberOfDevices); // for testing  
+						   osDelay(5);	
+						 break;
+						 
+						 case 0x10:	 // второй ответ после старта диспле€   0x10 0xFF 0xFF 0xFF
+							 
+						   displayStartedFlag++;
+						   InitNextionDisplayWithDeviceData(numberOfDevices);
+						 break;	 	
+					 }						 
+        // ѕерезапускаем приЄм
+           HAL_UART_Receive_IT(&huart3,(uint8_t *)&arrDisplayRX[0], 1);					
+				}				
 		
     osDelay(50);
 		taskYIELD()

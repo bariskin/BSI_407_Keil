@@ -66,6 +66,7 @@ extern uint8_t ModBusSlaveDefaultDeviceAddr;
 
 extern uint16_t timerPeriod;
 extern volatile uint16_t timerCounter;
+extern uint8_t  numberOfDevices;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -123,7 +124,7 @@ int main(void)
 	
   /* *************start display receiving******************** */
   UART_Display_StartReceiving();
-
+  initDeviceData(numberOfDevices);
 	/* *************MODBUS SLAVE init******************** */
 	
 	  if (HAL_UART_Init(&huart1) != HAL_OK)  /* restart  UART1 */

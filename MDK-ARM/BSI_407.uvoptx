@@ -154,7 +154,7 @@
           <Type>0</Type>
           <LineNumber>403</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134232902</Address>
+          <Address>134240714</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -170,7 +170,7 @@
           <Type>0</Type>
           <LineNumber>450</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134233052</Address>
+          <Address>134240864</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -203,6 +203,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>timeStep,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>rxIdxDisplayUart</ItemText>
+        </Ww>
+        <Ww>
+          <count>5</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>arrDisplayRX</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -219,6 +229,16 @@
           <count>2</count>
           <WinNumber>2</WinNumber>
           <ItemText>usMRegHoldBuf</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>displayStartedFlag</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>arrDisplayRX</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

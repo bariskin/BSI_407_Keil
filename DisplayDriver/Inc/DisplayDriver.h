@@ -24,7 +24,7 @@ extern "C" {
   */
  /* ------------------------Defines ----------------------------------*/
   #define ARRAY_TX_SIZE		100
-  #define ARRAY_RX_SIZE		100 
+  #define ARRAY_RX_SIZE		40
 	#define START_INIT_BYTE	0x10
  /* ------------------------External variables -------------------------*/
   
@@ -34,10 +34,12 @@ extern "C" {
   */
 	 void Init_qDev(void);
 	 void UART_Display_StartReceiving(void);
-	 uint8_t Nextion_ParseMsgAndExecute(uint8_t* data);
+	 //uint8_t Nextion_ParseMsgAndExecute(uint8_t* data);
 	 void FixRussianEncodingForNextion (char *str);
    void SendNextionCommand(const char* format, ...);
-	 void InitNextionDisplayWithDeviceData(void);
+	 void InitNextionDisplayWithDeviceData(uint8_t numberOfdevices);
+	 //void Nextion_SendCommand(const char* command);
+	 void initDeviceData(uint8_t numberOfdevices);
   /**
   * @}
   */

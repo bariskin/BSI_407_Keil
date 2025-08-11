@@ -19,8 +19,14 @@
 extern UART_HandleTypeDef huart3;
 /* ------------------------Global variables----------------------------*/
  char arrDisplayTX[ARRAY_TX_SIZE] = {0};
- volatile char arrDisplayRX[ARRAY_RX_SIZE] = {0};
+ volatile uint8_t arrDisplayRX[ARRAY_RX_SIZE] = {0};
+ volatile uint8_t startDisplayFlag = 0;
+ 
  uint8_t rxIdxDisplayUart = 0;
+extern  uint8_t tx_buffer[ARRAY_TX_SIZE + 3]; // ќсновной буфер + 3 байта маркера конца
+extern volatile uint16_t tx_index;
+extern volatile uint16_t tx_size;
+ 
  
 /* ------------------------Locale variables----------------------------*/
  enum {
@@ -84,170 +90,171 @@ struct paramDev{
  }
  
  void UART_Display_StartReceiving(void){
-    rxIdxDisplayUart = 0;          // —брос индекса
-    HAL_UART_Receive_IT(&huart3, (uint8_t *)&arrDisplayRX[rxIdxDisplayUart], 1);  // «апуск приЄма 1 байта
- }
- 
- /**
-  * @brief Processes incoming UART messages from Nextion display
-  * @param data Pointer to received data buffer
-  * @return int8_t - 0 if processed successfully, message byte for short messages
-  */
-uint8_t Nextion_ParseMsgAndExecute(uint8_t* data){
-    uint8_t len;
-	 	uint16_t data_int16;
-	  uint32_t fdata_int32;
-	 
-    // обработка сообщени€ от диспле€
-    for (uint8_t i = 0; i < ARRAY_RX_SIZE; i++)
-    {   
-			// Find message end marker (0xFF 0xFF 0xFF)
-        if ((data[i] == 0xFF) && (data[i + 1] == 0xFF) && (data[i + 2] == 0xFF))
-        {
-		    	 // Clear remaining bytes (checksum/error fields)
-			     for(uint8_t j = i; j < ARRAY_RX_SIZE; j++)
-			       {
-			        data[j] = 0x00;
-			       }
-        // Short message processing (single byte)
-            if (i == 1)
-            {
-                return data[0];
-            }
-					 // long message processing 
-        	else 
-        	 {
-        		
-     
-           	uint8_t ch_number = data[0];
-           	uint8_t comand_number = data[1];
-           	uint8_t addr_reg = data[2];
-
-        		uint8_t data_reg[10];
-        		char* data_end[10];
-        		float fdata;
-						 
-            // Extract float value if present
-            if (i > 3)  // Ensure there's data to parse
-            {          
-           		fdata = strtof((char*)&data[3], data_end);
-						}
-						
-						switch (comand_number) {
-
-							case 0x00:  // Set device quantity
-								flash_struct.dev_quan = (uint8_t)fdata;
-								//HAL_I2C_Mem_Write(&hi2c2, 0x56 << 1, 1,I2C_MEMADD_SIZE_16BIT, (uint8_t*)&flash_struct.dev_quan, 1, 100);
-								break;
-
-							case 0x01:  // Device configuration
-							 
-								switch (addr_reg) {
-									case 0x01:
-							
-										len = sizeof(device[ch_number].posit);
-										for(uint8_t i = 0; i < len; i++)				device[ch_number].posit[i] = 0;
-										for(uint8_t i = 0; data[3+i]!='\0'; i++)	device[ch_number].posit[i] = data[3+i];
-										break;
-									case 0x02:
-										len = sizeof(device[ch_number].scaleDimension);
-										for(uint8_t i = 0; i < len; i++)				device[ch_number].scaleDimension[i] = 0;
-										for(uint8_t i = 0; data[3+i]!='\0'; i++)	device[ch_number].scaleDimension[i] = data[3+i];
-										break;
-									case 0x03:
-										device[ch_number].scaleMax = fdata;
-										break;
-									case 0x04:
-										device[ch_number].Porog1 = fdata;
-										break;
-									case 0x05:
-										device[ch_number].Porog2 = fdata;
-										break;
-									case 0x06:
-										len = sizeof(device[ch_number].gas);
-										for(uint8_t i=0; i < len; i++)				device[ch_number].gas[i] = 0;
-										for(uint8_t i=0; data[3+i]!='\0'; i++)	device[ch_number].gas[i] = data[3+i];
-										break;
-									case 0xfe:
-										// команда записи данных в модуль канала
-										MsgDisplay.cal_status = 0xfe;
-										MsgDisplay.ch_number = ch_number;
-										break;
-									default:
-										break;
-								}
-								break;
-
-							case 0x06:
-							
-								data_int16 = fdata * 100;
-
-								MsgDisplay.ch_number = (device[ch_number].channelIndex-1)/4+1;
-								MsgDisplay.addr_reg = addr_reg + 1000*((device[ch_number].channelIndex-1)%4);
-								MsgDisplay.data_int16 = data_int16;
-								MsgDisplay.cal_status = 0x06;
-								break;
-
-							case 0x10:
-								
-								fdata_int32 = *(uint32_t*) &fdata;
-
-								data_reg[0] = fdata_int32 >> 24;
-								data_reg[1] = fdata_int32 >> 16;
-								data_reg[2] = fdata_int32 >> 8;
-								data_reg[3] = fdata_int32;
-
-								if(device[ch_number].channelIndex != 0)
-								{
-									MsgDisplay.ch_number = (device[ch_number].channelIndex-1)/4+1;
-									MsgDisplay.addr_reg = addr_reg + 1000*((device[ch_number].channelIndex-1)%4);
-									for(uint8_t j=0; j<4; j++)
-									{
-										MsgDisplay.data_reg[j] = data_reg[j];
-									}
-								}
-								else
-								{
-									MsgDisplay.ch_number = ch_number;
-									MsgDisplay.addr_reg = addr_reg;
-									MsgDisplay.fdata = fdata;
-								}
-								MsgDisplay.qReg = 2;
-								MsgDisplay.cal_status = 0x10;
-
-								break;
-
-							default:
-								break;
-						}
-        	}
-        }
-    }
-
-		#ifdef	DEBUGING
-		  uint8_t a
-		  a = snprintf(arrDisplay, DISP_TX_SIZE, "Display code: %d \n", arrDisplayRX[0]);
-		  USART_Transmit(USART_DEBUG, 6, (uint8_t*)arrDisplay, a);
-		#endif
-
-	return 0;
- 
- }
- 
- /**
-  * @brief ќтправка данных через UART (неблокирующий режим с прерывани€ми)
-  * @param huart ”казатель на структуру UART_HandleTypeDef
-  * @param data ”казатель на массив данных дл€ отправки
-  * @param size  оличество байт дл€ отправки
-  * @retval HAL_StatusTypeDef —татус операции
-  */
-HAL_StatusTypeDef USART_Transmit_IT(UART_HandleTypeDef *huart, uint8_t *data, uint16_t size){
-    if(huart == NULL || data == NULL || size == 0) {
-        return HAL_ERROR;
-    }
     
-    return HAL_UART_Transmit_IT(huart, data, size);
-}
+	 // јктивируем прерывание по приЄму первого байта
+       HAL_UART_Receive_IT(&huart3, (uint8_t *)&arrDisplayRX[0], 1); 
+ }
+ 
+// /**
+//  * @brief Processes incoming UART messages from Nextion display
+//  * @param data Pointer to received data buffer
+//  * @return int8_t - 0 if processed successfully, message byte for short messages
+//  */
+//uint8_t Nextion_ParseMsgAndExecute(uint8_t* data){
+//    uint8_t len;
+//	 	uint16_t data_int16;
+//	  uint32_t fdata_int32;
+//	 
+//    // обработка сообщени€ от диспле€
+//    for (uint8_t i = 0; i < ARRAY_RX_SIZE; i++)
+//    {   
+//			// Find message end marker (0xFF 0xFF 0xFF)
+//        if ((data[i] == 0xFF) && (data[i + 1] == 0xFF) && (data[i + 2] == 0xFF))
+//        {
+//		    	 // Clear remaining bytes (checksum/error fields)
+//			     for(uint8_t j = i; j < ARRAY_RX_SIZE; j++)
+//			       {
+//			        data[j] = 0x00;
+//			       }
+//        // Short message processing (single byte)
+//            if (data[i - 1] == 0x10)
+//            {
+//             return  0x10;
+//            }
+//					 // long message processing 
+//        	else 
+//        	 {
+//        		
+//     
+//           	uint8_t ch_number = data[0];
+//           	uint8_t comand_number = data[1];
+//           	uint8_t addr_reg = data[2];
+
+//        		uint8_t data_reg[10];
+//        		char* data_end[10];
+//        		float fdata;
+//						 
+//            // Extract float value if present
+//            if (i > 3)  // Ensure there's data to parse
+//            {          
+//           		fdata = strtof((char*)&data[3], data_end);
+//						}
+//						
+//						switch (comand_number) {
+
+//							case 0x00:  // Set device quantity
+//								flash_struct.dev_quan = (uint8_t)fdata;
+//								//HAL_I2C_Mem_Write(&hi2c2, 0x56 << 1, 1,I2C_MEMADD_SIZE_16BIT, (uint8_t*)&flash_struct.dev_quan, 1, 100);
+//								break;
+
+//							case 0x01:  // Device configuration
+//							 
+//								switch (addr_reg) {
+//									case 0x01:
+//							
+//										len = sizeof(device[ch_number].posit);
+//										for(uint8_t i = 0; i < len; i++)				device[ch_number].posit[i] = 0;
+//										for(uint8_t i = 0; data[3+i]!='\0'; i++)	device[ch_number].posit[i] = data[3+i];
+//										break;
+//									case 0x02:
+//										len = sizeof(device[ch_number].scaleDimension);
+//										for(uint8_t i = 0; i < len; i++)				device[ch_number].scaleDimension[i] = 0;
+//										for(uint8_t i = 0; data[3+i]!='\0'; i++)	device[ch_number].scaleDimension[i] = data[3+i];
+//										break;
+//									case 0x03:
+//										device[ch_number].scaleMax = fdata;
+//										break;
+//									case 0x04:
+//										device[ch_number].Porog1 = fdata;
+//										break;
+//									case 0x05:
+//										device[ch_number].Porog2 = fdata;
+//										break;
+//									case 0x06:
+//										len = sizeof(device[ch_number].gas);
+//										for(uint8_t i=0; i < len; i++)				device[ch_number].gas[i] = 0;
+//										for(uint8_t i=0; data[3+i]!='\0'; i++)	device[ch_number].gas[i] = data[3+i];
+//										break;
+//									case 0xfe:
+//										// команда записи данных в модуль канала
+//										MsgDisplay.cal_status = 0xfe;
+//										MsgDisplay.ch_number = ch_number;
+//										break;
+//									default:
+//										break;
+//								}
+//								break;
+
+//							case 0x06:
+//							
+//								data_int16 = fdata * 100;
+
+//								MsgDisplay.ch_number = (device[ch_number].channelIndex-1)/4+1;
+//								MsgDisplay.addr_reg = addr_reg + 1000*((device[ch_number].channelIndex-1)%4);
+//								MsgDisplay.data_int16 = data_int16;
+//								MsgDisplay.cal_status = 0x06;
+//								break;
+
+//							case 0x10:
+//								
+//								fdata_int32 = *(uint32_t*) &fdata;
+
+//								data_reg[0] = fdata_int32 >> 24;
+//								data_reg[1] = fdata_int32 >> 16;
+//								data_reg[2] = fdata_int32 >> 8;
+//								data_reg[3] = fdata_int32;
+
+//								if(device[ch_number].channelIndex != 0)
+//								{
+//									MsgDisplay.ch_number = (device[ch_number].channelIndex-1)/4+1;
+//									MsgDisplay.addr_reg = addr_reg + 1000*((device[ch_number].channelIndex-1)%4);
+//									for(uint8_t j=0; j<4; j++)
+//									{
+//										MsgDisplay.data_reg[j] = data_reg[j];
+//									}
+//								}
+//								else
+//								{
+//									MsgDisplay.ch_number = ch_number;
+//									MsgDisplay.addr_reg = addr_reg;
+//									MsgDisplay.fdata = fdata;
+//								}
+//								MsgDisplay.qReg = 2;
+//								MsgDisplay.cal_status = 0x10;
+
+//								break;
+
+//							default:
+//								break;
+//						}
+//        	}
+//        }
+//    }
+
+//		#ifdef	DEBUGING
+//		  uint8_t a
+//		  a = snprintf(arrDisplay, DISP_TX_SIZE, "Display code: %d \n", arrDisplayRX[0]);
+//		  USART_Transmit(USART_DEBUG, 6, (uint8_t*)arrDisplay, a);
+//		#endif
+
+//	return 0;
+// 
+// }
+ 
+// /**
+//  * @brief ќтправка данных через UART (неблокирующий режим с прерывани€ми)
+//  * @param huart ”казатель на структуру UART_HandleTypeDef
+//  * @param data ”казатель на массив данных дл€ отправки
+//  * @param size  оличество байт дл€ отправки
+//  * @retval HAL_StatusTypeDef —татус операции
+//  */
+//HAL_StatusTypeDef USART_Transmit_IT(UART_HandleTypeDef *huart, uint8_t *data, uint16_t size){
+//    if(huart == NULL || data == NULL || size == 0) {
+//        return HAL_ERROR;
+//    }
+//    
+//    return HAL_UART_Transmit_IT(huart, data, size);
+//}
 
  
  void FixRussianEncodingForNextion(char *str) {
@@ -258,41 +265,40 @@ HAL_StatusTypeDef USART_Transmit_IT(UART_HandleTypeDef *huart, uint8_t *data, ui
     }
 }
 
-// ќбъ€вл€ем вспомогательную функцию дл€ отправки команд
+// вспомогательна€ функцию дл€ отправки команд
  void SendNextionCommand(const char* format, ...){
     va_list args;
     va_start(args, format);
-    uint8_t len = vsnprintf(arrDisplayTX, ARRAY_TX_SIZE, format, args);
+    uint8_t len = vsnprintf((char*)tx_buffer, ARRAY_TX_SIZE, format, args);
     va_end(args);
     
     if(len >= ARRAY_TX_SIZE) {
-        // ќбработка переполнени€ буфера
-        return;
+        return; // ќбработка переполнени€ буфера
     }
     
-    FixRussianEncodingForNextion(arrDisplayTX);
-    //USART_Transmit(USART_DISPLAY, 3, (uint8_t*)arrDisplay, len);
-		USART_Transmit_IT(&huart3, (uint8_t *)arrDisplayTX, len);
-    osDelay(50);  // —тандартна€ задержка между командами
+    FixRussianEncodingForNextion((char*)tx_buffer);
+    
+    // ƒобавл€ем маркер конца (3 байта 0xFF)
+    tx_buffer[len] = 0xFF;
+    tx_buffer[len+1] = 0xFF;
+    tx_buffer[len+2] = 0xFF;
+    
+    tx_size = len + 3;
+    tx_index = 0;
+    
+    // ¬ключаем прерывание передачи
+    huart3.Instance->CR1 |= USART_CR1_TXEIE;
+    
+    osDelay(40); // «адержка между командами
 }
 
- void InitNextionDisplayWithDeviceData(void){
- 
-	  while( arrDisplayRX[0] !=  0x30) // ???
-	  {
-		  SendNextionCommand("page page0€€€");
-		  osDelay(500);
-	  }
-		
+ void InitNextionDisplayWithDeviceData(uint8_t numberOfdevices){
+ 		
 		  // ќтправл€ем данные дл€ каждого устройства
-    for(uint8_t i = 1; i <= flash_struct.dev_quan; i++) {
+    for(uint8_t i = 1; i <= numberOfdevices ; i++) {
 			
-        if(device[i].status != RX_OK) 
-				 {
-					 continue;
-         }
         uint8_t page = (i-1)/4;
-        uint8_t pos =  i - 4 * page;
+        uint8_t pos =  (i - 1) % 4 + 1;    // ѕозици€ на странице (1-4)
         
         // ‘орматируем числа с зап€той вместо точки
         char value_str[20], scale_max_str[20], por1_str[20], por2_str[20];
@@ -307,14 +313,15 @@ HAL_StatusTypeDef USART_Transmit_IT(UART_HandleTypeDef *huart, uint8_t *data, ui
         for(char* p = por2_str; *p; p++) if(*p == '.') *p = ',';
         
         // ќтправл€ем все параметры устройства
-        SendNextionCommand("page%d.ch%d.txt=\" анал %d\"€€€", page, pos, i);         //pos вместо i-4*page
-        SendNextionCommand("page%d.val%d.txt=\"%s\"€€€", page, pos, value_str);
-        SendNextionCommand("page%d.gas%d.txt=\"%s\"€€€", page, pos, device[i].gas);
-        SendNextionCommand("page%d.ran%d.txt=\"%s\"€€€", page, pos, scale_max_str);
-        SendNextionCommand("page%d.unit%d.txt=\"%s\"€€€", page, pos, device[i].scaleDimension);
-        SendNextionCommand("page%d.por1%d.txt=\"%s\"€€€", page, pos, por1_str);
-        SendNextionCommand("page%d.por2%d.txt=\"%s\"€€€", page, pos, por2_str);
-        SendNextionCommand("page%d.mod%d.txt=\"%s\"€€€", page, pos, device[i].model);
+			  SendNextionCommand ("page page%d", page);
+        SendNextionCommand("page%d.ch%d.txt=\" анал %d\"", page, pos, i);         //pos вместо i-4*page
+        SendNextionCommand("page%d.val%d.txt=\"%s\"", page, pos, value_str);
+        SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos, device[i].gas);
+        SendNextionCommand("page%d.ran%d.txt=\"%s\"", page, pos, scale_max_str);
+        SendNextionCommand("page%d.unit%d.txt=\"%s\"", page, pos, device[i].scaleDimension);
+        SendNextionCommand("page%d.por1%d.txt=\"%s\"", page, pos, por1_str);
+        SendNextionCommand("page%d.por2%d.txt=\"%s\"", page, pos, por2_str);
+        SendNextionCommand("page%d.mod%d.txt=\"%s\"", page, pos, device[i].model);
     }
  }
 
@@ -382,6 +389,34 @@ HAL_StatusTypeDef USART_Transmit_IT(UART_HandleTypeDef *huart, uint8_t *data, ui
 	return   channel_num;
         				
  }
+ 
+void initDeviceData(uint8_t numberOfdevices)
+
+   {
+		 for(uint8_t i = 0; i <= numberOfdevices ; i++)
+		  {
+			  device[i].value = 11.56;
+			  strncpy(device[i].gas, "O2", sizeof(device[i].gas));
+				device[i].scaleMax = 50.00;
+			  strncpy(device[i].scaleDimension, "ppm", sizeof(device[i].scaleDimension));
+				device[i].Porog1 = 10;
+				device[i].Porog2 = 20;
+				strncpy(device[i].model, "QT1020", sizeof(device[i].model));
+			}
+			
+	 }
+	 
+//void Nextion_SendCommand(const char* command)
+//{
+//    // ќтправл€ем команду
+//    HAL_UART_Transmit(&huart3, (uint8_t*)command, strlen(command), HAL_MAX_DELAY);
+//    
+//    // ќтправл€ем завершающие байты (0xFF 0xFF 0xFF)
+//    uint8_t end_bytes[3] = {0xFF, 0xFF, 0xFF};
+//    HAL_UART_Transmit(&huart3, end_bytes, 3, HAL_MAX_DELAY);
+//}
+// 
+ 
  /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
 
 
