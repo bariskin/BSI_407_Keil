@@ -391,7 +391,6 @@ void SlaveEventFunction(void const * argument)
 void DisplayTaskFunction(void const * argument)
 {
   /* USER CODE BEGIN DisplayTaskFunction */
-
   /* Infinite loop */
   for(;;)
   {
@@ -400,7 +399,10 @@ void DisplayTaskFunction(void const * argument)
 				   packet_ready = 0;
            memset((void*)arrDisplayRX, 0, ARRAY_RX_SIZE);
            switch(displayResponse)
-					 {
+					 {	 
+						 case 0x00:
+							 
+						 break;
 						 case 0x88:   // первый ответ после старта дисплея  0x88 0xFF 0xFF 0xFF
 							 displayStartedFlag++;
 						 
