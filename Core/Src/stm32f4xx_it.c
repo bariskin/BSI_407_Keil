@@ -52,7 +52,7 @@ extern  uint8_t rxIdxDisplayUart;
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+#define CHECK_3_ZEROS(arr) (arr[0] == 0 && arr[1] == 0 && arr[2] == 0)
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -79,6 +79,27 @@ volatile uint8_t displayStartedFlag = 0;
 uint8_t tx_buffer[ARRAY_TX_SIZE + 3]; // Основной буфер + 3 байта маркера конца
 volatile uint16_t tx_index = 0;
 volatile uint16_t tx_size = 0;
+
+
+ #define MAX_PACKETS 10         // Максимум сообщений в буфере
+// uint8_t packet_buffer[MAX_PACKETS][ARRAY_RX_SIZE];
+// uint8_t packet_lengths[MAX_PACKETS];
+// uint8_t current_packet = 0;
+
+ #define MAX_SIGNIFICANT_BYTES  10 // Максимум значимых байтов для сохранения
+ 
+ typedef struct {
+    uint8_t data[10];      // Полные данные сообщения
+    uint8_t length;                   // Общая длина (без учёта FF FF FF)
+    uint8_t significant_bytes[MAX_SIGNIFICANT_BYTES]; 
+    uint8_t significant_count;        // Фактическое количество значимых байтов
+} Packet;
+
+
+ Packet received_packets[MAX_PACKETS];
+ uint8_t packets_received = 0;
+ uint8_t significant_bytes_count = 0;
+ uint8_t significant_bytes[MAX_SIGNIFICANT_BYTES] = {0};
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -246,31 +267,77 @@ void USART3_IRQHandler(void) {
 
         // Если буфер не переполнен
         if (rx_index < ARRAY_RX_SIZE - 1) {
-            arrDisplayRX[rx_index++] = byte;  // Сохраняем байт в буфер
+					
+              arrDisplayRX[rx_index++] = byte;  // Сохраняем байт в буфер
 
             // Проверяем, является ли текущий байт частью маркера конца (0xFF)
             if (byte == 0xFF) {
                 end_marker_counter++;  // Увеличиваем счётчик подряд идущих 0xFF
-            } else {
+            } 
+						else {
                 end_marker_counter = 0; // Сброс, если байт не 0xFF
+							
+							  // Сохраняем первые 5 значимых байтов
+                if (significant_bytes_count < MAX_SIGNIFICANT_BYTES) {
+                   significant_bytes[significant_bytes_count++] = byte;
+                  }	
             }
-
-            // Если обнаружено три 0xFF подряд (конец пакета)
-            if (end_marker_counter >= 3) {
-                arrDisplayRX[rx_index - 3] = '\0';  // Удаляем маркер конца и добавляем нуль-терминатор
-                packet_ready = 1;                   // Устанавливаем флаг готовности пакета
-                displayResponse =  arrDisplayRX[rx_index - 4];
-							  rx_index = 0;                       // Сбрасываем индекс для нового пакета
-                end_marker_counter = 0;             // Сбрасываем счётчик
-            }
+								
+        // Обнаружение конца сообщения (3+ FF подряд)
+        if (end_marker_counter >= 3 && packets_received < 3) {
+					
+					  arrDisplayRX[rx_index - 3] = '\0';  // Удаляем маркер конца и добавляем нуль-терминатор
+					
+            // Обновляем displayResponse
+            if (significant_bytes_count > 0) {		
+							
+							if(significant_bytes_count == 1)
+							  {
+                  displayResponse = significant_bytes[0];
+							  }
+							else if(significant_bytes_count == 2)
+							 {
+								 if(significant_bytes[0] == 0x00)    // for CMD 0x88
+								  {
+									 displayResponse = significant_bytes[1];
+									}
+									else
+									{
+									displayResponse = significant_bytes[0];
+									}										
+							 }
+	             else if(significant_bytes_count == 3)
+							 {
+							  
+							 }
+							 else if(significant_bytes_count == 4)
+							 {
+							 
+							 }
+							else if(significant_bytes_count == 5)   // for numberOfDevices
+							 {
+								 if(CHECK_3_ZEROS(significant_bytes)) // признак полчения команды количеств девайсов 
+					        {
+										displayResponse = 0x33;
+									    
+									}		
+								}							     
+							}		
+						packet_ready = 1;                   // Устанавливаем флаг готовности пакета		
+           // packets_received++;
+						if(packets_received >MAX_PACKETS)
+						{
+						  packets_received = 0;
+						}
+            rx_index = 0;
+            end_marker_counter = 0;
+            significant_bytes_count = 0; // Сброс для нового сообщения
+         }
         } else {
             // Переполнение буфера — сбрасываем
             rx_index = 0;
             end_marker_counter = 0;
-        }
-				
-		     // Перезапускаем приём следующего байта
-        huart3.Instance->CR1 |= USART_CR1_RXNEIE;  // Включаем прерывание		
+        }			
     }
 
 		   // Обработка передачи

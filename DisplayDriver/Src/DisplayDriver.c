@@ -27,7 +27,7 @@ extern  uint8_t tx_buffer[ARRAY_TX_SIZE + 3]; // Основной буфер + 3 байта маркер
 extern volatile uint16_t tx_index;
 extern volatile uint16_t tx_size;
  
- 
+
 /* ------------------------Locale variables----------------------------*/
  enum {
 	FALSE,
@@ -405,18 +405,6 @@ void initDeviceData(uint8_t numberOfdevices)
 			}
 			
 	 }
-	 
-//void Nextion_SendCommand(const char* command)
-//{
-//    // Отправляем команду
-//    HAL_UART_Transmit(&huart3, (uint8_t*)command, strlen(command), HAL_MAX_DELAY);
-//    
-//    // Отправляем завершающие байты (0xFF 0xFF 0xFF)
-//    uint8_t end_bytes[3] = {0xFF, 0xFF, 0xFF};
-//    HAL_UART_Transmit(&huart3, end_bytes, 3, HAL_MAX_DELAY);
-//}
-// 
- 
  /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
 
 

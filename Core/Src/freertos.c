@@ -43,6 +43,7 @@ uint8_t SelectaFlag = 0;
 extern volatile uint8_t startDisplayFlag;
 extern volatile uint8_t packet_ready;   
 extern UART_HandleTypeDef huart3;
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -53,9 +54,12 @@ extern SensorState_t   SensorStateArray[NUMBER_SLAVE_DEVICES];
 extern volatile char arrDisplayRX[ARRAY_RX_SIZE];
 extern volatile uint8_t displayResponse;
 extern volatile uint8_t displayStartedFlag ;
+extern  uint8_t packets_received;
 
 uint8_t  numberOfDevices = 20;
+uint16_t BaudRateID = 0;
 
+uint8_t getIntFromChar( char * inputString, uint8_t stringSize);
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -396,26 +400,37 @@ void DisplayTaskFunction(void const * argument)
   {
 			if(packet_ready)	
         {
-				   packet_ready = 0;
-           memset((void*)arrDisplayRX, 0, ARRAY_RX_SIZE);
+				  
            switch(displayResponse)
 					 {	 
 						 case 0x00:
 							 
 						 break;
 						 case 0x88:   // первый ответ после старта дисплея  0x88 0xFF 0xFF 0xFF
-							 displayStartedFlag++;
-						 
+				 
 							 SendNextionCommand("Init.qDev.txt=\"%d\"", numberOfDevices); // for testing  
-						   osDelay(5);	
+
 						 break;
 						 
 						 case 0x10:	 // второй ответ после старта дисплея   0x10 0xFF 0xFF 0xFF
 							 
-						   displayStartedFlag++;
 						   InitNextionDisplayWithDeviceData(numberOfDevices);
 						 break;	 	
-					 }						 
+						 
+						 case 0xA0:
+					 
+						   BaudRateID = arrDisplayRX[1];
+             break;
+						 
+						 case 0x33:
+					        numberOfDevices = getIntFromChar((char *)&arrDisplayRX[0], 5);
+             break; 
+						 				 
+					 }		
+	 
+           packet_ready = 0;
+           memset((void*)arrDisplayRX, 0, ARRAY_RX_SIZE);
+					 
         // Перезапускаем приём
            HAL_UART_Receive_IT(&huart3,(uint8_t *)&arrDisplayRX[0], 1);					
 				}				
@@ -428,5 +443,21 @@ void DisplayTaskFunction(void const * argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
-
+// Пропускаем нули и находим первую цифру
+ uint8_t getIntFromChar( char *inputString, uint8_t stringSize)
+ {
+	 int number = 0;
+	for (int i = 0; i < stringSize; i++) {
+			
+		  if (inputString[i] == 0x00) continue; // Пропускаем нули
+			 osDelay(1);
+			// Если байт в диапазоне ASCII-цифр ('0'-'9')
+			if (inputString[i] >= 0x30 && inputString[i] <= 0x39) {
+					// Первая цифра: data[i] - '0', вторая: data[i+1] - '0'
+					number = (inputString[i] - 0x30) * 10 + (inputString[i+1] - 0x30);
+					break; // Выходим после обработки
+			}
+	 }
+  return number;
+}
 /* USER CODE END Application */
