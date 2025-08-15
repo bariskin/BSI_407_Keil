@@ -283,56 +283,45 @@ void USART3_IRQHandler(void) {
                   }	
             }
 								
-        // Обнаружение конца сообщения (3+ FF подряд)
-        if (end_marker_counter >= 3 && packets_received < 3) {
-					
-					  arrDisplayRX[rx_index - 3] = '\0';  // Удаляем маркер конца и добавляем нуль-терминатор
-					
-            // Обновляем displayResponse
-            if (significant_bytes_count > 0) {		
+								// Обнаружение конца сообщения (3 0xFF подряд)
+					if (end_marker_counter >= 3) {
+							arrDisplayRX[rx_index - 3] = '\0';  // Удаляем маркер конца
 							
-							if(significant_bytes_count == 1)
-							  {
-                  displayResponse = significant_bytes[0];
-							  }
-							else if(significant_bytes_count == 2)
-							 {
-								 if(significant_bytes[0] == 0x00)    // for CMD 0x88
-								  {
-									 displayResponse = significant_bytes[1];
+							// Обновляем displayResponse
+							if (significant_bytes_count > 0) {
+									// Обработка специальных случаев
+									switch(significant_bytes_count) {
+											case 1:
+													displayResponse = significant_bytes[0];
+													break;
+													
+											case 2:
+													displayResponse = (significant_bytes[0] == 0x00) 
+																				 ? significant_bytes[1] 
+																				 : significant_bytes[0];
+													break;
+													
+											case 5:
+													if (CHECK_3_ZEROS(significant_bytes)) {
+															displayResponse = 0x33; // Количество устройств
+													}
+													break;
 									}
-									else
-									{
-									displayResponse = significant_bytes[0];
-									}										
-							 }
-	             else if(significant_bytes_count == 3)
-							 {
-							  
-							 }
-							 else if(significant_bytes_count == 4)
-							 {
-							 
-							 }
-							else if(significant_bytes_count == 5)   // for numberOfDevices
-							 {
-								 if(CHECK_3_ZEROS(significant_bytes)) // признак полчения команды количеств девайсов 
-					        {
-										displayResponse = 0x33;
-									    
-									}		
-								}							     
-							}		
-						packet_ready = 1;                   // Устанавливаем флаг готовности пакета		
-           // packets_received++;
-						if(packets_received >MAX_PACKETS)
-						{
-						  packets_received = 0;
-						}
-            rx_index = 0;
-            end_marker_counter = 0;
-            significant_bytes_count = 0; // Сброс для нового сообщения
-         }
+									
+									// Обработка командных пакетов (формат XX 01 YY)
+									if (significant_bytes_count >= 3 && arrDisplayRX[1] == 0x01) {
+											// Используем прямое соответствие между param_id и response
+											if (arrDisplayRX[2] >= 0x01 && arrDisplayRX[2] <= 0x06) {
+													displayResponse = arrDisplayRX[2];
+											}
+									}
+							}
+							
+							packet_ready = 1;  // Флаг готовности пакета
+							rx_index = 0;
+							end_marker_counter = 0;
+							significant_bytes_count = 0;
+					}
         } else {
             // Переполнение буфера — сбрасываем
             rx_index = 0;

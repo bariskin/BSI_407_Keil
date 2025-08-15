@@ -15,8 +15,11 @@
 #include "cmsis_os.h"
 #include "numberDevices.h"
 #include "stdbool.h"
+#include "UARTSlaveSettings.h"
+#include "HoldingRegisterSlaveHandler.h"
 /* ------------------------External variables -------------------------*/
 extern UART_HandleTypeDef huart3;
+extern osThreadId SlaveEventTaskHandle;
 /* ------------------------Global variables----------------------------*/
  char arrDisplayTX[ARRAY_TX_SIZE] = {0};
  volatile uint8_t arrDisplayRX[ARRAY_RX_SIZE] = {0};
@@ -26,7 +29,7 @@ extern UART_HandleTypeDef huart3;
 extern  uint8_t tx_buffer[ARRAY_TX_SIZE + 3]; // Основной буфер + 3 байта маркера конца
 extern volatile uint16_t tx_index;
 extern volatile uint16_t tx_size;
- 
+extern  uint8_t  numberOfDevices;
 
 /* ------------------------Locale variables----------------------------*/
  enum {
@@ -94,169 +97,7 @@ struct paramDev{
 	 // Активируем прерывание по приёму первого байта
        HAL_UART_Receive_IT(&huart3, (uint8_t *)&arrDisplayRX[0], 1); 
  }
- 
-// /**
-//  * @brief Processes incoming UART messages from Nextion display
-//  * @param data Pointer to received data buffer
-//  * @return int8_t - 0 if processed successfully, message byte for short messages
-//  */
-//uint8_t Nextion_ParseMsgAndExecute(uint8_t* data){
-//    uint8_t len;
-//	 	uint16_t data_int16;
-//	  uint32_t fdata_int32;
-//	 
-//    // обработка сообщения от дисплея
-//    for (uint8_t i = 0; i < ARRAY_RX_SIZE; i++)
-//    {   
-//			// Find message end marker (0xFF 0xFF 0xFF)
-//        if ((data[i] == 0xFF) && (data[i + 1] == 0xFF) && (data[i + 2] == 0xFF))
-//        {
-//		    	 // Clear remaining bytes (checksum/error fields)
-//			     for(uint8_t j = i; j < ARRAY_RX_SIZE; j++)
-//			       {
-//			        data[j] = 0x00;
-//			       }
-//        // Short message processing (single byte)
-//            if (data[i - 1] == 0x10)
-//            {
-//             return  0x10;
-//            }
-//					 // long message processing 
-//        	else 
-//        	 {
-//        		
-//     
-//           	uint8_t ch_number = data[0];
-//           	uint8_t comand_number = data[1];
-//           	uint8_t addr_reg = data[2];
 
-//        		uint8_t data_reg[10];
-//        		char* data_end[10];
-//        		float fdata;
-//						 
-//            // Extract float value if present
-//            if (i > 3)  // Ensure there's data to parse
-//            {          
-//           		fdata = strtof((char*)&data[3], data_end);
-//						}
-//						
-//						switch (comand_number) {
-
-//							case 0x00:  // Set device quantity
-//								flash_struct.dev_quan = (uint8_t)fdata;
-//								//HAL_I2C_Mem_Write(&hi2c2, 0x56 << 1, 1,I2C_MEMADD_SIZE_16BIT, (uint8_t*)&flash_struct.dev_quan, 1, 100);
-//								break;
-
-//							case 0x01:  // Device configuration
-//							 
-//								switch (addr_reg) {
-//									case 0x01:
-//							
-//										len = sizeof(device[ch_number].posit);
-//										for(uint8_t i = 0; i < len; i++)				device[ch_number].posit[i] = 0;
-//										for(uint8_t i = 0; data[3+i]!='\0'; i++)	device[ch_number].posit[i] = data[3+i];
-//										break;
-//									case 0x02:
-//										len = sizeof(device[ch_number].scaleDimension);
-//										for(uint8_t i = 0; i < len; i++)				device[ch_number].scaleDimension[i] = 0;
-//										for(uint8_t i = 0; data[3+i]!='\0'; i++)	device[ch_number].scaleDimension[i] = data[3+i];
-//										break;
-//									case 0x03:
-//										device[ch_number].scaleMax = fdata;
-//										break;
-//									case 0x04:
-//										device[ch_number].Porog1 = fdata;
-//										break;
-//									case 0x05:
-//										device[ch_number].Porog2 = fdata;
-//										break;
-//									case 0x06:
-//										len = sizeof(device[ch_number].gas);
-//										for(uint8_t i=0; i < len; i++)				device[ch_number].gas[i] = 0;
-//										for(uint8_t i=0; data[3+i]!='\0'; i++)	device[ch_number].gas[i] = data[3+i];
-//										break;
-//									case 0xfe:
-//										// команда записи данных в модуль канала
-//										MsgDisplay.cal_status = 0xfe;
-//										MsgDisplay.ch_number = ch_number;
-//										break;
-//									default:
-//										break;
-//								}
-//								break;
-
-//							case 0x06:
-//							
-//								data_int16 = fdata * 100;
-
-//								MsgDisplay.ch_number = (device[ch_number].channelIndex-1)/4+1;
-//								MsgDisplay.addr_reg = addr_reg + 1000*((device[ch_number].channelIndex-1)%4);
-//								MsgDisplay.data_int16 = data_int16;
-//								MsgDisplay.cal_status = 0x06;
-//								break;
-
-//							case 0x10:
-//								
-//								fdata_int32 = *(uint32_t*) &fdata;
-
-//								data_reg[0] = fdata_int32 >> 24;
-//								data_reg[1] = fdata_int32 >> 16;
-//								data_reg[2] = fdata_int32 >> 8;
-//								data_reg[3] = fdata_int32;
-
-//								if(device[ch_number].channelIndex != 0)
-//								{
-//									MsgDisplay.ch_number = (device[ch_number].channelIndex-1)/4+1;
-//									MsgDisplay.addr_reg = addr_reg + 1000*((device[ch_number].channelIndex-1)%4);
-//									for(uint8_t j=0; j<4; j++)
-//									{
-//										MsgDisplay.data_reg[j] = data_reg[j];
-//									}
-//								}
-//								else
-//								{
-//									MsgDisplay.ch_number = ch_number;
-//									MsgDisplay.addr_reg = addr_reg;
-//									MsgDisplay.fdata = fdata;
-//								}
-//								MsgDisplay.qReg = 2;
-//								MsgDisplay.cal_status = 0x10;
-
-//								break;
-
-//							default:
-//								break;
-//						}
-//        	}
-//        }
-//    }
-
-//		#ifdef	DEBUGING
-//		  uint8_t a
-//		  a = snprintf(arrDisplay, DISP_TX_SIZE, "Display code: %d \n", arrDisplayRX[0]);
-//		  USART_Transmit(USART_DEBUG, 6, (uint8_t*)arrDisplay, a);
-//		#endif
-
-//	return 0;
-// 
-// }
- 
-// /**
-//  * @brief Отправка данных через UART (неблокирующий режим с прерываниями)
-//  * @param huart Указатель на структуру UART_HandleTypeDef
-//  * @param data Указатель на массив данных для отправки
-//  * @param size Количество байт для отправки
-//  * @retval HAL_StatusTypeDef Статус операции
-//  */
-//HAL_StatusTypeDef USART_Transmit_IT(UART_HandleTypeDef *huart, uint8_t *data, uint16_t size){
-//    if(huart == NULL || data == NULL || size == 0) {
-//        return HAL_ERROR;
-//    }
-//    
-//    return HAL_UART_Transmit_IT(huart, data, size);
-//}
-
- 
  void FixRussianEncodingForNextion(char *str) {
     for (; *str != '\0'; str++) {  // Проверка на конец строки
         if ((*str >= (char)0xC0) && (*str != (char)0xFF)) {
@@ -405,6 +246,77 @@ void initDeviceData(uint8_t numberOfdevices)
 			}
 			
 	 }
+	 
+// Пропускаем нули и находим первую цифру
+ uint8_t getIntFromChar( char *inputString, uint8_t stringSize)
+ {
+	 int number = 0;
+	for (int i = 0; i < stringSize; i++) {
+			
+		  if (inputString[i] == 0x00) continue; // Пропускаем нули
+			 osDelay(1);
+			// Если байт в диапазоне ASCII-цифр ('0'-'9')
+			if (inputString[i] >= 0x30 && inputString[i] <= 0x39) {
+					// Первая цифра: data[i] - '0', вторая: data[i+1] - '0'
+					number = (inputString[i] - 0x30) * 10 + (inputString[i+1] - 0x30);
+					break; // Выходим после обработки
+			}
+	 }
+  return number;
+}	 
+	 
+
+	/**
+ * @brief Обрабатывает команды, полученные от дисплея.
+ * @param displayResponse Код команды от дисплея.
+ * @param arrDisplayRX Буфер с данными команды.
+ * @param packet_ready Флаг готовности пакета (1 — данные получены, 0 — нет).
+ * @param numberOfDevices Указатель на переменную с числом устройств (если нужно обновлять).
+ * @param huart Указатель на UART-интерфейс для перезапуска приёма.
+ */
+void HandleDisplayCommands(uint8_t displayResponse, uint8_t *arrDisplayRX, uint8_t *packet_ready, UART_HandleTypeDef *huart) {
+    
+	if (*packet_ready) {
+        switch (displayResponse) {
+            case 0x01: // Модель
+                break;
+            case 0x02: // Единицы измерения
+                break;
+            case 0x03: // Диапазон измерения
+                break;
+            case 0x04: // Порог 1
+                break;
+            case 0x05: // Порог 2
+                break;
+            case 0x06: // Газ
+                break;
+            case 0x88: // Первый ответ после старта дисплея (0x88 0xFF 0xFF 0xFF)
+                SendNextionCommand("Init.qDev.txt=\"%d\"", numberOfDevices); // Тестовая строка
+                break;
+            case 0x10: // Второй ответ после старта дисплея (0x10 0xFF 0xFF 0xFF)
+                InitNextionDisplayWithDeviceData(numberOfDevices);
+                break;
+            case 0xA0: // Смена скорости UART
+                if (arrDisplayRX[1] >= 1 && arrDisplayRX[1] <= 6) {
+                    MB_BaudRateValue = getBaudrate(arrDisplayRX[1]);
+                    xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_1, eSetValueWithOverwrite);
+                }
+                osDelay(1);
+                break;
+            case 0x33: // Обновление числа устройств
+                numberOfDevices = getIntFromChar((char *)&arrDisplayRX[0], 5);
+                break;
+        }
+
+        // Сброс флага и буфера
+        *packet_ready = 0;
+        memset(arrDisplayRX, 0, ARRAY_RX_SIZE);
+
+        // Перезапуск UART-приёма
+        HAL_UART_Receive_IT(huart, arrDisplayRX, 1);
+    }
+} 
+	  
  /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
 
 

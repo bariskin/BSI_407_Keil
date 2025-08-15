@@ -34,12 +34,12 @@ extern "C" {
   */
 	 void Init_qDev(void);
 	 void UART_Display_StartReceiving(void);
-	 //uint8_t Nextion_ParseMsgAndExecute(uint8_t* data);
 	 void FixRussianEncodingForNextion (char *str);
    void SendNextionCommand(const char* format, ...);
 	 void InitNextionDisplayWithDeviceData(uint8_t numberOfdevices);
-	 //void Nextion_SendCommand(const char* command);
 	 void initDeviceData(uint8_t numberOfdevices);
+	 uint8_t getIntFromChar( char * inputString, uint8_t stringSize);
+	 void HandleDisplayCommands(uint8_t displayResponse, uint8_t *arrDisplayRX, uint8_t *packet_ready, UART_HandleTypeDef *huart);
   /**
   * @}
   */
