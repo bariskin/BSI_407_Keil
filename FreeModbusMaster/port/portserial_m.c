@@ -29,7 +29,7 @@
 
 /* ----------------------- static functions ---------------------------------*/
 static void prvvUARTTxReadyISR(void);
-static void prvvUARTRxISR(void);
+//static void prvvUARTRxISR(void);
 
 /* ----------------------- Variables ----------------------------------------*/
 
@@ -108,9 +108,9 @@ static void prvvUARTTxReadyISR(void)
 }
 
 /* --------------------------------------------------------------------------*/
-static void prvvUARTRxISR(void)
-{
-  pxMBMasterFrameCBByteReceived();
-}
+//static void prvvUARTRxISR(void)
+//{
+//  pxMBMasterFrameCBByteReceived();
+//}
 
 /* --------------------------------------------------------------------------*/

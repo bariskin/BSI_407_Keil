@@ -43,29 +43,8 @@ extern  uint8_t  numberOfDevices;
 	RX_FAULT = 1
 };
  
-struct paramDev{
-	uint8_t channelIndex;
-	uint16_t status;
-	char model[20];
-	char posit[20];
-	char gas[20];
-	float scaleMax;
-	char scaleDimension[20];
-	float value;
-	float current4_20;									  	// петля 4-20 mA
-	float currentConsumptoin;								// ток потребления
-	float Porog1;
-	float Porog2;
-	uint8_t error;
-	uint8_t errorRS;
-	uint32_t status_GA;
-	uint32_t value_uint32;
-	uint32_t scaleMax_uint32;					
-	uint8_t scaleDimension_hex;					
-	uint32_t Porog1_int32;							
-	uint32_t Porog2_int32;							
-	uint32_t model_hex;								  
-}device[NUMBER_SLAVE_DEVICES];
+
+ paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  
  struct
  {
@@ -271,7 +250,6 @@ void initDeviceData(uint8_t numberOfdevices)
  * @param displayResponse Код команды от дисплея.
  * @param arrDisplayRX Буфер с данными команды.
  * @param packet_ready Флаг готовности пакета (1 — данные получены, 0 — нет).
- * @param numberOfDevices Указатель на переменную с числом устройств (если нужно обновлять).
  * @param huart Указатель на UART-интерфейс для перезапуска приёма.
  */
 void HandleDisplayCommands(uint8_t displayResponse, uint8_t *arrDisplayRX, uint8_t *packet_ready, UART_HandleTypeDef *huart) {
@@ -291,10 +269,10 @@ void HandleDisplayCommands(uint8_t displayResponse, uint8_t *arrDisplayRX, uint8
             case 0x06: // Газ
                 break;
             case 0x88: // Первый ответ после старта дисплея (0x88 0xFF 0xFF 0xFF)
-                SendNextionCommand("Init.qDev.txt=\"%d\"", numberOfDevices); // Тестовая строка
+                //SendNextionCommand("Init.qDev.txt=\"%d\"", numberOfDevices); // Тестовая строка
                 break;
             case 0x10: // Второй ответ после старта дисплея (0x10 0xFF 0xFF 0xFF)
-                InitNextionDisplayWithDeviceData(numberOfDevices);
+                //InitNextionDisplayWithDeviceData(numberOfDevices);
                 break;
             case 0xA0: // Смена скорости UART
                 if (arrDisplayRX[1] >= 1 && arrDisplayRX[1] <= 6) {

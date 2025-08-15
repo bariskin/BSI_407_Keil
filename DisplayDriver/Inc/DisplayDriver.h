@@ -26,6 +26,32 @@ extern "C" {
   #define ARRAY_TX_SIZE		100
   #define ARRAY_RX_SIZE		256
 	#define START_INIT_BYTE	0x10
+	
+		typedef struct
+	  {
+			uint8_t channelIndex;
+			uint16_t status;
+			char model[20];
+			char posit[20];
+			char gas[20];
+			float scaleMax;
+			char scaleDimension[20];
+			float value;
+			float current4_20;									  	// петля 4-20 mA
+			float currentConsumptoin;								// ток потребления
+			float Porog1;
+			float Porog2;
+			uint8_t error;
+			uint8_t errorRS;
+			uint32_t status_GA;
+			uint32_t value_uint32;
+			uint32_t scaleMax_uint32;					
+			uint8_t scaleDimension_hex;					
+			uint32_t Porog1_int32;							
+			uint32_t Porog2_int32;							
+			uint32_t model_hex;						
+    }paramDev_t;
+	
  /* ------------------------External variables -------------------------*/
   
 

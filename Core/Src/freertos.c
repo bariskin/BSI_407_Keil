@@ -59,8 +59,7 @@ extern  uint8_t packets_received;
 
 uint8_t  numberOfDevices = 20;
 uint16_t BaudRateID = 0;
-
-
+extern SensorInfo_t SensorInfo;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -80,11 +79,11 @@ osThreadId MasterModbusTasHandle;
 uint32_t MasterModbusTasBuffer[ 256 ];
 osStaticThreadDef_t MasterModbusTasControlBlock;
 osThreadId HoldingHandlerHandle;
-uint32_t HoldingHandlerBuffer[ 256 ];
+uint32_t HoldingHandlerBuffer[ 512 ];
 osStaticThreadDef_t HoldingHandlerControlBlock;
 osThreadId InputHandlerHandle;
-uint32_t InputHandlerBuffer[ 256 ];
-osStaticThreadDef_t InputHandlerControlBlock;
+//uint32_t InputHandlerBuffer[ 256 ];
+//osStaticThreadDef_t InputHandlerControlBlock;
 osThreadId SlaveEventTaskHandle;
 uint32_t SlaveEventTaskBuffer[ 256 ];
 osStaticThreadDef_t SlaveEventTaskControlBlock;
@@ -164,7 +163,7 @@ void MX_FREERTOS_Init(void) {
   MasterModbusTasHandle = osThreadCreate(osThread(MasterModbusTas), NULL);
 
   /* definition and creation of HoldingHandler */
-  osThreadStaticDef(HoldingHandler, HoldingHandlerFunction, osPriorityNormal, 0, 256, HoldingHandlerBuffer, &HoldingHandlerControlBlock);
+  osThreadStaticDef(HoldingHandler, HoldingHandlerFunction, osPriorityNormal, 0, 512, HoldingHandlerBuffer, &HoldingHandlerControlBlock);
   HoldingHandlerHandle = osThreadCreate(osThread(HoldingHandler), NULL);
 
   /* definition and creation of InputHandler */
@@ -260,22 +259,22 @@ void HoldingHandlerFunction(void const * argument)
 			
 			     /* *********************************  Handling HOLDING registers *************************** */
 				    if(SelectRunFlag == 0)
-				     {   
+				     { // вычитывается модель прибора   
 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, (DEVICE_MODEL_CODE - 1),2, 200 );
 					    SelectRunFlag = 1;
 				     }
 				    else if(SelectRunFlag == 1)
-				     { 	 
+				     { // вычитываются значения дипазона  всей шкалы и единицы измерения
 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SCALE_MAX_HIGH - 1 ,3, 200 );
 					    SelectRunFlag = 2;
 				     }				 
 				    else if (SelectRunFlag == 2)
-					   {
+					   { //вычитываются пороги 1 и 2
 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 4, 200 );
 					    SelectRunFlag = 3;
 					   }
 				    else if (SelectRunFlag == 3)
-					    {
+					    { //вычитывается тип газа
 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SUBSTANCE_CODE_1 - 1, 16, 200 );
 					     SelectRunFlag = 4;	
 					    } 	 
@@ -299,10 +298,15 @@ void HoldingHandlerFunction(void const * argument)
 								ModBusSlaveCurrentDeviceAddr = 1; 
 							 }
 		 
-					     if(HoldingPollsDone == 3) // после трех проходов опредеояем наличие активных приборов
+					     if(HoldingPollsDone == 3) // после трех проходов определяем наличие активных приборов
 					      {
-						      SelectRunFlag = 4;	
-								  ModBusSlaveCurrentDeviceAddr = 1;
+									
+						      SelectRunFlag = 4;	               // переход на постояный цикл опроса значений концентрации
+									
+									/* получение информации об активных датчика их адресах */
+									GetActiveSensors(SensorStateArray, (SensorInfo_t *) &SensorInfo);
+									/* получение modbus адреса  первого активного датчика на линии */
+								  ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusAddrs[0];  	
 						     }
 				       }					
 			   }		  
@@ -311,7 +315,7 @@ void HoldingHandlerFunction(void const * argument)
 			        /* ********************************* Handling INPUT registers *************************** */
 				       if (SelectRunFlag == 4)
 				  	    {
-								      	/* отправка  запроса на считываение регистров  */
+								 /*  отправка  запроса на считывания значение текущей концентрации */
 					       eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
 					       SelectRunFlag = 5;
 					      } 		
@@ -322,7 +326,7 @@ void HoldingHandlerFunction(void const * argument)
 					        readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
 									
 					        /* выбираем только адреса активных приборов */
-				          setNextActiveDeviceAddr(&ModBusSlaveCurrentDeviceAddr);	       // set next device addr
+				          setNextActiveDeviceAddr_(&ModBusSlaveCurrentDeviceAddr,SensorInfo.count);	       // set next active sdevice addr
                   SelectRunFlag = 4;
 				   }	
 			   }
@@ -398,63 +402,7 @@ void DisplayTaskFunction(void const * argument)
   /* USER CODE BEGIN DisplayTaskFunction */
   /* Infinite loop */
   for(;;)
-  {
-//			if(packet_ready)	
-//        {
-//				  
-//           switch(displayResponse)
-//					 {	 
-//						 case 0x01: // Модель ???
-//							 
-//						 break;
-//						 case 0x02: // единицы измерения
-//							 
-//						 break;
-//						 case 0x03: // диапазон измерения
-//							 
-//						 break;
-//						 case 0x04: // Порог 1
-//							 
-//						 break;
-//						 case 0x05: // Порог 2
-//							 
-//						 break;
-//						 case 0x06: // Газ
-//							 
-//						 break;
-//						 case 0x88:   // первый ответ после старта дисплея  0x88 0xFF 0xFF 0xFF
-//				 
-//							 SendNextionCommand("Init.qDev.txt=\"%d\"", numberOfDevices); // for testing  
-//						 break; 
-//						 case 0x10:	 // второй ответ после старта дисплея   0x10 0xFF 0xFF 0xFF
-//							 
-//						   InitNextionDisplayWithDeviceData(numberOfDevices);
-//						 break;	 	
-//						 
-//						 case 0xA0:   // по этой команде добавить смену скорости
-//							 
-//						 if(arrDisplayRX[1]>= 1  && arrDisplayRX[1] <= 6 )	
-//				         {
-//			  	         MB_BaudRateValue =  getBaudrate(arrDisplayRX[1] );
-//									 // отправать Notify для смены скорости обмена по UART1 ( RX: PA10 , TX: PA9, RDen1: PA12 ) со SCADA
-//					         xTaskNotify( SlaveEventTaskHandle , HOLDING_REGISTER_SLAVE_IDX_1, eSetValueWithOverwrite); 
-//				          }
-//                 osDelay(1);								 
-//             break;
-//						 
-//						 case 0x33:
-//					        numberOfDevices = getIntFromChar((char *)&arrDisplayRX[0], 5);
-//             break; 
-//			 				 
-//					 }		
-//	 
-//           packet_ready = 0;
-//           memset((void*)arrDisplayRX, 0, ARRAY_RX_SIZE);
-//					 
-//        // Перезапускаем приём
-//           HAL_UART_Receive_IT(&huart3,(uint8_t *)&arrDisplayRX[0], 1);					
-//				}	
-				
+  {		
 	  HandleDisplayCommands(displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready, &huart3);	
     osDelay(50);
 		taskYIELD()

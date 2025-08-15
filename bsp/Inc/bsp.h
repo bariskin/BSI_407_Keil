@@ -49,13 +49,26 @@ extern "C" {
 	
   typedef struct
 	  {
-		  uint16_t DeviceStatus;
+			uint8_t  SensorModBudAddr;
+			uint32_t DeviceModelCode;
+			uint32_t SensorScaleMax;
+			uint16_t SensorScaleDimension;
+			uint32_t SensorWarning;       // Порог 1
+			uint32_t SensorAlarm;         // Порог 1
+			uint8_t SensorSubstanceCode[16]; //тип газа
 			uint16_t Concentration_H;
 			uint16_t Concentration_L;
+		  uint16_t DeviceStatus;
 			float  Concentration;
 		  uint16_t NotResponsCounter;
 			_Bool ErrorState;
 		}SensorState_t;
+		
+		
+typedef struct {
+    uint8_t count;
+    uint8_t modbusAddrs[NUMBER_SLAVE_DEVICES];
+} SensorInfo_t; 
 		
 	typedef struct
 	  {
@@ -78,6 +91,8 @@ extern  uint8_t NumberSlaveDevices;
   	void setModBusSlaveSetting(void);
 		void setModBusSlaveAddr(void);
 		void setNextActiveDeviceAddr(uint8_t *currentAddr);
+	  uint8_t GetActiveSensors(SensorState_t SensorStateArray[NUMBER_SLAVE_DEVICES], SensorInfo_t *sensorinfo);
+		void setNextActiveDeviceAddr_(uint8_t *currentAddr, uint8_t countsensores); 
 		/**
   * @}
   */

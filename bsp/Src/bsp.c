@@ -16,14 +16,17 @@
 #include "user_mb_app.h"
 #include "cmsis_os.h"
 #include "stdbool.h"
+#include "stdio.h"
+#include "stdlib.h"
+#include <string.h>
 /* ------------------------External variables -------------------------*/
 extern uint16_t holdingRegsPart1[MAX_MODBUS_SLAVE_REGS_PART];  // Адреса 1-120
 extern UART_HandleTypeDef huart1;
 extern uint8_t ModBusSlaveDefaultDeviceAddr;
 /* ------------------------Global variables----------------------------*/
-uint8_t NumberSlaveDevices = 0;
-
-SensorState_t   SensorStateArray[NUMBER_SLAVE_DEVICES] = {0};
+uint8_t NumberSlaveDevices       = 0x00;
+SensorState_t  SensorStateArray[NUMBER_SLAVE_DEVICES] = {0};
+SensorInfo_t   SensorInfo = {0};
 
 volatile ModBusAddr_t  ModBusAddr = 
 	    {
@@ -59,12 +62,21 @@ void initSensorStateArray(uint8_t numberdevices)
   {
 		for(int i = 0; i < numberdevices; i++)
 		{
-     SensorStateArray[i].DeviceStatus =    0x0000;
-		 SensorStateArray[i].Concentration_H = 0x0000;
-		 SensorStateArray[i].Concentration_L = 0x0000;
-		 SensorStateArray[i].Concentration =   0.00;
-		 SensorStateArray[i].NotResponsCounter = 0x0000;
-		 SensorStateArray[i].ErrorState = false;
+			  // Обнуление массива DeviceModelCode,строковое значение вещества 
+    memset((void *)SensorStateArray[i].SensorSubstanceCode, 0, sizeof(SensorStateArray[i].SensorSubstanceCode));
+			
+		 SensorStateArray[i].SensorModBudAddr     = 0x00;	
+		 SensorStateArray[i].DeviceModelCode      = 0x00000000;
+		 SensorStateArray[i].SensorScaleMax       = 0x00000000;
+		 SensorStateArray[i].SensorScaleDimension = 0x0000;
+		 SensorStateArray[i].SensorWarning        = 0x00000000;
+     SensorStateArray[i].SensorAlarm          = 0x00000000;
+		 SensorStateArray[i].DeviceStatus         = 0x0000;
+		 SensorStateArray[i].Concentration_H      = 0x0000;
+		 SensorStateArray[i].Concentration_L      = 0x0000;
+		 SensorStateArray[i].Concentration        = 0.00;
+		 SensorStateArray[i].NotResponsCounter    = 0x0000;
+		 SensorStateArray[i].ErrorState           = true;
 		}
   }
 
@@ -322,7 +334,6 @@ void setNextActiveDeviceAddr(uint8_t *currentAddr)
     // Iterate through all possible devices (1, 2, 3)
     for (int attempt = 0; attempt < NUMBER_SLAVE_DEVICES; attempt++) 
     {
-
         // Move to next device (wrap around if needed)
         slave_idx = (slave_idx % NUMBER_SLAVE_DEVICES) + 1;
         
@@ -334,12 +345,52 @@ void setNextActiveDeviceAddr(uint8_t *currentAddr)
             *currentAddr = slave_idx;
             return;
         }
-    }
-    
+    }  
     // If all devices have errors, return 0 or some error code
     *currentAddr = 1;
 }
-	 
-	 
+
+void setNextActiveDeviceAddr_(uint8_t *currentAddr, uint8_t countsensores) 
+{    
+    static uint8_t currentIdx	= 0x00;
+	
+    if(countsensores == 0x00) // если датчиков нет вылетаем 
+		{
+			// If all devices have errors, return 0 or some error code
+      *currentAddr = 1;
+		  return;
+		}      
+		
+		//берем следующий modbus адрес из списка 
+     *currentAddr = SensorInfo.modbusAddrs[currentIdx];
+     currentIdx++;
+		// если весь список прошли начинаем сначала
+    if(currentIdx ==  countsensores)	
+ 		{
+		 currentIdx = 0;
+		}			
+}
+ 
+uint8_t GetActiveSensors(SensorState_t SensorStateArray[NUMBER_SLAVE_DEVICES], SensorInfo_t *sensorinfo)
+  {	   
+		uint8_t IdxActiveAddr = 0x00;
+	 // Iterate through all possible devices (1, 2, 3)
+    for (int i = 0; i < NUMBER_SLAVE_DEVICES; i++) 
+    {
+			 SensorState_t *sensor = &SensorStateArray[i];
+			 
+			if (sensor->ErrorState == false) 
+        {   
+					sensor->SensorModBudAddr = i + 1; // modbus адрес активного датчика 
+					
+					/* формирование массива адресов активных датчиков и количества датчиков*/
+					sensorinfo->count++;
+					sensorinfo->modbusAddrs[IdxActiveAddr] = sensor->SensorModBudAddr; 
+					IdxActiveAddr++;
+				  osDelay(1);	
+        }
+	  } 	
+		return sensorinfo->count;
+	}
 	 
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/
