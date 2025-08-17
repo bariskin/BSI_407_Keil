@@ -175,8 +175,8 @@ void MX_FREERTOS_Init(void) {
   SlaveEventTaskHandle = osThreadCreate(osThread(SlaveEventTask), NULL);
 
   /* definition and creation of DisplayTask */
-  //osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 256, DisplayTaskBuffer, &DisplayTaskControlBlock);
-  //DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
+  osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 256, DisplayTaskBuffer, &DisplayTaskControlBlock);
+  DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
