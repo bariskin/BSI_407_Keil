@@ -145,7 +145,8 @@ extern  SensorInfo_t  SensorInfo;
 	 
 	  // Форматируем числа с запятой вместо точки
      char value_str[20], scale_max_str[20], por1_str[20], por2_str[20];
-	 
+	  
+	 // получение очерердного активного modbus addr
 	  uint8_t currentModbusIdx = SensorInfo.modbusAddrs[nextChannel - 1];
 	 
 	  snprintf(value_str, sizeof(value_str), "%.2f", SensorStateArray[currentModbusIdx - 1].Concentration);
