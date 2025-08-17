@@ -375,7 +375,7 @@ uint8_t GetActiveSensors(SensorState_t SensorStateArray[NUMBER_SLAVE_DEVICES], S
   {	   
 		uint8_t IdxActiveAddr = 0x00;
 	 // Iterate through all possible devices (1, 2, 3)
-    for (int i = 0; i < NUMBER_SLAVE_DEVICES; i++) 
+    for (int i = 0; i < NUMBER_SLAVE_DEVICES - 1; i++) 
     {
 			 SensorState_t *sensor = &SensorStateArray[i];
 			 
@@ -384,7 +384,7 @@ uint8_t GetActiveSensors(SensorState_t SensorStateArray[NUMBER_SLAVE_DEVICES], S
 					sensor->SensorModBudAddr = i + 1; // modbus адрес активного датчика 
 					
 					/* формирование массива адресов активных датчиков и количества датчиков*/
-					sensorinfo->count++;
+					sensorinfo->count++;	
 					sensorinfo->modbusAddrs[IdxActiveAddr] = sensor->SensorModBudAddr; 
 					IdxActiveAddr++;
 				  osDelay(1);	

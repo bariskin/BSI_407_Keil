@@ -57,7 +57,7 @@ extern volatile uint8_t displayResponse;
 extern volatile uint8_t displayStartedFlag ;
 extern  uint8_t packets_received;
 
-uint8_t  numberOfDevices = 20;
+uint8_t  numberOfDevices = NUMBER_SLAVE_DEVICES;
 uint16_t BaudRateID = 0;
 extern SensorInfo_t SensorInfo;
 /* USER CODE END PD */
@@ -82,8 +82,8 @@ osThreadId HoldingHandlerHandle;
 uint32_t HoldingHandlerBuffer[ 512 ];
 osStaticThreadDef_t HoldingHandlerControlBlock;
 osThreadId InputHandlerHandle;
-//uint32_t InputHandlerBuffer[ 256 ];
-//osStaticThreadDef_t InputHandlerControlBlock;
+uint32_t InputHandlerBuffer[ 256 ];
+osStaticThreadDef_t InputHandlerControlBlock;
 osThreadId SlaveEventTaskHandle;
 uint32_t SlaveEventTaskBuffer[ 256 ];
 osStaticThreadDef_t SlaveEventTaskControlBlock;
@@ -167,16 +167,16 @@ void MX_FREERTOS_Init(void) {
   HoldingHandlerHandle = osThreadCreate(osThread(HoldingHandler), NULL);
 
   /* definition and creation of InputHandler */
-  //osThreadStaticDef(InputHandler, InputHandlerFunction, osPriorityBelowNormal, 0, 256, InputHandlerBuffer, &InputHandlerControlBlock);
-  //InputHandlerHandle = osThreadCreate(osThread(InputHandler), NULL);
+  osThreadStaticDef(InputHandler, InputHandlerFunction, osPriorityBelowNormal, 0, 256, InputHandlerBuffer, &InputHandlerControlBlock);
+  InputHandlerHandle = osThreadCreate(osThread(InputHandler), NULL);
 
   /* definition and creation of SlaveEventTask */
   osThreadStaticDef(SlaveEventTask, SlaveEventFunction, osPriorityBelowNormal, 0, 256, SlaveEventTaskBuffer, &SlaveEventTaskControlBlock);
   SlaveEventTaskHandle = osThreadCreate(osThread(SlaveEventTask), NULL);
 
   /* definition and creation of DisplayTask */
-  osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 256, DisplayTaskBuffer, &DisplayTaskControlBlock);
-  DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
+  //osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 256, DisplayTaskBuffer, &DisplayTaskControlBlock);
+  //DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -299,35 +299,41 @@ void HoldingHandlerFunction(void const * argument)
 							 }
 		 
 					     if(HoldingPollsDone == 3) // после трех проходов определяем наличие активных приборов
-					      {
+					       {
 									
-						      SelectRunFlag = 4;	               // переход на постояный цикл опроса значений концентрации
+						      SelectRunFlag = 6;	               // переход на постояный цикл опроса значений концентрации
 									
-									/* получение информации об активных датчика их адресах */
+									/* получение информации об активных датчиках их адресах */
 									GetActiveSensors(SensorStateArray, (SensorInfo_t *) &SensorInfo);
 									/* получение modbus адреса  первого активного датчика на линии */
-								  ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusAddrs[0];  	
-						     }
+								  ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusAddrs[0];  
+									 
+                   /* вывести окна активных дачтичиков  и перейти на постоянный опрос */
+						  
+								 //xTaskNotify(InputHandlerHandle, 20, eSetValueWithOverwrite);
+								 }
+								 
+								
 				       }					
 			   }		  
 			 else   /* постоянный цикл опроса активных приборов */
 				 {
 			        /* ********************************* Handling INPUT registers *************************** */
-				       if (SelectRunFlag == 4)
+				       if (SelectRunFlag == 6)
 				  	    {
 								 /*  отправка  запроса на считывания значение текущей концентрации */
 					       eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
-					       SelectRunFlag = 5;
+					       SelectRunFlag = 7;
 					      } 		
 				      /* ********************************* set next slave addr *************************** */	
-				       else if (SelectRunFlag == 5)
+				       else if (SelectRunFlag == 7)
 				        {
 						    	/* считиваем регистры после запроса */
 					        readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
 									
 					        /* выбираем только адреса активных приборов */
 				          setNextActiveDeviceAddr_(&ModBusSlaveCurrentDeviceAddr,SensorInfo.count);	       // set next active sdevice addr
-                  SelectRunFlag = 4;
+                  SelectRunFlag = 6;
 				   }	
 			   }
 			//Освобождаем мьютекс
@@ -357,18 +363,21 @@ void HoldingHandlerFunction(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_InputHandlerFunction */
-//void InputHandlerFunction(void const * argument)
-//{
-//  /* USER CODE BEGIN InputHandlerFunction */
-//  /* Infinite loop */
-//  for(;;)
-//  {
-//		ModBusSlaveEventHoldingRegHandler();
-//    osDelay(4);
-//		taskYIELD()
-//  }
+void InputHandlerFunction(void const * argument)
+{
+  /* USER CODE BEGIN InputHandlerFunction */
+  /* Infinite loop */
+  for(;;)
+  {			
+	 	if(SensorInfo.count)   
+			{
+		    UpdateNextionDisplayWithChannelData(SensorInfo.count);
+		  }
+    osDelay(50);
+		taskYIELD()
+  }
   /* USER CODE END InputHandlerFunction */
-//}
+}
 
 /* USER CODE BEGIN Header_SlaveEventFunction */
 /**
@@ -404,7 +413,7 @@ void DisplayTaskFunction(void const * argument)
   for(;;)
   {		
 	  HandleDisplayCommands(displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready, &huart3);	
-    osDelay(50);
+    osDelay(25);
 		taskYIELD()
   }
   /* USER CODE END DisplayTaskFunction */

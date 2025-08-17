@@ -25,7 +25,7 @@ extern "C" {
   */
  /* ------------------------Defines ----------------------------------*/
  
- #define NUMBER_SLAVE_DEVICES 50
+ #define NUMBER_SLAVE_DEVICES 48
  
   
 #ifdef __cplusplus

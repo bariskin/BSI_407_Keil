@@ -66,7 +66,8 @@ extern "C" {
 	 void initDeviceData(uint8_t numberOfdevices);
 	 uint8_t getIntFromChar( char * inputString, uint8_t stringSize);
 	 void HandleDisplayCommands(uint8_t displayResponse, uint8_t *arrDisplayRX, uint8_t *packet_ready, UART_HandleTypeDef *huart);
-  /**
+   void UpdateNextionDisplayWithChannelData(uint8_t channel_num);
+		/**
   * @}
   */
   

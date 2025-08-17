@@ -67,6 +67,7 @@ extern "C" {
 		
 typedef struct {
     uint8_t count;
+	  uint8_t realChannelNum;
     uint8_t modbusAddrs[NUMBER_SLAVE_DEVICES];
 } SensorInfo_t; 
 		

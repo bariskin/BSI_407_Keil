@@ -158,7 +158,7 @@ int main(void)
 	 setNumberDevices(&NumberSlaveDevices, NUMBER_SLAVE_DEVICES);
 	 
 	 /* инициализация струкутур для храения информации со слайв устройств  */
-	 initSensorStateArray(NUMBER_SLAVE_DEVICES);               
+	 //initSensorStateArray(NUMBER_SLAVE_DEVICES);               
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

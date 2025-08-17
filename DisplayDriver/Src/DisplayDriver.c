@@ -17,6 +17,7 @@
 #include "stdbool.h"
 #include "UARTSlaveSettings.h"
 #include "HoldingRegisterSlaveHandler.h"
+#include "bsp.h"
 /* ------------------------External variables -------------------------*/
 extern UART_HandleTypeDef huart3;
 extern osThreadId SlaveEventTaskHandle;
@@ -31,19 +32,9 @@ extern volatile uint16_t tx_index;
 extern volatile uint16_t tx_size;
 extern  uint8_t  numberOfDevices;
 
+extern SensorState_t  SensorStateArray[NUMBER_SLAVE_DEVICES]; 
+extern  SensorInfo_t  SensorInfo;
 /* ------------------------Locale variables----------------------------*/
- enum {
-	FALSE,
-	TRUE,
-	CRC_OK,
-	RX_OK = 2,
-//	CHANNEL_LINE,
-//	DEVICE_LINE,
-//	RX_OK = 2,
-	RX_FAULT = 1
-};
- 
-
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  
  struct
@@ -145,69 +136,42 @@ extern  uint8_t  numberOfDevices;
     }
  }
 
- uint8_t UpdateNextionDisplayWithChannelData(uint8_t channel_num){
+ void UpdateNextionDisplayWithChannelData(uint8_t SensorInfo_count){
 	 
-    static uint8_t step = 0;
-    const uint8_t page = (channel_num - 1) / 4;  // 4 канала на страницу
-    const uint8_t pos = channel_num - 4 * page;  // Ёлемент на странице (1..4)
+	  static uint8_t nextChannel = 1;
+	 
+    const uint8_t page = (nextChannel - 1) / 4;  // 4 канала на страницу
+    const uint8_t pos = nextChannel - 4 * page;  // Ёлемент на странице (1..4)
 	 
 	  // ‘орматируем числа с зап€той вместо точки
-		 char  scale_max_str[20], por1_str[20], por2_str[20];
+     char value_str[20], scale_max_str[20], por1_str[20], por2_str[20];
 	 
-	  snprintf(scale_max_str, sizeof(scale_max_str), "%.2f", device[channel_num].scaleMax);
-    snprintf(por1_str,  sizeof(por1_str),  "%.2f", device[channel_num].Porog1);
-    snprintf(por2_str,  sizeof(por2_str),  "%.2f", device[channel_num].Porog2);
+	  uint8_t currentModbusIdx = SensorInfo.modbusAddrs[nextChannel - 1];
+	 
+	  snprintf(value_str, sizeof(value_str), "%.2f", SensorStateArray[currentModbusIdx - 1].Concentration);
+	  snprintf(scale_max_str, sizeof(scale_max_str), "%.2f", device[nextChannel].scaleMax);
+    snprintf(por1_str,  sizeof(por1_str),  "%.2f", device[nextChannel].Porog1);
+    snprintf(por2_str,  sizeof(por2_str),  "%.2f", device[nextChannel].Porog2);
+	  for(char* p = value_str; *p; p++) if(*p == '.') *p = ',';
 	  for(char* p = scale_max_str; *p; p++) if(*p == '.') *p = ',';
     for(char* p = por1_str; *p; p++) if(*p == '.') *p = ',';
     for(char* p = por2_str; *p; p++) if(*p == '.') *p = ',';
 	 
-	  if(step == 0)
+	   SendNextionCommand("page%d.val%d.txt=\"%s\"", page, pos, value_str);
+		 SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos, device[nextChannel].gas);
+	   SendNextionCommand("page%d.ran%d.txt=\"%s\"", page, pos, scale_max_str);
+		 SendNextionCommand("page%d.poz%d.txt=\"%s\"", page, pos,device[nextChannel].posit);
+	   SendNextionCommand("page%d.por1%d.txt=\"%s\"", page, pos, por1_str);
+		 SendNextionCommand("page%d.por2%d.txt=\"%s\"€€€", page, pos, por2_str);	
+		 SendNextionCommand("page%d.unit%d.txt=\"%s\"€€€", page, pos, device[nextChannel].scaleDimension);
+		 
+		 nextChannel++;
+		 
+		if( nextChannel > SensorInfo_count)
 		{
-			step = 1;
+		  nextChannel =1;
 		}
-		else if(step == 1)
-		{
-			step = 2;
-		}
-		else if(step == 2)
-		{
-		  SendNextionCommand("page%d.gas%d.txt=\"%s\"€€€", page, pos, device[channel_num].gas);
-			step = 3;
-		}
-		else if(step == 3)
-		{
-	    SendNextionCommand("page%d.ran%d.txt=\"%s\"€€€", page, pos, scale_max_str);
-			step = 4;
-		}
-		else if(step == 4)
-		{
-		  SendNextionCommand("page%d.poz%d.txt=\"%s\"€€€", page, pos,device[channel_num].posit);
-			step = 5;
-		}
-		else if(step == 5)
-		{
-	    SendNextionCommand("page%d.por1%d.txt=\"%s\"€€€", page, pos, por1_str);
-	  	step = 6;
-		}
-		else if(step == 6)
-		{ 
-			SendNextionCommand("page%d.por2%d.txt=\"%s\"€€€", page, pos, por2_str);
-			step = 7;
-		}
-		else if(step == 7)
-		{
-
-			step = 8;
-		}
-		else if(step == 8)
-		{
-		  SendNextionCommand("page%d.unit%d.txt=\"%s\"€€€", page, pos, device[channel_num].scaleDimension);
-			step = 0;
-			return 0;
-		}
-	  
-	return   channel_num;
-        				
+		 
  }
  
 void initDeviceData(uint8_t numberOfdevices)
@@ -215,13 +179,13 @@ void initDeviceData(uint8_t numberOfdevices)
    {
 		 for(uint8_t i = 0; i <= numberOfdevices ; i++)
 		  {
-			  device[i].value = 11.56;
-			  strncpy(device[i].gas, "O2", sizeof(device[i].gas));
+			  device[i].value = 00.00;
+			  strncpy(device[i].gas, "unknown", sizeof(device[i].gas));
 				device[i].scaleMax = 50.00;
-			  strncpy(device[i].scaleDimension, "ppm", sizeof(device[i].scaleDimension));
-				device[i].Porog1 = 10;
-				device[i].Porog2 = 20;
-				strncpy(device[i].model, "QT1020", sizeof(device[i].model));
+			  strncpy(device[i].scaleDimension, "unknown", sizeof(device[i].scaleDimension));
+				device[i].Porog1 = 10.00;
+				device[i].Porog2 = 20.00;
+				strncpy(device[i].model, "UNKNOWN", sizeof(device[i].model));
 			}
 			
 	 }
@@ -269,10 +233,10 @@ void HandleDisplayCommands(uint8_t displayResponse, uint8_t *arrDisplayRX, uint8
             case 0x06: // √аз
                 break;
             case 0x88: // ѕервый ответ после старта диспле€ (0x88 0xFF 0xFF 0xFF)
-                //SendNextionCommand("Init.qDev.txt=\"%d\"", numberOfDevices); // “естова€ строка
+                SendNextionCommand("Init.qDev.txt=\"%d\"", numberOfDevices); // “естова€ строка
                 break;
             case 0x10: // ¬торой ответ после старта диспле€ (0x10 0xFF 0xFF 0xFF)
-                //InitNextionDisplayWithDeviceData(numberOfDevices);
+                InitNextionDisplayWithDeviceData(numberOfDevices);
                 break;
             case 0xA0: // —мена скорости UART
                 if (arrDisplayRX[1] >= 1 && arrDisplayRX[1] <= 6) {
