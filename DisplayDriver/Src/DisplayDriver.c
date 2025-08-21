@@ -241,25 +241,31 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                 InitNextionDisplayWithDeviceData(numberOfDevices);
                 break;
             case 0xA0: // Смена скорости UART
+							 *displayresponse = 0x00; // reset cmd for display
                 if (arrDisplayRX[1] >= 1 && arrDisplayRX[1] <= 6) {
-                    MB_BaudRateValue = getBaudrate(arrDisplayRX[1]);
-                    xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_1, eSetValueWithOverwrite);
+                    //MB_BaudRateValue = getBaudrate(arrDisplayRX[1]);
+                    //xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_1, eSetValueWithOverwrite);
                 }
                 osDelay(1);
                 break;
-            case 0x33: // Обновление числа устройств
-                numberOfDevices = getIntFromChar((char *)&arrDisplayRX[0], 5);
+            case 0xBB: // Обновление числа устройств
+							   *displayresponse = 0x00; // reset cmd for display
+                 numberOfDevices = getIntFromChar((char *)&arrDisplayRX[0], 5);
                 break;
+						case 0x35:
+							*displayresponse = 0x00; 
+							break;
+						
 						case 0x64: /* for Calibration Primary Zero, Калибровка  <<0>>*/ 
-							
+							 *displayresponse = 0x00; // reset cmd for display
 							 break;
 						case 0x68:/* for Calibration, Калибровка  "Точка 1" */ 
-							
+							 *displayresponse = 0x00; // reset cmd for display
 							 break;
 						
         }
 
-				*displayresponse = 0x00; // reset cmd for display
+				
         // Сброс флага и буфера
         *packet_ready = 0;
         memset(arrDisplayRX, 0, ARRAY_RX_SIZE);

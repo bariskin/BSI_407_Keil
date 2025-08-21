@@ -154,7 +154,7 @@
           <Type>0</Type>
           <LineNumber>403</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134246414</Address>
+          <Address>134246422</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -170,7 +170,7 @@
           <Type>0</Type>
           <LineNumber>450</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134246564</Address>
+          <Address>134246572</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -285,6 +285,16 @@
           <count>9</count>
           <WinNumber>2</WinNumber>
           <ItemText>displayResponse</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>numberOfDevices,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>arrDisplayRX_test</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

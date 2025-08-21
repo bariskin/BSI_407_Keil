@@ -412,7 +412,7 @@ void DisplayTaskFunction(void const * argument)
   for(;;)
   {		
 	  HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready, &huart3);	
-    osDelay(25);
+    osDelay(5);
   }
   /* USER CODE END DisplayTaskFunction */
 }

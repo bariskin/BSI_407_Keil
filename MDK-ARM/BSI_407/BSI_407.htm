@@ -3,7 +3,7 @@
 <title>Static Call Graph - [BSI_407\BSI_407.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image BSI_407\BSI_407.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Aug 21 14:10:19 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Aug 21 16:21:13 2025
 <BR><P>
 <H3>Maximum Stack Usage =        532 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -741,7 +741,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_sputc
 <LI><a href="#[c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_char_common
 </UL>
-<BR>[Called By]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readCurrentSensorState
+<BR>[Called By]<UL><LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readCurrentSensorState
 <LI><a href="#[15e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UpdateNextionDisplayWithChannelData
 <LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;InitNextionDisplayWithDeviceData
 </UL>
@@ -1829,17 +1829,15 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[142]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndTransmit_IT
 </UL>
 
-<P><STRONG><a name="[104]"></a>HandleDisplayCommands</STRONG> (Thumb, 196 bytes, Stack size 24 bytes, displaydriver.o(i.HandleDisplayCommands))
+<P><STRONG><a name="[104]"></a>HandleDisplayCommands</STRONG> (Thumb, 184 bytes, Stack size 24 bytes, displaydriver.o(i.HandleDisplayCommands))
 <BR><BR>[Stack]<UL><LI>Max Depth = 304 + Unknown Stack Size
 <LI>Call Chain = HandleDisplayCommands &rArr; InitNextionDisplayWithDeviceData &rArr; SendNextionCommand &rArr; vsnprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
-<LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getIntFromChar
+<LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getIntFromChar
 <LI><a href="#[14a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SendNextionCommand
 <LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;InitNextionDisplayWithDeviceData
 <LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Receive_IT
-<LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
-<LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getBaudrate
 <LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr
 </UL>
 <BR>[Called By]<UL><LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisplayTaskFunction
@@ -1852,29 +1850,29 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 184 + Unknown Stack Size
 <LI>Call Chain = HoldingHandlerFunction &rArr; readCurrentSensorState &rArr; __2snprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[153]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextDeviceAddr
-<LI><a href="#[155]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextActiveDeviceAddr_
-<LI><a href="#[154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readCurrentSensorValue
-<LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readCurrentSensorState
-<LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexWait
-<LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexRelease
+<BR>[Calls]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextDeviceAddr
+<LI><a href="#[153]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextActiveDeviceAddr_
+<LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readCurrentSensorValue
+<LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readCurrentSensorState
+<LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexWait
+<LI><a href="#[154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexRelease
 <LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
-<LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
-<LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
+<LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
+<LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
 <LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GetActiveSensors
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.constdata)
 </UL>
-<P><STRONG><a name="[157]"></a>HoldingRegisterFromModbusSlaveStack</STRONG> (Thumb, 288 bytes, Stack size 16 bytes, holdingregisterslavehandler.o(i.HoldingRegisterFromModbusSlaveStack))
+<P><STRONG><a name="[155]"></a>HoldingRegisterFromModbusSlaveStack</STRONG> (Thumb, 288 bytes, Stack size 16 bytes, holdingregisterslavehandler.o(i.HoldingRegisterFromModbusSlaveStack))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = HoldingRegisterFromModbusSlaveStack &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
-<LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
 <LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getStopBitsId
 <LI><a href="#[15b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getStopBits
 <LI><a href="#[15a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getParityId
 <LI><a href="#[159]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getParity
-<LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getBaudrate
+<LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getBaudrate
 <LI><a href="#[158]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getBaudRateId
 </UL>
 <BR>[Called By]<UL><LI><a href="#[185]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBRegHoldingCB
@@ -1987,8 +1985,8 @@ Global Symbols
 <P><STRONG><a name="[87]"></a>MasterModbusTaskFunction</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, freertos.o(i.MasterModbusTaskFunction))
 <BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = MasterModbusTaskFunction &rArr; osMutexRelease &rArr; xQueueGenericSend &rArr; vTaskPlaceOnEventList &rArr; prvAddCurrentTaskToDelayedList &rArr; vListInsert
 </UL>
-<BR>[Calls]<UL><LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexWait
-<LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexRelease
+<BR>[Calls]<UL><LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexWait
+<LI><a href="#[154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexRelease
 <LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[16d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterPoll
 </UL>
@@ -2128,7 +2126,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
-<P><STRONG><a name="[40]"></a>USART3_IRQHandler</STRONG> (Thumb, 502 bytes, Stack size 24 bytes, stm32f4xx_it.o(i.USART3_IRQHandler))
+<P><STRONG><a name="[40]"></a>USART3_IRQHandler</STRONG> (Thumb, 496 bytes, Stack size 24 bytes, stm32f4xx_it.o(i.USART3_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 532<LI>Call Chain = USART3_IRQHandler &rArr; __0sscanf &rArr; __vfscanf_char &rArr; __vfscanf &rArr; _scanf_real &rArr; _scanf_really_real &rArr; _fp_value &rArr; _btod_etento &rArr; _btod_emul &rArr; _e2e
 </UL>
 <BR>[Calls]<UL><LI><a href="#[17a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
@@ -2333,13 +2331,13 @@ Global Symbols
 <P><STRONG><a name="[1eb]"></a>eMBMasterDisable</STRONG> (Thumb, 50 bytes, Stack size 8 bytes, mb_m.o(i.eMBMasterDisable))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = eMBMasterDisable
 </UL>
-<BR>[Called By]<UL><LI><a href="#[153]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextDeviceAddr
+<BR>[Called By]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextDeviceAddr
 </UL>
 
 <P><STRONG><a name="[1ba]"></a>eMBMasterEnable</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, mb_m.o(i.eMBMasterEnable))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = eMBMasterEnable
 </UL>
-<BR>[Called By]<UL><LI><a href="#[153]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextDeviceAddr
+<BR>[Called By]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextDeviceAddr
 <LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -2498,7 +2496,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterFuncReadInputRegister
 </UL>
 
-<P><STRONG><a name="[150]"></a>eMBMasterReqReadHoldingRegister</STRONG> (Thumb, 102 bytes, Stack size 32 bytes, mbfuncholding_m.o(i.eMBMasterReqReadHoldingRegister))
+<P><STRONG><a name="[14e]"></a>eMBMasterReqReadHoldingRegister</STRONG> (Thumb, 102 bytes, Stack size 32 bytes, mbfuncholding_m.o(i.eMBMasterReqReadHoldingRegister))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = eMBMasterReqReadHoldingRegister
 </UL>
 <BR>[Calls]<UL><LI><a href="#[199]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBMasterSetDestAddress
@@ -2511,7 +2509,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[151]"></a>eMBMasterReqReadInputRegister</STRONG> (Thumb, 102 bytes, Stack size 32 bytes, mbfuncinput_m.o(i.eMBMasterReqReadInputRegister))
+<P><STRONG><a name="[14f]"></a>eMBMasterReqReadInputRegister</STRONG> (Thumb, 102 bytes, Stack size 32 bytes, mbfuncinput_m.o(i.eMBMasterReqReadInputRegister))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = eMBMasterReqReadInputRegister
 </UL>
 <BR>[Calls]<UL><LI><a href="#[199]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBMasterSetDestAddress
@@ -2525,8 +2523,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1ac]"></a>eMBMasterWaitRequestFinish</STRONG> (Thumb, 46 bytes, Stack size 0 bytes, portevent_m.o(i.eMBMasterWaitRequestFinish))
-<BR><BR>[Called By]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
-<LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
+<BR><BR>[Called By]<UL><LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
+<LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
 </UL>
 
 <P><STRONG><a name="[174]"></a>eMBPoll</STRONG> (Thumb, 260 bytes, Stack size 16 bytes, mb.o(i.eMBPoll))
@@ -2591,7 +2589,7 @@ Global Symbols
 <P><STRONG><a name="[185]"></a>eMBRegHoldingCB</STRONG> (Thumb, 176 bytes, Stack size 40 bytes, user_mb_app.o(i.eMBRegHoldingCB))
 <BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = eMBRegHoldingCB &rArr; HoldingRegisterFromModbusSlaveStack &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
+<BR>[Calls]<UL><LI><a href="#[155]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBFuncWriteMultipleHoldingRegister
 <LI><a href="#[8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBFuncWriteHoldingRegister
@@ -2615,13 +2613,12 @@ Global Symbols
 
 <P><STRONG><a name="[158]"></a>getBaudRateId</STRONG> (Thumb, 84 bytes, Stack size 0 bytes, uartslavesettings.o(i.getBaudRateId))
 <BR><BR>[Called By]<UL><LI><a href="#[16e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ModBusSlaveEventHoldingRegHandler
-<LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
+<LI><a href="#[155]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
 </UL>
 
-<P><STRONG><a name="[14c]"></a>getBaudrate</STRONG> (Thumb, 66 bytes, Stack size 0 bytes, uartslavesettings.o(i.getBaudrate))
-<BR><BR>[Called By]<UL><LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HandleDisplayCommands
-<LI><a href="#[1b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setModBusSlaveSetting
-<LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
+<P><STRONG><a name="[156]"></a>getBaudrate</STRONG> (Thumb, 66 bytes, Stack size 0 bytes, uartslavesettings.o(i.getBaudrate))
+<BR><BR>[Called By]<UL><LI><a href="#[1b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setModBusSlaveSetting
+<LI><a href="#[155]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
 </UL>
 
 <P><STRONG><a name="[1b4]"></a>getDeviceModelNameFromShorts</STRONG> (Thumb, 70 bytes, Stack size 24 bytes, bsp.o(i.getDeviceModelNameFromShorts))
@@ -2629,10 +2626,10 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1b5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;memcmp
 </UL>
-<BR>[Called By]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readCurrentSensorState
+<BR>[Called By]<UL><LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readCurrentSensorState
 </UL>
 
-<P><STRONG><a name="[14e]"></a>getIntFromChar</STRONG> (Thumb, 74 bytes, Stack size 24 bytes, displaydriver.o(i.getIntFromChar))
+<P><STRONG><a name="[14c]"></a>getIntFromChar</STRONG> (Thumb, 74 bytes, Stack size 24 bytes, displaydriver.o(i.getIntFromChar))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = getIntFromChar &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
@@ -2642,12 +2639,12 @@ Global Symbols
 
 <P><STRONG><a name="[159]"></a>getParity</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, uartslavesettings.o(i.getParity))
 <BR><BR>[Called By]<UL><LI><a href="#[1b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setModBusSlaveSetting
-<LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
+<LI><a href="#[155]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
 </UL>
 
 <P><STRONG><a name="[15a]"></a>getParityId</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, uartslavesettings.o(i.getParityId))
 <BR><BR>[Called By]<UL><LI><a href="#[16e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ModBusSlaveEventHoldingRegHandler
-<LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
+<LI><a href="#[155]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
 </UL>
 
 <P><STRONG><a name="[10b]"></a>getSector</STRONG> (Thumb, 126 bytes, Stack size 0 bytes, flashdriver.o(i.getSector))
@@ -2656,12 +2653,12 @@ Global Symbols
 
 <P><STRONG><a name="[15b]"></a>getStopBits</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, uartslavesettings.o(i.getStopBits))
 <BR><BR>[Called By]<UL><LI><a href="#[1b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setModBusSlaveSetting
-<LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
+<LI><a href="#[155]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
 </UL>
 
 <P><STRONG><a name="[15c]"></a>getStopBitsId</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, uartslavesettings.o(i.getStopBitsId))
 <BR><BR>[Called By]<UL><LI><a href="#[16e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ModBusSlaveEventHoldingRegHandler
-<LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
+<LI><a href="#[155]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
 </UL>
 
 <P><STRONG><a name="[1ea]"></a>getUartWordLength</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, uartslavesettings.o(i.getUartWordLength))
@@ -2669,7 +2666,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1e8]"></a>getUnitStringByCode</STRONG> (Thumb, 76 bytes, Stack size 0 bytes, bsp.o(i.getUnitStringByCode))
-<BR><BR>[Called By]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readCurrentSensorState
+<BR><BR>[Called By]<UL><LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readCurrentSensorState
 </UL>
 
 <P><STRONG><a name="[1b6]"></a>initDeviceData</STRONG> (Thumb, 180 bytes, Stack size 16 bytes, displaydriver.o(i.initDeviceData))
@@ -2718,7 +2715,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskDelay
 </UL>
-<BR>[Called By]<UL><LI><a href="#[153]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextDeviceAddr
+<BR>[Called By]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextDeviceAddr
 <LI><a href="#[16e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ModBusSlaveEventHoldingRegHandler
 <LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HandleDisplayCommands
 <LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GetActiveSensors
@@ -2728,9 +2725,9 @@ Global Symbols
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;InputHandlerFunction
 <LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisplayTaskFunction
-<LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getIntFromChar
+<LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getIntFromChar
 <LI><a href="#[14a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SendNextionCommand
-<LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
+<LI><a href="#[155]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
 </UL>
 
 <P><STRONG><a name="[1bc]"></a>osKernelStart</STRONG> (Thumb, 10 bytes, Stack size 8 bytes, cmsis_os.o(i.osKernelStart))
@@ -2750,7 +2747,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_FREERTOS_Init
 </UL>
 
-<P><STRONG><a name="[156]"></a>osMutexRelease</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, cmsis_os.o(i.osMutexRelease))
+<P><STRONG><a name="[154]"></a>osMutexRelease</STRONG> (Thumb, 76 bytes, Stack size 16 bytes, cmsis_os.o(i.osMutexRelease))
 <BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = osMutexRelease &rArr; xQueueGenericSend &rArr; vTaskPlaceOnEventList &rArr; prvAddCurrentTaskToDelayedList &rArr; vListInsert
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;inHandlerMode
@@ -2761,7 +2758,7 @@ Global Symbols
 <LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[14f]"></a>osMutexWait</STRONG> (Thumb, 100 bytes, Stack size 24 bytes, cmsis_os.o(i.osMutexWait))
+<P><STRONG><a name="[14d]"></a>osMutexWait</STRONG> (Thumb, 100 bytes, Stack size 24 bytes, cmsis_os.o(i.osMutexWait))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = osMutexWait &rArr; xQueueSemaphoreTake &rArr; vTaskPlaceOnEventList &rArr; prvAddCurrentTaskToDelayedList &rArr; vListInsert
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;inHandlerMode
@@ -2815,7 +2812,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[1da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
 </UL>
 
-<P><STRONG><a name="[152]"></a>readCurrentSensorState</STRONG> (Thumb, 392 bytes, Stack size 40 bytes, bsp.o(i.readCurrentSensorState))
+<P><STRONG><a name="[150]"></a>readCurrentSensorState</STRONG> (Thumb, 392 bytes, Stack size 40 bytes, bsp.o(i.readCurrentSensorState))
 <BR><BR>[Stack]<UL><LI>Max Depth = 184 + Unknown Stack Size
 <LI>Call Chain = readCurrentSensorState &rArr; __2snprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -2826,7 +2823,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[154]"></a>readCurrentSensorValue</STRONG> (Thumb, 118 bytes, Stack size 20 bytes, bsp.o(i.readCurrentSensorValue))
+<P><STRONG><a name="[152]"></a>readCurrentSensorValue</STRONG> (Thumb, 118 bytes, Stack size 20 bytes, bsp.o(i.readCurrentSensorValue))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = readCurrentSensorValue
 </UL>
 <BR>[Called By]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
@@ -2852,17 +2849,17 @@ Global Symbols
 <LI><a href="#[1e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Flash_Read_Data
 <LI><a href="#[15b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getStopBits
 <LI><a href="#[159]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getParity
-<LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getBaudrate
+<LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getBaudrate
 <LI><a href="#[109]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Flash_Write_Data
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[155]"></a>setNextActiveDeviceAddr_</STRONG> (Thumb, 44 bytes, Stack size 0 bytes, bsp.o(i.setNextActiveDeviceAddr_))
+<P><STRONG><a name="[153]"></a>setNextActiveDeviceAddr_</STRONG> (Thumb, 44 bytes, Stack size 0 bytes, bsp.o(i.setNextActiveDeviceAddr_))
 <BR><BR>[Called By]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[153]"></a>setNextDeviceAddr</STRONG> (Thumb, 60 bytes, Stack size 8 bytes, bsp.o(i.setNextDeviceAddr))
+<P><STRONG><a name="[151]"></a>setNextDeviceAddr</STRONG> (Thumb, 60 bytes, Stack size 8 bytes, bsp.o(i.setNextDeviceAddr))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = setNextDeviceAddr &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[105]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
@@ -2907,7 +2904,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1ca]"></a>uxListRemove</STRONG> (Thumb, 40 bytes, Stack size 0 bytes, list.o(i.uxListRemove))
-<BR><BR>[Called By]<UL><LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<BR><BR>[Called By]<UL><LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
 <LI><a href="#[175]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
 <LI><a href="#[1d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckTasksWaitingTermination
 <LI><a href="#[1c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddCurrentTaskToDelayedList
@@ -2939,7 +2936,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1cb]"></a>vListInsertEnd</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, list.o(i.vListInsertEnd))
-<BR><BR>[Called By]<UL><LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<BR><BR>[Called By]<UL><LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
 <LI><a href="#[175]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskIncrementTick
 <LI><a href="#[1cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 <LI><a href="#[1c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddCurrentTaskToDelayedList
@@ -2983,8 +2980,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[18c]"></a>vMBMasterGetPDUSndBuf</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, mbrtu_m.o(i.vMBMasterGetPDUSndBuf))
-<BR><BR>[Called By]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
-<LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
+<BR><BR>[Called By]<UL><LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
+<LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
 <LI><a href="#[16d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterPoll
 <LI><a href="#[a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterFuncReadInputRegister
 <LI><a href="#[c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterFuncWriteMultipleHoldingRegister
@@ -3062,9 +3059,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[199]"></a>vMBMasterSetDestAddress</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, mb_m.o(i.vMBMasterSetDestAddress))
-<BR><BR>[Called By]<UL><LI><a href="#[153]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextDeviceAddr
-<LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
-<LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
+<BR><BR>[Called By]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextDeviceAddr
+<LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
+<LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
 <LI><a href="#[16d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterPoll
 <LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -3075,8 +3072,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1ab]"></a>vMBMasterSetPDUSndLength</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, mbrtu_m.o(i.vMBMasterSetPDUSndLength))
-<BR><BR>[Called By]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
-<LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
+<BR><BR>[Called By]<UL><LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
+<LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
 </UL>
 
 <P><STRONG><a name="[1b1]"></a>vMBPortSerialEnable</STRONG> (Thumb, 72 bytes, Stack size 16 bytes, portserial.o(i.vMBPortSerialEnable))
@@ -3113,7 +3110,7 @@ Global Symbols
 
 <P><STRONG><a name="[1ce]"></a>vPortEnterCritical</STRONG> (Thumb, 76 bytes, Stack size 0 bytes, port.o(i.vPortEnterCritical))
 <BR><BR>[Called By]<UL><LI><a href="#[16f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskNotifyWait
-<LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
 <LI><a href="#[1d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckTasksWaitingTermination
 <LI><a href="#[1cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 <LI><a href="#[203]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCheckForTimeOut
@@ -3128,7 +3125,7 @@ Global Symbols
 
 <P><STRONG><a name="[1d0]"></a>vPortExitCritical</STRONG> (Thumb, 56 bytes, Stack size 0 bytes, port.o(i.vPortExitCritical))
 <BR><BR>[Called By]<UL><LI><a href="#[16f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskNotifyWait
-<LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
 <LI><a href="#[1d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCheckTasksWaitingTermination
 <LI><a href="#[1cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvAddNewTaskToReadyList
 <LI><a href="#[203]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCheckForTimeOut
@@ -3235,8 +3232,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[195]"></a>xMBMasterPortEventPost</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, portevent_m.o(i.xMBMasterPortEventPost))
-<BR><BR>[Called By]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
-<LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
+<BR><BR>[Called By]<UL><LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
+<LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
 <LI><a href="#[16d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterPoll
 <LI><a href="#[83]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xMBMasterRTUTimerExpired
 <LI><a href="#[19d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBMasterErrorCBRespondTimeout
@@ -3308,8 +3305,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1aa]"></a>xMBMasterRunResTake</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, portevent_m.o(i.xMBMasterRunResTake))
-<BR><BR>[Called By]<UL><LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
-<LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
+<BR><BR>[Called By]<UL><LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadInputRegister
+<LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterReqReadHoldingRegister
 </UL>
 
 <P><STRONG><a name="[1ad]"></a>xMBPortEventGet</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, portevent.o(i.xMBPortEventGet))
@@ -3447,7 +3444,7 @@ Global Symbols
 <LI><a href="#[1d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
 <LI><a href="#[1ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 </UL>
-<BR>[Called By]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexRelease
+<BR>[Called By]<UL><LI><a href="#[154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexRelease
 <LI><a href="#[1d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseMutex
 </UL>
 
@@ -3457,7 +3454,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[1e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
 <LI><a href="#[1f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortValidateInterruptPriority
 </UL>
-<BR>[Called By]<UL><LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexRelease
+<BR>[Called By]<UL><LI><a href="#[154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexRelease
 </UL>
 
 <P><STRONG><a name="[1c4]"></a>xQueueReceiveFromISR</STRONG> (Thumb, 202 bytes, Stack size 40 bytes, queue.o(i.xQueueReceiveFromISR))
@@ -3467,7 +3464,7 @@ Global Symbols
 <LI><a href="#[1f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortValidateInterruptPriority
 <LI><a href="#[1d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCopyDataFromQueue
 </UL>
-<BR>[Called By]<UL><LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexWait
+<BR>[Called By]<UL><LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexWait
 </UL>
 
 <P><STRONG><a name="[1c5]"></a>xQueueSemaphoreTake</STRONG> (Thumb, 434 bytes, Stack size 40 bytes, queue.o(i.xQueueSemaphoreTake))
@@ -3489,7 +3486,7 @@ Global Symbols
 <LI><a href="#[1d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
 <LI><a href="#[1ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 </UL>
-<BR>[Called By]<UL><LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexWait
+<BR>[Called By]<UL><LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexWait
 </UL>
 
 <P><STRONG><a name="[203]"></a>xTaskCheckForTimeOut</STRONG> (Thumb, 132 bytes, Stack size 16 bytes, tasks.o(i.xTaskCheckForTimeOut))
@@ -3524,7 +3521,7 @@ Global Symbols
 <LI><a href="#[1be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskStartScheduler
 </UL>
 
-<P><STRONG><a name="[14d]"></a>xTaskGenericNotify</STRONG> (Thumb, 280 bytes, Stack size 32 bytes, tasks.o(i.xTaskGenericNotify))
+<P><STRONG><a name="[157]"></a>xTaskGenericNotify</STRONG> (Thumb, 280 bytes, Stack size 32 bytes, tasks.o(i.xTaskGenericNotify))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = xTaskGenericNotify
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1cb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
@@ -3532,8 +3529,7 @@ Global Symbols
 <LI><a href="#[1d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
 <LI><a href="#[1ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 </UL>
-<BR>[Called By]<UL><LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HandleDisplayCommands
-<LI><a href="#[157]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
+<BR>[Called By]<UL><LI><a href="#[155]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
 </UL>
 
 <P><STRONG><a name="[201]"></a>xTaskGetSchedulerState</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, tasks.o(i.xTaskGetSchedulerState))
@@ -4046,8 +4042,8 @@ Local Symbols
 </UL>
 
 <P><STRONG><a name="[1c1]"></a>inHandlerMode</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, cmsis_os.o(i.inHandlerMode))
-<BR><BR>[Called By]<UL><LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexWait
-<LI><a href="#[156]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexRelease
+<BR><BR>[Called By]<UL><LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexWait
+<LI><a href="#[154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexRelease
 </UL>
 
 <P><STRONG><a name="[1c6]"></a>makeFreeRtosPriority</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, cmsis_os.o(i.makeFreeRtosPriority))
