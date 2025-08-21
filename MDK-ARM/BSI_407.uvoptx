@@ -154,7 +154,7 @@
           <Type>0</Type>
           <LineNumber>403</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134240826</Address>
+          <Address>134241974</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -170,7 +170,7 @@
           <Type>0</Type>
           <LineNumber>450</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134240976</Address>
+          <Address>134242124</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -180,6 +180,22 @@
           <Filename>..\FreeModbusMaster\functions\mbfuncholding_m.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\BSI_407\../FreeModbusMaster/functions/mbfuncholding_m.c\450</Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
+          <LineNumber>293</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>../Core/Src/stm32f4xx_it.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -1105,7 +1121,7 @@
 
   <Group>
     <GroupName>FreeModbusMaster</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1245,7 +1261,7 @@
 
   <Group>
     <GroupName>HoldingRegisterSlave</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1393,7 +1409,7 @@
 
   <Group>
     <GroupName>bsp</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1433,7 +1449,7 @@
 
   <Group>
     <GroupName>FlashDriver</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

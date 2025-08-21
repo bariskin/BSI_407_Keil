@@ -307,14 +307,20 @@ void USART3_IRQHandler(void) {
 													}
 													break;
 									}
-									
+		
 									// Обработка командных пакетов (формат XX 01 YY)
 									if (significant_bytes_count >= 3 && arrDisplayRX[1] == 0x01) {
 											// Используем прямое соответствие между param_id и response
-											if (arrDisplayRX[2] >= 0x01 && arrDisplayRX[2] <= 0x06) {
+											if (arrDisplayRX[2] >= 0x01 && arrDisplayRX[2] <= 0x06) { // Baud Rate change
 													displayResponse = arrDisplayRX[2];
 											}
 									}
+									/// для Calibration Primary Zero 
+									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x10 && arrDisplayRX[2] == (uint8_t)0x64)
+									{
+										displayResponse = 0x64; // Calibration Primary Zero 	
+									}
+														 
 							}
 							
 							packet_ready = 1;  // Флаг готовности пакета

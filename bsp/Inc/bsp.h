@@ -50,11 +50,12 @@ extern "C" {
   typedef struct
 	  {
 			uint8_t  SensorModBudAddr;
-			uint32_t DeviceModelCode;
-			uint32_t SensorScaleMax;
-			uint16_t SensorScaleDimension;
-			uint32_t SensorWarning;       // Порог 1
-			uint32_t SensorAlarm;         // Порог 1
+			uint8_t DeviceModelCode[10];
+			float SensorScaleMax;
+			char SensorGas[10];
+			char SensorScaleDimension[10];
+			float SensorWarning;            // Порог 1
+			float SensorAlarm;              // Порог 2
 			uint8_t SensorSubstanceCode[16]; //тип газа
 			uint16_t Concentration_H;
 			uint16_t Concentration_L;
@@ -88,12 +89,15 @@ extern  uint8_t NumberSlaveDevices;
     void setNumberDevices(uint8_t *numberDevices, uint8_t number);
 		void setNextDeviceAddr(uint8_t *currentAddr);
 		void initSensorStateArray(uint8_t numberdevices);
-		void readCurrentSensorState( uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS]);
+	void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS],uint16_t RegHoldingBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS]);
   	void setModBusSlaveSetting(void);
 		void setModBusSlaveAddr(void);
 		void setNextActiveDeviceAddr(uint8_t *currentAddr);
 	  uint8_t GetActiveSensors(SensorState_t SensorStateArray[NUMBER_SLAVE_DEVICES], SensorInfo_t *sensorinfo);
 		void setNextActiveDeviceAddr_(uint8_t *currentAddr, uint8_t countsensores); 
+		const char* getUnitStringByCode(uint8_t code);
+		void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS]);
+		const char* getDeviceModelNameFromShorts(short part1, short part2);
 		/**
   * @}
   */

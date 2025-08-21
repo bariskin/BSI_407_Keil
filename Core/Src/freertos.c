@@ -50,6 +50,7 @@ extern UART_HandleTypeDef huart3;
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
 extern USHORT   usMRegInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS];
+extern USHORT   usMRegHoldBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS];
 extern SensorState_t   SensorStateArray[NUMBER_SLAVE_DEVICES];
 
 extern volatile char arrDisplayRX[ARRAY_RX_SIZE];
@@ -287,7 +288,7 @@ void HoldingHandlerFunction(void const * argument)
 				    /* ********************************* set next slave addr *************************** */	
 				     else if (SelectRunFlag == 5)
 				      {
-					     readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
+					     readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf,usMRegHoldBuf);
 				       setNextDeviceAddr(&ModBusSlaveCurrentDeviceAddr);	       // set next device addr
                SelectRunFlag = 0;
 								
@@ -328,8 +329,8 @@ void HoldingHandlerFunction(void const * argument)
 				      /* ********************************* set next slave addr *************************** */	
 				       else if (SelectRunFlag == 7)
 				        {
-						    	/* считиваем регистры после запроса */
-					        readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
+						    	/* значение концентрации текущее */
+					         readCurrentSensorValue(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
 									
 					        /* выбираем только адреса активных приборов */
 				          setNextActiveDeviceAddr_(&ModBusSlaveCurrentDeviceAddr,SensorInfo.count);	       // set next active sdevice addr

@@ -146,31 +146,32 @@ extern  SensorInfo_t  SensorInfo;
 	  // ‘орматируем числа с зап€той вместо точки
      char value_str[20], scale_max_str[20], por1_str[20], por2_str[20];
 	  
-	 // получение очерердного активного modbus addr
+	 // получение очередного активного modbus addr
 	  uint8_t currentModbusIdx = SensorInfo.modbusAddrs[nextChannel - 1];
 	 
 	  snprintf(value_str, sizeof(value_str), "%.2f", SensorStateArray[currentModbusIdx - 1].Concentration);
-	  snprintf(scale_max_str, sizeof(scale_max_str), "%.2f", device[nextChannel].scaleMax);
-    snprintf(por1_str,  sizeof(por1_str),  "%.2f", device[nextChannel].Porog1);
-    snprintf(por2_str,  sizeof(por2_str),  "%.2f", device[nextChannel].Porog2);
+	  snprintf(scale_max_str, sizeof(scale_max_str), "%.2f", SensorStateArray[currentModbusIdx - 1].SensorScaleMax);
+    snprintf(por1_str,  sizeof(por1_str),  "%.2f", SensorStateArray[currentModbusIdx - 1].SensorWarning);
+    snprintf(por2_str,  sizeof(por2_str),  "%.2f", SensorStateArray[currentModbusIdx - 1].SensorAlarm);
 	  for(char* p = value_str; *p; p++) if(*p == '.') *p = ',';
 	  for(char* p = scale_max_str; *p; p++) if(*p == '.') *p = ',';
     for(char* p = por1_str; *p; p++) if(*p == '.') *p = ',';
     for(char* p = por2_str; *p; p++) if(*p == '.') *p = ',';
 	 
 	   SendNextionCommand("page%d.val%d.txt=\"%s\"", page, pos, value_str);
-		 SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos, device[nextChannel].gas);
+		 SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].SensorGas);
 	   SendNextionCommand("page%d.ran%d.txt=\"%s\"", page, pos, scale_max_str);
 		 SendNextionCommand("page%d.poz%d.txt=\"%s\"", page, pos,device[nextChannel].posit);
 	   SendNextionCommand("page%d.por1%d.txt=\"%s\"", page, pos, por1_str);
-		 SendNextionCommand("page%d.por2%d.txt=\"%s\"€€€", page, pos, por2_str);	
-		 SendNextionCommand("page%d.unit%d.txt=\"%s\"€€€", page, pos, device[nextChannel].scaleDimension);
-		 
+		 SendNextionCommand("page%d.por2%d.txt=\"%s\"", page, pos, por2_str);	
+		 SendNextionCommand("page%d.unit%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].SensorScaleDimension);
+		 SendNextionCommand("page%d.mod%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].DeviceModelCode);
+			
 		 nextChannel++;
 		 
 		if( nextChannel > SensorInfo_count)
 		{
-		  nextChannel =1;
+		  nextChannel = 1;
 		}
 		 
  }
@@ -181,12 +182,12 @@ void initDeviceData(uint8_t numberOfdevices)
 		 for(uint8_t i = 0; i <= numberOfdevices ; i++)
 		  {
 			  device[i].value = 00.00;
-			  strncpy(device[i].gas, "unknown", sizeof(device[i].gas));
+			  strncpy(device[i].gas, "gas", sizeof(device[i].gas));
 				device[i].scaleMax = 50.00;
-			  strncpy(device[i].scaleDimension, "unknown", sizeof(device[i].scaleDimension));
+			  strncpy(device[i].scaleDimension, "dimension", sizeof(device[i].scaleDimension));
 				device[i].Porog1 = 10.00;
 				device[i].Porog2 = 20.00;
-				strncpy(device[i].model, "UNKNOWN", sizeof(device[i].model));
+				strncpy(device[i].model, "---", sizeof(device[i].model));
 			}
 			
 	 }
@@ -249,6 +250,10 @@ void HandleDisplayCommands(uint8_t displayResponse, uint8_t *arrDisplayRX, uint8
             case 0x33: // ќбновление числа устройств
                 numberOfDevices = getIntFromChar((char *)&arrDisplayRX[0], 5);
                 break;
+						case 0x64: // калибровка "0"
+							
+							 break;
+						
         }
 
         // —брос флага и буфера

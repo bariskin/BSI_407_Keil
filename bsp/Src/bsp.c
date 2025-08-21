@@ -57,35 +57,33 @@ volatile 	TimeStepReadingSensores_t TimeStep =
 /* ------------------------Locale variables----------------------------*/
  union ShortsToFloat converter;
 /* ------------------------Functions-----------------------------------*/
-
 void initSensorStateArray(uint8_t numberdevices)
   {
 		for(int i = 0; i < numberdevices; i++)
 		{
+			SensorStateArray[i].SensorModBudAddr     = 0x00;	
 			  // Обнуление массива DeviceModelCode,строковое значение вещества 
-    memset((void *)SensorStateArray[i].SensorSubstanceCode, 0, sizeof(SensorStateArray[i].SensorSubstanceCode));
-			
-		 SensorStateArray[i].SensorModBudAddr     = 0x00;	
-		 SensorStateArray[i].DeviceModelCode      = 0x00000000;
-		 SensorStateArray[i].SensorScaleMax       = 0x00000000;
-		 SensorStateArray[i].SensorScaleDimension = 0x0000;
-		 SensorStateArray[i].SensorWarning        = 0x00000000;
-     SensorStateArray[i].SensorAlarm          = 0x00000000;
-		 SensorStateArray[i].DeviceStatus         = 0x0000;
-		 SensorStateArray[i].Concentration_H      = 0x0000;
-		 SensorStateArray[i].Concentration_L      = 0x0000;
+     memset((void *)SensorStateArray[i].SensorSubstanceCode, 0, sizeof(SensorStateArray[i].SensorSubstanceCode));
+		 memset((void *)SensorStateArray[i].DeviceModelCode, 0, sizeof(SensorStateArray[i].DeviceModelCode)); 
+		 SensorStateArray[i].SensorScaleMax       = 0;
+		 memset((void *)SensorStateArray[i].SensorGas, 0, sizeof(SensorStateArray[i].SensorGas));
+		 memset((void *)SensorStateArray[i].SensorScaleDimension, 0, sizeof(SensorStateArray[i].SensorScaleDimension));
+		 SensorStateArray[i].SensorWarning        = 0.00;
+     SensorStateArray[i].SensorAlarm          = 0.00;
+		 SensorStateArray[i].DeviceStatus         = 0;
+		 SensorStateArray[i].Concentration_H      = 0;
+		 SensorStateArray[i].Concentration_L      = 0;
 		 SensorStateArray[i].Concentration        = 0.00;
-		 SensorStateArray[i].NotResponsCounter    = 0x0000;
+		 SensorStateArray[i].NotResponsCounter    = 0;
 		 SensorStateArray[i].ErrorState           = true;
 		}
   }
-
 /**
  * @brief Reads and processes current sensor state from Modbus input registers
  * @param slaveaddr Slave device address (1-based index)
  * @param RegInputBuff 2D array containing Modbus input registers for all slaves
  */
-void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS])
+void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS],uint16_t RegHoldingBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS])
 {
 	  uint32_t combined;   // Объединённые 32 бита
 	  float result;        // Результат
@@ -93,14 +91,45 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     if (slaveaddr < 1 || slaveaddr > MB_MASTER_TOTAL_SLAVE_NUM) {
         return; // or handle error appropriately
     }
-
     const size_t slave_idx = slaveaddr - 1;
     SensorState_t* sensor = &SensorStateArray[slave_idx];
     
     // Reset buffer values before reading
-    sensor->DeviceStatus = 0x0000;
+    sensor->DeviceStatus =  0;
+    /* *********************************  Read sensor data ********************************** */
+		
+			// SensorModelCode
+    const char* unit = getDeviceModelNameFromShorts(RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN- 1],RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN_2- 1]);
+    snprintf((char*)sensor->DeviceModelCode, sizeof(sensor->DeviceModelCode), "%s", unit);
+		
+		// SensorGas
+	  uint16_t *src_ptr = &RegHoldingBuff[slave_idx][SENSOR_SUBSTANCE_CODE_1_INTERN - 1];
+     for (int i = 0; i < 6; i++) {
+       sensor->SensorGas[i] = src_ptr[i] & 0xFF;  // Берём только младший байт
+     }
+		// SensorWarning
+    combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_WARNIGN_HIGN_INTERN - 1] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_WARNIGN_LOW_INTERN - 1];
+    // Копируем биты в float (аналог reinterpret_cast в C++)
+    *(uint32_t*)&result = combined;
+    sensor->SensorWarning = result;
+		
+		// SensorAlarm
+    combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_HIGH_INTERN - 1] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_LOW_INTERN - 1];
+   
+    *(uint32_t*)&result = combined;
+    sensor->SensorAlarm = result;
+		
+		// SensorScaleMax
+    combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_HIGH_INTERN - 1] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_LOW_INTERN - 1];
     
-    // Read sensor data
+    *(uint32_t*)&result = combined;
+    sensor->SensorScaleMax = result;
+		
+		// SensorScaleDimension
+    unit = getUnitStringByCode(RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_INTERN - 1]);
+    snprintf((char*)sensor->SensorScaleDimension, sizeof(sensor->SensorScaleDimension), "%s", unit);
+		
+		//Concentration 
     sensor->DeviceStatus    = RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN - 1];
     sensor->Concentration_H = RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_HIGH_INTERN - 1];
     sensor->Concentration_L = RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_LOW_INTERN - 1];
@@ -131,6 +160,40 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
             // Consider additional error handling here if needed
         }
     }
+}
+
+/**
+ * @brief Reads and processes current sensor state from Modbus input registers
+ * @param slaveaddr Slave device address (1-based index)
+ * @param RegInputBuff 2D array containing Modbus input registers for all slaves
+ */
+void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS])
+{
+	  uint32_t combined;   // Объединённые 32 бита
+	  float result;        // Результат
+    // Validate slave address
+    if (slaveaddr < 1 || slaveaddr > MB_MASTER_TOTAL_SLAVE_NUM) {
+        return; // or handle error appropriately
+    }
+    const size_t slave_idx = slaveaddr - 1;
+    SensorState_t* sensor = &SensorStateArray[slave_idx];
+    
+		//Concentration 
+    sensor->DeviceStatus    = RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN - 1];
+    sensor->Concentration_H = RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_HIGH_INTERN - 1];
+    sensor->Concentration_L = RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_LOW_INTERN - 1];
+		  // Собираем 32 бита из двух 16-битных short
+    combined = ((uint32_t)(uint16_t)sensor->Concentration_H ) << 16 | (uint16_t)  sensor->Concentration_L;
+
+    // Копируем биты в float (аналог reinterpret_cast в C++)
+    *(uint32_t*)&result = combined;
+    sensor->Concentration   = result;
+		
+    // Clear the input buffer
+    RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN - 1]  = 0x0000;
+    RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_HIGH_INTERN - 1] = 0x0000;
+    RegInputBuff[slave_idx][SENSOR_PRIMARY_VAUE_LOW_INTERN - 1]  = 0x0000;
+  
 }
 
 /**
@@ -393,4 +456,56 @@ uint8_t GetActiveSensors(SensorState_t SensorStateArray[NUMBER_SLAVE_DEVICES], S
 		return sensorinfo->count;
 	}
 	 
+	const char* getUnitStringByCode(uint8_t code) {
+    switch (code) {
+        case 0x8B: return "ppm";
+        case 0xA9: return "ppb";
+        case 0xAA: return "mg/m3";
+        case 0xA1: return "%LEL";
+        case 0x6A: return "% vol. solids";
+        case 0x69: return "% wt. solids";
+        case 0x5B: return "g/m3";
+        case 0x5C: return "kg/m3";
+        default:   return "Unknown unit";  // Если код не найден
+    }
+}
+	
+#include <stdint.h>
+#include <string.h>
+
+/**
+ * @brief Получает название модели устройства по двум short (4 байта ASCII).
+ * @param part1 Первые 2 ASCII-символа (например, 0x4531 для "E1").
+ * @param part2 Следующие 2 ASCII-символа (например, 0x3938 для "98").
+ * @return Название модели или "Неизвестная модель".
+ */
+const char* getDeviceModelNameFromShorts(short part1, short part2) {
+    // Преобразуем два short в массив из 4 байт (с учётом little-endian)
+    uint8_t device_code[4];
+	
+	  device_code[0] = (uint8_t)((part1 >> 8) & 0xFF); // Старший байт part1
+    device_code[1] = (uint8_t)(part1 & 0xFF);       // Младший байт part1
+	  device_code[2] = (uint8_t)((part2 >> 8) & 0xFF); // Старший байт part2
+    device_code[3] = (uint8_t)(part2 & 0xFF);       // Младший байт part2
+	
+    // Известные коды моделей (4 ASCII-символа)
+    static const struct {
+        uint8_t code[4];
+        const char* name;
+    } device_mappings[] = {
+        {{0x45, 0x31, 0x39, 0x38}, "Бинар-6X"},  // E198
+        {{0x45, 0x31, 0x39, 0x37}, "Бинар-7X"},  // E197
+        {{0x45, 0x31, 0x39, 0x44}, "Бинар-2Д"},  // E19D
+    };
+
+    // Сравниваем с известными моделями
+    for (size_t i = 0; i < sizeof(device_mappings) / sizeof(device_mappings[0]); i++) {
+        if (memcmp(device_code, device_mappings[i].code, 4) == 0) {
+            return device_mappings[i].name;
+        }
+    }
+
+    return "Неизвестная модель";
+}
+	
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/
