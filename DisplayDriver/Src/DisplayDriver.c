@@ -218,10 +218,10 @@ void initDeviceData(uint8_t numberOfdevices)
  * @param packet_ready Флаг готовности пакета (1 — данные получены, 0 — нет).
  * @param huart Указатель на UART-интерфейс для перезапуска приёма.
  */
-void HandleDisplayCommands(uint8_t displayResponse, uint8_t *arrDisplayRX, uint8_t *packet_ready, UART_HandleTypeDef *huart) {
+void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint8_t *packet_ready, UART_HandleTypeDef *huart) {
     
 	if (*packet_ready) {
-        switch (displayResponse) {
+        switch (*displayresponse) {
             case 0x01: // Модель
                 break;
             case 0x02: // Единицы измерения
@@ -250,12 +250,16 @@ void HandleDisplayCommands(uint8_t displayResponse, uint8_t *arrDisplayRX, uint8
             case 0x33: // Обновление числа устройств
                 numberOfDevices = getIntFromChar((char *)&arrDisplayRX[0], 5);
                 break;
-						case 0x64: // калибровка "0"
+						case 0x64: /* for Calibration Primary Zero, Калибровка  <<0>>*/ 
+							
+							 break;
+						case 0x68:/* for Calibration, Калибровка  "Точка 1" */ 
 							
 							 break;
 						
         }
 
+				*displayresponse = 0x00; // reset cmd for display
         // Сброс флага и буфера
         *packet_ready = 0;
         memset(arrDisplayRX, 0, ARRAY_RX_SIZE);

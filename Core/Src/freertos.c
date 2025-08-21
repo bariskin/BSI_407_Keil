@@ -411,9 +411,8 @@ void DisplayTaskFunction(void const * argument)
   /* Infinite loop */
   for(;;)
   {		
-	  HandleDisplayCommands(displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready, &huart3);	
+	  HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready, &huart3);	
     osDelay(25);
-		taskYIELD()
   }
   /* USER CODE END DisplayTaskFunction */
 }
