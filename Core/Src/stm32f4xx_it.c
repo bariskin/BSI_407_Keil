@@ -23,6 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "DisplayDriver.h"
+#include <string.h>
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -99,7 +101,10 @@ volatile uint16_t tx_size = 0;
  Packet received_packets[MAX_PACKETS];
  uint8_t packets_received = 0;
  uint8_t significant_bytes_count = 0;
+ uint8_t calibration_bytes_count = 0;
  uint8_t significant_bytes[MAX_SIGNIFICANT_BYTES] = {0};
+ float   updateCalibrationValue = 0.00;
+ uint8_t channelID = 0;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -315,12 +320,24 @@ void USART3_IRQHandler(void) {
 													displayResponse = arrDisplayRX[2];
 											}
 									}
-									/// для Calibration Primary Zero 
+						/* for Calibration Primary Zero, Калибровка  <<0>>*/ 
 									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x10 && arrDisplayRX[2] == (uint8_t)0x64)
 									{
 										displayResponse = 0x64; // Calibration Primary Zero 	
 									}
-														 
+						/* for Calibration, Калибровка  "Точка 1" */ 
+									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x10 && arrDisplayRX[2] == (uint8_t)0x68)
+									{
+										 displayResponse = 0x68; 	
+										
+										/*1. channel ID: arrDisplayRX[0]*/	
+										 channelID = arrDisplayRX[0];
+										/*2. significant_bytes_count with calibration value: "Точка 1"*/		
+										 calibration_bytes_count = significant_bytes_count - 3;
+									   uint8_t input[10] = {0};
+										 memcpy(input,(void *)&arrDisplayRX[3], calibration_bytes_count);
+										 sscanf((const char *)input, "%f", &updateCalibrationValue);
+									}							 
 							}
 							
 							packet_ready = 1;  // Флаг готовности пакета

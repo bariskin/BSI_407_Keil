@@ -218,18 +218,16 @@ void MasterModbusTaskFunction(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-		// ѕытаемс€ захватить мьютекс (ждЄм 10 мс)
+		// ѕытаемс€ захватить мьютекс (ждЄм 100 мс)
      osStatus status = osMutexWait(myMutex01Handle, 100);
 		 if (status == osOK) {		 
 	   
 		     eMBMasterPoll();
-			   eMBMasterPoll();
 			  // ќсвобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }
 		 
     osDelay(10);
-		taskYIELD();
   }
   /* USER CODE END MasterModbusTaskFunction */
 }
