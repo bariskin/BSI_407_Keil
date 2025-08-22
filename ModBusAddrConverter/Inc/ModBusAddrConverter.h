@@ -40,6 +40,17 @@ extern "C" {
 #define SENSOR_THRESHOLD_ALARM_HIGH     (uint16_t)(41013 - 40000)  //Sensor Threshold ALARM LOW
 #define SENSOR_THRESHOLD_ALARM_LOW      (uint16_t)(41014 - 40000)  //Sensor Threshold ALARM LOW
 
+#define CALIBRATION_PRIMATY_ZERO               (uint16_t)(41021 - 40000)  //Calibration Primary Zero 
+#define CALIBRATION_PRIMATY_ZERO_STATUS        (uint16_t)(41022 - 40000)  //Calibration Primary Zero Status
+#define CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH   (uint16_t)(41023 - 40000)  //Calibration Primary Zero Signal High
+#define CALIBRATION_PRIMATY_ZERO_SIGNAL_LOW    (uint16_t)(41024 - 40000)  //Calibration Primary Zero Signal Low
+
+#define CALIBRATION_PRIMATY_SPAN               (uint16_t)(41026 - 40000)  //Calibration Primary Span 
+#define CALIBRATION_PRIMATY_SPAN_STATUS        (uint16_t)(41027 - 40000)  //Calibration Primary Span Status
+#define CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH   (uint16_t)(41028 - 40000)  //Calibration Primary Span Signal High
+#define CALIBRATION_PRIMATY_SPAN_SIGNAL_LOW    (uint16_t)(41029 - 40000)  //Calibration Primary Span Signal Low
+
+
 #define SENSOR_SUBSTANCE_CODE_1         (uint16_t)(41031 - 40000)  //SENSOR_SUBSTANCE_CODE 
 #define SENSOR_SUBSTANCE_CODE_2         (uint16_t)(41032 - 40000)  //SENSOR_SUBSTANCE_CODE 
 #define SENSOR_SUBSTANCE_CODE_3         (uint16_t)(41033 - 40000)  //SENSOR_SUBSTANCE_CODE 
@@ -86,6 +97,20 @@ extern "C" {
 #define SENSOR_SUBSTANCE_CODE_14_INTERN        (uint16_t)(23) 
 #define SENSOR_SUBSTANCE_CODE_15_INTERN        (uint16_t)(24) 
 #define SENSOR_SUBSTANCE_CODE_16_INTERN        (uint16_t)(25) 
+
+#define CALIBRATION_PRIMATY_ZERO_INTERN               (uint16_t)(26)  
+#define CALIBRATION_PRIMATY_ZERO_STATUS_INTERN        (uint16_t)(27)  
+#define CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH_INTERN   (uint16_t)(28)  
+#define CALIBRATION_PRIMATY_ZERO_SIGNAL_LOW_INTERN    (uint16_t)(29)  
+
+#define CALIBRATION_PRIMATY_SPAN_INTERN               (uint16_t)(30)  
+#define CALIBRATION_PRIMATY_SPAN_STATUS_INTERN        (uint16_t)(31)  
+#define CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH_INTERN   (uint16_t)(32)  
+#define CALIBRATION_PRIMATY_SPAN_SIGNAL_LOW_INTERN    (uint16_t)(33)  
+
+
+
+
 
 /* ------------------------ END HOLDING REGISTERS ------------------------------------*/	
 

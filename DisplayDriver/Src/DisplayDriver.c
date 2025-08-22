@@ -21,6 +21,7 @@
 /* ------------------------External variables -------------------------*/
 extern UART_HandleTypeDef huart3;
 extern osThreadId SlaveEventTaskHandle;
+extern osThreadId SendToDispTaskHandle;
 /* ------------------------Global variables----------------------------*/
  char arrDisplayTX[ARRAY_TX_SIZE] = {0};
  volatile uint8_t arrDisplayRX[ARRAY_RX_SIZE] = {0};
@@ -34,6 +35,7 @@ extern  uint8_t  numberOfDevices;
 
 extern SensorState_t  SensorStateArray[NUMBER_SLAVE_DEVICES]; 
 extern  SensorInfo_t  SensorInfo;
+ uint8_t channelID = 0x00;
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  
@@ -258,9 +260,15 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 						
 						case 0x64: /* for Calibration Primary Zero, Калибровка  <<0>>*/ 
 							 *displayresponse = 0x00; // reset cmd for display
+						   channelID = arrDisplayRX[0];
+						   xTaskNotify(SendToDispTaskHandle,0x64 , eSetValueWithOverwrite);
+						    
 							 break;
 						case 0x68:/* for Calibration, Калибровка  "Точка 1" */ 
 							 *displayresponse = 0x00; // reset cmd for display
+						
+						   channelID = arrDisplayRX[0];
+						   xTaskNotify(SendToDispTaskHandle,0x68 , eSetValueWithOverwrite);
 							 break;
 						
         }

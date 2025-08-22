@@ -78,15 +78,10 @@ volatile uint32_t end_marker_counter = 0;     // Счётчик для детектирования 0xFF
 volatile uint8_t displayResponse = 0;
 volatile uint8_t displayStartedFlag = 0;
 
-uint8_t tx_buffer[ARRAY_TX_SIZE + 3]; // Основной буфер + 3 байта маркера конца
-volatile uint16_t tx_index = 0;
-volatile uint16_t tx_size = 0;
+ uint8_t tx_buffer[ARRAY_TX_SIZE + 3]; // Основной буфер + 3 байта маркера конца
+ volatile uint16_t tx_index = 0;
+ volatile uint16_t tx_size = 0;
 
-
- #define MAX_PACKETS 10         // Максимум сообщений в буфере
-// uint8_t packet_buffer[MAX_PACKETS][ARRAY_RX_SIZE];
-// uint8_t packet_lengths[MAX_PACKETS];
-// uint8_t current_packet = 0;
 
  #define MAX_SIGNIFICANT_BYTES  10 // Максимум значимых байтов для сохранения
  
@@ -98,13 +93,13 @@ volatile uint16_t tx_size = 0;
 } Packet;
 
 
- Packet received_packets[MAX_PACKETS];
  uint8_t packets_received = 0;
  uint8_t significant_bytes_count = 0;
  uint8_t calibration_bytes_count = 0;
  uint8_t significant_bytes[MAX_SIGNIFICANT_BYTES] = {0};
  float   updateCalibrationValue = 0.00;
- uint8_t channelID = 0;
+ 
+ extern  uint8_t channelID;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -323,6 +318,7 @@ void USART3_IRQHandler(void) {
 						/* for Calibration Primary Zero, Калибровка  <<0>>*/ 
 									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x10 && arrDisplayRX[2] == (uint8_t)0x64)
 									{
+										channelID = arrDisplayRX[0];
 										displayResponse = 0x64; // Calibration Primary Zero 	
 									}
 						/* for Calibration, Калибровка  "Точка 1" */ 

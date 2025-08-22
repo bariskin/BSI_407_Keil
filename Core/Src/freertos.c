@@ -61,6 +61,7 @@ extern  uint8_t packets_received;
 uint8_t  numberOfDevices = NUMBER_SLAVE_DEVICES;
 uint16_t BaudRateID = 0;
 extern SensorInfo_t SensorInfo;
+extern  uint8_t channelID;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -91,6 +92,9 @@ osStaticThreadDef_t SlaveEventTaskControlBlock;
 osThreadId DisplayTaskHandle;
 uint32_t DisplayTaskBuffer[ 256 ];
 osStaticThreadDef_t DisplayTaskControlBlock;
+osThreadId SendToDispTaskHandle;
+uint32_t SendToDispTaskBuffer[ 512 ];
+osStaticThreadDef_t SendToDispTaskControlBlock;
 osMutexId myMutex01Handle;
 osStaticMutexDef_t myMutex01ControlBlock;
 
@@ -105,6 +109,7 @@ void HoldingHandlerFunction(void const * argument);
 void InputHandlerFunction(void const * argument);
 void SlaveEventFunction(void const * argument);
 void DisplayTaskFunction(void const * argument);
+void SendToDispTaskFunction(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -179,6 +184,10 @@ void MX_FREERTOS_Init(void) {
   osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 256, DisplayTaskBuffer, &DisplayTaskControlBlock);
   DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
+  /* definition and creation of SendToDispTask */
+  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityBelowNormal, 0, 512, SendToDispTaskBuffer, &SendToDispTaskControlBlock);
+  SendToDispTaskHandle = osThreadCreate(osThread(SendToDispTask), NULL);
+
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
@@ -223,11 +232,13 @@ void MasterModbusTaskFunction(void const * argument)
 		 if (status == osOK) {		 
 	   
 		     eMBMasterPoll();
+			   //eMBMasterPoll();
 			  // Освобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }
 		 
     osDelay(10);
+		taskYIELD();
   }
   /* USER CODE END MasterModbusTaskFunction */
 }
@@ -369,7 +380,8 @@ void InputHandlerFunction(void const * argument)
   for(;;)
   {			
 	 	if(SensorInfo.count)   
-			{
+			{ 
+				// обновление конценатрации, если датчики есть
 		    UpdateNextionDisplayWithChannelData(SensorInfo.count);
 		  }
     osDelay(50);
@@ -415,6 +427,55 @@ void DisplayTaskFunction(void const * argument)
     osDelay(5);
   }
   /* USER CODE END DisplayTaskFunction */
+}
+
+/* USER CODE BEGIN Header_SendToDispTaskFunction */
+/**
+* @brief Function implementing the SendToDispTask thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_SendToDispTaskFunction */
+void SendToDispTaskFunction(void const * argument)
+{
+  /* USER CODE BEGIN SendToDispTaskFunction */
+  /* Infinite loop */
+  for(;;)
+  { 
+			uint32_t ulNotifiedValue = 0 ;
+		
+		 xTaskNotifyWait
+				(             
+				 0x00,             /* Don’t clear any notification bits on entry. */
+				 0xFFFFFFFFUL,     /* Reset the notification value to 0 on exit. */
+				 &ulNotifiedValue, /* Notified value pass out in ulNotifiedValue. */                      
+				 portMAX_DELAY     /* Block indefinitely. */
+					 );
+			 if(ulNotifiedValue == 0x64)     /* for Calibration Primary Zero, Калибровка  <<0>>*/ 
+			  	{		
+						  osStatus status = osMutexWait(myMutex01Handle, 100);
+		          if (status == osOK) {
+					    eMBMasterReqWriteHoldingRegister(SensorInfo.modbusAddrs[channelID -1],CALIBRATION_PRIMATY_ZERO - 1, 0x0000, 200 );
+					
+						//Освобождаем мьютекс
+					    osMutexRelease(myMutex01Handle);
+					}
+				}			
+			else if (ulNotifiedValue == 0x68)
+			{
+			      osStatus status = osMutexWait(myMutex01Handle, 100);
+		        if (status == osOK) {
+										
+								//TODO:добавить код для отправки данных				
+								
+						//Освобождаем мьютекс
+					    osMutexRelease(myMutex01Handle);	
+			    }				
+			}	 
+		osDelay(20);
+		 
+  }
+  /* USER CODE END SendToDispTaskFunction */
 }
 
 /* Private application code --------------------------------------------------*/
