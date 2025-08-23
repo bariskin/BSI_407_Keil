@@ -52,6 +52,20 @@ extern "C" {
 			uint32_t model_hex;						
     }paramDev_t;
 	
+// Display operation response status
+typedef enum {
+    DISPLAY_BAUD_RATE_CMD            = 0xA0,            
+    DISPLAY_CACIBRATION_PRIMARY_ZERO = 0x64,             
+    DISPLAY_CALIBRATION_POINT_1      = 0x68,             
+    DISPLAY_MODEL                    = 0x01,             
+    DISPLAY_SCALE_DIMENSION          = 0x02,
+    DISPLAY_SCALE_MAX                = 0x03,
+	  DISPLAY_THRESHOLD_WARNING        = 0x04, 
+    DISPLAY_THRESHOLD_ALARM          = 0x05, 
+    DISPLAY_SUBSTANCE_CODE           = 0x06
+} DisplayResponseCmd;
+		
+		
  /* ------------------------External variables -------------------------*/
   
 
@@ -65,8 +79,9 @@ extern "C" {
 	 void InitNextionDisplayWithDeviceData(uint8_t numberOfdevices);
 	 void initDeviceData(uint8_t numberOfdevices);
 	 uint8_t getIntFromChar( char * inputString, uint8_t stringSize);
-	 void HandleDisplayCommands(uint8_t * displayresponse, uint8_t *arrDisplayRX, uint8_t *packet_ready, UART_HandleTypeDef *huart);
+	 void HandleDisplayCommands(uint8_t * displayresponse, uint8_t *arrDisplayRX, uint8_t *packet_ready);
    void UpdateNextionDisplayWithChannelData(uint8_t channel_num);
+		void GetDisplayCmd(uint8_t inputByte);
 		/**
   * @}
   */

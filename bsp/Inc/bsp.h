@@ -17,6 +17,7 @@ extern "C" {
  #include "stm32f4xx_hal.h"
  #include "user_mb_app_m.h"
  #include "ModBusAddrConverter.h"
+ #include "RingBuffer.h"
   /** @defgroup board_support
   * @{
   */
@@ -98,6 +99,8 @@ extern  uint8_t NumberSlaveDevices;
 		const char* getUnitStringByCode(uint8_t code);
 		void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS]);
 		const char* getDeviceModelNameFromShorts(short part1, short part2);
+		RX_Buffer_State Uart_Get_Byte(RING_buffer_t* buf, uint8_t* a);
+		void float_to_registers_safe(float value, uint16_t registers[2]);
 		/**
   * @}
   */

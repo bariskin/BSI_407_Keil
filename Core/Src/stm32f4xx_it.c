@@ -25,11 +25,15 @@
 #include "DisplayDriver.h"
 #include <string.h>
 #include <stdio.h>
+#include "RingBuffer.h"
+#include "FreeRTOS.h"
+#include "task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
 extern volatile uint8_t startDisplayFlag;
+extern volatile uint8_t RxUartByte3;
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/
@@ -54,7 +58,7 @@ extern  uint8_t rxIdxDisplayUart;
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#define CHECK_3_ZEROS(arr) (arr[0] == 0 && arr[1] == 0 && arr[2] == 0)
+
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
@@ -72,34 +76,18 @@ extern TIM_HandleTypeDef htim2;
 #define PACKET_END_MARKER 0xFFFFF             // Маркер конца пакета (0xFF 0xFF 0xFF)
 
 extern volatile uint8_t arrDisplayRX[ARRAY_RX_SIZE];   // Буфер приёма
-volatile uint16_t rx_index = 0;               // Текущая позиция в буфере
-volatile uint8_t packet_ready = 0;            // Флаг завершённого пакета
-volatile uint32_t end_marker_counter = 0;     // Счётчик для детектирования 0xFF 0xFF 0xFF
-volatile uint8_t displayResponse = 0;
 volatile uint8_t displayStartedFlag = 0;
 
  uint8_t tx_buffer[ARRAY_TX_SIZE + 3]; // Основной буфер + 3 байта маркера конца
  volatile uint16_t tx_index = 0;
  volatile uint16_t tx_size = 0;
 
-
- #define MAX_SIGNIFICANT_BYTES  10 // Максимум значимых байтов для сохранения
- 
- typedef struct {
-    uint8_t data[10];      // Полные данные сообщения
-    uint8_t length;                   // Общая длина (без учёта FF FF FF)
-    uint8_t significant_bytes[MAX_SIGNIFICANT_BYTES]; 
-    uint8_t significant_count;        // Фактическое количество значимых байтов
-} Packet;
-
-
  uint8_t packets_received = 0;
- uint8_t significant_bytes_count = 0;
- uint8_t calibration_bytes_count = 0;
- uint8_t significant_bytes[MAX_SIGNIFICANT_BYTES] = {0};
- float   updateCalibrationValue = 0.00;
  
  extern  uint8_t channelID;
+ 
+ extern RING_buffer_t ring_Rx;   /* RX ring buffer structur */
+ extern uint8_t is_active_rx_uart_buffer; 
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -263,89 +251,15 @@ void USART2_IRQHandler(void)
 void USART3_IRQHandler(void) {
     // Проверяем флаг прерывания по приёму данных (RXNE)
     if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_RXNE)) {
+			
         uint8_t byte = (uint8_t)(huart3.Instance->DR & 0xFF);  // Читаем принятый байт
-
-        // Если буфер не переполнен
-        if (rx_index < ARRAY_RX_SIZE - 1) {
-					
-              arrDisplayRX[rx_index++] = byte;  // Сохраняем байт в буфер
-
-            // Проверяем, является ли текущий байт частью маркера конца (0xFF)
-            if (byte == 0xFF) {
-                end_marker_counter++;  // Увеличиваем счётчик подряд идущих 0xFF
-            } 
-						else {
-                end_marker_counter = 0; // Сброс, если байт не 0xFF
-							
-							  // Сохраняем первые 5 значимых байтов
-                if (significant_bytes_count < MAX_SIGNIFICANT_BYTES) {
-                   significant_bytes[significant_bytes_count++] = byte;
-                  }	
-            }
-								
-								// Обнаружение конца сообщения (3 0xFF подряд)
-					if (end_marker_counter >= 3) {
-							arrDisplayRX[rx_index - 3] = '\0';  // Удаляем маркер конца
-							
-							// Обновляем displayResponse
-							if (significant_bytes_count > 0) {
-									// Обработка специальных случаев
-									switch(significant_bytes_count) {
-											case 1:
-													displayResponse = significant_bytes[0];
-													break;
-													
-											case 2:
-													displayResponse = (significant_bytes[0] == 0x00) 
-																				 ? significant_bytes[1] 
-																				 : significant_bytes[0];
-													break;
-													
-											case 5:
-													if (CHECK_3_ZEROS(significant_bytes)) {
-															displayResponse = 0x33; // Количество устройств
-													}
-													break;
-									}
-		
-									// Обработка командных пакетов (формат XX 01 YY)
-									if (significant_bytes_count >= 3 && arrDisplayRX[1] == 0x01) {
-											// Используем прямое соответствие между param_id и response
-											if (arrDisplayRX[2] >= 0x01 && arrDisplayRX[2] <= 0x06) { // Baud Rate change
-													displayResponse = arrDisplayRX[2];
-											}
-									}
-						/* for Calibration Primary Zero, Калибровка  <<0>>*/ 
-									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x10 && arrDisplayRX[2] == (uint8_t)0x64)
-									{
-										channelID = arrDisplayRX[0];
-										displayResponse = 0x64; // Calibration Primary Zero 	
-									}
-						/* for Calibration, Калибровка  "Точка 1" */ 
-									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x10 && arrDisplayRX[2] == (uint8_t)0x68)
-									{
-										 displayResponse = 0x68; 	
-										
-										/*1. channel ID: arrDisplayRX[0]*/	
-										 channelID = arrDisplayRX[0];
-										/*2. significant_bytes_count with calibration value: "Точка 1"*/		
-										 calibration_bytes_count = significant_bytes_count - 3;
-									   uint8_t input[10] = {0};
-										 memcpy(input,(void *)&arrDisplayRX[3], calibration_bytes_count);
-										 sscanf((const char *)input, "%f", &updateCalibrationValue);
-									}							 
-							}
-							
-							packet_ready = 1;  // Флаг готовности пакета
-							rx_index = 0;
-							end_marker_counter = 0;
-							significant_bytes_count = 0;
-					}
-        } else {
-            // Переполнение буфера — сбрасываем
-            rx_index = 0;
-            end_marker_counter = 0;
-        }			
+			  
+			  /* получение очередного байта и загрузка его в кольцевой буффер */ 
+			   is_active_rx_uart_buffer = 1;
+			   //taskENTER_CRITICAL();
+			   RING_Put(byte,&ring_Rx);
+		     //taskEXIT_CRITICAL();  
+			   is_active_rx_uart_buffer = 0; 		
     }
 
 		   // Обработка передачи
@@ -361,8 +275,6 @@ void USART3_IRQHandler(void) {
     // Обработка ошибок UART (опционально)
     if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_ORE | UART_FLAG_FE | UART_FLAG_NE)) {
         __HAL_UART_CLEAR_FLAG(&huart3, UART_FLAG_ORE | UART_FLAG_FE | UART_FLAG_NE);
-        rx_index = 0;  // Сброс буфера при ошибке
-        end_marker_counter = 0;
     }
 }
 

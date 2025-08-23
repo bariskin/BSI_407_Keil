@@ -36,6 +36,7 @@
 #include "stdlib.h"
 #include <string.h>
 #include "UARTSlaveSettings.h"
+#include "RingBuffer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -44,7 +45,7 @@ uint8_t SelectaFlag = 0;
 extern volatile uint8_t startDisplayFlag;
 extern volatile uint8_t packet_ready;   
 extern UART_HandleTypeDef huart3;
-
+extern RING_buffer_t ring_Rx;   /* RX ring buffer structur */
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -90,10 +91,10 @@ osThreadId SlaveEventTaskHandle;
 uint32_t SlaveEventTaskBuffer[ 256 ];
 osStaticThreadDef_t SlaveEventTaskControlBlock;
 osThreadId DisplayTaskHandle;
-uint32_t DisplayTaskBuffer[ 256 ];
+uint32_t DisplayTaskBuffer[ 512 ];
 osStaticThreadDef_t DisplayTaskControlBlock;
 osThreadId SendToDispTaskHandle;
-uint32_t SendToDispTaskBuffer[ 512 ];
+uint32_t SendToDispTaskBuffer[ 256 ];
 osStaticThreadDef_t SendToDispTaskControlBlock;
 osMutexId myMutex01Handle;
 osStaticMutexDef_t myMutex01ControlBlock;
@@ -181,11 +182,11 @@ void MX_FREERTOS_Init(void) {
   SlaveEventTaskHandle = osThreadCreate(osThread(SlaveEventTask), NULL);
 
   /* definition and creation of DisplayTask */
-  osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 256, DisplayTaskBuffer, &DisplayTaskControlBlock);
+  osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 512, DisplayTaskBuffer, &DisplayTaskControlBlock);
   DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* definition and creation of SendToDispTask */
-  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityBelowNormal, 0, 512, SendToDispTaskBuffer, &SendToDispTaskControlBlock);
+  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityBelowNormal, 0, 256, SendToDispTaskBuffer, &SendToDispTaskControlBlock);
   SendToDispTaskHandle = osThreadCreate(osThread(SendToDispTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -420,11 +421,21 @@ void SlaveEventFunction(void const * argument)
 void DisplayTaskFunction(void const * argument)
 {
   /* USER CODE BEGIN DisplayTaskFunction */
+	uint8_t InputByte = 0x00;
   /* Infinite loop */
   for(;;)
   {		
-	  HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready, &huart3);	
-    osDelay(5);
+		
+		if(Uart_Get_Byte(&ring_Rx, (uint8_t *)&InputByte) == RX_BUF_DONE)
+		{
+		  GetDisplayCmd(InputByte);
+		}
+		if(packet_ready)
+		{
+	   HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready);	
+    }
+		osDelay(30);
+		taskYIELD()
   }
   /* USER CODE END DisplayTaskFunction */
 }
@@ -451,7 +462,7 @@ void SendToDispTaskFunction(void const * argument)
 				 &ulNotifiedValue, /* Notified value pass out in ulNotifiedValue. */                      
 				 portMAX_DELAY     /* Block indefinitely. */
 					 );
-			 if(ulNotifiedValue == 0x64)     /* for Calibration Primary Zero, Калибровка  <<0>>*/ 
+			 if(ulNotifiedValue == DISPLAY_CACIBRATION_PRIMARY_ZERO)     /* for Calibration Primary Zero, Калибровка  <<0>>*/ 
 			  	{		
 						  osStatus status = osMutexWait(myMutex01Handle, 100);
 		          if (status == osOK) {
@@ -461,7 +472,7 @@ void SendToDispTaskFunction(void const * argument)
 					    osMutexRelease(myMutex01Handle);
 					}
 				}			
-			else if (ulNotifiedValue == 0x68)
+			else if (ulNotifiedValue == DISPLAY_CALIBRATION_POINT_1)
 			{
 			      osStatus status = osMutexWait(myMutex01Handle, 100);
 		        if (status == osOK) {
@@ -470,9 +481,33 @@ void SendToDispTaskFunction(void const * argument)
 								
 						//Освобождаем мьютекс
 					    osMutexRelease(myMutex01Handle);	
-			    }				
+			    }						
 			}	 
-		osDelay(20);
+		 else if (ulNotifiedValue == DISPLAY_THRESHOLD_WARNING)
+			{
+			      osStatus status = osMutexWait(myMutex01Handle, 100);
+		        if (status == osOK) {
+										
+								//TODO:добавить код для отправки данных				
+								
+						//Освобождаем мьютекс
+					    osMutexRelease(myMutex01Handle);	
+			    }						
+			}	 
+			
+			else if (ulNotifiedValue == DISPLAY_THRESHOLD_ALARM)
+			{
+			      osStatus status = osMutexWait(myMutex01Handle, 100);
+		        if (status == osOK) {
+										
+								//TODO:добавить код для отправки данных				
+								
+						//Освобождаем мьютекс
+					    osMutexRelease(myMutex01Handle);	
+			    }						
+			}	 	
+			
+		osDelay(10);
 		 
   }
   /* USER CODE END SendToDispTaskFunction */

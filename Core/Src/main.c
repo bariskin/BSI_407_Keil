@@ -39,6 +39,7 @@
 #include "HoldingRegisterSlaveHandler.h"
 #include "numberDevices.h"
 #include "DisplayDriver.h"
+#include "RingBuffer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -67,6 +68,18 @@ extern uint8_t ModBusSlaveDefaultDeviceAddr;
 extern uint16_t timerPeriod;
 extern volatile uint16_t timerCounter;
 extern uint8_t  numberOfDevices;
+
+//**********Variables for ring biffer*******************/
+
+RING_buffer_t ring_Rx;   /* RX ring buffer structur */
+//RING_buffer_t ring_Tx;   /* TX ring buffer structur */
+
+/* Array for RX and TX ring buffers structur */
+uint8_t ring_buffer_RX[CIRC_BUF_RX_SIZE] = {0};  
+//uint8_t ring_buffer_TX[CIRC_BUF_TX_SIZE] = {0}; 
+uint8_t is_active_rx_uart_buffer = 0; 
+//uint8_t is_active_tx_vcp_buffer = 0; 
+volatile uint8_t RxUartByte3 = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -158,7 +171,12 @@ int main(void)
 	 setNumberDevices(&NumberSlaveDevices, NUMBER_SLAVE_DEVICES);
 	 
 	 /* инициализация струкутур для храения информации со слайв устройств  */
-	 //initSensorStateArray(NUMBER_SLAVE_DEVICES);               
+	 //initSensorStateArray(NUMBER_SLAVE_DEVICES);  
+
+
+   /* ************* Initializes  RX and TX ring buffers ***** */    
+	 RING_Init(&ring_Rx, ring_buffer_RX, CIRC_BUF_RX_SIZE );         /*! Init RX buffer for UART3: display */
+  //RING_Init(&ring_Tx, ring_buffer_TX, CIRC_BUF_TX_SIZE );       /*! Init TX buffer vor VCP */
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

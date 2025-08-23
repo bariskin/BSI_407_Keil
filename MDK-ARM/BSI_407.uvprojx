@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../FreeModbusSlave/include;../FreeModbusSlave/app;../FreeModbusSlave/port;../FreeModbusSlave/rtu;../ModbusSetting/Inc;../HoldingRegisterSlave/Inc;../FreeModbusMaster/include/mb_m;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../ModBusAddrConverter/Inc;../bsp/Inc;../FreeModbusMaster/user_mb_app;../UARTSlaveSettings/Inc;../FlashDriver/Inc;../DisplayDriver/Inc</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../FreeModbusSlave/include;../FreeModbusSlave/app;../FreeModbusSlave/port;../FreeModbusSlave/rtu;../ModbusSetting/Inc;../HoldingRegisterSlave/Inc;../FreeModbusMaster/include/mb_m;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../ModBusAddrConverter/Inc;../bsp/Inc;../FreeModbusMaster/user_mb_app;../UARTSlaveSettings/Inc;../FlashDriver/Inc;../DisplayDriver/Inc;..\RingBuffer\Inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1614,6 +1614,16 @@
               <FileName>DisplayDriver.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\DisplayDriver\Src\DisplayDriver.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>RingBuffer</GroupName>
+          <Files>
+            <File>
+              <FileName>RingBuffer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\RingBuffer\Src\RingBuffer.c</FilePath>
             </File>
           </Files>
         </Group>

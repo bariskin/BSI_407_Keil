@@ -19,10 +19,12 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include <string.h>
+#include "RingBuffer.h"
 /* ------------------------External variables -------------------------*/
 extern uint16_t holdingRegsPart1[MAX_MODBUS_SLAVE_REGS_PART];  // Адреса 1-120
 extern UART_HandleTypeDef huart1;
 extern uint8_t ModBusSlaveDefaultDeviceAddr;
+extern uint8_t is_active_rx_uart_buffer; 
 /* ------------------------Global variables----------------------------*/
 uint8_t NumberSlaveDevices       = 0x00;
 SensorState_t  SensorStateArray[NUMBER_SLAVE_DEVICES] = {0};
@@ -508,4 +510,52 @@ const char* getDeviceModelNameFromShorts(short part1, short part2) {
     return "Неизвестная модель";
 }
 	
+/**    
+* @brief   Receive a byte of data from circular Rx buffer
+* @param   buf: pointer of RING_buffer_t
+* @param   a: symbol to receive
+* @retval  RX_Buffer_State                                          
+*/ 
+RX_Buffer_State Uart_Get_Byte(RING_buffer_t* buf, uint8_t* a)
+{  
+  
+  uint8_t i = 3;                                  /* numbers of tries */
+  
+  if(is_active_rx_uart_buffer == 1)                /* to prevent a simultaneuous manipulation with the circular RX buffer */
+    while ((i) && (is_active_rx_uart_buffer))
+    { i--;  }
+  
+  if(is_active_rx_uart_buffer == 1)   /* if  rx buffer not yet available, then return error */
+  { 
+    return RX_BUF_FAIL;
+  }
+  
+  is_active_rx_uart_buffer = 1;       /* mutex  */
+  
+  if(buf->idxIn!=buf->idxOut)        /* if  rx buffer is not  empty */
+  {
+    *a = RING_Pop(buf);
+    
+    is_active_rx_uart_buffer = 0;    /* mutex  release */
+    
+    return RX_BUF_DONE;
+  }
+  else                              /* rx buffer is empty */
+  {
+    return RX_BUF_EMPTY;
+  }
+} 
+
+void float_to_registers_safe(float value, uint16_t registers[2]) {
+    uint32_t temp;
+    memcpy(&temp, &value, sizeof(float));
+    
+    // Явное указание порядка байт
+    registers[0] = (temp >> 16) & 0xFFFF; // Big-endian
+    registers[1] = temp & 0xFFFF;
+    
+    // Или для little-endian:
+    // registers[0] = temp & 0xFFFF;
+    // registers[1] = (temp >> 16) & 0xFFFF;
+}
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/
