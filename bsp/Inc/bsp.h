@@ -101,6 +101,8 @@ extern  uint8_t NumberSlaveDevices;
 		const char* getDeviceModelNameFromShorts(short part1, short part2);
 		RX_Buffer_State Uart_Get_Byte(RING_buffer_t* buf, uint8_t* a);
 		void float_to_registers_safe(float value, uint16_t registers[2]);
+		void float_to_registers(float value, uint16_t *reg_high, uint16_t *reg_low);
+		void float_to_modbus_registers(float value, uint16_t registers[2]);
 		/**
   * @}
   */

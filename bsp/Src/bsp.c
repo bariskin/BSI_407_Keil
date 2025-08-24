@@ -558,4 +558,18 @@ void float_to_registers_safe(float value, uint16_t registers[2]) {
     // registers[0] = temp & 0xFFFF;
     // registers[1] = (temp >> 16) & 0xFFFF;
 }
+
+void float_to_modbus_registers(float value, uint16_t registers[2]) {
+    uint8_t bytes[4];
+    memcpy(bytes, &value, sizeof(float));
+     
+        // Modbus standard (big-endian
+     registers[0] = (bytes[0] << 8) | bytes[1];
+     registers[1] = (bytes[2] << 8) | bytes[3];
+    
+        // Alternative (little-endian)
+     //registers[0] = (bytes[1] << 8) | bytes[0];
+     //registers[1] = (bytes[3] << 8) | bytes[2]; 
+}
+
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/

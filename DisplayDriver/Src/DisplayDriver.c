@@ -36,7 +36,7 @@ extern  uint8_t  numberOfDevices;
 extern SensorState_t  SensorStateArray[NUMBER_SLAVE_DEVICES]; 
 extern  SensorInfo_t  SensorInfo;
  uint8_t channelID = 0x00;
- 
+extern   uint32_t binary32;
  
  #define MAX_SIGNIFICANT_BYTES  10 // Максимум значимых байтов для сохранения 
  #define CHECK_3_ZEROS(arr) (arr[0] == 0 && arr[1] == 0 && arr[2] == 0)
@@ -50,6 +50,8 @@ extern  SensorInfo_t  SensorInfo;
  float   updateThresholdWarning = 0.00;
  float   updateThresholdAlarm = 0.00;
  float   updateCalibrationValue = 0.00;
+ 
+extern  osThreadId HoldingHandlerHandle;
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  
@@ -237,16 +239,14 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
             case  DISPLAY_SCALE_MAX:   
 									   
                 break;
-            case  DISPLAY_THRESHOLD_WARNING:
-							
-						   xTaskNotify(SendToDispTaskHandle,DISPLAY_THRESHOLD_WARNING , eSetValueWithOverwrite);
+            case  DISPLAY_THRESHOLD_WARNING_TASK:
+						   xTaskNotify(SendToDispTaskHandle,DISPLAY_THRESHOLD_WARNING_TASK , eSetValueWithOverwrite);
 							 break;	
             case  DISPLAY_THRESHOLD_ALARM: 
 							
 						   xTaskNotify(SendToDispTaskHandle,DISPLAY_THRESHOLD_ALARM , eSetValueWithOverwrite);
 							 break;	
             case DISPLAY_SUBSTANCE_CODE:  
-							
                 break;
             case 0x88: // Первый ответ после старта дисплея (0x88 0xFF 0xFF 0xFF)
 							
@@ -264,7 +264,7 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                   } 
                 break;
             case 0xBB: // Обновление числа устройств
-							   *displayresponse = 0x00; // reset cmd for display
+							   //*displayresponse = 0x00; // reset cmd for display
                  numberOfDevices = getIntFromChar((char *)&arrDisplayRX[0], 5);
                 break;
 						case 0x35:
@@ -305,7 +305,24 @@ void GetDisplayCmd(uint8_t inputByte){
                    significant_bytes[significant_bytes_count++] = inputByte;
                   }	
             }
-								
+							switch(significant_bytes_count) {
+											case 1:
+													displayResponse = significant_bytes[0];
+													break;
+													
+											case 2:
+													displayResponse = (significant_bytes[0] == 0x00) 
+																				 ? significant_bytes[1] 
+																				 : significant_bytes[0];
+													break;
+													
+											case 5:
+													if (CHECK_3_ZEROS(significant_bytes)) {
+															displayResponse = 0xBB; // Количество устройств
+													}
+													break;
+									}	
+						
 								// Обнаружение конца сообщения (3 0xFF подряд)
 					if (end_marker_counter >= 3) {
 							arrDisplayRX[rx_index - 3] = '\0';  // Удаляем маркер конца
@@ -336,6 +353,7 @@ void GetDisplayCmd(uint8_t inputByte){
 									   uint8_t input[10] = {0};
 										 memcpy(input,(void *)&arrDisplayRX[3], calibration_bytes_count);
 										 sscanf((const char *)input, "%f", &updateCalibrationValue);
+										 
 									}	
 						    /* Модель */			
 								 else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] ==  DISPLAY_MODEL )
@@ -362,17 +380,19 @@ void GetDisplayCmd(uint8_t inputByte){
 									/*         */		
 							  else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_WARNING )
 									{
-										 displayResponse = DISPLAY_THRESHOLD_WARNING ; 				
+										 displayResponse = DISPLAY_THRESHOLD_WARNING_TASK ; 				
 										/*1. channel ID: arrDisplayRX[0]*/	
 										 channelID = arrDisplayRX[0];			
 										 calibration_bytes_count = significant_bytes_count - 3;
 									   uint8_t input[10] = {0};
 										 memcpy(input,(void *)&arrDisplayRX[3], calibration_bytes_count);
-										 sscanf((const char *)input, "%f", &updateThresholdWarning);					
+										 sscanf((const char *)input, "%f", &updateThresholdWarning);
+										  memcpy(&binary32, &updateThresholdWarning, sizeof(float));
 									}
 								/*         */			
 								 else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_ALARM )
 									{
+										vTaskSuspend(HoldingHandlerHandle);
 										 displayResponse = DISPLAY_THRESHOLD_ALARM ; 		
 										/*1. channel ID: arrDisplayRX[0]*/	
 										 channelID = arrDisplayRX[0];
@@ -380,6 +400,7 @@ void GetDisplayCmd(uint8_t inputByte){
 									   uint8_t input[10] = {0};
 										 memcpy(input,(void *)&arrDisplayRX[3], calibration_bytes_count);
 										 sscanf((const char *)input, "%f", &updateThresholdAlarm);											
+									   memcpy(&binary32, &updateThresholdAlarm, sizeof(float));
 									}	
 								/*         */			
 									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_SUBSTANCE_CODE )

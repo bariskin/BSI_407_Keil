@@ -26,8 +26,8 @@ extern "C" {
   * @}
  */  
     
-#define  CIRC_BUF_RX_SIZE 128
-#define  CIRC_BUF_TX_SIZE 256
+#define  CIRC_BUF_RX_SIZE 256
+#define  CIRC_BUF_TX_SIZE 128
   
 #define  CIRC_BUF_RX_MASK    (CIRC_BUF_RX_SIZE -1)
 #define  CIRC_BUF_TX_MASK    (CIRC_BUF_TX_SIZE -1)
