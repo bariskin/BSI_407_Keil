@@ -27,7 +27,6 @@ extern osThreadId SendToDispTaskHandle;
  volatile uint8_t arrDisplayRX[ARRAY_RX_SIZE] = {0};
  volatile uint8_t startDisplayFlag = 0;
  
- uint8_t rxIdxDisplayUart = 0;
 extern  uint8_t tx_buffer[ARRAY_TX_SIZE + 3]; // Основной буфер + 3 байта маркера конца
 extern volatile uint16_t tx_index;
 extern volatile uint16_t tx_size;
@@ -44,18 +43,18 @@ extern   uint32_t binary32;
  volatile uint8_t displayResponse = 0;
  volatile uint32_t end_marker_counter = 0; 
  uint8_t significant_bytes_count = 0;
- uint8_t calibration_bytes_count = 0; 
+ uint8_t  value_bytes_count = 0; 
  volatile uint8_t packet_ready = 0; 
  uint8_t significant_bytes[MAX_SIGNIFICANT_BYTES] = {0};
- float   updateThresholdWarning = 0.00;
- float   updateThresholdAlarm = 0.00;
- float   updateCalibrationValue = 0.00;
- 
+ float   updateThresholdWarning    = 0.00;
+ float   updateThresholdAlarm      = 0.00;
+ float   updateThresholdAdditional = 0.00;
+ float   updateCalibrationValue    = 0.00;
+ float   updateScaleMax            = 0.00;
 
  DisplayCommand_t cmd;
-extern  QueueHandle_t displayCommandQueue;
-
-extern  volatile uint8_t disableThisFunctionForSetting;
+ extern  QueueHandle_t displayCommandQueue;
+ extern  volatile uint8_t disableThisFunctionForSetting;
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  
@@ -220,89 +219,7 @@ void initDeviceData(uint8_t numberOfdevices)
 	 }
   return number;
 }	 
-	 
-
-	/**
- * @brief Обрабатывает команды, полученные от дисплея.
- * @param displayResponse Код команды от дисплея.
- * @param arrDisplayRX Буфер с данными команды.
- * @param packet_ready Флаг готовности пакета (1 — данные получены, 0 — нет).
- * @param huart Указатель на UART-интерфейс для перезапуска приёма.
- */
-void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint8_t *packet_ready) {
-    
-	if (*packet_ready) {
-		
-        switch (*displayresponse) {
-            case DISPLAY_MODEL:
-							  //disableThisFunctionForSetting = 1;
-                break;
-            case DISPLAY_SCALE_DIMENSION: 
-							  //disableThisFunctionForSetting = 1;
-                break; 
-            case  DISPLAY_SCALE_MAX:   
-								// disableThisFunctionForSetting = 1;	   
-                break;
-            case  DISPLAY_THRESHOLD_WARNING_TASK:
-						  disableThisFunctionForSetting = 1;
-              cmd.command = DISPLAY_THRESHOLD_WARNING_TASK;
-              cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
-              cmd.binary32 = binary32;
-
-              xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY);
-							
-						break;	
-            case  DISPLAY_THRESHOLD_ALARM: 
-					    disableThisFunctionForSetting = 1;
-						  cmd.command = DISPLAY_THRESHOLD_ALARM;
-              cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
-              cmd.binary32 = binary32;
-
-              xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY);
-								
-							 break;	
-            case DISPLAY_SUBSTANCE_CODE: 
-                //disableThisFunctionForSetting = 1;						
-                break;
-            case 0x88: // Первый ответ после старта дисплея (0x88 0xFF 0xFF 0xFF)
-							
-                SendNextionCommand("Init.qDev.txt=\"%d\"", numberOfDevices); // Тестовая строка
-                break;
-            case 0x10: // Второй ответ после старта дисплея (0x10 0xFF 0xFF 0xFF)
-                InitNextionDisplayWithDeviceData(numberOfDevices);
-                break;
-            case DISPLAY_BAUD_RATE_CMD: // Смена скорости UART
-							
-                if (arrDisplayRX[1] >= 1 && arrDisplayRX[1] <= 6) {
-                    MB_BaudRateValue = getBaudrate(arrDisplayRX[1]);
-                    xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_1, eSetValueWithOverwrite);
-								    osDelay(1);	
-                  } 
-                break;
-            case 0xBB: // Обновление числа устройств
-							   //*displayresponse = 0x00; // reset cmd for display
-                 numberOfDevices = getIntFromChar((char *)&arrDisplayRX[0], 5);
-                break;
-						case 0x35:
-							
-							break;		
-						case DISPLAY_CALIBRATION_PRIMARY_ZERO: /* for Calibration Primary Zero, Калибровка  <<0>>*/ 
-							
-						    //xTaskNotify(SendToDispTaskHandle,DISPLAY_CALIBRATION_PRIMARY_ZERO, eSetValueWithOverwrite);
-						    
-							 break;
-						case  DISPLAY_CALIBRATION_POINT_1:/* for Calibration, Калибровка  "Точка 1" */ 
-							
-						   //xTaskNotify(SendToDispTaskHandle,DISPLAY_CALIBRATION_POINT_1 , eSetValueWithOverwrite);
-							 break;			
-        }
-        // Сброс флага и буфера
-				*displayresponse = 0x00;    
-        *packet_ready = 0x00;
-         memset(arrDisplayRX, 0, ARRAY_RX_SIZE);
-    }
-} 
-	  
+	   
 void GetDisplayCmd(uint8_t inputByte){
            // Если буфер не переполнен
          if (rx_index < ARRAY_RX_SIZE - 1) {
@@ -355,8 +272,9 @@ void GetDisplayCmd(uint8_t inputByte){
 						/* for Calibration Primary Zero, Калибровка  <<0>>*/ 
 									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x10 && arrDisplayRX[2] == DISPLAY_CALIBRATION_PRIMARY_ZERO)
 									{
+										displayResponse = DISPLAY_CALIBRATION_PRIMARY_ZERO; // Calibration Primary Zero 
+										/*1. channel ID: arrDisplayRX[0]*/	
 										channelID = arrDisplayRX[0];
-										displayResponse = DISPLAY_CALIBRATION_PRIMARY_ZERO; // Calibration Primary Zero 	
 									}
 						/* for Calibration, Калибровка  "Точка 1" */ 
 									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x10 && arrDisplayRX[2] == DISPLAY_CALIBRATION_POINT_1 )
@@ -365,25 +283,30 @@ void GetDisplayCmd(uint8_t inputByte){
 										/*1. channel ID: arrDisplayRX[0]*/	
 										 channelID = arrDisplayRX[0];
 										/*2. significant_bytes_count with calibration value: "Точка 1"*/		
-										 calibration_bytes_count = significant_bytes_count - 3;
+										 value_bytes_count = significant_bytes_count - 3;
 									   uint8_t input[10] = {0};
-										 memcpy(input,(void *)&arrDisplayRX[3], calibration_bytes_count);
+										 memcpy(input,(void *)&arrDisplayRX[3], value_bytes_count);
 										 sscanf((const char *)input, "%f", &updateCalibrationValue);
-										 
+										 memcpy(&binary32, &updateCalibrationValue, sizeof(float));
 									}	
-						    /* Модель */			
+						  /* Модель */			
 								 else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] ==  DISPLAY_MODEL )
 								  { 	
 										 displayResponse =  DISPLAY_MODEL ; 										
 										/*1. channel ID: arrDisplayRX[0]*/	
 										 channelID = arrDisplayRX[0];	
 									}				
-					      /*         */				
+					     /*         */				
                  else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_SCALE_DIMENSION )
 									{
 										 displayResponse = DISPLAY_SCALE_DIMENSION ; 										
 										/*1. channel ID: arrDisplayRX[0]*/	
-										 channelID = arrDisplayRX[0];		
+										 channelID = arrDisplayRX[0];
+                     value_bytes_count = significant_bytes_count - 3;
+									   uint8_t input[10] = {0};
+										 memcpy(input,(void *)&arrDisplayRX[3], value_bytes_count);	
+
+										 // TODO: создать строку для получения кода dimension									 
 									}					
 					      /*         */						
 								else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_SCALE_MAX )
@@ -392,6 +315,11 @@ void GetDisplayCmd(uint8_t inputByte){
 										
 										/*1. channel ID: arrDisplayRX[0]*/	
 										 channelID = arrDisplayRX[0];			
+										 value_bytes_count = significant_bytes_count - 3;
+									   uint8_t input[10] = {0};
+										 memcpy(input,(void *)&arrDisplayRX[3], value_bytes_count);
+										 sscanf((const char *)input, "%f", &updateScaleMax);
+										 memcpy(&binary32, &updateScaleMax, sizeof(float));		
 									}
 									/*         */		
 							  else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_WARNING )
@@ -399,11 +327,11 @@ void GetDisplayCmd(uint8_t inputByte){
 										 displayResponse = DISPLAY_THRESHOLD_WARNING_TASK ; 				
 										/*1. channel ID: arrDisplayRX[0]*/	
 										 channelID = arrDisplayRX[0];			
-										 calibration_bytes_count = significant_bytes_count - 3;
+										 value_bytes_count = significant_bytes_count - 3;
 									   uint8_t input[10] = {0};
-										 memcpy(input,(void *)&arrDisplayRX[3], calibration_bytes_count);
+										 memcpy(input,(void *)&arrDisplayRX[3], value_bytes_count);
 										 sscanf((const char *)input, "%f", &updateThresholdWarning);
-										  memcpy(&binary32, &updateThresholdWarning, sizeof(float));
+										 memcpy(&binary32, &updateThresholdWarning, sizeof(float));
 									}
 								/*         */			
 								 else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_ALARM )
@@ -411,13 +339,25 @@ void GetDisplayCmd(uint8_t inputByte){
 										 displayResponse = DISPLAY_THRESHOLD_ALARM ; 		
 										/*1. channel ID: arrDisplayRX[0]*/	
 										 channelID = arrDisplayRX[0];
-										 calibration_bytes_count = significant_bytes_count - 3;
+										 value_bytes_count = significant_bytes_count - 3;
 									   uint8_t input[10] = {0};
-										 memcpy(input,(void *)&arrDisplayRX[3], calibration_bytes_count);
+										 memcpy(input,(void *)&arrDisplayRX[3], value_bytes_count);
 										 sscanf((const char *)input, "%f", &updateThresholdAlarm);											
 									   memcpy(&binary32, &updateThresholdAlarm, sizeof(float));
 									}	
-								/*         */			
+									/*         */	
+									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_ADDITIONAL )
+									{
+										 displayResponse = DISPLAY_THRESHOLD_ADDITIONAL ; 		
+										/*1. channel ID: arrDisplayRX[0]*/	
+										 channelID = arrDisplayRX[0];
+										 value_bytes_count = significant_bytes_count - 3;
+									   uint8_t input[10] = {0};
+										 memcpy(input,(void *)&arrDisplayRX[3], value_bytes_count);
+										 sscanf((const char *)input, "%f", &updateCalibrationValue);											
+									   memcpy(&binary32, &updateCalibrationValue, sizeof(float));
+								  }		
+								  /*         */			
 									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_SUBSTANCE_CODE )
 									{
 										 displayResponse = DISPLAY_SUBSTANCE_CODE ; 				
@@ -436,4 +376,112 @@ void GetDisplayCmd(uint8_t inputByte){
             end_marker_counter = 0;
         }
 			}
+
+	/**
+ * @brief Обрабатывает команды, полученные от дисплея.
+ * @param displayResponse Код команды от дисплея.
+ * @param arrDisplayRX Буфер с данными команды.
+ * @param packet_ready Флаг готовности пакета (1 — данные получены, 0 — нет).
+ * @param huart Указатель на UART-интерфейс для перезапуска приёма.
+ */
+void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint8_t *packet_ready) {
+    
+	if (*packet_ready) {
+		
+        switch (*displayresponse) {
+            case DISPLAY_MODEL:
+							  disableThisFunctionForSetting = 1;
+                break;
+            case DISPLAY_SCALE_DIMENSION: 
+							   disableThisFunctionForSetting = 1;
+						
+						     cmd.command = DISPLAY_SCALE_DIMENSION;
+                break; 
+            case  DISPLAY_SCALE_MAX:   
+								 disableThisFunctionForSetting = 1;	
+						
+						     cmd.command = DISPLAY_SCALE_MAX;
+                 cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
+                 cmd.binary32 = binary32;
+
+                 xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY);
+                break;
+            case  DISPLAY_THRESHOLD_WARNING_TASK:
+						     disableThisFunctionForSetting = 1;
+              
+						     cmd.command = DISPLAY_THRESHOLD_WARNING_TASK;
+                 cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
+                 cmd.binary32 = binary32;
+
+                 xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY);							
+						break;	
+            case  DISPLAY_THRESHOLD_ALARM: 
+					      disableThisFunctionForSetting = 1;
+						  
+						    cmd.command = DISPLAY_THRESHOLD_ALARM;
+                cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
+                cmd.binary32 = binary32;
+
+                xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY);								
+							 break;	
+						case DISPLAY_THRESHOLD_ADDITIONAL:
+							    disableThisFunctionForSetting = 1;
+						  
+						     cmd.command = DISPLAY_THRESHOLD_ADDITIONAL;
+                 cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
+                 cmd.binary32 = binary32;
+
+                 xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY);		
+						 break;	
+						
+            case DISPLAY_SUBSTANCE_CODE: 
+                disableThisFunctionForSetting = 1;						
+                break;
+            case 0x88: // Первый ответ после старта дисплея (0x88 0xFF 0xFF 0xFF)
+							
+                SendNextionCommand("Init.qDev.txt=\"%d\"", numberOfDevices); // Тестовая строка
+                break;
+            case 0x10: // Второй ответ после старта дисплея (0x10 0xFF 0xFF 0xFF)
+                InitNextionDisplayWithDeviceData(numberOfDevices);
+                break;
+            case DISPLAY_BAUD_RATE_CMD: // Смена скорости UART
+							
+                if (arrDisplayRX[1] >= 1 && arrDisplayRX[1] <= 6) {
+                    MB_BaudRateValue = getBaudrate(arrDisplayRX[1]);
+                    xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_1, eSetValueWithOverwrite);
+								    osDelay(1);	
+                  } 
+                break;
+            case 0xBB: // Обновление числа устройств
+							   //*displayresponse = 0x00; // reset cmd for display
+                 numberOfDevices = getIntFromChar((char *)&arrDisplayRX[0], 5);
+                break;
+						case 0x35:
+							
+							break;		
+						case DISPLAY_CALIBRATION_PRIMARY_ZERO: /* for Calibration Primary Zero, Калибровка  <<0>>*/ 
+							    disableThisFunctionForSetting = 1;
+						
+						      cmd.command = DISPLAY_CALIBRATION_PRIMARY_ZERO;
+                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
+						      //cmd.binary32 = binary32; !!!   not used for this command !!!
+						
+							 break;
+						case  DISPLAY_CALIBRATION_POINT_1:    /* for Calibration, Калибровка  "Точка 1" */ 
+							    disableThisFunctionForSetting = 1;
+						      
+						      cmd.command = DISPLAY_CALIBRATION_POINT_1;
+                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
+						      cmd.binary32 = binary32;
+						
+							 break;			
+        }
+        // Сброс флага и буфера
+				*displayresponse = 0x00;    
+        *packet_ready = 0x00;
+         memset(arrDisplayRX, 0, ARRAY_RX_SIZE);
+    }
+} 		
+			
+			
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/

@@ -85,12 +85,11 @@ extern  uint8_t NumberSlaveDevices;
   /** @addtogroup board_support
   * @{
   */
-	
 		uint8_t getNumberDevices(void);
     void setNumberDevices(uint8_t *numberDevices, uint8_t number);
 		void setNextDeviceAddr(uint8_t *currentAddr);
 		void initSensorStateArray(uint8_t numberdevices);
-	void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS],uint16_t RegHoldingBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS]);
+	  void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS],uint16_t RegHoldingBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS]);
   	void setModBusSlaveSetting(void);
 		void setModBusSlaveAddr(void);
 		void setNextActiveDeviceAddr(uint8_t *currentAddr);
@@ -100,10 +99,8 @@ extern  uint8_t NumberSlaveDevices;
 		void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS]);
 		const char* getDeviceModelNameFromShorts(short part1, short part2);
 		RX_Buffer_State Uart_Get_Byte(RING_buffer_t* buf, uint8_t* a);
-		void float_to_registers_safe(float value, uint16_t registers[2]);
-		void float_to_registers(float value, uint16_t *reg_high, uint16_t *reg_low);
-		void float_to_modbus_registers(float value, uint16_t registers[2]);
-		/**
+		uint8_t getCodeByUnitString(const char* unitStr);
+ /**
   * @}
   */
   

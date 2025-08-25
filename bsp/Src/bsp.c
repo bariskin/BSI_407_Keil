@@ -471,9 +471,19 @@ uint8_t GetActiveSensors(SensorState_t SensorStateArray[NUMBER_SLAVE_DEVICES], S
         default:   return "Unknown unit";  // Если код не найден
     }
 }
-	
-#include <stdint.h>
-#include <string.h>
+
+uint8_t getCodeByUnitString(const char* unitStr) {
+    if (strcmp(unitStr, "ppm") == 0) return 0x8B;
+    if (strcmp(unitStr, "ppb") == 0) return 0xA9;
+    if (strcmp(unitStr, "mg/m3") == 0) return 0xAA;
+    if (strcmp(unitStr, "%LEL") == 0) return 0xA1;
+    if (strcmp(unitStr, "% vol. solids") == 0) return 0x6A;
+    if (strcmp(unitStr, "% wt. solids") == 0) return 0x69;
+    if (strcmp(unitStr, "g/m3") == 0) return 0x5B;
+    if (strcmp(unitStr, "kg/m3") == 0) return 0x5C;
+    
+    return 0xFF; // Код для неизвестной единицы измерения
+}	
 
 /**
  * @brief Получает название модели устройства по двум short (4 байта ASCII).
@@ -506,7 +516,6 @@ const char* getDeviceModelNameFromShorts(short part1, short part2) {
             return device_mappings[i].name;
         }
     }
-
     return "Неизвестная модель";
 }
 	
@@ -545,31 +554,4 @@ RX_Buffer_State Uart_Get_Byte(RING_buffer_t* buf, uint8_t* a)
     return RX_BUF_EMPTY;
   }
 } 
-
-void float_to_registers_safe(float value, uint16_t registers[2]) {
-    uint32_t temp;
-    memcpy(&temp, &value, sizeof(float));
-    
-    // Явное указание порядка байт
-    registers[0] = (temp >> 16) & 0xFFFF; // Big-endian
-    registers[1] = temp & 0xFFFF;
-    
-    // Или для little-endian:
-    // registers[0] = temp & 0xFFFF;
-    // registers[1] = (temp >> 16) & 0xFFFF;
-}
-
-void float_to_modbus_registers(float value, uint16_t registers[2]) {
-    uint8_t bytes[4];
-    memcpy(bytes, &value, sizeof(float));
-     
-        // Modbus standard (big-endian
-     registers[0] = (bytes[0] << 8) | bytes[1];
-     registers[1] = (bytes[2] << 8) | bytes[3];
-    
-        // Alternative (little-endian)
-     //registers[0] = (bytes[1] << 8) | bytes[0];
-     //registers[1] = (bytes[3] << 8) | bytes[2]; 
-}
-
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/

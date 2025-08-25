@@ -61,7 +61,8 @@ typedef enum {
     DISPLAY_SCALE_DIMENSION          = 0x02,
     DISPLAY_SCALE_MAX                = 0x03,
 	  DISPLAY_THRESHOLD_WARNING        = 0x04, 
-    DISPLAY_THRESHOLD_ALARM          = 0x05, 
+    DISPLAY_THRESHOLD_ALARM          = 0x05,
+	  DISPLAY_THRESHOLD_ADDITIONAL     = 0x07,
     DISPLAY_SUBSTANCE_CODE           = 0x06,
 	  DISPLAY_THRESHOLD_WARNING_TASK   = 0x11,   // подмена для 4 канала
 } DisplayResponseCmd;

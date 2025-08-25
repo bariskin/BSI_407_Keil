@@ -48,7 +48,6 @@ extern volatile uint8_t RxUartByte3;
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-extern  uint8_t rxIdxDisplayUart;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

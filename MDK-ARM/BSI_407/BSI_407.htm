@@ -3,7 +3,7 @@
 <title>Static Call Graph - [BSI_407\BSI_407.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image BSI_407\BSI_407.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Mon Aug 25 08:57:17 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Mon Aug 25 15:49:59 2025
 <BR><P>
 <H3>Maximum Stack Usage =        540 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -718,8 +718,8 @@ Global Symbols
 <P><STRONG><a name="[12d]"></a>__aeabi_uldivmod</STRONG> (Thumb, 0 bytes, Stack size 48 bytes, lludivv7m.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = __aeabi_uldivmod
 </UL>
-<BR>[Called By]<UL><LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
-<LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
+<BR>[Called By]<UL><LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
+<LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
 </UL>
 
 <P><STRONG><a name="[24c]"></a>_ll_udiv</STRONG> (Thumb, 238 bytes, Stack size 48 bytes, lludivv7m.o(.text), UNUSED)
@@ -838,6 +838,11 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;initDeviceData
+</UL>
+
+<P><STRONG><a name="[213]"></a>strcmp</STRONG> (Thumb, 128 bytes, Stack size 0 bytes, strcmpv7m.o(.text))
+<BR><BR>[Called By]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_get_lc_numeric
+<LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_get_lc_ctype
 </UL>
 
 <P><STRONG><a name="[254]"></a>__use_two_region_memory</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, heapauxi.o(.text), UNUSED)
@@ -1243,11 +1248,6 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[bd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry_main
 </UL>
 
-<P><STRONG><a name="[213]"></a>strcmp</STRONG> (Thumb, 128 bytes, Stack size 0 bytes, strcmpv7m.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[b8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_get_lc_numeric
-<LI><a href="#[72]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_get_lc_ctype
-</UL>
-
 <P><STRONG><a name="[fb]"></a>__aeabi_llsl</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, llshl.o(.text))
 <BR><BR>[Called By]<UL><LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_scanf_really_hex_real
 </UL>
@@ -1359,7 +1359,7 @@ Global Symbols
 <P><STRONG><a name="[16]"></a>DebugMon_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f4xx_it.o(i.DebugMon_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
-<P><STRONG><a name="[8b]"></a>DisplayTaskFunction</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, freertos.o(i.DisplayTaskFunction))
+<P><STRONG><a name="[8b]"></a>DisplayTaskFunction</STRONG> (Thumb, 52 bytes, Stack size 8 bytes, freertos.o(i.DisplayTaskFunction))
 <BR><BR>[Stack]<UL><LI>Max Depth = 540 + Unknown Stack Size
 <LI>Call Chain = DisplayTaskFunction &rArr; GetDisplayCmd &rArr; __0sscanf &rArr; __vfscanf_char &rArr; __vfscanf &rArr; _scanf_real &rArr; _scanf_really_real &rArr; _fp_value &rArr; _btod_etento &rArr; _btod_emul &rArr; _e2e
 </UL>
@@ -1439,7 +1439,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[105]"></a>GetDisplayCmd</STRONG> (Thumb, 696 bytes, Stack size 24 bytes, displaydriver.o(i.GetDisplayCmd))
+<P><STRONG><a name="[105]"></a>GetDisplayCmd</STRONG> (Thumb, 874 bytes, Stack size 24 bytes, displaydriver.o(i.GetDisplayCmd))
 <BR><BR>[Stack]<UL><LI>Max Depth = 532<LI>Call Chain = GetDisplayCmd &rArr; __0sscanf &rArr; __vfscanf_char &rArr; __vfscanf &rArr; _scanf_real &rArr; _scanf_really_real &rArr; _fp_value &rArr; _btod_etento &rArr; _btod_emul &rArr; _e2e
 </UL>
 <BR>[Calls]<UL><LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
@@ -1457,9 +1457,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[13b]"></a>HAL_DMA_Abort_IT</STRONG> (Thumb, 40 bytes, Stack size 0 bytes, stm32f4xx_hal_dma.o(i.HAL_DMA_Abort_IT))
-<BR><BR>[Called By]<UL><LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_AbortTransmit_IT
+<BR><BR>[Called By]<UL><LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
+<LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_AbortTransmit_IT
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_AbortReceive_IT
-<LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
 </UL>
 
 <P><STRONG><a name="[115]"></a>HAL_Delay</STRONG> (Thumb, 36 bytes, Stack size 16 bytes, stm32f4xx_hal.o(i.HAL_Delay))
@@ -1611,8 +1611,8 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetHCLKFreq
 </UL>
-<BR>[Called By]<UL><LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
-<LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
+<BR>[Called By]<UL><LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
+<LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
 </UL>
 
 <P><STRONG><a name="[12c]"></a>HAL_RCC_GetPCLK2Freq</STRONG> (Thumb, 22 bytes, Stack size 4 bytes, stm32f4xx_hal_rcc.o(i.HAL_RCC_GetPCLK2Freq))
@@ -1656,8 +1656,8 @@ Global Symbols
 <P><STRONG><a name="[123]"></a>HAL_TIM_Base_Init</STRONG> (Thumb, 102 bytes, Stack size 8 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_Base_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = HAL_TIM_Base_Init &rArr; HAL_TIM_Base_MspInit &rArr; HAL_NVIC_SetPriority &rArr; __NVIC_SetPriority
 </UL>
-<BR>[Calls]<UL><LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_Base_SetConfig
-<LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_MspInit
+<BR>[Calls]<UL><LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_MspInit
+<LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_Base_SetConfig
 </UL>
 <BR>[Called By]<UL><LI><a href="#[16e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM6_Init
 <LI><a href="#[16c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM10_Init
@@ -1674,9 +1674,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[124]"></a>HAL_TIM_Base_Start_IT</STRONG> (Thumb, 138 bytes, Stack size 0 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_Base_Start_IT))
-<BR><BR>[Called By]<UL><LI><a href="#[1bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBPortTimersEnable
+<BR><BR>[Called By]<UL><LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
+<LI><a href="#[1bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBPortTimersEnable
 <LI><a href="#[1af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBMasterPortTimersT35Enable
-<LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
 </UL>
 
 <P><STRONG><a name="[1fb]"></a>HAL_TIM_Base_Stop_IT</STRONG> (Thumb, 62 bytes, Stack size 0 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_Base_Stop_IT))
@@ -1725,8 +1725,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[143]"></a>HAL_UARTEx_RxEventCallback</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f4xx_hal_uart.o(i.HAL_UARTEx_RxEventCallback))
-<BR><BR>[Called By]<UL><LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Receive_IT
-<LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
+<BR><BR>[Called By]<UL><LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
+<LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Receive_IT
 </UL>
 
 <P><STRONG><a name="[13c]"></a>HAL_UART_AbortReceiveCpltCallback</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_AbortReceiveCpltCallback))
@@ -1737,8 +1737,8 @@ Global Symbols
 <P><STRONG><a name="[13a]"></a>HAL_UART_AbortReceive_IT</STRONG> (Thumb, 214 bytes, Stack size 8 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_AbortReceive_IT))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = HAL_UART_AbortReceive_IT
 </UL>
-<BR>[Calls]<UL><LI><a href="#[13c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_AbortReceiveCpltCallback
-<LI><a href="#[13b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
+<BR>[Calls]<UL><LI><a href="#[13b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
+<LI><a href="#[13c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_AbortReceiveCpltCallback
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBPortSerialEnable
 <LI><a href="#[1ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBMasterPortSerialEnable
@@ -1752,29 +1752,29 @@ Global Symbols
 <P><STRONG><a name="[13d]"></a>HAL_UART_AbortTransmit_IT</STRONG> (Thumb, 140 bytes, Stack size 8 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_AbortTransmit_IT))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = HAL_UART_AbortTransmit_IT
 </UL>
-<BR>[Calls]<UL><LI><a href="#[13e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_AbortTransmitCpltCallback
-<LI><a href="#[13b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
+<BR>[Calls]<UL><LI><a href="#[13b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
+<LI><a href="#[13e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_AbortTransmitCpltCallback
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1ba]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBPortSerialEnable
 <LI><a href="#[1ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBMasterPortSerialEnable
 </UL>
 
 <P><STRONG><a name="[142]"></a>HAL_UART_ErrorCallback</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_ErrorCallback))
-<BR><BR>[Called By]<UL><LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_DMAAbortOnError
-<LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
+<BR><BR>[Called By]<UL><LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
+<LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_DMAAbortOnError
 </UL>
 
 <P><STRONG><a name="[13f]"></a>HAL_UART_IRQHandler</STRONG> (Thumb, 740 bytes, Stack size 40 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = HAL_UART_IRQHandler &rArr; UART_Receive_IT &rArr; HAL_UART_RxCpltCallback
 </UL>
-<BR>[Calls]<UL><LI><a href="#[142]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_ErrorCallback
+<BR>[Calls]<UL><LI><a href="#[13b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
+<LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort
+<LI><a href="#[142]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_ErrorCallback
 <LI><a href="#[143]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_RxEventCallback
 <LI><a href="#[144]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Transmit_IT
 <LI><a href="#[140]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Receive_IT
 <LI><a href="#[145]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndTransmit_IT
 <LI><a href="#[141]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndRxTransfer
-<LI><a href="#[13b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
-<LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort
 </UL>
 <BR>[Called By]<UL><LI><a href="#[60]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART6_IRQHandler
 <LI><a href="#[3f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART2_IRQHandler
@@ -1785,8 +1785,8 @@ Global Symbols
 <P><STRONG><a name="[146]"></a>HAL_UART_Init</STRONG> (Thumb, 118 bytes, Stack size 8 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = HAL_UART_Init &rArr; UART_SetConfig &rArr; __aeabi_uldivmod
 </UL>
-<BR>[Calls]<UL><LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
-<LI><a href="#[147]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_MspInit
+<BR>[Calls]<UL><LI><a href="#[147]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_MspInit
+<LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1c1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setModBusSlaveSetting
 <LI><a href="#[174]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_USART6_UART_Init
@@ -1839,17 +1839,17 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[145]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndTransmit_IT
 </UL>
 
-<P><STRONG><a name="[106]"></a>HandleDisplayCommands</STRONG> (Thumb, 288 bytes, Stack size 16 bytes, displaydriver.o(i.HandleDisplayCommands))
+<P><STRONG><a name="[106]"></a>HandleDisplayCommands</STRONG> (Thumb, 474 bytes, Stack size 16 bytes, displaydriver.o(i.HandleDisplayCommands))
 <BR><BR>[Stack]<UL><LI>Max Depth = 296 + Unknown Stack Size
 <LI>Call Chain = HandleDisplayCommands &rArr; InitNextionDisplayWithDeviceData &rArr; SendNextionCommand &rArr; vsnprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
-<LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
-<LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getBaudrate
 <LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getIntFromChar
 <LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SendNextionCommand
 <LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;InitNextionDisplayWithDeviceData
 <LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr
+<LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
+<LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getBaudrate
 <LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
 </UL>
 <BR>[Called By]<UL><LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisplayTaskFunction
@@ -1858,7 +1858,7 @@ Global Symbols
 <P><STRONG><a name="[11]"></a>HardFault_Handler</STRONG> (Thumb, 4 bytes, Stack size 0 bytes, stm32f4xx_it.o(i.HardFault_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
-<P><STRONG><a name="[88]"></a>HoldingHandlerFunction</STRONG> (Thumb, 598 bytes, Stack size 16 bytes, freertos.o(i.HoldingHandlerFunction))
+<P><STRONG><a name="[88]"></a>HoldingHandlerFunction</STRONG> (Thumb, 816 bytes, Stack size 16 bytes, freertos.o(i.HoldingHandlerFunction))
 <BR><BR>[Stack]<UL><LI>Max Depth = 200 + Unknown Stack Size
 <LI>Call Chain = HoldingHandlerFunction &rArr; readCurrentSensorState &rArr; __2snprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -2055,7 +2055,7 @@ Global Symbols
 <LI><a href="#[14f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;InitNextionDisplayWithDeviceData
 </UL>
 
-<P><STRONG><a name="[8a]"></a>SlaveEventFunction</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, freertos.o(i.SlaveEventFunction))
+<P><STRONG><a name="[8a]"></a>SlaveEventFunction</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, freertos.o(i.SlaveEventFunction))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = SlaveEventFunction &rArr; ModBusSlaveEventHoldingRegHandler &rArr; Flash_Write_Data &rArr; HAL_FLASHEx_Erase &rArr; FLASH_WaitForLastOperation
 </UL>
 <BR>[Calls]<UL><LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
@@ -2285,7 +2285,7 @@ Global Symbols
 <LI><a href="#[cc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__printf
 </UL>
 
-<P><STRONG><a name="[1b1]"></a>convertModBusAddrHolding_M</STRONG> (Thumb, 264 bytes, Stack size 0 bytes, modbusaddrconverter.o(i.convertModBusAddrHolding_M))
+<P><STRONG><a name="[1b1]"></a>convertModBusAddrHolding_M</STRONG> (Thumb, 278 bytes, Stack size 0 bytes, modbusaddrconverter.o(i.convertModBusAddrHolding_M))
 <BR><BR>[Called By]<UL><LI><a href="#[196]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterRegHoldingCB
 </UL>
 
@@ -2511,7 +2511,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> mb_m.o(i.eMBMasterInit)
 </UL>
-<P><STRONG><a name="[196]"></a>eMBMasterRegHoldingCB</STRONG> (Thumb, 186 bytes, Stack size 48 bytes, user_mb_app_m.o(i.eMBMasterRegHoldingCB))
+<P><STRONG><a name="[196]"></a>eMBMasterRegHoldingCB</STRONG> (Thumb, 184 bytes, Stack size 48 bytes, user_mb_app_m.o(i.eMBMasterRegHoldingCB))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = eMBMasterRegHoldingCB
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;convertModBusAddrHolding_M
@@ -2778,9 +2778,9 @@ Global Symbols
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;InputHandlerFunction
 <LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 <LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisplayTaskFunction
-<LI><a href="#[15e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
 <LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getIntFromChar
 <LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SendNextionCommand
+<LI><a href="#[15e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
 </UL>
 
 <P><STRONG><a name="[1c6]"></a>osKernelStart</STRONG> (Thumb, 10 bytes, Stack size 8 bytes, cmsis_os.o(i.osKernelStart))
@@ -2875,7 +2875,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[1e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
 </UL>
 
-<P><STRONG><a name="[157]"></a>readCurrentSensorState</STRONG> (Thumb, 432 bytes, Stack size 40 bytes, bsp.o(i.readCurrentSensorState))
+<P><STRONG><a name="[157]"></a>readCurrentSensorState</STRONG> (Thumb, 394 bytes, Stack size 40 bytes, bsp.o(i.readCurrentSensorState))
 <BR><BR>[Stack]<UL><LI>Max Depth = 184 + Unknown Stack Size
 <LI>Call Chain = readCurrentSensorState &rArr; __2snprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -2896,8 +2896,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = setModBusSlaveAddr &rArr; Flash_Write_Data &rArr; HAL_FLASHEx_Erase &rArr; FLASH_WaitForLastOperation
 </UL>
 <BR>[Calls]<UL><LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
-<LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Flash_Write_Data
 <LI><a href="#[1f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Flash_Read_Data
+<LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Flash_Write_Data
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -2908,12 +2908,12 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[146]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_Init
 <LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
 <LI><a href="#[16d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Error_Handler
+<LI><a href="#[1f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getUartWordLength
+<LI><a href="#[1f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Flash_Read_Data
 <LI><a href="#[162]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getStopBits
 <LI><a href="#[160]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getParity
 <LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getBaudrate
 <LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Flash_Write_Data
-<LI><a href="#[1f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getUartWordLength
-<LI><a href="#[1f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Flash_Read_Data
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -2941,8 +2941,8 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = setTimeStepReadingSensores &rArr; Flash_Write_Data &rArr; HAL_FLASHEx_Erase &rArr; FLASH_WaitForLastOperation
 </UL>
 <BR>[Calls]<UL><LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
-<LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Flash_Write_Data
 <LI><a href="#[1f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Flash_Read_Data
+<LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Flash_Write_Data
 </UL>
 <BR>[Called By]<UL><LI><a href="#[be]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -3101,8 +3101,8 @@ Global Symbols
 <P><STRONG><a name="[1af]"></a>vMBMasterPortTimersT35Enable</STRONG> (Thumb, 22 bytes, Stack size 8 bytes, porttimer_m.o(i.vMBMasterPortTimersT35Enable))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = vMBMasterPortTimersT35Enable
 </UL>
-<BR>[Calls]<UL><LI><a href="#[1fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBMasterSetCurTimerMode
-<LI><a href="#[124]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Start_IT
+<BR>[Calls]<UL><LI><a href="#[124]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_Base_Start_IT
+<LI><a href="#[1fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBMasterSetCurTimerMode
 </UL>
 <BR>[Called By]<UL><LI><a href="#[81]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xMBMasterRTUReceiveFSM
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterRTUStart

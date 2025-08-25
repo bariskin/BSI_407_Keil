@@ -171,12 +171,10 @@ int main(void)
 	 setNumberDevices(&NumberSlaveDevices, NUMBER_SLAVE_DEVICES);
 	 
 	 /* инициализация струкутур для храения информации со слайв устройств  */
-	 //initSensorStateArray(NUMBER_SLAVE_DEVICES);  
-
-
+	
    /* ************* Initializes  RX and TX ring buffers ***** */    
 	 RING_Init(&ring_Rx, ring_buffer_RX, CIRC_BUF_RX_SIZE );         /*! Init RX buffer for UART3: display */
-  //RING_Init(&ring_Tx, ring_buffer_TX, CIRC_BUF_TX_SIZE );       /*! Init TX buffer vor VCP */
+  //RING_Init(&ring_Tx, ring_buffer_TX, CIRC_BUF_TX_SIZE );      
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
