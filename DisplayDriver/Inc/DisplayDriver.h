@@ -24,7 +24,7 @@ extern "C" {
   */
  /* ------------------------Defines ----------------------------------*/
   #define ARRAY_TX_SIZE		100
-  #define ARRAY_RX_SIZE		256
+  #define ARRAY_RX_SIZE		32
 	#define START_INIT_BYTE	0x10
 	
 		typedef struct
@@ -55,7 +55,7 @@ extern "C" {
 // Display operation response status
 typedef enum {
     DISPLAY_BAUD_RATE_CMD            = 0xA0,            
-    DISPLAY_CACIBRATION_PRIMARY_ZERO = 0x64,             
+    DISPLAY_CALIBRATION_PRIMARY_ZERO = 0x64,             
     DISPLAY_CALIBRATION_POINT_1      = 0x68,             
     DISPLAY_MODEL                    = 0x01,             
     DISPLAY_SCALE_DIMENSION          = 0x02,
@@ -66,7 +66,12 @@ typedef enum {
 	  DISPLAY_THRESHOLD_WARNING_TASK   = 0x11,   // подмена для 4 канала
 } DisplayResponseCmd;
 		
-		
+		// Структура для команд от дисплея
+typedef struct {
+    uint8_t command;
+    uint8_t deviceAddr;
+    uint32_t binary32;
+} DisplayCommand_t;
  /* ------------------------External variables -------------------------*/
   
 

@@ -123,9 +123,9 @@ extern "C" {
 #define SENSOR_PRIMARY_VALUE_LOW        (uint16_t)(33002 - 30000) // один адрес , концентрация 
 #define SENSOR_PRIMARY_STATUS           (uint16_t)(33003 - 30000) // один адрес
   
-#define SENSOR_PRIMARY_VAUE_HIGH_INTERN (uint16_t)(1) // один адрес , концентрация   */
-#define SENSOR_PRIMARY_VAUE_LOW_INTERN  (uint16_t)(2) // один адрес , концентрация   */
-#define SENSOR_PRIMARY_STATUS_INTERN    (uint16_t)(3) 
+#define SENSOR_PRIMARY_VALUE_HIGH_INTERN (uint16_t)(1) // один адрес , концентрация   */
+#define SENSOR_PRIMARY_VALUE_LOW_INTERN  (uint16_t)(2) // один адрес , концентрация   */
+#define SENSOR_PRIMARY_STATUS_INTERN     (uint16_t)(3) 
 
  uint16_t convertModBusAddrHolding_M(uint16_t MBAddress);
  uint16_t convertModBusAddrInput_M(uint16_t MBAddress);

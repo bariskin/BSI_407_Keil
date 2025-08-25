@@ -68,12 +68,16 @@ extern float  updateThresholdWarning;
 extern float  updateThresholdAlarm ;
 extern float  updateCalibrationValue;
 
-uint16_t registersTX[2] = {0};
+volatile uint16_t registersTX[2] = {0};
  uint32_t binary32 = 0;
  uint8_t ModbusSensoraddr = 0;
 
 uint8_t SelectRunFlag = 0;
+uint8_t SelectRunFlag1 = 0;
+// Глобальная очередь для команд
+QueueHandle_t displayCommandQueue;
 
+volatile uint8_t disableThisFunctionForSetting = 0;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -114,6 +118,30 @@ osStaticMutexDef_t myMutex01ControlBlock;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
+
+
+void wait_for_modbus_response(uint32_t timeout_ms)
+{
+    uint32_t start_time = osKernelSysTick();
+    
+    while ((osKernelSysTick() - start_time) < timeout_ms) {
+        //eMBMasterPoll(); // Обрабатываем Modbus стек
+        
+        // Проверяем, завершился ли запрос
+        if (eMBMasterGetErrorType() != EV_ERROR_EXECUTE_FUNCTION) {
+            break; // Запрос завершён
+        }
+        
+        osDelay(1);
+    }
+    
+    // Небольшая пауза между запросами
+    osDelay(2);
+}
+
+
+
+
 
 /* USER CODE END FunctionPrototypes */
 
@@ -179,11 +207,11 @@ void MX_FREERTOS_Init(void) {
   SlaveModbusTaskHandle = osThreadCreate(osThread(SlaveModbusTask), NULL);
 
   /* definition and creation of MasterModbusTas */
-  osThreadStaticDef(MasterModbusTas, MasterModbusTaskFunction, osPriorityNormal, 0, 256, MasterModbusTasBuffer, &MasterModbusTasControlBlock);
+  osThreadStaticDef(MasterModbusTas, MasterModbusTaskFunction, osPriorityNormal, 0, 512, MasterModbusTasBuffer, &MasterModbusTasControlBlock);
   MasterModbusTasHandle = osThreadCreate(osThread(MasterModbusTas), NULL);
 
   /* definition and creation of HoldingHandler */
-  osThreadStaticDef(HoldingHandler, HoldingHandlerFunction, osPriorityBelowNormal, 0, 512, HoldingHandlerBuffer, &HoldingHandlerControlBlock);
+  osThreadStaticDef(HoldingHandler, HoldingHandlerFunction, osPriorityNormal, 0, 1024, HoldingHandlerBuffer, &HoldingHandlerControlBlock);
   HoldingHandlerHandle = osThreadCreate(osThread(HoldingHandler), NULL);
 
   /* definition and creation of InputHandler */
@@ -199,11 +227,13 @@ void MX_FREERTOS_Init(void) {
   DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* definition and creation of SendToDispTask */
-  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityRealtime, 0, 256, SendToDispTaskBuffer, &SendToDispTaskControlBlock);
-  SendToDispTaskHandle = osThreadCreate(osThread(SendToDispTask), NULL);
+  //osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityRealtime, 0, 256, SendToDispTaskBuffer, &SendToDispTaskControlBlock);
+  //SendToDispTaskHandle = osThreadCreate(osThread(SendToDispTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+	
+	displayCommandQueue = xQueueCreate(10, sizeof(DisplayCommand_t));
   /* USER CODE END RTOS_THREADS */
 
 }
@@ -223,7 +253,6 @@ void SlaveModbusTaskFunction(void const * argument)
   {
 		eMBPoll();
     osDelay(2);
-		taskYIELD();
   }
   /* USER CODE END SlaveModbusTaskFunction */
 }
@@ -246,13 +275,10 @@ void MasterModbusTaskFunction(void const * argument)
 		 if (status == osOK) {		 
 	   
 		     eMBMasterPoll();
-			   //eMBMasterPoll();
 			  // Освобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }
-		 
-    osDelay(10);
-		taskYIELD();
+    osDelay(5);
   }
   /* USER CODE END MasterModbusTaskFunction */
 }
@@ -285,29 +311,33 @@ void HoldingHandlerFunction(void const * argument)
 				    if(SelectRunFlag == 0)
 				     { // вычитывается модель прибора   
 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, (DEVICE_MODEL_CODE - 1),2, 200 );
-					    SelectRunFlag = 1;
+							 wait_for_modbus_response(200);
+							 SelectRunFlag = 1;
 				     }
 				    else if(SelectRunFlag == 1)
 				     { // вычитываются значения дипазона  всей шкалы и единицы измерения
-					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SCALE_MAX_HIGH - 1 ,3, 200 );
-					    SelectRunFlag = 2;
+					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SCALE_MAX_HIGH - 1 ,3, 200 );
+					     wait_for_modbus_response(200);
+							 SelectRunFlag = 2;
 				     }				 
 				    else if (SelectRunFlag == 2)
 					   { //вычитываются пороги 1 и 2
 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 4, 200 );
-
+	            wait_for_modbus_response(200);
 					    SelectRunFlag = 3;
 					   }
 				    else if (SelectRunFlag == 3)
 					    { //вычитывается тип газа
 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SUBSTANCE_CODE_1 - 1, 16, 200 );
-					     SelectRunFlag = 4;	
+					     wait_for_modbus_response(200);
+							 SelectRunFlag = 4;	
 					    } 	 
 			      /* ********************************* Handling INPUT registers *************************** */
 				     else if (SelectRunFlag == 4)
 					    {
 					     eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
-					     SelectRunFlag = 5;
+               wait_for_modbus_response(200);					    
+							 SelectRunFlag = 5;
 					    } 	
 				    /* ********************************* set next slave addr *************************** */	
 				     else if (SelectRunFlag == 5)
@@ -316,7 +346,7 @@ void HoldingHandlerFunction(void const * argument)
 				       setNextDeviceAddr(&ModBusSlaveCurrentDeviceAddr);	       // set next device addr
                SelectRunFlag = 0;
 								
-								
+			
 					     if(ModBusSlaveCurrentDeviceAddr == NUMBER_SLAVE_DEVICES)
 					     {
 							  HoldingPollsDone++;
@@ -332,41 +362,86 @@ void HoldingHandlerFunction(void const * argument)
 									GetActiveSensors(SensorStateArray, (SensorInfo_t *) &SensorInfo);
 									/* получение modbus адреса  первого активного датчика на линии */
 								  ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusAddrs[0];  
-									 
-                   /* вывести окна активных дачтичиков  и перейти на постоянный опрос */
+                  /* вывести окна активных дачтичиков  и перейти на постоянный опрос */
 								 }
-								 
-								
+										
 				       }					
 			   }		  
-			 else   /* постоянный цикл опроса активных приборов */
-				 {
+			      /* постоянный цикл опроса активных приборов */
+				
 			        /* ********************************* Handling INPUT registers *************************** */
-				       if (SelectRunFlag == 6)
+				  else if (SelectRunFlag == 6)
 				  	    {
 								 /*  отправка  запроса на считывания значение текущей концентрации */
-															
-					        eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
-					
+									 if(!disableThisFunctionForSetting){
+					           eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
+									
+									   wait_for_modbus_response(200);
+									 }
 					       SelectRunFlag = 7;
 					      } 		
 				      /* ********************************* set next slave addr *************************** */	
-				       else if (SelectRunFlag == 7)
+				   else if (SelectRunFlag == 7)
 				        {
 									
 						    	   /* значение концентрации текущее */
-					            readCurrentSensorValue(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
+					           readCurrentSensorValue(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
 									
 					            /* выбираем только адреса активных приборов */
-				             setNextActiveDeviceAddr_(&ModBusSlaveCurrentDeviceAddr,SensorInfo.count);	       // set next active sdevice addr
-								
-                     SelectRunFlag = 6;
+				            setNextActiveDeviceAddr_(&ModBusSlaveCurrentDeviceAddr,SensorInfo.count);	       // set next active sdevice addr
+                     SelectRunFlag = 8;
 				       }									 
-			   }
+			   //}
+		else if (SelectRunFlag == 8)		 
+		{		 
+			 /* *************** ОБРАБОТКА КОМАНД ОТ ДИСПЛЕЯ *************** */
+    // Проверяем, есть ли команды от дисплея в очереди
+    DisplayCommand_t displayCmd;
+    if(xQueueReceive(displayCommandQueue, &displayCmd, 0) == pdTRUE)
+    {
+      switch(displayCmd.command)
+      {
+        case DISPLAY_CALIBRATION_PRIMARY_ZERO:
+          //eMBMasterReqWriteHoldingRegister(displayCmd.deviceAddr, CALIBRATION_PRIMATY_ZERO - 1, 0x0000, 200);
+          break;
+          
+        case DISPLAY_CALIBRATION_POINT_1:
+          //eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
+            //CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH - 1, 2, displayCmd.registers, 200);
+          break;
+          
+        case DISPLAY_THRESHOLD_WARNING_TASK:
+					
+            registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
+            registersTX[1] = displayCmd.binary32 & 0xFFFF;
+						
+             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,
+             SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 2, (USHORT *)&registersTX[0], 200);
+				    
+							wait_for_modbus_response(200);
+							
+          break;
+          
+        case DISPLAY_THRESHOLD_ALARM:
+
+            registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
+            registersTX[1] = displayCmd.binary32 & 0xFFFF;
+						
+             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,
+             SENSOR_THRESHOLD_ALARM_HIGH - 1, 2, (USHORT *)&registersTX[0], 200);
+							
+						wait_for_modbus_response(200);
+						
+
+          break;
+      }
+    }	 
+		SelectRunFlag = 6;
+	 }	
+
 			//Освобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }
-		  
 	 /* ************* osDelay()****************** */
 		  if(HoldingPollsDone == 3) 
 		   {
@@ -378,7 +453,6 @@ void HoldingHandlerFunction(void const * argument)
 		   osDelay(TIME_DEFAULT_1 + 10);       // для первых трех опросов всех датчкиков
 		   }
 		/* *************************************** */
-		taskYIELD();
   }
   /* USER CODE END HoldingHandlerFunction */
 }
@@ -402,7 +476,7 @@ void InputHandlerFunction(void const * argument)
 		    UpdateNextionDisplayWithChannelData(SensorInfo.count);
 		  }
     osDelay(50);
-		taskYIELD()
+		//taskYIELD()
   }
   /* USER CODE END InputHandlerFunction */
 }
@@ -450,8 +524,7 @@ void DisplayTaskFunction(void const * argument)
 		{
 	   HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready);	
     }
-		osDelay(50);
-		taskYIELD()
+		osDelay(400);
   }
   /* USER CODE END DisplayTaskFunction */
 }
@@ -471,70 +544,33 @@ void SendToDispTaskFunction(void const * argument)
   /* Infinite loop */
   for(;;)
   { 
-			uint32_t ulNotifiedValue = 0 ;
-		
-		 xTaskNotifyWait
-				(             
-				 0x00,             /* Don’t clear any notification bits on entry. */
-				 0xFFFFFFFFUL,     /* Reset the notification value to 0 on exit. */
-				 &ulNotifiedValue, /* Notified value pass out in ulNotifiedValue. */                      
-				 portMAX_DELAY     /* Block indefinitely. */
-					 );
-		
-		
-		 //vTaskSuspend(HoldingHandlerHandle);
-		
-		
-		
-		  // osStatus status = osMutexWait(myMutex01Handle, 100);
-		  //      if (status == osOK) {  							
-		switch (ulNotifiedValue)
-		{
-			case DISPLAY_CACIBRATION_PRIMARY_ZERO:     /* for Calibration Primary Zero, Калибровка  <<0>>*/ 
-			 
-			     		
-	  				  // eMBMasterReqWriteHoldingRegister(SensorInfo.modbusAddrs[channelID -1],CALIBRATION_PRIMATY_ZERO - 1, 0x0000, 200 );
-						 
-
-           // additMutexMbFunctions = mutexOFF;								 
-						break;
-				  			
-		 	case DISPLAY_CALIBRATION_POINT_1:
-			    							 
-              //eMBMasterReqWriteMultipleHoldingRegister(SensorInfo.modbusAddrs[channelID -1], CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH  - 1, 2,registersTX,200 );								
-        break;				 			 
-			case DISPLAY_THRESHOLD_WARNING_TASK:
-				
-			      status = osMutexWait(myMutex01Handle, 100);
-		        if (status == osOK) {
-							
-						registersTX[0] = (binary32 >> 16) & 0xFFFF;
-						registersTX[1] = binary32 & 0xFFFF;  
-				 
-						ModbusSensoraddr = SensorInfo.modbusAddrs[channelID - 1];
-            eMBMasterReqWriteMultipleHoldingRegister(ModbusSensoraddr,SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 2, (USHORT *)&registersTX[0],400 );	
-        	  
-							osMutexRelease(myMutex01Handle);	
-	        } 
-        break;						
-				
-			case DISPLAY_THRESHOLD_ALARM:
-				
-						 status = osMutexWait(myMutex01Handle, 100);
-		        if (status == osOK) { 
-							
-		  			registersTX[0] = (binary32 >> 16) & 0xFFFF;
-			  		registersTX[1] = binary32 & 0xFFFF; 
-				  	ModbusSensoraddr = SensorInfo.modbusAddrs[channelID - 1];
+		 if (SelectRunFlag1 == 1)
+				  	    {
+								 /*  отправка  запроса на считывания значение текущей концентрации */
+									 osStatus status = osMutexWait(myMutex01Handle, 100);
+		                  if (status == osOK) {
+					                eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
+									
+									        wait_for_modbus_response(200);
+												
+									         osMutexRelease(myMutex01Handle);
+		                 }			
+									
+					       SelectRunFlag1 = 2;
+					      } 		
+				      /* ********************************* set next slave addr *************************** */	
+				   else if (SelectRunFlag1 == 2)
+				        {
+									
+						    	   /* значение концентрации текущее */
+					           readCurrentSensorValue(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
+									
+					            /* выбираем только адреса активных приборов */
+				             setNextActiveDeviceAddr_(&ModBusSlaveCurrentDeviceAddr,SensorInfo.count);	       // set next active sdevice addr
+                     SelectRunFlag1 = 1;
+				       }									 
 			
-            eMBMasterReqWriteMultipleHoldingRegister(ModbusSensoraddr,SENSOR_THRESHOLD_ALARM_HIGH - 1, 2, (USHORT *)&registersTX[0],400 );	
-						osMutexRelease(myMutex01Handle);	
-	        }			
-       break;						
-		}	
-			   
-		 vTaskResume(HoldingHandlerHandle);				
-	osDelay(1);
+	  osDelay((timeStep + 10)/2);   //для соответствия реальному и вводимомоу. 
   }
   /* USER CODE END SendToDispTaskFunction */
 }

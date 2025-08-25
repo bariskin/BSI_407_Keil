@@ -51,7 +51,11 @@ extern   uint32_t binary32;
  float   updateThresholdAlarm = 0.00;
  float   updateCalibrationValue = 0.00;
  
-extern  osThreadId HoldingHandlerHandle;
+
+ DisplayCommand_t cmd;
+extern  QueueHandle_t displayCommandQueue;
+
+extern  volatile uint8_t disableThisFunctionForSetting;
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  
@@ -231,22 +235,34 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 		
         switch (*displayresponse) {
             case DISPLAY_MODEL:
-							
+							  //disableThisFunctionForSetting = 1;
                 break;
             case DISPLAY_SCALE_DIMENSION: 
-							
+							  //disableThisFunctionForSetting = 1;
                 break; 
             case  DISPLAY_SCALE_MAX:   
-									   
+								// disableThisFunctionForSetting = 1;	   
                 break;
             case  DISPLAY_THRESHOLD_WARNING_TASK:
-						   xTaskNotify(SendToDispTaskHandle,DISPLAY_THRESHOLD_WARNING_TASK , eSetValueWithOverwrite);
-							 break;	
-            case  DISPLAY_THRESHOLD_ALARM: 
+						  disableThisFunctionForSetting = 1;
+              cmd.command = DISPLAY_THRESHOLD_WARNING_TASK;
+              cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
+              cmd.binary32 = binary32;
+
+              xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY);
 							
-						   xTaskNotify(SendToDispTaskHandle,DISPLAY_THRESHOLD_ALARM , eSetValueWithOverwrite);
+						break;	
+            case  DISPLAY_THRESHOLD_ALARM: 
+					    disableThisFunctionForSetting = 1;
+						  cmd.command = DISPLAY_THRESHOLD_ALARM;
+              cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
+              cmd.binary32 = binary32;
+
+              xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY);
+								
 							 break;	
-            case DISPLAY_SUBSTANCE_CODE:  
+            case DISPLAY_SUBSTANCE_CODE: 
+                //disableThisFunctionForSetting = 1;						
                 break;
             case 0x88: // Первый ответ после старта дисплея (0x88 0xFF 0xFF 0xFF)
 							
@@ -270,14 +286,14 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 						case 0x35:
 							
 							break;		
-						case DISPLAY_CACIBRATION_PRIMARY_ZERO: /* for Calibration Primary Zero, Калибровка  <<0>>*/ 
+						case DISPLAY_CALIBRATION_PRIMARY_ZERO: /* for Calibration Primary Zero, Калибровка  <<0>>*/ 
 							
-						    xTaskNotify(SendToDispTaskHandle,DISPLAY_CACIBRATION_PRIMARY_ZERO, eSetValueWithOverwrite);
+						    //xTaskNotify(SendToDispTaskHandle,DISPLAY_CALIBRATION_PRIMARY_ZERO, eSetValueWithOverwrite);
 						    
 							 break;
 						case  DISPLAY_CALIBRATION_POINT_1:/* for Calibration, Калибровка  "Точка 1" */ 
 							
-						   xTaskNotify(SendToDispTaskHandle,DISPLAY_CALIBRATION_POINT_1 , eSetValueWithOverwrite);
+						   //xTaskNotify(SendToDispTaskHandle,DISPLAY_CALIBRATION_POINT_1 , eSetValueWithOverwrite);
 							 break;			
         }
         // Сброс флага и буфера
@@ -337,10 +353,10 @@ void GetDisplayCmd(uint8_t inputByte){
 											}
 									}
 						/* for Calibration Primary Zero, Калибровка  <<0>>*/ 
-									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x10 && arrDisplayRX[2] == DISPLAY_CACIBRATION_PRIMARY_ZERO)
+									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x10 && arrDisplayRX[2] == DISPLAY_CALIBRATION_PRIMARY_ZERO)
 									{
 										channelID = arrDisplayRX[0];
-										displayResponse = DISPLAY_CACIBRATION_PRIMARY_ZERO; // Calibration Primary Zero 	
+										displayResponse = DISPLAY_CALIBRATION_PRIMARY_ZERO; // Calibration Primary Zero 	
 									}
 						/* for Calibration, Калибровка  "Точка 1" */ 
 									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x10 && arrDisplayRX[2] == DISPLAY_CALIBRATION_POINT_1 )
@@ -392,7 +408,6 @@ void GetDisplayCmd(uint8_t inputByte){
 								/*         */			
 								 else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_ALARM )
 									{
-										vTaskSuspend(HoldingHandlerHandle);
 										 displayResponse = DISPLAY_THRESHOLD_ALARM ; 		
 										/*1. channel ID: arrDisplayRX[0]*/	
 										 channelID = arrDisplayRX[0];

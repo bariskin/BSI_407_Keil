@@ -200,13 +200,13 @@ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress)
   {
 	 case SENSOR_PRIMARY_VALUE_HIGH:
     
-    MBReg = SENSOR_PRIMARY_VAUE_HIGH_INTERN; 
+    MBReg = SENSOR_PRIMARY_VALUE_HIGH_INTERN; 
     
     break;
 		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  case SENSOR_PRIMARY_VALUE_LOW:
     
-    MBReg = SENSOR_PRIMARY_VAUE_LOW_INTERN; 
+    MBReg = SENSOR_PRIMARY_VALUE_LOW_INTERN; 
     
     break;
 		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
