@@ -123,27 +123,29 @@ extern   uint32_t binary32;
         uint8_t pos =  (i - 1) % 4 + 1;    // Позиция на странице (1-4)
         
         // Форматируем числа с запятой вместо точки
-        char value_str[20], scale_max_str[20], por1_str[20], por2_str[20];
+        char value_str[20], scale_max_str[20], por1_str[20], por2_str[20], por3_str[20];
 			
         snprintf(value_str, sizeof(value_str), "%.2f", device[i].value);
         snprintf(scale_max_str, sizeof(scale_max_str), "%.2f", device[i].scaleMax);
         snprintf(por1_str, sizeof(por1_str), "%.2f", device[i].Porog1);
         snprintf(por2_str, sizeof(por2_str), "%.2f", device[i].Porog2);
+			  snprintf(por3_str, sizeof(por3_str), "%.2f", device[i].Porog3);
         for(char* p = value_str; *p; p++) if(*p == '.') *p = ',';
         for(char* p = scale_max_str; *p; p++) if(*p == '.') *p = ',';
         for(char* p = por1_str; *p; p++) if(*p == '.') *p = ',';
         for(char* p = por2_str; *p; p++) if(*p == '.') *p = ',';
-        
+        for(char* p = por3_str; *p; p++) if(*p == '.') *p = ',';
         // Отправляем все параметры устройства
 			  SendNextionCommand ("page page%d", page);
         SendNextionCommand("page%d.ch%d.txt=\"Канал %d\"", page, pos, i);         //pos вместо i-4*page
-        SendNextionCommand("page%d.val%d.txt=\"%s\"", page, pos, value_str);
-        SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos, device[i].gas);
-        SendNextionCommand("page%d.ran%d.txt=\"%s\"", page, pos, scale_max_str);
+        SendNextionCommand("page%d.val%d.txt=\"%s\"",  page, pos, value_str);
+        SendNextionCommand("page%d.gas%d.txt=\"%s\"",  page, pos, device[i].gas);
+        SendNextionCommand("page%d.ran%d.txt=\"%s\"",  page, pos, scale_max_str);
         SendNextionCommand("page%d.unit%d.txt=\"%s\"", page, pos, device[i].scaleDimension);
         SendNextionCommand("page%d.por1%d.txt=\"%s\"", page, pos, por1_str);
         SendNextionCommand("page%d.por2%d.txt=\"%s\"", page, pos, por2_str);
-        SendNextionCommand("page%d.mod%d.txt=\"%s\"", page, pos, device[i].model);
+				SendNextionCommand("page%d.por3%d.txt=\"%s\"", page, pos, por3_str);
+        SendNextionCommand("page%d.mod%d.txt=\"%s\"",  page, pos, device[i].model);
     }
  }
 
@@ -155,7 +157,7 @@ extern   uint32_t binary32;
     const uint8_t pos = nextChannel - 4 * page;  // Элемент на странице (1..4)
 	 
 	  // Форматируем числа с запятой вместо точки
-     char value_str[20], scale_max_str[20], por1_str[20], por2_str[20];
+     char value_str[20], scale_max_str[20], por1_str[20], por2_str[20], por3_str[20];
 	  
 	 // получение очередного активного modbus addr
 	  uint8_t currentModbusIdx = SensorInfo.modbusAddrs[nextChannel - 1];
@@ -164,19 +166,21 @@ extern   uint32_t binary32;
 	  snprintf(scale_max_str, sizeof(scale_max_str), "%.2f", SensorStateArray[currentModbusIdx - 1].SensorScaleMax);
     snprintf(por1_str,  sizeof(por1_str),  "%.2f", SensorStateArray[currentModbusIdx - 1].SensorWarning);
     snprintf(por2_str,  sizeof(por2_str),  "%.2f", SensorStateArray[currentModbusIdx - 1].SensorAlarm);
+	  snprintf(por3_str,  sizeof(por3_str),  "%.2f" , SensorStateArray[currentModbusIdx - 1].SensorAlarm2);
 	  for(char* p = value_str; *p; p++) if(*p == '.') *p = ',';
 	  for(char* p = scale_max_str; *p; p++) if(*p == '.') *p = ',';
     for(char* p = por1_str; *p; p++) if(*p == '.') *p = ',';
     for(char* p = por2_str; *p; p++) if(*p == '.') *p = ',';
-	 
+	  for(char* p = por3_str; *p; p++) if(*p == '.') *p = ',';
 	   SendNextionCommand("page%d.val%d.txt=\"%s\"", page, pos, value_str);
 		 SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].SensorGas);
 	   SendNextionCommand("page%d.ran%d.txt=\"%s\"", page, pos, scale_max_str);
 		 SendNextionCommand("page%d.poz%d.txt=\"%s\"", page, pos,device[nextChannel].posit);
 	   SendNextionCommand("page%d.por1%d.txt=\"%s\"", page, pos, por1_str);
 		 SendNextionCommand("page%d.por2%d.txt=\"%s\"", page, pos, por2_str);	
+		 SendNextionCommand("page%d.por3%d.txt=\"%s\"", page, pos, por3_str);	
 		 SendNextionCommand("page%d.unit%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].SensorScaleDimension);
-		 SendNextionCommand("page%d.mod%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].DeviceModelCode);
+		 SendNextionCommand("page%d.mod%d.txt=\"%s\"", page, pos,  SensorStateArray[currentModbusIdx - 1].DeviceModelCode);
 			
 		 nextChannel++;
 		 
@@ -198,9 +202,9 @@ void initDeviceData(uint8_t numberOfdevices)
 			  strncpy(device[i].scaleDimension, "dimension", sizeof(device[i].scaleDimension));
 				device[i].Porog1 = 10.00;
 				device[i].Porog2 = 20.00;
+				device[i].Porog3 = 30.00;
 				strncpy(device[i].model, "---", sizeof(device[i].model));
-			}
-			
+			}	
 	 }
 	 
 // Пропускаем нули и находим первую цифру
@@ -333,8 +337,8 @@ void GetDisplayCmd(uint8_t inputByte) {
                       memcpy(&binary32, &updateScaleMax, sizeof(float));       
                     }
                     		/*         */		
-							  else if (significant_bytes_count > 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_WARNING )
-									{
+							    else if (significant_bytes_count > 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_WARNING )
+									  {
 										 displayResponse = DISPLAY_THRESHOLD_WARNING; 				
 										/*1. channel ID: arrDisplayRX[0]*/	
 										 channelID = arrDisplayRX[0];			
@@ -343,9 +347,9 @@ void GetDisplayCmd(uint8_t inputByte) {
 										 memcpy(input,(void *)&arrDisplayRX[3], value_bytes_count);
 										 sscanf((const char *)input, "%f", &updateThresholdWarning);
 										 memcpy(&binary32, &updateThresholdWarning, sizeof(float));
-									}
+								  	}
                    else if (significant_bytes_count > 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_ALARM )
-									 {
+									  {
 										 displayResponse = DISPLAY_THRESHOLD_ALARM; 		
 										/*1. channel ID: arrDisplayRX[0]*/	
 										 channelID = arrDisplayRX[0];
@@ -354,9 +358,8 @@ void GetDisplayCmd(uint8_t inputByte) {
 										 memcpy(input,(void *)&arrDisplayRX[3], value_bytes_count);
 										 sscanf((const char *)input, "%f", &updateThresholdAlarm);											
 									   memcpy(&binary32, &updateThresholdAlarm, sizeof(float));  
-                   } 
-									 
-									 	else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_ADDITIONAL )
+                    } 
+									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_ADDITIONAL )
 									{
 										 displayResponse = DISPLAY_THRESHOLD_ADDITIONAL ; 		
 										/*1. channel ID: arrDisplayRX[0]*/	
@@ -365,8 +368,7 @@ void GetDisplayCmd(uint8_t inputByte) {
 									   uint8_t input[10] = {0};
 										 memcpy(input,(void *)&arrDisplayRX[3], value_bytes_count);
 										 sscanf((const char *)input, "%f", &updateThresholdAdditional);											
-									   memcpy(&binary32, &updateThresholdAdditional, sizeof(float));
-									 
+									   memcpy(&binary32, &updateThresholdAdditional, sizeof(float)); 
 									 }
 									  
 									 else if (significant_bytes_count > 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_SUBSTANCE_CODE )
@@ -417,7 +419,7 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
         return;
     }
     
-    uint8_t need_cleanup = 1;
+    //uint8_t need_cleanup = 1;
     uint8_t processed_without_channel = 0;
     
     // Команды, которые не требуют channelID
@@ -490,7 +492,6 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 									{	
                   } else{ 
                   }
-								
                 break;
               /* *************************************** */   
             case DISPLAY_THRESHOLD_WARNING:

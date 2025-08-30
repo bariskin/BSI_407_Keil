@@ -41,6 +41,7 @@ extern "C" {
 			float currentConsumptoin;								// ток потребления
 			float Porog1;
 			float Porog2;
+			float Porog3;
 			uint8_t error;
 			uint8_t errorRS;
 			uint32_t status_GA;
@@ -48,7 +49,8 @@ extern "C" {
 			uint32_t scaleMax_uint32;					
 			uint8_t scaleDimension_hex;					
 			uint32_t Porog1_int32;							
-			uint32_t Porog2_int32;							
+			uint32_t Porog2_int32;	
+  		//uint32_t Porog3_int32;		
 			uint32_t model_hex;						
     }paramDev_t;
 	

@@ -72,6 +72,7 @@ void initSensorStateArray(uint8_t numberdevices)
 		 memset((void *)SensorStateArray[i].SensorScaleDimension, 0, sizeof(SensorStateArray[i].SensorScaleDimension));
 		 SensorStateArray[i].SensorWarning        = 0.00;
      SensorStateArray[i].SensorAlarm          = 0.00;
+		 SensorStateArray[i].SensorAlarm2         = 0.00;
 		 SensorStateArray[i].DeviceStatus         = 0;
 		 SensorStateArray[i].Concentration_H      = 0;
 		 SensorStateArray[i].Concentration_L      = 0;
@@ -120,7 +121,12 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
    
     *(uint32_t*)&result = combined;
     sensor->SensorAlarm = result;
-		
+		// SensorAlarm2
+    combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_HIGH_INTERN - 1] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_LOW_INTERN - 1];
+   
+    *(uint32_t*)&result = combined;
+    sensor->SensorAlarm2 = result;
+		 
 		// SensorScaleMax
     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_HIGH_INTERN - 1] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_LOW_INTERN - 1];
     
@@ -436,18 +442,16 @@ void setNextActiveDeviceAddr_(uint8_t *currentAddr, uint8_t countsensores)
 		}			
 }
  
-uint8_t GetActiveSensors(SensorState_t SensorStateArray[NUMBER_SLAVE_DEVICES], SensorInfo_t *sensorinfo)
+ uint8_t GetActiveSensors(SensorState_t SensorStateArray[NUMBER_SLAVE_DEVICES], SensorInfo_t *sensorinfo)
   {	   
 		uint8_t IdxActiveAddr = 0x00;
 	 // Iterate through all possible devices (1, 2, 3)
     for (int i = 0; i < NUMBER_SLAVE_DEVICES - 1; i++) 
     {
-			 SensorState_t *sensor = &SensorStateArray[i];
-			 
+			 SensorState_t *sensor = &SensorStateArray[i];	 
 			if (sensor->ErrorState == false) 
         {   
-					sensor->SensorModBudAddr = i + 1; // modbus адрес активного датчика 
-					
+					sensor->SensorModBudAddr = i + 1; // modbus адрес активного датчика 		
 					/* формирование массива адресов активных датчиков и количества датчиков*/
 					sensorinfo->count++;	
 					sensorinfo->modbusAddrs[IdxActiveAddr] = sensor->SensorModBudAddr; 
@@ -461,29 +465,27 @@ uint8_t GetActiveSensors(SensorState_t SensorStateArray[NUMBER_SLAVE_DEVICES], S
 	const char* getUnitStringByCode(uint8_t code) {
     switch (code) {
         case 0x8B: return "ppm";
-        case 0xA9: return "ppb";
+        //case 0xA9: return "ppb";
         case 0xAA: return "mg/m3";
         case 0xA1: return "%LEL";
         case 0x6A: return "% vol. solids";
-        case 0x69: return "% wt. solids";
-        case 0x5B: return "g/m3";
-        case 0x5C: return "kg/m3";
+        //case 0x69: return "% wt. solids";
+        //case 0x5B: return "g/m3";
+        //case 0x5C: return "kg/m3";
         default:   return "Unknown unit";  // Если код не найден
     }
-}
-
-uint8_t getCodeByUnitString(const char* unitStr) {
+ }
+ uint8_t getCodeByUnitString(const char* unitStr) {
     if (strcmp(unitStr, "ppm") == 0) return 0x8B;
-    if (strcmp(unitStr, "ppb") == 0) return 0xA9;
+    //if (strcmp(unitStr, "ppb") == 0) return 0xA9;
     if (strcmp(unitStr, "mg/m3") == 0) return 0xAA;
     if (strcmp(unitStr, "%LEL") == 0) return 0xA1;
     if (strcmp(unitStr, "% vol. solids") == 0) return 0x6A;
-    if (strcmp(unitStr, "% wt. solids") == 0) return 0x69;
-    if (strcmp(unitStr, "g/m3") == 0) return 0x5B;
-    if (strcmp(unitStr, "kg/m3") == 0) return 0x5C;
-    
+    //if (strcmp(unitStr, "% wt. solids") == 0) return 0x69;
+    //if (strcmp(unitStr, "g/m3") == 0) return 0x5B;
+    //if (strcmp(unitStr, "kg/m3") == 0) return 0x5C;   
     return 0xFF; // Код для неизвестной единицы измерения
-}	
+ }	
 
 /**
  * @brief Получает название модели устройства по двум short (4 байта ASCII).

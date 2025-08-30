@@ -324,8 +324,8 @@ void HoldingHandlerFunction(void const * argument)
 							 SelectRunFlag = 2;
 				     }				 
 				    else if (SelectRunFlag == 2)
-					   { //вычитываются пороги 1 и 2
-					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 4, 200 );
+					   { //вычитываются пороги 1, 2 и 3
+ 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 6, 200 );
 	            wait_for_modbus_response(200);
 					    SelectRunFlag = 3;
 					   }
@@ -397,12 +397,12 @@ void HoldingHandlerFunction(void const * argument)
 				       }									 
 			   //}
 		else if (SelectRunFlag == 8)		 
-		{		 
-			 /* *************** ОБРАБОТКА КОМАНД ОТ ДИСПЛЕЯ *************** */
+		{		 /* *************** ОБРАБОТКА КОМАНД ОТ ДИСПЛЕЯ *************** */
     // Проверяем, есть ли команды от дисплея в очереди
     
     if(xQueueReceive(displayCommandQueue, &displayCmd, 0) == pdTRUE)
     {  	
+			
 			 if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){	 
 				      registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
               registersTX[1] = displayCmd.binary32 & 0xFFFF;		 
@@ -414,47 +414,68 @@ void HoldingHandlerFunction(void const * argument)
 					 }
 				/* ******************  DISPLAY_SCALE_DIMENSION ********************** */	  
 				//case DISPLAY_SCALE_DIMENSION:
-				 if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){
-				   //registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
-           //registersTX[1] = displayCmd.binary32 & 0xFFFF;    
+			 if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){
+				            
 			 }
 				/* ******************  DISPLAY_SCALE_MAX *************************** */	
 			 else		if(displayCmd.command ==DISPLAY_SCALE_MAX){					 
 					 registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
            registersTX[1] = displayCmd.binary32 & 0xFFFF;	
-           eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, SENSOR_SCALE_MAX_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000);       
+           eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
+				                                            SENSOR_SCALE_MAX_HIGH - 1, 
+				                                            2, 
+				                                            (USHORT *)&registersTX[0], 
+				                                            1000);       
 		    }
 				/* ******************  DISPLAY_CALIBRATION_PRIMARY_ZERO ********************** */	  
 				else	if(displayCmd.command == DISPLAY_CALIBRATION_PRIMARY_ZERO){
               registersTX[0] = 0x0000;
               registersTX[1] = 0x0000;
-              eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000);	  	  
+              eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
+					                                             CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH - 1, 
+					                                             2, 
+					                                             (USHORT *)&registersTX[0], 
+					                                             1000);	  	  
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
 	  else   if(displayCmd.command ==DISPLAY_CALIBRATION_POINT_1){	
 				    registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;
-            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000);
+            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
+			                                               CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH - 1, 
+			                                               2, 
+			                                               (USHORT *)&registersTX[0], 
+			                                               1000);
          }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
 			 else	 if(displayCmd.command ==DISPLAY_THRESHOLD_WARNING){
              registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
              registersTX[1] = displayCmd.binary32 & 0xFFFF;
-             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 2, (USHORT *)&registersTX[0], 1000);
+             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
+				                                              SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 
+				                                              2, 
+				                                              (USHORT *)&registersTX[0], 
+				                                              1000);
 	      }
           /* ******************  DISPLAY_THRESHOLD_ALARM ************************ */	  
-        //case DISPLAY_THRESHOLD_ALARM:
        else if(displayCmd.command == DISPLAY_THRESHOLD_ALARM){
             registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;	
-            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,SENSOR_THRESHOLD_ALARM_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000);	   
+            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,
+				                                             SENSOR_THRESHOLD_ALARM_HIGH - 1, 
+				                                             2, 
+				                                             (USHORT *)&registersTX[0], 
+			                                               1000);	   
         }
 				/* ******************  DISPLAY_THRESHOLD_ADDITIONAL ************************ */	 
-				//case DISPLAY_THRESHOLD_ADDITIONAL:
 			 else	if(displayCmd.command == DISPLAY_THRESHOLD_ADDITIONAL){
 				    registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;	
-            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,SENSOR_THRESHOLD_ADDITIONAL_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000); 
+            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,
+				                                             SENSOR_THRESHOLD_ADDITIONAL_HIGH - 1, 
+				                                             2, 
+				                                             (USHORT *)&registersTX[0], 
+				                                             1000); 
         }
     }	
 	  SelectRunFlag = 6;	 			
@@ -463,7 +484,6 @@ void HoldingHandlerFunction(void const * argument)
        osMutexRelease(myMutex01Handle);
 		 }
 	 /* ************* osDelay()****************** */
-		
 		  if(HoldingPollsDone == 3) 
 		   {
 				 // для постоянного опроса, делим timestep на два, так как попадаем в кейс отправки команды каждый второй раз 

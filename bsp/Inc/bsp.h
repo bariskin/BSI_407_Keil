@@ -57,6 +57,7 @@ extern "C" {
 			char SensorScaleDimension[10];
 			float SensorWarning;            // Порог 1
 			float SensorAlarm;              // Порог 2
+			float SensorAlarm2;             // Порог 3
 			uint8_t SensorSubstanceCode[16]; //тип газа
 			uint16_t Concentration_H;
 			uint16_t Concentration_L;
