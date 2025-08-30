@@ -245,27 +245,52 @@
         <Ww>
           <count>11</count>
           <WinNumber>2</WinNumber>
-          <ItemText>binary32</ItemText>
+          <ItemText>cmd</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>2</WinNumber>
-          <ItemText>additMutexMbFunctions</ItemText>
+          <ItemText>registersTX</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>2</WinNumber>
-          <ItemText>cmd</ItemText>
+          <ItemText>ModBusSlaveCurrentDeviceAddr</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>2</WinNumber>
-          <ItemText>registersTX</ItemText>
+          <ItemText>updateScaleMax</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ModBusSlaveCurrentDeviceAddr</ItemText>
+          <ItemText>updateScaleMax</ItemText>
+        </Ww>
+        <Ww>
+          <count>16</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>updateCalibrationValue</ItemText>
+        </Ww>
+        <Ww>
+          <count>17</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>updateThresholdAdditional</ItemText>
+        </Ww>
+        <Ww>
+          <count>18</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>updateThresholdAlarm</ItemText>
+        </Ww>
+        <Ww>
+          <count>19</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>updateThresholdWarning</ItemText>
+        </Ww>
+        <Ww>
+          <count>20</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>disableThisFunctionForSetting</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>
@@ -1122,7 +1147,7 @@
 
   <Group>
     <GroupName>FreeModbusMaster</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

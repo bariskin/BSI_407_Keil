@@ -57,14 +57,13 @@ typedef enum {
     DISPLAY_BAUD_RATE_CMD            = 0xA0,            
     DISPLAY_CALIBRATION_PRIMARY_ZERO = 0x64,             
     DISPLAY_CALIBRATION_POINT_1      = 0x68,             
-    DISPLAY_MODEL                    = 0x01,             
+    DISPLAY_POSITION                 = 0x01,             
     DISPLAY_SCALE_DIMENSION          = 0x02,
     DISPLAY_SCALE_MAX                = 0x03,
 	  DISPLAY_THRESHOLD_WARNING        = 0x04, 
     DISPLAY_THRESHOLD_ALARM          = 0x05,
-	  DISPLAY_THRESHOLD_ADDITIONAL     = 0x07,
-    DISPLAY_SUBSTANCE_CODE           = 0x06,
-	  DISPLAY_THRESHOLD_WARNING_TASK   = 0x11,   // подмена для 4 канала
+	  DISPLAY_SUBSTANCE_CODE           = 0x06,	
+	  DISPLAY_THRESHOLD_ADDITIONAL     = 0x07,  
 } DisplayResponseCmd;
 		
 		// Структура для команд от дисплея

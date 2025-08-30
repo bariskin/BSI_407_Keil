@@ -145,6 +145,7 @@ eMBErrorCode eMBMasterRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
                 iRegIndex++;
                 usNRegs--;
             }
+						//osDelay(1);
             break;
         /* write current register values with new values from the protocol stack. */
         case MB_REG_WRITE:
@@ -155,11 +156,13 @@ eMBErrorCode eMBMasterRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
                 iRegIndex++;
                 usNRegs--;
             }
+						//osDelay(1);
             break;
         }
     }
     else
-    {
+    {   
+			  osDelay(1);
         eStatus = MB_ENOREG;
     }
     return eStatus;
