@@ -402,14 +402,10 @@ void HoldingHandlerFunction(void const * argument)
     // Проверяем, есть ли команды от дисплея в очереди
     
     if(xQueueReceive(displayCommandQueue, &displayCmd, 0) == pdTRUE)
-    {
-      //switch(displayCmd.command)
-      {	
-					 if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){
-						 
+    {  	
+			 if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){	 
 				      registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
-              registersTX[1] = displayCmd.binary32 & 0xFFFF;
-						 
+              registersTX[1] = displayCmd.binary32 & 0xFFFF;		 
 						  eMBMasterReqWriteMultipleHoldingRegister(  displayCmd.deviceAddr, 
 						                                             SENSOR_SCALE_MAX_HIGH - 1, 
 						                                             2, 
@@ -420,85 +416,48 @@ void HoldingHandlerFunction(void const * argument)
 				//case DISPLAY_SCALE_DIMENSION:
 				 if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){
 				   //registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
-           //registersTX[1] = displayCmd.binary32 & 0xFFFF;
-				
-           //eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, SENSOR_SCALE_DIMENSTION - 1, 1, (USHORT *)&registersTX[0], 200);
-				   //wait_for_modbus_response(200);	
-				 //break;
+           //registersTX[1] = displayCmd.binary32 & 0xFFFF;    
 			 }
 				/* ******************  DISPLAY_SCALE_MAX *************************** */	
-				//case DISPLAY_SCALE_MAX:
-			else		if(displayCmd.command ==DISPLAY_SCALE_MAX){
-						 
+			 else		if(displayCmd.command ==DISPLAY_SCALE_MAX){					 
 					 registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
-           registersTX[1] = displayCmd.binary32 & 0xFFFF;
-				
-           eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, SENSOR_SCALE_MAX_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000);
-			     //eMBMasterPoll();
-				   //wait_for_modbus_response(200);	
-				// break;
+           registersTX[1] = displayCmd.binary32 & 0xFFFF;	
+           eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, SENSOR_SCALE_MAX_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000);       
 		    }
 				/* ******************  DISPLAY_CALIBRATION_PRIMARY_ZERO ********************** */	  
-        //case DISPLAY_CALIBRATION_PRIMARY_ZERO:
 				else	if(displayCmd.command == DISPLAY_CALIBRATION_PRIMARY_ZERO){
-            registersTX[0] = 0x0000;
-            registersTX[1] = 0x0000;
-				
-            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000);
-				    //eMBMasterPoll();
-					// wait_for_modbus_response(200);		
-        //  break;
+              registersTX[0] = 0x0000;
+              registersTX[1] = 0x0000;
+              eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000);	  	  
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
-        //case DISPLAY_CALIBRATION_POINT_1:
-	  else   if(displayCmd.command ==DISPLAY_CALIBRATION_POINT_1){
-			
+	  else   if(displayCmd.command ==DISPLAY_CALIBRATION_POINT_1){	
 				    registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;
-				
             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000);
-			      //eMBMasterPoll();	   
-			//wait_for_modbus_response(200);
-        //  break;
          }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
-        //case DISPLAY_THRESHOLD_WARNING:
 			 else	 if(displayCmd.command ==DISPLAY_THRESHOLD_WARNING){
-            registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
-            registersTX[1] = displayCmd.binary32 & 0xFFFF;
-						
-            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 2, (USHORT *)&registersTX[0], 1000);
-				  	//eMBMasterPoll();
-				    //wait_for_modbus_response(200);			
-         // break;
+             registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
+             registersTX[1] = displayCmd.binary32 & 0xFFFF;
+             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 2, (USHORT *)&registersTX[0], 1000);
 	      }
           /* ******************  DISPLAY_THRESHOLD_ALARM ************************ */	  
         //case DISPLAY_THRESHOLD_ALARM:
        else if(displayCmd.command == DISPLAY_THRESHOLD_ALARM){
             registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
-            registersTX[1] = displayCmd.binary32 & 0xFFFF;
-						
-            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,SENSOR_THRESHOLD_ALARM_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000);	
-				   // eMBMasterPoll();
-				 // wait_for_modbus_response(200);					
-         // break;
+            registersTX[1] = displayCmd.binary32 & 0xFFFF;	
+            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,SENSOR_THRESHOLD_ALARM_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000);	   
         }
 				/* ******************  DISPLAY_THRESHOLD_ADDITIONAL ************************ */	 
 				//case DISPLAY_THRESHOLD_ADDITIONAL:
 			 else	if(displayCmd.command == DISPLAY_THRESHOLD_ADDITIONAL){
 				    registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
-            registersTX[1] = displayCmd.binary32 & 0xFFFF;
-						
-            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,SENSOR_THRESHOLD_ADDITIONAL_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000);
-						
-         //wait_for_modbus_response(500);	
-				 //break;
+            registersTX[1] = displayCmd.binary32 & 0xFFFF;	
+            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,SENSOR_THRESHOLD_ADDITIONAL_HIGH - 1, 2, (USHORT *)&registersTX[0], 1000); 
         }
-       }
-		
     }	
-	  SelectRunFlag = 6;	
-    			
+	  SelectRunFlag = 6;	 			
 	 }	
 			//Освобождаем мьютекс
        osMutexRelease(myMutex01Handle);

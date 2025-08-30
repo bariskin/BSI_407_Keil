@@ -308,13 +308,11 @@ void GetDisplayCmd(uint8_t inputByte) {
                           // memcpy(&binary32, &updateCalibrationValue, sizeof(float));
                         
                     }
+										/* Position */
 									 else if (significant_bytes_count >= 3 && arrDisplayRX[1] == 0x01 && arrDisplayRX[2] == DISPLAY_POSITION) {
                         displayResponse = DISPLAY_POSITION;
                         channelID = arrDisplayRX[0];
-                       // value_bytes_count = data_length - 3;
-                        // Обработка dimension code
                     }
-										
                     /* Scale Dimension */
                     else if (significant_bytes_count > 3 && arrDisplayRX[1] == 0x01 && arrDisplayRX[2] == DISPLAY_SCALE_DIMENSION) {
                         //displayResponse = DISPLAY_SCALE_DIMENSION;
@@ -467,54 +465,42 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
         // Команды, которые требуют channelID
         switch (*displayresponse) {
             case DISPLAY_POSITION:
-							  disableThisFunctionForSetting = 1;
-						
+							   disableThisFunctionForSetting = 1;	
 						   /* *************************************** */
-                  //vTaskSuspend(SlaveEventTaskHandle);
-					        //vTaskSuspend (SlaveModbusTaskHandle);
-						      //osDelay(20); //время на отключение пока не нужных тасков
-						
 						     //EMPTY VALUE для пропихиванаия записи в  регистры modbus
 						      cmd.command = DISPLAY_POSITION;
                   cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                   cmd.binary32 = 0x0000; 
                 if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS)
-									{ 
-										
-                  } else{
-                   
+									{ 	
+                  } else{ 
                   } 
                 break;
               /* *************************************** */   
             case DISPLAY_SCALE_DIMENSION: 
-                disableThisFunctionForSetting = 1;
+                 disableThisFunctionForSetting = 1;
                 break;
                /* *************************************** */  
             case DISPLAY_SCALE_MAX: 
-                disableThisFunctionForSetting = 1;							
-                cmd.command = DISPLAY_SCALE_MAX;
-                cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
-                cmd.binary32 = binary32;
+                 disableThisFunctionForSetting = 1;							
+                 cmd.command = DISPLAY_SCALE_MAX;
+                 cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
+                 cmd.binary32 = binary32;
                 if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS)
-									{ 
-										
-                  } else{
-                   
+									{	
+                  } else{ 
                   }
 								
                 break;
               /* *************************************** */   
             case DISPLAY_THRESHOLD_WARNING:
-							  disableThisFunctionForSetting = 1;
-                cmd.command = DISPLAY_THRESHOLD_WARNING;
-                cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
-                cmd.binary32 = binary32;
+							   disableThisFunctionForSetting = 1;
+                 cmd.command = DISPLAY_THRESHOLD_WARNING;
+                 cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
+                 cmd.binary32 = binary32;
                 if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
-					
-                    } else {
-                    
-                    }
-									
+                    } else { 
+                    }	
                 break;
                 /* *************************************** */  
             case DISPLAY_THRESHOLD_ALARM: 
@@ -523,11 +509,8 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                 cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                 cmd.binary32 = binary32;
                if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
-						   
                     } else {
-                   
-                    }
-									
+                    }	
                 break;
                 /* *************************************** */ 
             case DISPLAY_THRESHOLD_ADDITIONAL:
@@ -535,12 +518,9 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                  cmd.command = DISPLAY_THRESHOLD_ADDITIONAL;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
-               if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
-						   
+                 if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else {
-                   
                     }
-								
                 break;
                /* *************************************** */  
             case DISPLAY_SUBSTANCE_CODE: 
@@ -549,24 +529,17 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                /* *************************************** */  
             case DISPLAY_CALIBRATION_PRIMARY_ZERO: /* for Calibration Primary Zero */
                  disableThisFunctionForSetting = 1;
-					
-						  
                  cmd.command = DISPLAY_CALIBRATION_PRIMARY_ZERO;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = 0x0000;
-						
-						   if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
-						   
-                    } else {
-                   
+						     if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
+                    } else {  
                     }
-								
                 break;
                 /* *************************************** */ 
             case DISPLAY_CALIBRATION_POINT_1:    /* for Calibration, Калибровка "Точка 1" */
                 disableThisFunctionForSetting = 1;
-                break;
-           
+                break;    
         }
     } 
       
