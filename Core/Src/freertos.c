@@ -233,7 +233,7 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
 	
-	displayCommandQueue = xQueueCreate(15, sizeof(DisplayCommand_t));
+	displayCommandQueue = xQueueCreate(20, sizeof(DisplayCommand_t));
   /* USER CODE END RTOS_THREADS */
 
 }
@@ -402,21 +402,26 @@ void HoldingHandlerFunction(void const * argument)
     
     if(xQueueReceive(displayCommandQueue, &displayCmd, 0) == pdTRUE)
     {  	
-			
-			 if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){	 
+				   if(displayCmd.command ==DISPLAY_POSITION){	 
 				      registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
-              registersTX[1] = displayCmd.binary32 & 0xFFFF;		 
+              registersTX[1] = displayCmd.binary32 & 0xFFFF;	
+						  eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
+				                                            2000 - 1, 
+				                                            2, 
+				                                            (USHORT *)&registersTX[0], 
+				                                            1000); 
+					 } 
+	 
+			   else  if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){	 
+				      registersTX[0] = displayCmd.binary32 & 0xFFFF;
+              //registersTX[1] = displayCmd.binary32 & 0xFFFF;		 
 						  eMBMasterReqWriteMultipleHoldingRegister(  displayCmd.deviceAddr, 
-						                                             SENSOR_SCALE_MAX_HIGH - 1, 
-						                                             2, 
+						                                             SENSOR_SCALE_DIMENSTION - 1, 
+						                                             1, 
 						                                             (USHORT *)&registersTX[0], 
 						                                             1000); 
 					 }
-				/* ******************  DISPLAY_SCALE_DIMENSION ********************** */	  
-				//case DISPLAY_SCALE_DIMENSION:
-			 if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){
-				            
-			 }
+			
 				/* ******************  DISPLAY_SCALE_MAX *************************** */	
 			 else		if(displayCmd.command ==DISPLAY_SCALE_MAX){					 
 					 registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
@@ -448,7 +453,7 @@ void HoldingHandlerFunction(void const * argument)
 			                                               1000);
          }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
-			 else	 if(displayCmd.command ==DISPLAY_THRESHOLD_WARNING){
+			 else	 if(displayCmd.command == DISPLAY_THRESHOLD_WARNING){
              registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
              registersTX[1] = displayCmd.binary32 & 0xFFFF;
              eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 

@@ -135,7 +135,7 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		
 		// SensorScaleDimension
     unit = getUnitStringByCode(RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_INTERN - 1]);
-    snprintf((char*)sensor->SensorScaleDimension, sizeof(sensor->SensorScaleDimension), "%s", unit);
+    snprintf((char*)sensor->SensorScaleDimension, sizeof(sensor->SensorScaleDimension), "%s",(const char *)unit);
 		
 		//Concentration 
     sensor->DeviceStatus    = RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN - 1];
@@ -467,20 +467,20 @@ void setNextActiveDeviceAddr_(uint8_t *currentAddr, uint8_t countsensores)
         case 0x8B: return "ppm";
         //case 0xA9: return "ppb";
         case 0xAA: return "mg/m3";
-        case 0xA1: return "%LEL";
-        case 0x6A: return "% vol. solids";
+        case 0xA1: return "%НКПР";
+        case 0x6A: return "% Об.д";
         //case 0x69: return "% wt. solids";
         //case 0x5B: return "g/m3";
         //case 0x5C: return "kg/m3";
-        default:   return "Unknown unit";  // Если код не найден
+        default:   return "unknown";  // Если код не найден
     }
  }
  uint8_t getCodeByUnitString(const char* unitStr) {
     if (strcmp(unitStr, "ppm") == 0) return 0x8B;
     //if (strcmp(unitStr, "ppb") == 0) return 0xA9;
     if (strcmp(unitStr, "mg/m3") == 0) return 0xAA;
-    if (strcmp(unitStr, "%LEL") == 0) return 0xA1;
-    if (strcmp(unitStr, "% vol. solids") == 0) return 0x6A;
+    if (strcmp(unitStr, "%ЅєїА") == 0) return 0xA1;
+    if (strcmp(unitStr, "% ѕС.Ф.") == 0) return 0x6A;
     //if (strcmp(unitStr, "% wt. solids") == 0) return 0x69;
     //if (strcmp(unitStr, "g/m3") == 0) return 0x5B;
     //if (strcmp(unitStr, "kg/m3") == 0) return 0x5C;   

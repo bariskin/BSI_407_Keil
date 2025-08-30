@@ -52,7 +52,8 @@ extern   uint32_t binary32;
  float   updateThresholdAdditional = 0.00;
  float   updateCalibrationValue    = 0.00;
  float   updateScaleMax            = 0.00;
-
+ uint8_t  dimensionCode            = 0x00;
+ 
  DisplayCommand_t cmd;
  extern  QueueHandle_t displayCommandQueue;
  extern  volatile uint8_t disableThisFunctionForSetting;
@@ -316,13 +317,20 @@ void GetDisplayCmd(uint8_t inputByte) {
 									 else if (significant_bytes_count >= 3 && arrDisplayRX[1] == 0x01 && arrDisplayRX[2] == DISPLAY_POSITION) {
                         displayResponse = DISPLAY_POSITION;
                         channelID = arrDisplayRX[0];
+										    value_bytes_count = data_length - 3;
+                        uint8_t input[10] = {0};
+                        memcpy(input, (void *)&arrDisplayRX[3], value_bytes_count);
+										 
                     }
                     /* Scale Dimension */
-                    else if (significant_bytes_count > 3 && arrDisplayRX[1] == 0x01 && arrDisplayRX[2] == DISPLAY_SCALE_DIMENSION) {
-                        //displayResponse = DISPLAY_SCALE_DIMENSION;
-                       // channelID = arrDisplayRX[0];
-                       // value_bytes_count = data_length - 3;
-                        // Обработка dimension code
+                   else if (significant_bytes_count > 3 && arrDisplayRX[1] == 0x01 && arrDisplayRX[2] == DISPLAY_SCALE_DIMENSION) {
+                        displayResponse = DISPLAY_SCALE_DIMENSION;
+                        channelID = arrDisplayRX[0];
+                        value_bytes_count = data_length - 3;
+                        uint8_t input[10] = {0};
+                        memcpy(input, (void *)&arrDisplayRX[3], value_bytes_count); 
+                        binary32 = getCodeByUnitString((const char *)input);
+                      			
                     }
                     /* Scale Max */
                     else if (significant_bytes_count > 3 && arrDisplayRX[1] == 0x01 && arrDisplayRX[2] == DISPLAY_SCALE_MAX) {
@@ -473,14 +481,41 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 						      cmd.command = DISPLAY_POSITION;
                   cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                   cmd.binary32 = 0x0000; 
-                if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS)
-									{ 	
+                if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
                   } else{ 
                   } 
-                break;
+									osDelay(5);
+								if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
+                  } else{ 
+                  }	
+									
+									osDelay(5);
+									if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
+                  } else{ 
+                  }
+								//	osDelay(2);
+								// if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
+                 // } else{ 
+                 // }
+									//osDelay(2);
+									//if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
+                 // } else{ 
+                 // }
+									break;
               /* *************************************** */   
             case DISPLAY_SCALE_DIMENSION: 
-                 disableThisFunctionForSetting = 1;
+                 disableThisFunctionForSetting = 1;						
+                 cmd.command = DISPLAY_SCALE_DIMENSION;
+                 cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
+                 cmd.binary32 = binary32;
+                if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS)
+									{	
+                  } else{ 
+                  }
+									//osDelay(2);
+									//if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
+                  //} else{ 
+                  //}
                 break;
                /* *************************************** */  
             case DISPLAY_SCALE_MAX: 
@@ -492,6 +527,10 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 									{	
                   } else{ 
                   }
+								//	osDelay(2);
+								//if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
+                //  } else{ 
+                 // }
                 break;
               /* *************************************** */   
             case DISPLAY_THRESHOLD_WARNING:
@@ -501,7 +540,11 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                  cmd.binary32 = binary32;
                 if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else { 
-                    }	
+                    }
+								//		osDelay(2);
+								//if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
+               //   } else{ 
+                //  }
                 break;
                 /* *************************************** */  
             case DISPLAY_THRESHOLD_ALARM: 
@@ -511,7 +554,11 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                 cmd.binary32 = binary32;
                if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else {
-                    }	
+                    }
+							// osDelay(2);			
+							// if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
+               //   } else{ 
+               //   }		
                 break;
                 /* *************************************** */ 
             case DISPLAY_THRESHOLD_ADDITIONAL:
@@ -522,6 +569,10 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                  if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else {
                     }
+							//	osDelay(2);		
+							//	if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
+              //    } else{ 
+              //    }
                 break;
                /* *************************************** */  
             case DISPLAY_SUBSTANCE_CODE: 
@@ -536,21 +587,33 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 						     if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else {  
                     }
+									osDelay(5);
+								 if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
+                  } else{ 
+                  }	
                 break;
                 /* *************************************** */ 
             case DISPLAY_CALIBRATION_POINT_1:    /* for Calibration, Калибровка "Точка 1" */
-                disableThisFunctionForSetting = 1;
+                 disableThisFunctionForSetting = 1;
+						     cmd.command = DISPLAY_CALIBRATION_POINT_1;
+                 cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
+                 cmd.binary32 = binary32;
+						     if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
+                    } else {  
+                    }
+								 osDelay(5);
+								 if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
+                  } else{ 
+                  }	
+
                 break;    
         }
-    } 
-      
+    }     
     // Очистка буферов и сброс флагов
-  
         channelID = 0x00;
         *displayresponse = 0x00;    
         *packet_ready = 0x00;
-        memset(arrDisplayRX, 0, ARRAY_RX_SIZE);
-   
+        memset(arrDisplayRX, 0, ARRAY_RX_SIZE);  
 }
 			
 			
