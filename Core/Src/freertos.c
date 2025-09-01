@@ -299,7 +299,7 @@ void HoldingHandlerFunction(void const * argument)
 	
 	
 	static uint8_t HoldingPollsDone = 0;  // —чЄтчик выполненных опросов Holding-регистров
-  
+  osDelay(10000);
 	osDelay(timeStep/2);
 	/* Infinite loop */
   for(;;)
@@ -579,7 +579,7 @@ void DisplayTaskFunction(void const * argument)
 	   HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready);	
     }
 		
-		osDelay(50);
+		osDelay(20);
   }
   /* USER CODE END DisplayTaskFunction */
 }
