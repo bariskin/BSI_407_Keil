@@ -481,12 +481,12 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 						     osDelay(10);
 						   /* *************************************** */
 						     //EMPTY VALUE для пропихиванаия записи в  регистры modbus
-						      cmd.command = DISPLAY_POSITION;
-                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
-                  cmd.binary32 = 0x0000; 
-                if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
-                  } else{ 
-                  } 
+						      //cmd.command = DISPLAY_POSITION;
+                  //cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
+                  //cmd.binary32 = 0x0000; 
+                //if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
+                //  } else{ 
+                 // } 
 								//	osDelay(5);
 								//if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
                 //  } else{ 
