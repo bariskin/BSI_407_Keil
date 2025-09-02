@@ -29,28 +29,30 @@ extern "C" {
 /* ------------------------ Defines  HOLDING REGISTERS ------------------------------------*/
 #define HOLDING_OFFSET                  (uint16_t)40000
 
-#define DEVICE_MODEL_CODE                      (uint16_t)(40401 - 40000) //DEVICE_MODEL_CODE
-#define DEVICE_MODEL_CODE_2                    (uint16_t)(40402 - 40000) //DEVICE_MODEL_CODE
-#define SENSOR_SCALE_MAX_HIGH                  (uint16_t)(41003 - 40000)	//Sensor Scale Max High
-#define SENSOR_SCALE_MAX_LOW                   (uint16_t)(41004 - 40000)	//Sensor Scale Max Low
-#define SENSOR_SCALE_DIMENSTION                (uint16_t)(41005 - 40000)	//Sensor Scale Dimension
+#define DEVICE_MODEL_CODE                      (uint16_t)(40401 - HOLDING_OFFSET) //DEVICE_MODEL_CODE
+#define DEVICE_MODEL_CODE_2                    (uint16_t)(40402 - HOLDING_OFFSET) //DEVICE_MODEL_CODE
+#define SENSOR_SCALE_MAX_HIGH                  (uint16_t)(41003 - HOLDING_OFFSET)	//Sensor Scale Max High
+#define SENSOR_SCALE_MAX_LOW                   (uint16_t)(41004 - HOLDING_OFFSET)	//Sensor Scale Max Low
+#define SENSOR_SCALE_DIMENSTION                (uint16_t)(41005 - HOLDING_OFFSET)	//Sensor Scale Dimension
 
-#define SENSOR_THRESHOLD_WARNIGN_HIGN          (uint16_t)(41011 - 40000)  //Sensor Threshold Warning High
-#define SENSOR_THRESHOLD_WARNIGN_LOW           (uint16_t)(41012 - 40000)  //Sensor Threshold Warning LOW
-#define SENSOR_THRESHOLD_ALARM_HIGH            (uint16_t)(41013 - 40000)  //Sensor Threshold ALARM LOW
-#define SENSOR_THRESHOLD_ALARM_LOW             (uint16_t)(41014 - 40000)  //Sensor Threshold ALARM LOW
-#define SENSOR_THRESHOLD_ADDITIONAL_HIGH       (uint16_t)(41015 - 40000)  //Sensor Threshold ADDITIONAL LOW
-#define SENSOR_THRESHOLD_ADDITIONAL_LOW        (uint16_t)(41016 - 40000)  //Sensor Threshold ADDITIONAL LOW
+#define SENSOR_THRESHOLD_WARNIGN_HIGN          (uint16_t)(41011 - HOLDING_OFFSET)  //Sensor Threshold Warning High
+#define SENSOR_THRESHOLD_WARNIGN_LOW           (uint16_t)(41012 - HOLDING_OFFSET)  //Sensor Threshold Warning LOW
+#define SENSOR_THRESHOLD_ALARM_HIGH            (uint16_t)(41013 - HOLDING_OFFSET)  //Sensor Threshold ALARM LOW
+#define SENSOR_THRESHOLD_ALARM_LOW             (uint16_t)(41014 - HOLDING_OFFSET)  //Sensor Threshold ALARM LOW
+#define SENSOR_THRESHOLD_ADDITIONAL_HIGH       (uint16_t)(41015 - HOLDING_OFFSET)  //Sensor Threshold ADDITIONAL LOW
+#define SENSOR_THRESHOLD_ADDITIONAL_LOW        (uint16_t)(41016 - HOLDING_OFFSET)  //Sensor Threshold ADDITIONAL LOW
 
-#define CALIBRATION_PRIMATY_ZERO               (uint16_t)(41021 - 40000)  //Calibration Primary Zero 
-#define CALIBRATION_PRIMATY_ZERO_STATUS        (uint16_t)(41022 - 40000)  //Calibration Primary Zero Status
-#define CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH   (uint16_t)(41023 - 40000)  //Calibration Primary Zero Signal High
-#define CALIBRATION_PRIMATY_ZERO_SIGNAL_LOW    (uint16_t)(41024 - 40000)  //Calibration Primary Zero Signal Low
 
-#define CALIBRATION_PRIMATY_SPAN               (uint16_t)(41026 - 40000)  //Calibration Primary Span 
-#define CALIBRATION_PRIMATY_SPAN_STATUS        (uint16_t)(41027 - 40000)  //Calibration Primary Span Status
-#define CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH   (uint16_t)(41028 - 40000)  //Calibration Primary Span Signal High
-#define CALIBRATION_PRIMATY_SPAN_SIGNAL_LOW    (uint16_t)(41029 - 40000)  //Calibration Primary Span Signal Low
+#define CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH   (uint16_t)(41019 - HOLDING_OFFSET)  //Calibration Primary Zero Signal High
+#define CALIBRATION_PRIMATY_ZERO_SIGNAL_LOW    (uint16_t)(41020 - HOLDING_OFFSET)  //Calibration Primary Zero Signal Low
+#define CALIBRATION_PRIMATY_ZERO               (uint16_t)(41021 - HOLDING_OFFSET)  //Calibration Primary Zero 
+#define CALIBRATION_PRIMATY_ZERO_STATUS        (uint16_t)(41022 - HOLDING_OFFSET)  //Calibration Primary Zero Status
+
+
+#define CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH   (uint16_t)(41024 - HOLDING_OFFSET)  //Calibration Primary Span Signal High
+#define CALIBRATION_PRIMATY_SPAN_SIGNAL_LOW    (uint16_t)(41025 - HOLDING_OFFSET)  //Calibration Primary Span Signal Low
+#define CALIBRATION_PRIMATY_SPAN               (uint16_t)(41026 - HOLDING_OFFSET)  //Calibration Primary Span 
+#define CALIBRATION_PRIMATY_SPAN_STATUS        (uint16_t)(41027 - HOLDING_OFFSET)  //Calibration Primary Span Status
 
 
 #define SENSOR_SUBSTANCE_CODE_1                (uint16_t)(41031 - 40000)  //SENSOR_SUBSTANCE_CODE 
@@ -102,15 +104,18 @@ extern "C" {
 #define SENSOR_SUBSTANCE_CODE_15_INTERN          (uint16_t)(26) 
 #define SENSOR_SUBSTANCE_CODE_16_INTERN          (uint16_t)(27) 
 
-#define CALIBRATION_PRIMATY_ZERO_INTERN               (uint16_t)(28)  
-#define CALIBRATION_PRIMATY_ZERO_STATUS_INTERN        (uint16_t)(29)  
-#define CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH_INTERN   (uint16_t)(30)  
-#define CALIBRATION_PRIMATY_ZERO_SIGNAL_LOW_INTERN    (uint16_t)(31)  
 
-#define CALIBRATION_PRIMATY_SPAN_INTERN               (uint16_t)(32)  
-#define CALIBRATION_PRIMATY_SPAN_STATUS_INTERN        (uint16_t)(33)  
-#define CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH_INTERN   (uint16_t)(34)  
-#define CALIBRATION_PRIMATY_SPAN_SIGNAL_LOW_INTERN    (uint16_t)(35)  
+
+#define CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH_INTERN   (uint16_t)(28)  
+#define CALIBRATION_PRIMATY_ZERO_SIGNAL_LOW_INTERN    (uint16_t)(29) 
+#define CALIBRATION_PRIMATY_ZERO_INTERN               (uint16_t)(30)  
+#define CALIBRATION_PRIMATY_ZERO_STATUS_INTERN        (uint16_t)(31)  
+ 
+#define CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH_INTERN   (uint16_t)(32)  
+#define CALIBRATION_PRIMATY_SPAN_SIGNAL_LOW_INTERN    (uint16_t)(33)  
+#define CALIBRATION_PRIMATY_SPAN_INTERN               (uint16_t)(34)  
+#define CALIBRATION_PRIMATY_SPAN_STATUS_INTERN        (uint16_t)(35)  
+
 
 
 

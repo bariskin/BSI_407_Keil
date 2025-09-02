@@ -313,7 +313,7 @@ void HoldingHandlerFunction(void const * argument)
 			     /* *********************************  Handling HOLDING registers *************************** */
 				    if(SelectRunFlag == 0)
 				     { // вычитывается модель прибора   
-					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, (DEVICE_MODEL_CODE - 1),2, 200 );
+					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, DEVICE_MODEL_CODE - 1,2, 200 );
 							 //wait_for_modbus_response(200);
 							 SelectRunFlag = 1;
 				     }
@@ -376,23 +376,23 @@ void HoldingHandlerFunction(void const * argument)
 				  	    {
 								 /*  отправка  запроса на считывания значение текущей концентрации */
 								  /* !!!!! на период настройки параметроы с дисплея  отключается запрос концентрации !!!!! */ 
-									 if(!disableThisFunctionForSetting){ 
+									// if(!disableThisFunctionForSetting){ 
 					           eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
 									
-									   //wait_for_modbus_response(200);
-									 }
+									
+									// }
 					       SelectRunFlag = 7;
 					      } 		
 				      /* ********************************* set next slave addr *************************** */	
 				   else if (SelectRunFlag == 7)
 				        {
-									if(!disableThisFunctionForSetting){ 
+									//if(!disableThisFunctionForSetting){ 
 						    	   /* значение концентрации текущее */
 					           readCurrentSensorValue(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
 									
 					            /* выбираем только адреса активных приборов */
 				            setNextActiveDeviceAddr_(&ModBusSlaveCurrentDeviceAddr,SensorInfo.count);	       // set next active sdevice addr
-									} 
+									//} 
 										SelectRunFlag = 8;
 				       }									 
 			   //}
@@ -579,7 +579,7 @@ void DisplayTaskFunction(void const * argument)
 	   HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready);	
     }
 		
-		osDelay(20);
+		osDelay(40);
   }
   /* USER CODE END DisplayTaskFunction */
 }
