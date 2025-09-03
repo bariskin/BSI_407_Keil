@@ -56,7 +56,8 @@ extern   uint32_t binary32;
  
  DisplayCommand_t cmd;
  extern  QueueHandle_t displayCommandQueue;
- extern  volatile uint8_t disableThisFunctionForSetting;
+ extern  volatile uint8_t CmdIsReady;
+ extern volatile uint8_t PauseTaskCounter;
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  
@@ -301,16 +302,13 @@ void GetDisplayCmd(uint8_t inputByte) {
                     /* for Calibration Point 1 */
                     else if (significant_bytes_count > 3 && arrDisplayRX[1] == 0x10 && arrDisplayRX[2] == DISPLAY_CALIBRATION_POINT_1) {
                            
-											      displayResponse = DISPLAY_CALIBRATION_POINT_1;
-                          // channelID = arrDisplayRX[0];
-                        
-                          // Извлекаем значение калиб
-                     
-                          // value_bytes_count = significant_bytes_count - 3;
-                          // uint8_t input[10] = {0};
-                          // memcpy(input, (void *)&arrDisplayRX[3], value_bytes_count);
-                          // sscanf((const char *)input, "%f", &updateCalibrationValue);
-                          // memcpy(&binary32, &updateCalibrationValue, sizeof(float));
+											    displayResponse = DISPLAY_CALIBRATION_POINT_1;
+                          channelID = arrDisplayRX[0];
+                          value_bytes_count = significant_bytes_count - 3;
+                          uint8_t input[10] = {0};
+                          memcpy(input, (void *)&arrDisplayRX[3], value_bytes_count);
+                          sscanf((const char *)input, "%f", &updateCalibrationValue);
+                          memcpy(&binary32, &updateCalibrationValue, sizeof(float));
                         
                     }
 										/* Position */
@@ -475,39 +473,15 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
         // Команды, которые требуют channelID
         switch (*displayresponse) {
             case DISPLAY_POSITION:
-							   disableThisFunctionForSetting = 1;
-						     osDelay(10);
-	               eMBDisable( );		
-						     osDelay(10);
-						   /* *************************************** */
-						     //EMPTY VALUE для пропихиванаия записи в  регистры modbus
-						      //cmd.command = DISPLAY_POSITION;
-                  //cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
-                  //cmd.binary32 = 0x0000; 
-                //if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
-                //  } else{ 
-                 // } 
-								//	osDelay(5);
-								//if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
-                //  } else{ 
-                //  }	
-									
-								//	osDelay(5);
-								//	if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
-                //  } else{ 
-                //  }
-								//	osDelay(2);
-								// if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
-                 // } else{ 
-                 // }
-									//osDelay(2);
-									//if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
-                 // } else{ 
-                 // }
-									break;
+							   //CmdIsReady = 1;
+						     //PauseTaskCounter = 0;
+						 
+								 break;
               /* *************************************** */   
-            case DISPLAY_SCALE_DIMENSION: 
-                 disableThisFunctionForSetting = 1;						
+            case DISPLAY_SCALE_DIMENSION:
+                 CmdIsReady = 1;
+						     PauseTaskCounter = 0;
+						
                  cmd.command = DISPLAY_SCALE_DIMENSION;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
@@ -515,14 +489,9 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 									{	
                   } else{ 
                   }
-									//osDelay(2);
-									//if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
-                  //} else{ 
-                  //}
                 break;
                /* *************************************** */  
-            case DISPLAY_SCALE_MAX: 
-                 disableThisFunctionForSetting = 1;							
+            case DISPLAY_SCALE_MAX: 				
                  cmd.command = DISPLAY_SCALE_MAX;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
@@ -530,52 +499,33 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 									{	
                   } else{ 
                   }
-								//	osDelay(2);
-								//if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
-                //  } else{ 
-                 // }
                 break;
               /* *************************************** */   
             case DISPLAY_THRESHOLD_WARNING:
-							   disableThisFunctionForSetting = 1;
                  cmd.command = DISPLAY_THRESHOLD_WARNING;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
                 if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else { 
                     }
-								//		osDelay(2);
-								//if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
-               //   } else{ 
-                //  }
                 break;
                 /* *************************************** */  
             case DISPLAY_THRESHOLD_ALARM: 
-							  disableThisFunctionForSetting = 1;
                 cmd.command = DISPLAY_THRESHOLD_ALARM;
                 cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                 cmd.binary32 = binary32;
                if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else {
                     }
-							// osDelay(2);			
-							// if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
-               //   } else{ 
-               //   }		
                 break;
                 /* *************************************** */ 
             case DISPLAY_THRESHOLD_ADDITIONAL:
-							   disableThisFunctionForSetting = 1;
                  cmd.command = DISPLAY_THRESHOLD_ADDITIONAL;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
                  if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else {
                     }
-							//	osDelay(2);		
-							//	if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
-              //    } else{ 
-              //    }
                 break;
                /* *************************************** */  
             case DISPLAY_SUBSTANCE_CODE: 
@@ -584,43 +534,36 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                /* *************************************** */  
             case DISPLAY_CALIBRATION_PRIMARY_ZERO: /* for Calibration Primary Zero */
 							
-						     osDelay(10);
-	               eMBDisable( );		
-						     osDelay(10);
+						     //osDelay(10);
+	               //eMBDisable( );		
+						     //osDelay(10);
 						
-						
-                 disableThisFunctionForSetting = 1;
+						     CmdIsReady = 1;
+						     PauseTaskCounter = 0;
+						     
                  cmd.command = DISPLAY_CALIBRATION_PRIMARY_ZERO;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = 0x0000;
 						     if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else {  
                     }
-								//	osDelay(5);
-								// if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
-                //  } else{ 
-                //  }	
                 break;
                 /* *************************************** */ 
             case DISPLAY_CALIBRATION_POINT_1:    /* for Calibration, Калибровка "Точка 1" */
 							
-						     osDelay(10);
-	               eMBDisable( );		
-						     osDelay(10);
+						    // osDelay(10);
+	              // eMBDisable( );		
+						     //osDelay(10);
 						
-						
-                 disableThisFunctionForSetting = 1;
+                 CmdIsReady = 1;
+						     PauseTaskCounter = 0;
+						    
 						     cmd.command = DISPLAY_CALIBRATION_POINT_1;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
 						     if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else {  
                     }
-								// osDelay(5);
-								// if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS){ 	
-                //  } else{ 
-                //  }	
-
                 break;    
         }
     }     

@@ -77,7 +77,8 @@ uint8_t SelectRunFlag1 = 0;
 // Глобальная очередь для команд
 QueueHandle_t displayCommandQueue = NULL;
 
-volatile uint8_t disableThisFunctionForSetting = 0;
+volatile uint8_t CmdIsReady = 0;
+volatile uint8_t PauseTaskCounter = 0;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -299,7 +300,7 @@ void HoldingHandlerFunction(void const * argument)
 	
 	
 	static uint8_t HoldingPollsDone = 0;  // Счётчик выполненных опросов Holding-регистров
-  osDelay(10000);
+  //osDelay(10000);
 	osDelay(timeStep/2);
 	/* Infinite loop */
   for(;;)
@@ -320,7 +321,7 @@ void HoldingHandlerFunction(void const * argument)
 				    else if(SelectRunFlag == 1)
 				     { // вычитываются значения дипазона  всей шкалы и единицы измерения
 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SCALE_MAX_HIGH - 1 ,3, 200 );
-					     wait_for_modbus_response(200);
+					     //wait_for_modbus_response(200);
 							 SelectRunFlag = 2;
 				     }				 
 				    else if (SelectRunFlag == 2)
@@ -339,7 +340,7 @@ void HoldingHandlerFunction(void const * argument)
 				     else if (SelectRunFlag == 4)
 					    {
 					     eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
-               wait_for_modbus_response(200);					    
+               //wait_for_modbus_response(200);					    
 							 SelectRunFlag = 5;
 					    } 	
 				    /* ********************************* set next slave addr *************************** */	
@@ -376,50 +377,43 @@ void HoldingHandlerFunction(void const * argument)
 				  	    {
 								 /*  отправка  запроса на считывания значение текущей концентрации */
 								  /* !!!!! на период настройки параметроы с дисплея  отключается запрос концентрации !!!!! */ 
-									// if(!disableThisFunctionForSetting){ 
+									 if(!CmdIsReady){ 
 					           eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
-									
-									
-									// }
+									 }
 					       SelectRunFlag = 7;
 					      } 		
 				      /* ********************************* set next slave addr *************************** */	
 				   else if (SelectRunFlag == 7)
 				        {
-									//if(!disableThisFunctionForSetting){ 
+									if(!CmdIsReady){ 
 						    	   /* значение концентрации текущее */
 					           readCurrentSensorValue(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
 									
 					            /* выбираем только адреса активных приборов */
 				            setNextActiveDeviceAddr_(&ModBusSlaveCurrentDeviceAddr,SensorInfo.count);	       // set next active sdevice addr
-									//} 
+									} 
 										SelectRunFlag = 8;
 				       }									 
 			   //}
 		else if (SelectRunFlag == 8)		 
 		{		 /* *************** ОБРАБОТКА КОМАНД ОТ ДИСПЛЕЯ *************** */
     // Проверяем, есть ли команды от дисплея в очереди
-    
+    if ( PauseTaskCounter == 200)
+		 {
     if(xQueueReceive(displayCommandQueue, &displayCmd, 0) == pdTRUE)
     {  	
-				   if(displayCmd.command ==DISPLAY_POSITION){	 
-				      registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
-              registersTX[1] = displayCmd.binary32 & 0xFFFF;	
-						  eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
-				                                            2000 - 1, 
-				                                            2, 
-				                                            (USHORT *)&registersTX[0], 
-				                                            200); 
-					 } 
+				   //if(displayCmd.command ==DISPLAY_POSITION){	 
+				                                          
+					 //} 
 	 
-			   else  if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){	 
+			    if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){	 
 				      registersTX[0] = displayCmd.binary32 & 0xFFFF;
               //registersTX[1] = displayCmd.binary32 & 0xFFFF;		 
 						  eMBMasterReqWriteMultipleHoldingRegister(  displayCmd.deviceAddr, 
 						                                             SENSOR_SCALE_DIMENSTION - 1, 
 						                                             1, 
 						                                             (USHORT *)&registersTX[0], 
-						                                             200); 
+						                                             500); 
 					 }
 			
 				/* ******************  DISPLAY_SCALE_MAX *************************** */	
@@ -430,7 +424,7 @@ void HoldingHandlerFunction(void const * argument)
 				                                            SENSOR_SCALE_MAX_HIGH - 1, 
 				                                            2, 
 				                                            (USHORT *)&registersTX[0], 
-				                                            200);       
+				                                            500);       
 		    }
 				/* ******************  DISPLAY_CALIBRATION_PRIMARY_ZERO ********************** */	  
 				else	if(displayCmd.command == DISPLAY_CALIBRATION_PRIMARY_ZERO){
@@ -440,11 +434,11 @@ void HoldingHandlerFunction(void const * argument)
 					                                             CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH - 1, 
 					                                             2, 
 					                                             (USHORT *)&registersTX[0], 
-					                                             200);	  
-          osDelay(10);
-				 	eMBEnable( );
-				  osDelay(10); 
-					
+					                                             500);	  
+         // osDelay(10);
+				 	//eMBEnable( );
+				  //osDelay(10); 
+					CmdIsReady = 0;
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
 	  else   if(displayCmd.command ==DISPLAY_CALIBRATION_POINT_1){	
@@ -454,10 +448,11 @@ void HoldingHandlerFunction(void const * argument)
 			                                               CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH - 1, 
 			                                               2, 
 			                                               (USHORT *)&registersTX[0], 
-			                                               200);
-          osDelay(10);
-				 	eMBEnable( );
-				  osDelay(10); 
+			                                               500);
+          //osDelay(10);
+				 	//eMBEnable( );
+				  //osDelay(10); 
+			   CmdIsReady = 0;
 		    }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
 			 else	 if(displayCmd.command == DISPLAY_THRESHOLD_WARNING){
@@ -467,7 +462,7 @@ void HoldingHandlerFunction(void const * argument)
 				                                              SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 
 				                                              2, 
 				                                              (USHORT *)&registersTX[0], 
-				                                              200);
+				                                              500);
 	      }
           /* ******************  DISPLAY_THRESHOLD_ALARM ************************ */	  
        else if(displayCmd.command == DISPLAY_THRESHOLD_ALARM){
@@ -477,7 +472,7 @@ void HoldingHandlerFunction(void const * argument)
 				                                             SENSOR_THRESHOLD_ALARM_HIGH - 1, 
 				                                             2, 
 				                                             (USHORT *)&registersTX[0], 
-			                                               200);	   
+			                                               500);	   
         }
 				/* ******************  DISPLAY_THRESHOLD_ADDITIONAL ************************ */	 
 			 else	if(displayCmd.command == DISPLAY_THRESHOLD_ADDITIONAL){
@@ -487,17 +482,29 @@ void HoldingHandlerFunction(void const * argument)
 				                                             SENSOR_THRESHOLD_ADDITIONAL_HIGH - 1, 
 				                                             2, 
 				                                             (USHORT *)&registersTX[0], 
-				                                             200); 
-				  osDelay(5);
-				 	eMBEnable( );
-				  osDelay(5); 
+				                                             500); 
+				
+			
+				 CmdIsReady = 0;
+				 
         }
-    }	
+      }	
+		
+  	}
 	  SelectRunFlag = 6;	 			
 	 }	
 			//Освобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }
+		 
+		 
+		 
+		 	if(CmdIsReady && PauseTaskCounter < 200)
+			 {   
+    	  	PauseTaskCounter++;
+			 }
+		 
+		 
 	 /* ************* osDelay()****************** */
 		  if(HoldingPollsDone == 3) 
 		   {
@@ -509,6 +516,7 @@ void HoldingHandlerFunction(void const * argument)
 		   osDelay(TIME_DEFAULT_1 + 10);       // для первых трех опросов всех датчкиков
 		   }
 		/* *************************************** */
+					 		 
   }
   /* USER CODE END HoldingHandlerFunction */
 }
@@ -579,7 +587,7 @@ void DisplayTaskFunction(void const * argument)
 	   HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready);	
     }
 		
-		osDelay(40);
+		osDelay(200);
   }
   /* USER CODE END DisplayTaskFunction */
 }
