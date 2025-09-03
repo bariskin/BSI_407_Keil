@@ -78,7 +78,9 @@ uint8_t SelectRunFlag1 = 0;
 QueueHandle_t displayCommandQueue = NULL;
 
 volatile uint8_t CmdIsReady = 0;
+volatile uint8_t CmdWriteIsReady = 0;
 volatile uint8_t PauseTaskCounter = 0;
+volatile uint8_t PauseAfterTaskCounter = 100;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -297,11 +299,9 @@ DisplayCommand_t displayCmd;
 void HoldingHandlerFunction(void const * argument)
 {
   /* USER CODE BEGIN HoldingHandlerFunction */
-	
-	
+		
 	static uint8_t HoldingPollsDone = 0;  // Счётчик выполненных опросов Holding-регистров
-  //osDelay(10000);
-	osDelay(timeStep/2);
+  osDelay(10000);
 	/* Infinite loop */
   for(;;)
   {	// Пытаемся захватить мьютекс (ждём 50 мс)
@@ -315,32 +315,32 @@ void HoldingHandlerFunction(void const * argument)
 				    if(SelectRunFlag == 0)
 				     { // вычитывается модель прибора   
 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, DEVICE_MODEL_CODE - 1,2, 200 );
-							 //wait_for_modbus_response(200);
+					
 							 SelectRunFlag = 1;
 				     }
 				    else if(SelectRunFlag == 1)
 				     { // вычитываются значения дипазона  всей шкалы и единицы измерения
 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SCALE_MAX_HIGH - 1 ,3, 200 );
-					     //wait_for_modbus_response(200);
+					     
 							 SelectRunFlag = 2;
 				     }				 
 				    else if (SelectRunFlag == 2)
 					   { //вычитываются пороги 1, 2 и 3
  					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 6, 200 );
-	            //wait_for_modbus_response(200);
+	           
 					    SelectRunFlag = 3;
 					   }
 				    else if (SelectRunFlag == 3)
 					    { //вычитывается тип газа
 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SUBSTANCE_CODE_1 - 1, 16, 200 );
-					    // wait_for_modbus_response(200);
+					    
 							 SelectRunFlag = 4;	
 					    } 	 
 			      /* ********************************* Handling INPUT registers *************************** */
 				     else if (SelectRunFlag == 4)
 					    {
 					     eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
-               //wait_for_modbus_response(200);					    
+               				    
 							 SelectRunFlag = 5;
 					    } 	
 				    /* ********************************* set next slave addr *************************** */	
@@ -377,7 +377,7 @@ void HoldingHandlerFunction(void const * argument)
 				  	    {
 								 /*  отправка  запроса на считывания значение текущей концентрации */
 								  /* !!!!! на период настройки параметроы с дисплея  отключается запрос концентрации !!!!! */ 
-									 if(!CmdIsReady){ 
+									 if(!CmdIsReady && CmdWriteIsReady == 0){ 
 					           eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
 									 }
 					       SelectRunFlag = 7;
@@ -385,7 +385,7 @@ void HoldingHandlerFunction(void const * argument)
 				      /* ********************************* set next slave addr *************************** */	
 				   else if (SelectRunFlag == 7)
 				        {
-									if(!CmdIsReady){ 
+									 if(!CmdIsReady && CmdWriteIsReady == 0){ 
 						    	   /* значение концентрации текущее */
 					           readCurrentSensorValue(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
 									
@@ -402,10 +402,8 @@ void HoldingHandlerFunction(void const * argument)
 		 {
     if(xQueueReceive(displayCommandQueue, &displayCmd, 0) == pdTRUE)
     {  	
-				   //if(displayCmd.command ==DISPLAY_POSITION){	 
-				                                          
-					 //} 
-	 
+				  
+				                                         
 			    if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){	 
 				      registersTX[0] = displayCmd.binary32 & 0xFFFF;
               //registersTX[1] = displayCmd.binary32 & 0xFFFF;		 
@@ -413,7 +411,7 @@ void HoldingHandlerFunction(void const * argument)
 						                                             SENSOR_SCALE_DIMENSTION - 1, 
 						                                             1, 
 						                                             (USHORT *)&registersTX[0], 
-						                                             500); 
+						                                             200); 
 					 }
 			
 				/* ******************  DISPLAY_SCALE_MAX *************************** */	
@@ -424,21 +422,20 @@ void HoldingHandlerFunction(void const * argument)
 				                                            SENSOR_SCALE_MAX_HIGH - 1, 
 				                                            2, 
 				                                            (USHORT *)&registersTX[0], 
-				                                            500);       
+				                                            200);       
 		    }
 				/* ******************  DISPLAY_CALIBRATION_PRIMARY_ZERO ********************** */	  
 				else	if(displayCmd.command == DISPLAY_CALIBRATION_PRIMARY_ZERO){
-              registersTX[0] = 0x0000;
-              registersTX[1] = 0x0000;
+              registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
+              registersTX[1] = displayCmd.binary32 & 0xFFFF;	
               eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
 					                                             CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH - 1, 
 					                                             2, 
 					                                             (USHORT *)&registersTX[0], 
-					                                             500);	  
-         // osDelay(10);
-				 	//eMBEnable( );
-				  //osDelay(10); 
+					                                             200);	  
+        
 					CmdIsReady = 0;
+				  CmdWriteIsReady = 100;
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
 	  else   if(displayCmd.command ==DISPLAY_CALIBRATION_POINT_1){	
@@ -448,11 +445,11 @@ void HoldingHandlerFunction(void const * argument)
 			                                               CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH - 1, 
 			                                               2, 
 			                                               (USHORT *)&registersTX[0], 
-			                                               500);
-          //osDelay(10);
-				 	//eMBEnable( );
-				  //osDelay(10); 
-			   CmdIsReady = 0;
+			                                               200);
+          
+			      CmdIsReady = 0;
+			      CmdWriteIsReady = 100;
+			      
 		    }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
 			 else	 if(displayCmd.command == DISPLAY_THRESHOLD_WARNING){
@@ -462,7 +459,7 @@ void HoldingHandlerFunction(void const * argument)
 				                                              SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 
 				                                              2, 
 				                                              (USHORT *)&registersTX[0], 
-				                                              500);
+				                                              200);
 	      }
           /* ******************  DISPLAY_THRESHOLD_ALARM ************************ */	  
        else if(displayCmd.command == DISPLAY_THRESHOLD_ALARM){
@@ -472,7 +469,7 @@ void HoldingHandlerFunction(void const * argument)
 				                                             SENSOR_THRESHOLD_ALARM_HIGH - 1, 
 				                                             2, 
 				                                             (USHORT *)&registersTX[0], 
-			                                               500);	   
+			                                               200);	   
         }
 				/* ******************  DISPLAY_THRESHOLD_ADDITIONAL ************************ */	 
 			 else	if(displayCmd.command == DISPLAY_THRESHOLD_ADDITIONAL){
@@ -482,11 +479,10 @@ void HoldingHandlerFunction(void const * argument)
 				                                             SENSOR_THRESHOLD_ADDITIONAL_HIGH - 1, 
 				                                             2, 
 				                                             (USHORT *)&registersTX[0], 
-				                                             500); 
+				                                             200); 
 				
-			
 				 CmdIsReady = 0;
-				 
+				 CmdWriteIsReady = 100;
         }
       }	
 		
@@ -497,13 +493,14 @@ void HoldingHandlerFunction(void const * argument)
        osMutexRelease(myMutex01Handle);
 		 }
 		 
-		 
-		 
 		 	if(CmdIsReady && PauseTaskCounter < 200)
 			 {   
     	  	PauseTaskCounter++;
 			 }
-		 
+		  if(CmdWriteIsReady > 1)
+			  {
+					 CmdWriteIsReady--;
+			  }
 		 
 	 /* ************* osDelay()****************** */
 		  if(HoldingPollsDone == 3) 
