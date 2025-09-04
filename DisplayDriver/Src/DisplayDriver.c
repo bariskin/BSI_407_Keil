@@ -57,7 +57,6 @@ extern   uint32_t binary32;
  DisplayCommand_t cmd;
  extern  QueueHandle_t displayCommandQueue;
  extern  volatile uint8_t CmdIsReady;
- extern volatile uint8_t PauseTaskCounter;
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  
@@ -477,7 +476,7 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
               /* *************************************** */   
             case DISPLAY_SCALE_DIMENSION:
                  CmdIsReady = 1;
-						     PauseTaskCounter = 0;
+				
 						
                  cmd.command = DISPLAY_SCALE_DIMENSION;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
@@ -531,7 +530,7 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                /* *************************************** */  
             case DISPLAY_CALIBRATION_PRIMARY_ZERO: /* for Calibration Primary Zero */
 						     CmdIsReady = 1;
-						     PauseTaskCounter = 0;
+					
 						     
                  cmd.command = DISPLAY_CALIBRATION_PRIMARY_ZERO;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
@@ -543,7 +542,7 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                 /* *************************************** */ 
             case DISPLAY_CALIBRATION_POINT_1:    /* for Calibration, Калибровка "Точка 1" */
                  CmdIsReady = 1;
-						     PauseTaskCounter = 0;
+			
 						    
 						     cmd.command = DISPLAY_CALIBRATION_POINT_1;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];

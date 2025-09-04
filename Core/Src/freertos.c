@@ -80,7 +80,7 @@ QueueHandle_t displayCommandQueue = NULL;
 volatile uint8_t CmdIsReady = 0;
 volatile uint8_t CmdWriteIsReady = 0;
 volatile uint8_t PauseTaskCounter = 0;
-volatile uint8_t PauseAfterTaskCounter = 100;
+//volatile uint8_t PauseAfterTaskCounter = 100;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -296,6 +296,7 @@ void MasterModbusTaskFunction(void const * argument)
 */
 /* USER CODE END Header_HoldingHandlerFunction */
 DisplayCommand_t displayCmd;
+
 void HoldingHandlerFunction(void const * argument)
 {
   /* USER CODE BEGIN HoldingHandlerFunction */
@@ -377,7 +378,7 @@ void HoldingHandlerFunction(void const * argument)
 				  	    {
 								 /*  отправка  запроса на считывания значение текущей концентрации */
 								  /* !!!!! на период настройки параметроы с дисплея  отключается запрос концентрации !!!!! */ 
-									 if(!CmdIsReady && CmdWriteIsReady == 0){ 
+									 if(!CmdIsReady){ 
 					           eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
 									 }
 					       SelectRunFlag = 7;
@@ -385,7 +386,7 @@ void HoldingHandlerFunction(void const * argument)
 				      /* ********************************* set next slave addr *************************** */	
 				   else if (SelectRunFlag == 7)
 				        {
-									 if(!CmdIsReady && CmdWriteIsReady == 0){ 
+									 if(!CmdIsReady){ 
 						    	   /* значение концентрации текущее */
 					           readCurrentSensorValue(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
 									
@@ -397,9 +398,10 @@ void HoldingHandlerFunction(void const * argument)
 			   //}
 		else if (SelectRunFlag == 8)		 
 		{		 /* *************** ОБРАБОТКА КОМАНД ОТ ДИСПЛЕЯ *************** */
-    // Проверяем, есть ли команды от дисплея в очереди
-    if ( PauseTaskCounter == 200)
-		 {
+    // Проверяем, есть ли команды от дисплея в очеред
+	 if(CmdIsReady && PauseTaskCounter)
+	 { 
+
     if(xQueueReceive(displayCommandQueue, &displayCmd, 0) == pdTRUE)
     {  	
 				  
@@ -434,8 +436,8 @@ void HoldingHandlerFunction(void const * argument)
 					                                             (USHORT *)&registersTX[0], 
 					                                             200);	  
         
-					CmdIsReady = 0;
-				  CmdWriteIsReady = 100;
+					 
+				   CmdWriteIsReady = 1;
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
 	  else   if(displayCmd.command ==DISPLAY_CALIBRATION_POINT_1){	
@@ -447,8 +449,8 @@ void HoldingHandlerFunction(void const * argument)
 			                                               (USHORT *)&registersTX[0], 
 			                                               200);
           
-			      CmdIsReady = 0;
-			      CmdWriteIsReady = 100;
+			      
+			      CmdWriteIsReady = 1;
 			      
 		    }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
@@ -481,32 +483,36 @@ void HoldingHandlerFunction(void const * argument)
 				                                             (USHORT *)&registersTX[0], 
 				                                             200); 
 				
-				 CmdIsReady = 0;
-				 CmdWriteIsReady = 100;
+				
+				 CmdWriteIsReady = 1;
         }
       }	
-		
-  	}
+		}
 	  SelectRunFlag = 6;	 			
 	 }	
 			//Освобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }
-		 
-		 	if(CmdIsReady && PauseTaskCounter < 200)
-			 {   
-    	  	PauseTaskCounter++;
-			 }
-		  if(CmdWriteIsReady > 1)
-			  {
-					 CmdWriteIsReady--;
-			  }
-		 
+		  
 	 /* ************* osDelay()****************** */
-		  if(HoldingPollsDone == 3) 
+		  
+		  if(CmdIsReady)
+			{	 
+			  osDelay(300);
+				PauseTaskCounter = 1;
+				if(CmdWriteIsReady)
+				   {
+						  PauseTaskCounter = 0;
+						  CmdIsReady = 0;
+						  CmdWriteIsReady = 0;
+					 }
+			}
+		 
+		  else if(HoldingPollsDone == 3) 
 		   {
 				 // для постоянного опроса, делим timestep на два, так как попадаем в кейс отправки команды каждый второй раз 
-        osDelay((timeStep + 10)/2);   //для соответствия реальному и вводимомоу. 
+        //osDelay((timeStep + 10)/2);   //для соответствия реальному и вводимомоу. 
+				 osDelay(150); // фиксированное время 150 ms для постоянного опроса
 		   } 
 		  else
 		   {
@@ -584,7 +590,8 @@ void DisplayTaskFunction(void const * argument)
 	   HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready);	
     }
 		
-		osDelay(200);
+		//osDelay(100); // 3 минуты  после нажатия кнопки пауза 3 сек (+/- 0,5)
+    osDelay(20);  // 500 ms
   }
   /* USER CODE END DisplayTaskFunction */
 }
