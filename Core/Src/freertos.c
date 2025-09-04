@@ -396,8 +396,11 @@ void HoldingHandlerFunction(void const * argument)
 										SelectRunFlag = 8;
 				       }									 
 			   //}
-		else if (SelectRunFlag == 8)		 
-		{		 /* *************** ОБРАБОТКА КОМАНД ОТ ДИСПЛЕЯ *************** */
+		else if (SelectRunFlag == 8)	
+		{		
+      uint8_t shouldChangeFlag = 1;	
+
+			/* *************** ОБРАБОТКА КОМАНД ОТ ДИСПЛЕЯ *************** */
     // Проверяем, есть ли команды от дисплея в очеред
 	 if(CmdIsReady && PauseTaskCounter)
 	 { 
@@ -414,6 +417,7 @@ void HoldingHandlerFunction(void const * argument)
 						                                             1, 
 						                                             (USHORT *)&registersTX[0], 
 						                                             200); 
+						  shouldChangeFlag = 0;
 					 }
 			
 				/* ******************  DISPLAY_SCALE_MAX *************************** */	
@@ -424,7 +428,8 @@ void HoldingHandlerFunction(void const * argument)
 				                                            SENSOR_SCALE_MAX_HIGH - 1, 
 				                                            2, 
 				                                            (USHORT *)&registersTX[0], 
-				                                            200);       
+				                                            200);   
+				  shouldChangeFlag = 0;
 		    }
 				/* ******************  DISPLAY_CALIBRATION_PRIMARY_ZERO ********************** */	  
 				else	if(displayCmd.command == DISPLAY_CALIBRATION_PRIMARY_ZERO){
@@ -435,8 +440,9 @@ void HoldingHandlerFunction(void const * argument)
 					                                             2, 
 					                                             (USHORT *)&registersTX[0], 
 					                                             200);	  
-        
-					 
+           shouldChangeFlag = 0;
+					 SelectRunFlag = 7;
+					
 				   CmdWriteIsReady = 1;
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
@@ -448,8 +454,9 @@ void HoldingHandlerFunction(void const * argument)
 			                                               2, 
 			                                               (USHORT *)&registersTX[0], 
 			                                               200);
-          
-			      
+            shouldChangeFlag = 0;
+			      SelectRunFlag = 7;
+			
 			      CmdWriteIsReady = 1;
 			      
 		    }  
@@ -462,6 +469,11 @@ void HoldingHandlerFunction(void const * argument)
 				                                              2, 
 				                                              (USHORT *)&registersTX[0], 
 				                                              200);
+				      
+				     shouldChangeFlag = 0;
+			       SelectRunFlag = 7;
+				 
+				     shouldChangeFlag = 0;
 	      }
           /* ******************  DISPLAY_THRESHOLD_ALARM ************************ */	  
        else if(displayCmd.command == DISPLAY_THRESHOLD_ALARM){
@@ -472,6 +484,10 @@ void HoldingHandlerFunction(void const * argument)
 				                                             2, 
 				                                             (USHORT *)&registersTX[0], 
 			                                               200);	   
+				     shouldChangeFlag = 0;
+			       SelectRunFlag = 7;
+				 
+				     shouldChangeFlag = 0;
         }
 				/* ******************  DISPLAY_THRESHOLD_ADDITIONAL ************************ */	 
 			 else	if(displayCmd.command == DISPLAY_THRESHOLD_ADDITIONAL){
@@ -482,13 +498,17 @@ void HoldingHandlerFunction(void const * argument)
 				                                             2, 
 				                                             (USHORT *)&registersTX[0], 
 				                                             200); 
-				
-				
-				 CmdWriteIsReady = 1;
+				   shouldChangeFlag = 0;
+				   SelectRunFlag = 7;
+				 
+				   CmdWriteIsReady = 1;
         }
       }	
 		}
-	  SelectRunFlag = 6;	 			
+	   if(shouldChangeFlag)
+		   {	    
+		    SelectRunFlag = 6;
+	    }		 
 	 }	
 			//Освобождаем мьютекс
        osMutexRelease(myMutex01Handle);
@@ -498,7 +518,7 @@ void HoldingHandlerFunction(void const * argument)
 		  
 		  if(CmdIsReady)
 			{	 
-			  osDelay(300);
+			  osDelay(400);
 				PauseTaskCounter = 1;
 				if(CmdWriteIsReady)
 				   {
