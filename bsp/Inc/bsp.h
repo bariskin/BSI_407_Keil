@@ -27,7 +27,7 @@ extern "C" {
   */
  /* ------------------------Defines ----------------------------------*/
   
-	#define TIME_DEFAULT_1       120
+	#define TIME_DEFAULT_1       150
 	#define TIME_STEP_MIN_2      160
   #define TIME_STEP_DEFAULT_2  40
 	

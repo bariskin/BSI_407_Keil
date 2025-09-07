@@ -380,8 +380,9 @@ void HoldingHandlerFunction(void const * argument)
 								  /* !!!!! на период настройки параметроы с дисплея  отключается запрос концентрации !!!!! */ 
 									 if(!CmdIsReady){ 
 					           eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
+									
 									 }
-					       SelectRunFlag = 7;
+					        SelectRunFlag = 7;
 					      } 		
 				      /* ********************************* set next slave addr *************************** */	
 				   else if (SelectRunFlag == 7)
@@ -417,6 +418,8 @@ void HoldingHandlerFunction(void const * argument)
 						                                             1, 
 						                                             (USHORT *)&registersTX[0], 
 						                                             200); 
+						
+						  SelectRunFlag = 7;
 						  shouldChangeFlag = 0;
 					 }
 			
@@ -428,8 +431,11 @@ void HoldingHandlerFunction(void const * argument)
 				                                            SENSOR_SCALE_MAX_HIGH - 1, 
 				                                            2, 
 				                                            (USHORT *)&registersTX[0], 
-				                                            200);   
-				  shouldChangeFlag = 0;
+				                                            200);  
+
+				   SelectRunFlag = 7;
+				   shouldChangeFlag = 0;
+				 
 		    }
 				/* ******************  DISPLAY_CALIBRATION_PRIMARY_ZERO ********************** */	  
 				else	if(displayCmd.command == DISPLAY_CALIBRATION_PRIMARY_ZERO){
@@ -473,7 +479,6 @@ void HoldingHandlerFunction(void const * argument)
 				     shouldChangeFlag = 0;
 			       SelectRunFlag = 7;
 				 
-				     shouldChangeFlag = 0;
 	      }
           /* ******************  DISPLAY_THRESHOLD_ALARM ************************ */	  
        else if(displayCmd.command == DISPLAY_THRESHOLD_ALARM){
@@ -486,8 +491,7 @@ void HoldingHandlerFunction(void const * argument)
 			                                               200);	   
 				     shouldChangeFlag = 0;
 			       SelectRunFlag = 7;
-				 
-				     shouldChangeFlag = 0;
+
         }
 				/* ******************  DISPLAY_THRESHOLD_ADDITIONAL ************************ */	 
 			 else	if(displayCmd.command == DISPLAY_THRESHOLD_ADDITIONAL){
@@ -518,7 +522,7 @@ void HoldingHandlerFunction(void const * argument)
 		  
 		  if(CmdIsReady)
 			{	 
-			  osDelay(400);
+			  osDelay(473);
 				PauseTaskCounter = 1;
 				if(CmdWriteIsReady)
 				   {
@@ -532,11 +536,11 @@ void HoldingHandlerFunction(void const * argument)
 		   {
 				 // для постоянного опроса, делим timestep на два, так как попадаем в кейс отправки команды каждый второй раз 
         //osDelay((timeStep + 10)/2);   //для соответствия реальному и вводимомоу. 
-				 osDelay(150); // фиксированное время 150 ms для постоянного опроса
+				 osDelay(74); // фиксированное время 73 ms для постоянного опроса
 		   } 
 		  else
 		   {
-		   osDelay(TIME_DEFAULT_1 + 10);       // для первых трех опросов всех датчкиков
+		   osDelay(TIME_DEFAULT_1);       // для первых трех опросов всех датчкиков
 		   }
 		/* *************************************** */
 					 		 

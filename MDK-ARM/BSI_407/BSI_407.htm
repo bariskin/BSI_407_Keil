@@ -3,7 +3,7 @@
 <title>Static Call Graph - [BSI_407\BSI_407.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image BSI_407\BSI_407.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Sep 04 13:24:12 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Sep 05 19:10:04 2025
 <BR><P>
 <H3>Maximum Stack Usage =        548 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1451,7 +1451,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[105]"></a>GetDisplayCmd</STRONG> (Thumb, 650 bytes, Stack size 32 bytes, displaydriver.o(i.GetDisplayCmd))
+<P><STRONG><a name="[105]"></a>GetDisplayCmd</STRONG> (Thumb, 660 bytes, Stack size 32 bytes, displaydriver.o(i.GetDisplayCmd))
 <BR><BR>[Stack]<UL><LI>Max Depth = 540<LI>Call Chain = GetDisplayCmd &rArr; __0sscanf &rArr; __vfscanf_char &rArr; __vfscanf &rArr; _scanf_real &rArr; _scanf_really_real &rArr; _fp_value &rArr; _btod_etento &rArr; _btod_emul &rArr; _e2e
 </UL>
 <BR>[Calls]<UL><LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
@@ -1828,8 +1828,8 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
 </UL>
 
-<P><STRONG><a name="[106]"></a>HandleDisplayCommands</STRONG> (Thumb, 294 bytes, Stack size 48 bytes, displaydriver.o(i.HandleDisplayCommands))
-<BR><BR>[Stack]<UL><LI>Max Depth = 344 + Unknown Stack Size
+<P><STRONG><a name="[106]"></a>HandleDisplayCommands</STRONG> (Thumb, 278 bytes, Stack size 40 bytes, displaydriver.o(i.HandleDisplayCommands))
+<BR><BR>[Stack]<UL><LI>Max Depth = 336 + Unknown Stack Size
 <LI>Call Chain = HandleDisplayCommands &rArr; InitNextionDisplayWithDeviceData &rArr; SendNextionCommand &rArr; vsnprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
@@ -1851,7 +1851,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
-<P><STRONG><a name="[88]"></a>HoldingHandlerFunction</STRONG> (Thumb, 594 bytes, Stack size 8 bytes, freertos.o(i.HoldingHandlerFunction))
+<P><STRONG><a name="[88]"></a>HoldingHandlerFunction</STRONG> (Thumb, 600 bytes, Stack size 8 bytes, freertos.o(i.HoldingHandlerFunction))
 <BR><BR>[Stack]<UL><LI>Max Depth = 184 + Unknown Stack Size
 <LI>Call Chain = HoldingHandlerFunction &rArr; readCurrentSensorState &rArr; __2snprintf &rArr; _printf_char_common &rArr; __printf
 </UL>

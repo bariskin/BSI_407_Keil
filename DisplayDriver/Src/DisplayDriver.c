@@ -50,6 +50,7 @@ extern   uint32_t binary32;
  float   updateThresholdWarning    = 0.00;
  float   updateThresholdAlarm      = 0.00;
  float   updateThresholdAdditional = 0.00;
+ float   updateCalibrationZeroValue  = 0.00;
  float   updateCalibrationValue    = 0.00;
  float   updateScaleMax            = 0.00;
  uint8_t  dimensionCode            = 0x00;
@@ -296,7 +297,11 @@ void GetDisplayCmd(uint8_t inputByte) {
                     /* for Calibration Primary Zero */
                     else if (significant_bytes_count > 3 && arrDisplayRX[1] == 0x10 && arrDisplayRX[2] == DISPLAY_CALIBRATION_PRIMARY_ZERO) {
                         displayResponse = DISPLAY_CALIBRATION_PRIMARY_ZERO;
+											 /*1. channel ID: arrDisplayRX[0]*/	
                         channelID = arrDisplayRX[0];
+											  updateCalibrationZeroValue  = 0.00;
+											  memcpy(&binary32, &updateCalibrationZeroValue, sizeof(float));
+											
                     }
                     /* for Calibration Point 1 */
                     else if (significant_bytes_count > 3 && arrDisplayRX[1] == 0x10 && arrDisplayRX[2] == DISPLAY_CALIBRATION_POINT_1) {
@@ -341,7 +346,7 @@ void GetDisplayCmd(uint8_t inputByte) {
                       sscanf((const char *)input, "%f", &updateScaleMax);
                       memcpy(&binary32, &updateScaleMax, sizeof(float));       
                     }
-                    		/*         */		
+                    /*DISPLAY_THRESHOLD_WARNING         */		
 							    else if (significant_bytes_count > 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_WARNING )
 									  {
 										 displayResponse = DISPLAY_THRESHOLD_WARNING; 				
@@ -353,6 +358,7 @@ void GetDisplayCmd(uint8_t inputByte) {
 										 sscanf((const char *)input, "%f", &updateThresholdWarning);
 										 memcpy(&binary32, &updateThresholdWarning, sizeof(float));
 								  	}
+										 /* DISPLAY_THRESHOLD_ALARM */
                    else if (significant_bytes_count > 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_ALARM )
 									  {
 										 displayResponse = DISPLAY_THRESHOLD_ALARM; 		
@@ -364,6 +370,7 @@ void GetDisplayCmd(uint8_t inputByte) {
 										 sscanf((const char *)input, "%f", &updateThresholdAlarm);											
 									   memcpy(&binary32, &updateThresholdAlarm, sizeof(float));  
                     } 
+											 /* DISPLAY_THRESHOLD_ADDITIONAL	` */
 									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_ADDITIONAL )
 									{
 										 displayResponse = DISPLAY_THRESHOLD_ADDITIONAL ; 		
@@ -475,7 +482,7 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 								 break;
               /* *************************************** */   
             case DISPLAY_SCALE_DIMENSION:
-                 CmdIsReady = 1;
+                 CmdIsReady = 1;  // начало записи пакета команда
 				
 						
                  cmd.command = DISPLAY_SCALE_DIMENSION;
@@ -529,21 +536,19 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                 break;
                /* *************************************** */  
             case DISPLAY_CALIBRATION_PRIMARY_ZERO: /* for Calibration Primary Zero */
-						     CmdIsReady = 1;
-					
-						     
+						     CmdIsReady = 1; // начало записи одной команды 
+						
                  cmd.command = DISPLAY_CALIBRATION_PRIMARY_ZERO;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
-                 cmd.binary32 = 0x00000000;
+                  cmd.binary32 = binary32;
 						     if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else {  
                     }
                 break;
                 /* *************************************** */ 
             case DISPLAY_CALIBRATION_POINT_1:    /* for Calibration, Калибровка "Точка 1" */
-                 CmdIsReady = 1;
+                 CmdIsReady = 1;      // начало записи одной команды 
 			
-						    
 						     cmd.command = DISPLAY_CALIBRATION_POINT_1;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
