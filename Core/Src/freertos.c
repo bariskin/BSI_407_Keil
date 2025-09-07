@@ -68,12 +68,18 @@ extern float  updateThresholdWarning;
 extern float  updateThresholdAlarm ;
 extern float  updateCalibrationValue;
 
+
+extern  SensorCurrentState_t	writeParams;	 
+extern  SensorCurrentState_t	readParams ;
+
  uint16_t registersTX[4] = {0};
  uint32_t binary32 = 0;
  uint8_t ModbusSensoraddr = 0;
 
 uint8_t SelectRunFlag = 0;
 uint8_t SelectRunFlag1 = 0;
+ 
+uint8_t ControlCycleFlag = 0; 
 // Глобальная очередь для команд
 QueueHandle_t displayCommandQueue = NULL;
 
@@ -210,11 +216,11 @@ void MX_FREERTOS_Init(void) {
   SlaveModbusTaskHandle = osThreadCreate(osThread(SlaveModbusTask), NULL);
 
   /* definition and creation of MasterModbusTas */
-  osThreadStaticDef(MasterModbusTas, MasterModbusTaskFunction, osPriorityNormal, 0, 512, MasterModbusTasBuffer, &MasterModbusTasControlBlock);
+  osThreadStaticDef(MasterModbusTas, MasterModbusTaskFunction, osPriorityAboveNormal, 0, 512, MasterModbusTasBuffer, &MasterModbusTasControlBlock);
   MasterModbusTasHandle = osThreadCreate(osThread(MasterModbusTas), NULL);
 
   /* definition and creation of HoldingHandler */
-  osThreadStaticDef(HoldingHandler, HoldingHandlerFunction, osPriorityNormal, 0, 1024, HoldingHandlerBuffer, &HoldingHandlerControlBlock);
+  osThreadStaticDef(HoldingHandler, HoldingHandlerFunction, osPriorityAboveNormal, 0, 1024, HoldingHandlerBuffer, &HoldingHandlerControlBlock);
   HoldingHandlerHandle = osThreadCreate(osThread(HoldingHandler), NULL);
 
   /* definition and creation of InputHandler */
@@ -274,12 +280,9 @@ void MasterModbusTaskFunction(void const * argument)
   for(;;)
   {
 		// Пытаемся захватить мьютекс (ждём 100 мс)
-     osStatus status = osMutexWait(myMutex01Handle, 100);
+     osStatus status = osMutexWait(myMutex01Handle, 10);
 		 if (status == osOK) {		 
-	   
 		     eMBMasterPoll();
-			   osDelay(1);
-			   eMBMasterPoll();
 			  // Освобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }
@@ -306,8 +309,9 @@ void HoldingHandlerFunction(void const * argument)
 	/* Infinite loop */
   for(;;)
   {	// Пытаемся захватить мьютекс (ждём 50 мс)
-     osStatus status = osMutexWait(myMutex01Handle, 100);
-		 if (status == osOK) {
+     osStatus status = osMutexWait(myMutex01Handle, 10);
+		 if (status == osOK) 
+			  {
 			  
 			   if(HoldingPollsDone  < 3) // опрашиваем первые ТРИ РАЗА все регистры 
 				 {	 
@@ -343,10 +347,28 @@ void HoldingHandlerFunction(void const * argument)
 					     eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
                				    
 							 SelectRunFlag = 5;
+								
+								if( ControlCycleFlag)
+								 {
+									 SelectRunFlag = 5;
+									 
+								 }
 					    } 	
 				    /* ********************************* set next slave addr *************************** */	
 				     else if (SelectRunFlag == 5)
 				      {
+								if(ControlCycleFlag)
+								{
+								  readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf,usMRegHoldBuf);
+								  ControlCycleFlag = 0;
+									HoldingPollsDone = 3;
+									SelectRunFlag = 6;
+									checkParamsValue = false;
+								  checkParamsValue	= compareParams((SensorCurrentState_t *)&writeParams,(SensorCurrentState_t *)&readParams);
+								}
+								
+							else{
+								
 					     readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf,usMRegHoldBuf);
 				       setNextDeviceAddr(&ModBusSlaveCurrentDeviceAddr);	       // set next device addr
                SelectRunFlag = 0;
@@ -369,7 +391,8 @@ void HoldingHandlerFunction(void const * argument)
 								  ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusAddrs[0];  
                   /* вывести окна активных дачтичиков  и перейти на постоянный опрос */
 								 }				
-				       }					
+				       }	
+						 }								
 			     }		  
 			      /* постоянный цикл опроса активных приборов */
 				
@@ -378,15 +401,23 @@ void HoldingHandlerFunction(void const * argument)
 				  	    {
 								 /*  отправка  запроса на считывания значение текущей концентрации */
 								  /* !!!!! на период настройки параметроы с дисплея  отключается запрос концентрации !!!!! */ 
-									 if(!CmdIsReady){ 
+									
+                   SelectRunFlag = 7;
+									
+									if(!CmdIsReady){ 
 					           eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
 									
 									 }
-					        SelectRunFlag = 7;
+									else {
+									   SelectRunFlag = 8;
+									}
+					       
 					      } 		
 				      /* ********************************* set next slave addr *************************** */	
 				   else if (SelectRunFlag == 7)
 				        {
+									 SelectRunFlag = 8;
+									
 									 if(!CmdIsReady){ 
 						    	   /* значение концентрации текущее */
 					           readCurrentSensorValue(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
@@ -394,118 +425,195 @@ void HoldingHandlerFunction(void const * argument)
 					            /* выбираем только адреса активных приборов */
 				            setNextActiveDeviceAddr_(&ModBusSlaveCurrentDeviceAddr,SensorInfo.count);	       // set next active sdevice addr
 									} 
-										SelectRunFlag = 8;
+                  		    	
 				       }									 
-			   //}
 		else if (SelectRunFlag == 8)	
 		{		
-      uint8_t shouldChangeFlag = 1;	
+      uint8_t shouldChangeFlag = 1;	 // для обычного цикла, когда команды не прилетают
 
 			/* *************** ОБРАБОТКА КОМАНД ОТ ДИСПЛЕЯ *************** */
-    // Проверяем, есть ли команды от дисплея в очеред
-	 if(CmdIsReady && PauseTaskCounter)
+    // Проверяем, есть ли команды от дисплея в очереди
+	 if(CmdIsReady)
 	 { 
 
     if(xQueueReceive(displayCommandQueue, &displayCmd, 0) == pdTRUE)
-    {  	
-				  
-				                                         
+    {  	                                       
 			    if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){	 
-				      registersTX[0] = displayCmd.binary32 & 0xFFFF;
-              //registersTX[1] = displayCmd.binary32 & 0xFFFF;		 
-						  eMBMasterReqWriteMultipleHoldingRegister(  displayCmd.deviceAddr, 
+						
+						 registersTX[0] = displayCmd.binary32 & 0xFFFF;
+              //registersTX[1] = displayCmd.binary32 & 0xFFFF;
+						
+					   osMutexRelease(myMutex01Handle);
+             osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+             osMutexWait(myMutex01Handle, 10);
+				    		 
+						 eMBMasterReqWriteMultipleHoldingRegister(  displayCmd.deviceAddr, 
 						                                             SENSOR_SCALE_DIMENSTION - 1, 
 						                                             1, 
 						                                             (USHORT *)&registersTX[0], 
-						                                             200); 
+						                                             300); 
+											
+						osMutexRelease(myMutex01Handle);
+            osDelay(TIME_DELAY_PACKET);
+            osMutexWait(myMutex01Handle, 10);
 						
-						  SelectRunFlag = 7;
-						  shouldChangeFlag = 0;
+						shouldChangeFlag = 0;
+				    SelectRunFlag = 8;
 					 }
 			
 				/* ******************  DISPLAY_SCALE_MAX *************************** */	
-			 else		if(displayCmd.command ==DISPLAY_SCALE_MAX){					 
-					 registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
-           registersTX[1] = displayCmd.binary32 & 0xFFFF;	
+			 else		if(displayCmd.command ==DISPLAY_SCALE_MAX){		
+				 
+				   registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
+           registersTX[1] = displayCmd.binary32 & 0xFFFF;
+ 
+           osMutexRelease(myMutex01Handle);
+           osDelay(TIME_DELAY_PACKET);
+           osMutexWait(myMutex01Handle, 10);
+					 	
            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
 				                                            SENSOR_SCALE_MAX_HIGH - 1, 
 				                                            2, 
 				                                            (USHORT *)&registersTX[0], 
-				                                            200);  
+				                                            300); 
 
-				   SelectRunFlag = 7;
+           osMutexRelease(myMutex01Handle);
+           osDelay(TIME_DELAY_PACKET);
+           osMutexWait(myMutex01Handle, 10);
+
 				   shouldChangeFlag = 0;
-				 
+				   SelectRunFlag = 8; 
 		    }
 				/* ******************  DISPLAY_CALIBRATION_PRIMARY_ZERO ********************** */	  
 				else	if(displayCmd.command == DISPLAY_CALIBRATION_PRIMARY_ZERO){
-              registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
-              registersTX[1] = displayCmd.binary32 & 0xFFFF;	
-              eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
+					   
+					registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
+          registersTX[1] = displayCmd.binary32 & 0xFFFF;
+					
+					osMutexRelease(myMutex01Handle);
+          osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+          osMutexWait(myMutex01Handle, 10);
+					
+          eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
 					                                             CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH - 1, 
 					                                             2, 
 					                                             (USHORT *)&registersTX[0], 
-					                                             200);	  
-           shouldChangeFlag = 0;
-					 SelectRunFlag = 7;
-					
-				   CmdWriteIsReady = 1;
+					                                             300);	 
+
+          osMutexRelease(myMutex01Handle);
+          osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+          osMutexWait(myMutex01Handle, 10);
+
+			    shouldChangeFlag = 0;
+			    SelectRunFlag = 8;
+			    CmdWriteIsReady = 1;
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
 	  else   if(displayCmd.command ==DISPLAY_CALIBRATION_POINT_1){	
-				    registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
+			      registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;
+			
+			      osMutexRelease(myMutex01Handle);
+            osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+            osMutexWait(myMutex01Handle, 10);
+			
+				    
             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
 			                                               CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH - 1, 
 			                                               2, 
 			                                               (USHORT *)&registersTX[0], 
-			                                               200);
-            shouldChangeFlag = 0;
-			      SelectRunFlag = 7;
+			                                               300);
 			
-			      CmdWriteIsReady = 1;
-			      
+			
+            osMutexRelease(myMutex01Handle);
+            osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+            osMutexWait(myMutex01Handle, 10);
+
+			      shouldChangeFlag = 0;
+			      SelectRunFlag = 8;
+			      CmdWriteIsReady = 1;   
 		    }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
 			 else	 if(displayCmd.command == DISPLAY_THRESHOLD_WARNING){
+				 
              registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
              registersTX[1] = displayCmd.binary32 & 0xFFFF;
+				 
+				 
+				     osMutexRelease(myMutex01Handle);
+             osDelay(TIME_DELAY_PACKET);
+             osMutexWait(myMutex01Handle, 10);
+				 
+
              eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
 				                                              SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 
 				                                              2, 
 				                                              (USHORT *)&registersTX[0], 
-				                                              200);
-				      
-				     shouldChangeFlag = 0;
-			       SelectRunFlag = 7;
+				                                              300);
 				 
+				 
+				     osMutexRelease(myMutex01Handle);
+             osDelay(TIME_DELAY_PACKET);
+             osMutexWait(myMutex01Handle, 10);
+				   
+             shouldChangeFlag = 0;
+				     SelectRunFlag = 8;
 	      }
           /* ******************  DISPLAY_THRESHOLD_ALARM ************************ */	  
        else if(displayCmd.command == DISPLAY_THRESHOLD_ALARM){
+				 
+				    osMutexRelease(myMutex01Handle);
+             osDelay(TIME_DELAY_PACKET);
+            osMutexWait(myMutex01Handle, 10);
+				 
             registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;	
+				 
+				 
             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,
 				                                             SENSOR_THRESHOLD_ALARM_HIGH - 1, 
 				                                             2, 
 				                                             (USHORT *)&registersTX[0], 
-			                                               200);	   
-				     shouldChangeFlag = 0;
-			       SelectRunFlag = 7;
+			                                               300);	
 
+            osMutexRelease(myMutex01Handle);
+            osDelay(TIME_DELAY_PACKET);
+            osMutexWait(myMutex01Handle, 10);
+
+				 
+				    shouldChangeFlag = 0;
+				    SelectRunFlag = 8;
         }
 				/* ******************  DISPLAY_THRESHOLD_ADDITIONAL ************************ */	 
 			 else	if(displayCmd.command == DISPLAY_THRESHOLD_ADDITIONAL){
 				    registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;	
+				 
+				    osMutexRelease(myMutex01Handle);
+            osDelay(TIME_DELAY_PACKET);
+            osMutexWait(myMutex01Handle, 10);
+				 
+				 
             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,
 				                                             SENSOR_THRESHOLD_ADDITIONAL_HIGH - 1, 
 				                                             2, 
 				                                             (USHORT *)&registersTX[0], 
-				                                             200); 
-				   shouldChangeFlag = 0;
-				   SelectRunFlag = 7;
+				                                             300); 
 				 
-				   CmdWriteIsReady = 1;
+				    osMutexRelease(myMutex01Handle);
+            osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+            osMutexWait(myMutex01Handle, 10);
+				 
+				 
+				    shouldChangeFlag = 0;
+				 
+				   /* Для вычичитки записанных данных  пройти один цикл опроса */
+				    SelectRunFlag = 0;
+						ControlCycleFlag = 1;
+						HoldingPollsDone = 0;
+						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;
+				 	 /* ******************************************************** */
+				    CmdWriteIsReady = 1;
         }
       }	
 		}
@@ -522,25 +630,20 @@ void HoldingHandlerFunction(void const * argument)
 		  
 		  if(CmdIsReady)
 			{	 
-			  osDelay(473);
-				PauseTaskCounter = 1;
-				if(CmdWriteIsReady)
-				   {
-						  PauseTaskCounter = 0;
-						  CmdIsReady = 0;
-						  CmdWriteIsReady = 0;
-					 }
-			}
-		 
+			 if(CmdWriteIsReady)
+				 {
+					CmdIsReady = 0;
+					CmdWriteIsReady = 0;
+					osDelay(1);
+				 }
+			} 
 		  else if(HoldingPollsDone == 3) 
-		   {
-				 // для постоянного опроса, делим timestep на два, так как попадаем в кейс отправки команды каждый второй раз 
-        //osDelay((timeStep + 10)/2);   //для соответствия реальному и вводимомоу. 
-				 osDelay(74); // фиксированное время 73 ms для постоянного опроса
+		   { 
+	  			osDelay(TIME_STEP_DEFAULT_150_MS); 	    // 150 ms 
 		   } 
 		  else
 		   {
-		   osDelay(TIME_DEFAULT_1);       // для первых трех опросов всех датчкиков
+		   osDelay(TIME_DEFAULT_1);            // для первых трех опросов всех датчкиков
 		   }
 		/* *************************************** */
 					 		 
@@ -551,7 +654,7 @@ void HoldingHandlerFunction(void const * argument)
 /* USER CODE BEGIN Header_InputHandlerFunction */
 /**
 * @brief Function implementing the InputHandler thread.
-* @param argument: Not used
+* @param argument: Not used3
 * @retval None
 */
 /* USER CODE END Header_InputHandlerFunction */

@@ -18,6 +18,7 @@ extern "C" {
  #include "user_mb_app_m.h"
  #include "ModBusAddrConverter.h"
  #include "RingBuffer.h"
+ #include "stdbool.h"
   /** @defgroup board_support
   * @{
   */
@@ -27,10 +28,13 @@ extern "C" {
   */
  /* ------------------------Defines ----------------------------------*/
   
-	#define TIME_DEFAULT_1       150
-	#define TIME_STEP_MIN_2      160
-  #define TIME_STEP_DEFAULT_2  40
+	#define TIME_DEFAULT_1               160
+	#define TIME_STEP_MIN_2              160
+  #define TIME_STEP_DEFAULT_150_MS     58
 	
+	#define TIME_DELAY_PACKET            280
+	
+	#define TIME_DELAY_BEFORE_AFTER_CMD  470
 	
 	union ShortsToFloat {
     struct {
@@ -67,6 +71,16 @@ extern "C" {
 			_Bool ErrorState;
 		}SensorState_t;
 		
+			
+  typedef struct
+	  {
+			uint8_t SensorScaleDimensionID;
+			uint32_t SensorScaleMax;
+			uint32_t SensorWarning;            
+			uint32_t SensorAlarm;              
+			uint32_t SensorAlarm2;             
+		}SensorCurrentState_t;
+		
 		
 typedef struct {
     uint8_t count;
@@ -82,6 +96,8 @@ typedef struct {
 			
  /* ------------------------External variables -------------------------*/
 extern  uint8_t NumberSlaveDevices;
+		
+extern bool checkParamsValue ;
 
   /** @addtogroup board_support
   * @{
@@ -101,6 +117,7 @@ extern  uint8_t NumberSlaveDevices;
 		const char* getDeviceModelNameFromShorts(short part1, short part2);
 		RX_Buffer_State Uart_Get_Byte(RING_buffer_t* buf, uint8_t* a);
 		uint8_t getCodeByUnitString(const char* unitStr);
+		bool compareParams(SensorCurrentState_t *writeParams, SensorCurrentState_t *reasParams );
  /**
   * @}
   */

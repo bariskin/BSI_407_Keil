@@ -58,6 +58,9 @@ extern   uint32_t binary32;
  DisplayCommand_t cmd;
  extern  QueueHandle_t displayCommandQueue;
  extern  volatile uint8_t CmdIsReady;
+ 
+extern  SensorCurrentState_t	writeParams ;	 
+extern  SensorCurrentState_t	readParams  ;
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  
@@ -332,6 +335,8 @@ void GetDisplayCmd(uint8_t inputByte) {
                         uint8_t input[10] = {0};
                         memcpy(input, (void *)&arrDisplayRX[3], value_bytes_count); 
                         binary32 = getCodeByUnitString((const char *)input);
+												
+												writeParams.SensorScaleDimensionID = (uint32_t)binary32; 
                       			
                     }
                     /* Scale Max */
@@ -344,7 +349,9 @@ void GetDisplayCmd(uint8_t inputByte) {
                       uint8_t input[10] = {0};
                       memcpy(input, (void *)&arrDisplayRX[3], value_bytes_count);
                       sscanf((const char *)input, "%f", &updateScaleMax);
-                      memcpy(&binary32, &updateScaleMax, sizeof(float));       
+                      memcpy(&binary32, &updateScaleMax, sizeof(float));    
+											writeParams.SensorScaleMax = (uint32_t)updateScaleMax;
+											
                     }
                     /*DISPLAY_THRESHOLD_WARNING         */		
 							    else if (significant_bytes_count > 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_WARNING )
@@ -357,6 +364,7 @@ void GetDisplayCmd(uint8_t inputByte) {
 										 memcpy(input,(void *)&arrDisplayRX[3], value_bytes_count);
 										 sscanf((const char *)input, "%f", &updateThresholdWarning);
 										 memcpy(&binary32, &updateThresholdWarning, sizeof(float));
+										 writeParams.SensorWarning = (uint32_t)updateThresholdWarning;
 								  	}
 										 /* DISPLAY_THRESHOLD_ALARM */
                    else if (significant_bytes_count > 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_ALARM )
@@ -369,6 +377,7 @@ void GetDisplayCmd(uint8_t inputByte) {
 										 memcpy(input,(void *)&arrDisplayRX[3], value_bytes_count);
 										 sscanf((const char *)input, "%f", &updateThresholdAlarm);											
 									   memcpy(&binary32, &updateThresholdAlarm, sizeof(float));  
+										 writeParams.SensorAlarm = (uint32_t)updateThresholdAlarm;
                     } 
 											 /* DISPLAY_THRESHOLD_ADDITIONAL	` */
 									else if (significant_bytes_count >= 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_THRESHOLD_ADDITIONAL )
@@ -381,6 +390,7 @@ void GetDisplayCmd(uint8_t inputByte) {
 										 memcpy(input,(void *)&arrDisplayRX[3], value_bytes_count);
 										 sscanf((const char *)input, "%f", &updateThresholdAdditional);											
 									   memcpy(&binary32, &updateThresholdAdditional, sizeof(float)); 
+										 writeParams.SensorAlarm2 = (uint32_t)updateThresholdAdditional;
 									 }
 									  
 									 else if (significant_bytes_count > 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_SUBSTANCE_CODE )
@@ -482,9 +492,8 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 								 break;
               /* *************************************** */   
             case DISPLAY_SCALE_DIMENSION:
-                 CmdIsReady = 1;  // начало записи пакета команда
+                 CmdIsReady = 1; 
 				
-						
                  cmd.command = DISPLAY_SCALE_DIMENSION;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
@@ -494,7 +503,9 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                   }
                 break;
                /* *************************************** */  
-            case DISPLAY_SCALE_MAX: 				
+            case DISPLAY_SCALE_MAX:
+                // CmdIsReady = 1; 	
+						
                  cmd.command = DISPLAY_SCALE_MAX;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
@@ -505,6 +516,8 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                 break;
               /* *************************************** */   
             case DISPLAY_THRESHOLD_WARNING:
+						     //CmdIsReady = 1; 	
+						
                  cmd.command = DISPLAY_THRESHOLD_WARNING;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
@@ -514,6 +527,8 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                  break;
                 /* *************************************** */  
             case DISPLAY_THRESHOLD_ALARM: 
+							  //CmdIsReady = 1; 
+						
                 cmd.command = DISPLAY_THRESHOLD_ALARM;
                 cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                 cmd.binary32 = binary32;
@@ -523,6 +538,8 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                  break;
                 /* *************************************** */ 
             case DISPLAY_THRESHOLD_ADDITIONAL:
+							   //CmdIsReady = 1; 
+						
                  cmd.command = DISPLAY_THRESHOLD_ADDITIONAL;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;

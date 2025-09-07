@@ -15,7 +15,6 @@
 #include "HoldingRegisterSlaveHandler.h"
 #include "user_mb_app.h"
 #include "cmsis_os.h"
-#include "stdbool.h"
 #include "stdio.h"
 #include "stdlib.h"
 #include <string.h>
@@ -48,7 +47,7 @@ volatile ModBusAddr_t  ModBusAddrDefault =  // default modbus addr
 volatile 	TimeStepReadingSensores_t TimeStepDefault =	
       {
 			    .SetFlag  =  0x00000001, 
-			    .Timestep =  TIME_STEP_DEFAULT_2			
+			    .Timestep =  TIME_STEP_DEFAULT_150_MS			
 			};
 			
 volatile 	TimeStepReadingSensores_t TimeStep =	
@@ -58,6 +57,14 @@ volatile 	TimeStepReadingSensores_t TimeStep =
 			};		
 /* ------------------------Locale variables----------------------------*/
  union ShortsToFloat converter;
+			
+ SensorCurrentState_t	writeParams = {0};	 
+ SensorCurrentState_t	readParams  = {0};	
+
+ bool checkParamsValue = false;
+ extern uint8_t ControlCycleFlag; 
+ 
+ 
 /* ------------------------Functions-----------------------------------*/
 void initSensorStateArray(uint8_t numberdevices)
   {
@@ -115,28 +122,43 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     // Копируем биты в float (аналог reinterpret_cast в C++)
     *(uint32_t*)&result = combined;
     sensor->SensorWarning = result;
-		
+		 
+		 if(ControlCycleFlag){
+	  	readParams.SensorWarning = (uint32_t)result;     // for check
+		 } 
 		// SensorAlarm
     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_HIGH_INTERN - 1] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_LOW_INTERN - 1];
    
     *(uint32_t*)&result = combined;
     sensor->SensorAlarm = result;
+		 
+		 if(ControlCycleFlag){
+		 readParams.SensorAlarm = (uint32_t)result ;       // for check
+		 }
 		// SensorAlarm2
     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_HIGH_INTERN - 1] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_LOW_INTERN - 1];
    
     *(uint32_t*)&result = combined;
     sensor->SensorAlarm2 = result;
-		 
+		 if(ControlCycleFlag){
+		 readParams.SensorAlarm2 = (uint32_t)result;       // for check
+		 }
 		// SensorScaleMax
     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_HIGH_INTERN - 1] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_LOW_INTERN - 1];
     
     *(uint32_t*)&result = combined;
     sensor->SensorScaleMax = result;
-		
+		 
+		 if(ControlCycleFlag){
+		 readParams.SensorScaleMax =  (uint32_t)result;  // for check
+		 }
 		// SensorScaleDimension
     unit = getUnitStringByCode(RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_INTERN - 1]);
     snprintf((char*)sensor->SensorScaleDimension, sizeof(sensor->SensorScaleDimension), "%s",(const char *)unit);
-		
+		 
+		 if(ControlCycleFlag){
+		  readParams.SensorScaleDimensionID = RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_INTERN - 1] ; // for check
+		 }
 		//Concentration 
     sensor->DeviceStatus    = RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN - 1];
     sensor->Concentration_H = RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_HIGH_INTERN - 1];
@@ -465,25 +487,18 @@ void setNextActiveDeviceAddr_(uint8_t *currentAddr, uint8_t countsensores)
 	const char* getUnitStringByCode(uint8_t code) {
     switch (code) {
         case 0x8B: return "ppm";
-        //case 0xA9: return "ppb";
         case 0xAA: return "mg/m3";
         case 0xA1: return "%НКПР";
         case 0x6A: return "% Об.д";
-        //case 0x69: return "% wt. solids";
-        //case 0x5B: return "g/m3";
-        //case 0x5C: return "kg/m3";
+       
         default:   return "unknown";  // Если код не найден
     }
  }
  uint8_t getCodeByUnitString(const char* unitStr) {
     if (strcmp(unitStr, "ppm") == 0) return 0x8B;
-    //if (strcmp(unitStr, "ppb") == 0) return 0xA9;
     if (strcmp(unitStr, "mg/m3") == 0) return 0xAA;
     if (strcmp(unitStr, "%ЅєїА") == 0) return 0xA1;
     if (strcmp(unitStr, "% ѕС.Ф.") == 0) return 0x6A;
-    //if (strcmp(unitStr, "% wt. solids") == 0) return 0x69;
-    //if (strcmp(unitStr, "g/m3") == 0) return 0x5B;
-    //if (strcmp(unitStr, "kg/m3") == 0) return 0x5C;   
     return 0xFF; // Код для неизвестной единицы измерения
  }	
 
@@ -556,4 +571,18 @@ RX_Buffer_State Uart_Get_Byte(RING_buffer_t* buf, uint8_t* a)
     return RX_BUF_EMPTY;
   }
 } 
+
+
+bool compareParams(SensorCurrentState_t *writeParams, SensorCurrentState_t *readParams )
+  {
+  
+    if (writeParams->SensorWarning != readParams->SensorWarning) return false;
+    if (writeParams->SensorAlarm != readParams->SensorAlarm) return false;
+		if (writeParams->SensorAlarm2 != readParams->SensorAlarm2) return false;
+    if (writeParams->SensorScaleMax != readParams->SensorScaleMax) return false;
+		if (writeParams->SensorScaleDimensionID != readParams->SensorScaleDimensionID) return false;
+		
+		
+		 return true;
+  }
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/
