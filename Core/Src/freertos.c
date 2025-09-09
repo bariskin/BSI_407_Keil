@@ -333,8 +333,21 @@ void HoldingHandlerFunction(void const * argument)
 					   { //вычитываются пороги 1, 2 и 3
  					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 6, 200 );
 	           
-					    SelectRunFlag = 3;
+					    SelectRunFlag = 21;
 					   }
+						else if (SelectRunFlag == 21)
+					   { 
+ 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH - 1, 2, 200 );
+	   
+					    SelectRunFlag = 22;
+					   }
+						else if (SelectRunFlag == 22)
+					   { 
+ 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH - 1, 2, 200 );
+	   
+					    SelectRunFlag = 3;
+					   }  
+						 	 
 				    else if (SelectRunFlag == 3)
 					    { //вычитывается тип газа
 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SUBSTANCE_CODE_1 - 1, 16, 200 );
