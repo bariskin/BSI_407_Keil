@@ -86,6 +86,7 @@ void initSensorStateArray(uint8_t numberdevices)
 		 SensorStateArray[i].Concentration        = 0.00;
 		 SensorStateArray[i].NotResponsCounter    = 0;
 		 SensorStateArray[i].ErrorState           = true;
+		 SensorStateArray[i].CalibrationStatus    = 0x00;	
 		}
   }
 /**
@@ -97,6 +98,8 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 {
 	  uint32_t combined;   // Объединённые 32 бита
 	  float result;        // Результат
+	  uint8_t proccesStatus = 0x00;
+	
     // Validate slave address
     if (slaveaddr < 1 || slaveaddr > MB_MASTER_TOTAL_SLAVE_NUM) {
         return; // or handle error appropriately
@@ -107,6 +110,13 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     // Reset buffer values before reading
     sensor->DeviceStatus =  0;
     /* *********************************  Read sensor data ********************************** */
+		
+		  //CalibrationProcesStatus
+		 proccesStatus = (uint16_t)RegHoldingBuff[slave_idx][CALIBRATION_PROCESS_STATUS_INTERN - 1];
+      
+		 if(ControlCycleFlag){
+     sensor->CalibrationStatus = proccesStatus;
+		 }
 		
 			// SensorModelCode
     const char* unit = getDeviceModelNameFromShorts(RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN- 1],RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN_2- 1]);

@@ -69,6 +69,7 @@ extern "C" {
 			float  Concentration;
 		  uint16_t NotResponsCounter;
 			_Bool ErrorState;
+			uint8_t CalibrationStatus;
 		}SensorState_t;
 		
 			

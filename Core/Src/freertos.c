@@ -337,16 +337,16 @@ void HoldingHandlerFunction(void const * argument)
 					   }
 						else if (SelectRunFlag == 21)
 					   { 
- 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH - 1, 2, 200 );
-	   
-					    SelectRunFlag = 22;
-					   }
-						else if (SelectRunFlag == 22)
-					   { 
- 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH - 1, 2, 200 );
+ 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PROCESS_STATUS - 1, 1, 200 );
 	   
 					    SelectRunFlag = 3;
-					   }  
+					   }
+						//else if (SelectRunFlag == 22)
+					  // { 
+ 					   // eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH - 1, 2, 200 );
+	   
+					   // SelectRunFlag = 3;
+					   //}  
 						 	 
 				    else if (SelectRunFlag == 3)
 					    { //вычитывается тип газа
@@ -378,32 +378,35 @@ void HoldingHandlerFunction(void const * argument)
 									SelectRunFlag = 6;
 									checkParamsValue = false;
 								  checkParamsValue	= compareParams((SensorCurrentState_t *)&writeParams,(SensorCurrentState_t *)&readParams);
+								  setErrorStatus(checkParamsValue);
 								}
 								
 							else{
 								
-					     readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf,usMRegHoldBuf);
-				       setNextDeviceAddr(&ModBusSlaveCurrentDeviceAddr);	       // set next device addr
-               SelectRunFlag = 0;
+					         readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf,usMRegHoldBuf);
+				           setNextDeviceAddr(&ModBusSlaveCurrentDeviceAddr);	       // set next device addr
+                   SelectRunFlag = 0;
 								
 			
-					     if(ModBusSlaveCurrentDeviceAddr == NUMBER_SLAVE_DEVICES)
-					     {
-							  HoldingPollsDone++;
-								ModBusSlaveCurrentDeviceAddr = 1; 
-							 }
-		 
-					     if(HoldingPollsDone == 3) // после трех проходов определяем наличие активных приборов
-					       {
+					         if(ModBusSlaveCurrentDeviceAddr == NUMBER_SLAVE_DEVICES)
+					          {
+							       HoldingPollsDone++; // следующий	 круг из трех, при старте девайса
+								     ModBusSlaveCurrentDeviceAddr = 1; 
+											
+										 updateProgressBar(HoldingPollsDone);
+											 
+							      }
+					         if(HoldingPollsDone == 3) // после трех проходов определяем наличие активных приборов
+					          {
+									    SendNextionCommand ("page page%d", 0);
+						          SelectRunFlag = 6;	               // переход на постояный цикл опроса значений концентрации
 									
-						      SelectRunFlag = 6;	               // переход на постояный цикл опроса значений концентрации
-									
-									/* получение информации об активных датчиках их адресах */
-									GetActiveSensors(SensorStateArray, (SensorInfo_t *) &SensorInfo);
-									/* получение modbus адреса  первого активного датчика на линии */
-								  ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusAddrs[0];  
-                  /* вывести окна активных дачтичиков  и перейти на постоянный опрос */
-								 }				
+									   /* получение информации об активных датчиках их адресах */
+									   GetActiveSensors(SensorStateArray, (SensorInfo_t *) &SensorInfo);
+									   /* получение modbus адреса  первого активного датчика на линии */
+								     ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusAddrs[0];  
+                    /* вывести окна активных дачтичиков  и перейти на постоянный опрос */
+								   }				
 				       }	
 						 }								
 			     }		  
@@ -518,8 +521,16 @@ void HoldingHandlerFunction(void const * argument)
           osMutexWait(myMutex01Handle, 10);
 
 			    shouldChangeFlag = 0;
-			    SelectRunFlag = 8;
-			    CmdWriteIsReady = 1;
+			    
+					
+					//SelectRunFlag = 8;
+			      CmdWriteIsReady = 1;
+					
+					 /* Для вычичитки записанных данных  пройти один цикл опроса */
+				    SelectRunFlag = 0;
+						ControlCycleFlag = 1;
+						HoldingPollsDone = 0;
+						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;	
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
 	  else   if(displayCmd.command ==DISPLAY_CALIBRATION_POINT_1){	
@@ -543,8 +554,15 @@ void HoldingHandlerFunction(void const * argument)
             osMutexWait(myMutex01Handle, 10);
 
 			      shouldChangeFlag = 0;
-			      SelectRunFlag = 8;
+			      //SelectRunFlag = 8;
 			      CmdWriteIsReady = 1;   
+						
+						/* Для вычичитки записанных данных  пройти один цикл опроса */
+				    SelectRunFlag = 0;
+						ControlCycleFlag = 1;
+						HoldingPollsDone = 0;
+						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;
+				
 		    }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
 			 else	 if(displayCmd.command == DISPLAY_THRESHOLD_WARNING){
@@ -619,14 +637,14 @@ void HoldingHandlerFunction(void const * argument)
 				 
 				 
 				    shouldChangeFlag = 0;
-				 
+				    CmdWriteIsReady = 1;
 				   /* Для вычичитки записанных данных  пройти один цикл опроса */
 				    SelectRunFlag = 0;
 						ControlCycleFlag = 1;
 						HoldingPollsDone = 0;
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;
 				 	 /* ******************************************************** */
-				    CmdWriteIsReady = 1;
+				    
         }
       }	
 		}

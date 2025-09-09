@@ -89,7 +89,9 @@ typedef struct {
 	 uint8_t getIntFromChar( char * inputString, uint8_t stringSize);
 	 void HandleDisplayCommands(uint8_t * displayresponse, uint8_t *arrDisplayRX, uint8_t *packet_ready);
    void UpdateNextionDisplayWithChannelData(uint8_t channel_num);
-		void GetDisplayCmd(uint8_t inputByte);
+	 void GetDisplayCmd(uint8_t inputByte);
+   void updateProgressBar(int PollIsDone);
+   void setErrorStatus(int errorCode);
 		/**
   * @}
   */

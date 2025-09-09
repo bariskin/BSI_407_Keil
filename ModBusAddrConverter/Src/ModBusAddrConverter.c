@@ -194,7 +194,18 @@ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress)
     MBReg = SENSOR_PRIMARY_STATUS_INTERN; 
     
     break;
+ 
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+  case CALIBRATION_PROCESS_STATUS:
+    
+    MBReg = CALIBRATION_PROCESS_STATUS_INTERN; 
+    
+   break;
+ 
 		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
+ 
+ 
+ 
 	}
    return MBReg;
  }

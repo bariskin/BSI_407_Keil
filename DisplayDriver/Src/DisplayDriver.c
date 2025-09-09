@@ -177,6 +177,8 @@ extern  SensorCurrentState_t	readParams  ;
     for(char* p = por1_str; *p; p++) if(*p == '.') *p = ',';
     for(char* p = por2_str; *p; p++) if(*p == '.') *p = ',';
 	  for(char* p = por3_str; *p; p++) if(*p == '.') *p = ',';
+		
+		 SendNextionCommand("page%d.ch%d.txt=\"Канал %d\"", page, pos, nextChannel); 
 	   SendNextionCommand("page%d.val%d.txt=\"%s\"", page, pos, value_str);
 		 SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].SensorGas);
 	   SendNextionCommand("page%d.ran%d.txt=\"%s\"", page, pos, scale_max_str);
@@ -447,12 +449,12 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
     // Команды, которые не требуют channelID
     switch (*displayresponse) {
         case 0x88: // Первый ответ после старта дисплея (0x88 0xFF 0xFF 0xFF)
-            SendNextionCommand("Init.qDev.txt=\"%d\"", numberOfDevices);
+            //SendNextionCommand("Init.qDev.txt=\"%d\"", numberOfDevices);
             processed_without_channel = 1;
             break;
             
         case 0x10: // Второй ответ после старта дисплея (0x10 0xFF 0xFF 0xFF)
-            InitNextionDisplayWithDeviceData(numberOfDevices);
+            //InitNextionDisplayWithDeviceData(numberOfDevices);
             processed_without_channel = 1;
             break;
             
@@ -580,5 +582,25 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
         *displayresponse = 0x00;    
         *packet_ready = 0x00;
         memset(arrDisplayRX, 0, ARRAY_RX_SIZE);  
-}			
+}		
+
+void updateProgressBar(int PollIsDone) {
+    if (PollIsDone == 1) {
+        SendNextionCommand("j1.val=%d", 33);
+    } else if (PollIsDone == 2) {
+        SendNextionCommand("j1.val=%d", 66);
+    } else if (PollIsDone == 3) {
+        SendNextionCommand("j1.val=%d", 100);
+    }
+}
+
+void setErrorStatus(int errorCode) {
+    if (errorCode == 0) {
+        // Нет ошибки
+        SendNextionCommand("errore.val=0");
+    } else if (errorCode == 1) {
+        // Ошибка
+        SendNextionCommand("errore.val=1");
+    }
+}
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/

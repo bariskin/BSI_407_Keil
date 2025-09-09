@@ -72,6 +72,10 @@ extern "C" {
 #define SENSOR_SUBSTANCE_CODE_15               (uint16_t)(41045 - 40000)  //SENSOR_SUBSTANCE_CODE 
 #define SENSOR_SUBSTANCE_CODE_16               (uint16_t)(41046 - 40000)  //SENSOR_SUBSTANCE_CODE 
 
+#define CALIBRATION_PROCESS_STATUS             (uint16_t)(40922 - 40000)  //CALIBRATION_PROCESS_STATUS 
+
+
+
 /* ------------------------ Intern  for converter addr------------------------------------*/
 
 #define DEVICE_MODEL_CODE_INTERN                 (uint16_t)(1) 
@@ -116,7 +120,7 @@ extern "C" {
 #define CALIBRATION_PRIMATY_SPAN_INTERN               (uint16_t)(34)  
 #define CALIBRATION_PRIMATY_SPAN_STATUS_INTERN        (uint16_t)(35)  
 
-
+#define CALIBRATION_PROCESS_STATUS_INTERN             (uint16_t)(36) 
 
 
 
