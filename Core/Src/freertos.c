@@ -333,21 +333,9 @@ void HoldingHandlerFunction(void const * argument)
 					   { //вычитываются пороги 1, 2 и 3
  					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 6, 200 );
 	           
-					    SelectRunFlag = 21;
-					   }
-						else if (SelectRunFlag == 21)
-					   { 
- 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PROCESS_STATUS - 1, 1, 200 );
-	   
 					    SelectRunFlag = 3;
 					   }
-						//else if (SelectRunFlag == 22)
-					  // { 
- 					   // eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH - 1, 2, 200 );
-	   
-					   // SelectRunFlag = 3;
-					   //}  
-						 	 
+						 
 				    else if (SelectRunFlag == 3)
 					    { //вычитывается тип газа
 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SUBSTANCE_CODE_1 - 1, 16, 200 );
@@ -407,9 +395,28 @@ void HoldingHandlerFunction(void const * argument)
 								     ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusAddrs[0];  
                     /* вывести окна активных дачтичиков  и перейти на постоянный опрос */
 								   }				
-				       }	
+				        }	
 						 }								
-			     }		  
+			     }	
+
+           else if (SelectRunFlag == 21)
+					   { 
+ 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PROCESS_STATUS - 1, 1, 200 );
+	          	
+							 osMutexRelease(myMutex01Handle);
+               osDelay(400);
+               osMutexWait(myMutex01Handle, 10);
+					    SelectRunFlag = 22;
+					   }
+					else if (SelectRunFlag == 22)
+					   {  
+							checkParamsValue = false; 
+							readCurrentCalibrationState (ModBusSlaveCurrentDeviceAddr,usMRegHoldBuf);
+							checkParamsValue = getCalibrationProcessState (ModBusSlaveCurrentDeviceAddr);	
+							setErrorStatus(!checkParamsValue);
+					    SelectRunFlag = 6;
+					   }	 
+						 
 			      /* постоянный цикл опроса активных приборов */
 				
 			        /* ********************************* Handling INPUT registers *************************** */
@@ -511,7 +518,7 @@ void HoldingHandlerFunction(void const * argument)
           osMutexWait(myMutex01Handle, 10);
 					
           eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
-					                                             CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH - 1, 
+					                                             CALIBRATION_PRIMARY_ZERO_VALUE_HIGH - 1, 
 					                                             2, 
 					                                             (USHORT *)&registersTX[0], 
 					                                             300);	 
@@ -523,13 +530,11 @@ void HoldingHandlerFunction(void const * argument)
 			    shouldChangeFlag = 0;
 			    
 					
-					//SelectRunFlag = 8;
+				
 			      CmdWriteIsReady = 1;
 					
-					 /* Для вычичитки записанных данных  пройти один цикл опроса */
-				    SelectRunFlag = 0;
-						ControlCycleFlag = 1;
-						HoldingPollsDone = 0;
+					 /* пройти один цикл опроса состояния калибровки  */
+				    SelectRunFlag = 21;
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;	
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
@@ -543,7 +548,7 @@ void HoldingHandlerFunction(void const * argument)
 			
 				    
             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
-			                                               CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH - 1, 
+			                                               CALIBRATION_PRIMARY_SPAN_VALUE_HIGH - 1, 
 			                                               2, 
 			                                               (USHORT *)&registersTX[0], 
 			                                               300);
@@ -554,15 +559,11 @@ void HoldingHandlerFunction(void const * argument)
             osMutexWait(myMutex01Handle, 10);
 
 			      shouldChangeFlag = 0;
-			      //SelectRunFlag = 8;
 			      CmdWriteIsReady = 1;   
 						
-						/* Для вычичитки записанных данных  пройти один цикл опроса */
-				    SelectRunFlag = 0;
-						ControlCycleFlag = 1;
-						HoldingPollsDone = 0;
+						/* пройти один цикл опроса состояния калибровки  */
+				    SelectRunFlag = 21;
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;
-				
 		    }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
 			 else	 if(displayCmd.command == DISPLAY_THRESHOLD_WARNING){

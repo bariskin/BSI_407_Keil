@@ -25,6 +25,9 @@ extern UART_HandleTypeDef huart1;
 extern uint8_t ModBusSlaveDefaultDeviceAddr;
 extern uint8_t is_active_rx_uart_buffer; 
 /* ------------------------Global variables----------------------------*/
+uint8_t calibrationProcesStatus = 0x00;
+
+
 uint8_t NumberSlaveDevices       = 0x00;
 SensorState_t  SensorStateArray[NUMBER_SLAVE_DEVICES] = {0};
 SensorInfo_t   SensorInfo = {0};
@@ -110,13 +113,6 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     // Reset buffer values before reading
     sensor->DeviceStatus =  0;
     /* *********************************  Read sensor data ********************************** */
-		
-		  //CalibrationProcesStatus
-		 proccesStatus = (uint16_t)RegHoldingBuff[slave_idx][CALIBRATION_PROCESS_STATUS_INTERN - 1];
-      
-		 if(ControlCycleFlag){
-     sensor->CalibrationStatus = proccesStatus;
-		 }
 		
 			// SensorModelCode
     const char* unit = getDeviceModelNameFromShorts(RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN- 1],RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN_2- 1]);
@@ -595,4 +591,40 @@ bool compareParams(SensorCurrentState_t *writeParams, SensorCurrentState_t *read
 		
 		 return true;
   }
+	
+	
+void readCurrentCalibrationState(uint8_t slaveaddr,uint16_t RegHoldingBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS])
+{
+	  uint8_t proccesStatus = 0x00;
+	
+    // Validate slave address
+    if (slaveaddr < 1 || slaveaddr > MB_MASTER_TOTAL_SLAVE_NUM) {
+        return; // or handle error appropriately
+    }
+    const size_t slave_idx = slaveaddr - 1;
+    SensorState_t* sensor = &SensorStateArray[slave_idx];
+    
+    // Reset buffer values before reading
+    sensor->CalibrationStatus =  0;
+    /* *********************************  Read sensor data ********************************** */
+		
+		  //CalibrationProcesStatus
+		 calibrationProcesStatus = (uint16_t)RegHoldingBuff[slave_idx][CALIBRATION_PROCESS_STATUS_INTERN - 1];
+      
+     sensor->CalibrationStatus = calibrationProcesStatus; 	
+	}	
+	
+bool getCalibrationProcessState(uint8_t slaveaddr)
+ {
+    const size_t slave_idx = slaveaddr - 1;
+    SensorState_t* sensor = &SensorStateArray[slave_idx];
+    
+    if( sensor->DeviceStatus ==  CALIBRATION_STATUS_SUCCESFUL_COMPLETED)
+		{
+		  return true;
+		}
+		{
+		 return false;
+		}
+ }	
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/

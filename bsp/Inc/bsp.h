@@ -36,6 +36,19 @@ extern "C" {
 	
 	#define TIME_DELAY_BEFORE_AFTER_CMD  470
 	
+	#define CALIBRATION_STATUS_PREPARE                     0x00
+	#define CALIBRATION_STATUS_IN_PROGRESS                 0x01
+	#define CALIBRATION_STATUS_PUMPING                     0x02
+	#define CALIBRATION_STATUS_SUCCESFUL_COMPLETED         0x07
+	
+	#define CALIBRATION_STATUS_SENSOR_BROKEN               0x03
+	#define CALIBRATION_STATUS_POINT_VALUE_NOT_VALID       0x04
+	#define CALIBRATION_STATUS_SENSETIVITY_NOT_VALID       0x05
+	#define CALIBRATION_STATUS_CALIBRATION_ID_NOT_ACTIVE   0x06
+	#define CALIBRATION_STATUS_CORRELATION_TYPE_NOT_MATCH  0x09
+	
+	
+	
 	union ShortsToFloat {
     struct {
         short a;
@@ -119,6 +132,8 @@ extern bool checkParamsValue ;
 		RX_Buffer_State Uart_Get_Byte(RING_buffer_t* buf, uint8_t* a);
 		uint8_t getCodeByUnitString(const char* unitStr);
 		bool compareParams(SensorCurrentState_t *writeParams, SensorCurrentState_t *reasParams );
+		void readCurrentCalibrationState(uint8_t slaveaddr,uint16_t RegHoldingBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS]);
+    bool getCalibrationProcessState(uint8_t slaveaddr);
  /**
   * @}
   */

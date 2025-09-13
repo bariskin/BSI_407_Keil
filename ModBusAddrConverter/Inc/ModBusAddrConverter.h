@@ -43,19 +43,21 @@ extern "C" {
 #define SENSOR_THRESHOLD_ADDITIONAL_LOW        (uint16_t)(41016 - HOLDING_OFFSET)  //Sensor Threshold ADDITIONAL LOW
 
 
-#define CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH   (uint16_t)(41019 - HOLDING_OFFSET)  //Calibration Primary Zero Signal High
-#define CALIBRATION_PRIMATY_ZERO_SIGNAL_LOW    (uint16_t)(41020 - HOLDING_OFFSET)  //Calibration Primary Zero Signal Low
-#define CALIBRATION_PRIMATY_ZERO               (uint16_t)(41021 - HOLDING_OFFSET)  //Calibration Primary Zero 
-#define CALIBRATION_PRIMATY_ZERO_STATUS        (uint16_t)(41022 - HOLDING_OFFSET)  //Calibration Primary Zero Status
+#define CALIBRATION_PRIMARY_ZERO_VALUE_HIGH   (uint16_t)(41019 - HOLDING_OFFSET)  //Calibration Primary Zero Signal High
+#define CALIBRATION_PRIMARY_ZERO_VALUE_LOW     (uint16_t)(41020 - HOLDING_OFFSET)  //Calibration Primary Zero Signal Low
+#define CALIBRATION_PRIMARY_ZERO              (uint16_t)(41021 - HOLDING_OFFSET)  //Calibration Primary Zero 
+#define CALIBRATION_PRIMARY_ZERO_STATUS       (uint16_t)(41022 - HOLDING_OFFSET)  //Calibration Primary Zero Status
 
 
-#define CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH   (uint16_t)(41024 - HOLDING_OFFSET)  //Calibration Primary Span Signal High
-#define CALIBRATION_PRIMATY_SPAN_SIGNAL_LOW    (uint16_t)(41025 - HOLDING_OFFSET)  //Calibration Primary Span Signal Low
-#define CALIBRATION_PRIMATY_SPAN               (uint16_t)(41026 - HOLDING_OFFSET)  //Calibration Primary Span 
-#define CALIBRATION_PRIMATY_SPAN_STATUS        (uint16_t)(41027 - HOLDING_OFFSET)  //Calibration Primary Span Status
+#define CALIBRATION_PRIMARY_SPAN_VALUE_HIGH   (uint16_t)(41024 - HOLDING_OFFSET)  //Calibration Primary Span Value High
+#define CALIBRATION_PRIMARY_SPAN_VALUE_LOW    (uint16_t)(41025 - HOLDING_OFFSET)  //Calibration Primary Span Value Low
+#define CALIBRATION_PRIMARY_SPAN              (uint16_t)(41026 - HOLDING_OFFSET)  //Calibration Primary Span 
+#define CALIBRATION_PRIMARY_SPAN_STATUS       (uint16_t)(41027 - HOLDING_OFFSET)  //Calibration Primary Span Status
 
-
+#define CALIBRATION_PROCESS_STATUS             (uint16_t)(41029 - 40000)  //CALIBRATION_PROCESS_STATUS 
 #define SENSOR_SUBSTANCE_CODE_1                (uint16_t)(41031 - 40000)  //SENSOR_SUBSTANCE_CODE 
+
+
 #define SENSOR_SUBSTANCE_CODE_2                (uint16_t)(41032 - 40000)  //SENSOR_SUBSTANCE_CODE 
 #define SENSOR_SUBSTANCE_CODE_3                (uint16_t)(41033 - 40000)  //SENSOR_SUBSTANCE_CODE 
 #define SENSOR_SUBSTANCE_CODE_4                (uint16_t)(41034 - 40000)  //SENSOR_SUBSTANCE_CODE 
@@ -72,7 +74,7 @@ extern "C" {
 #define SENSOR_SUBSTANCE_CODE_15               (uint16_t)(41045 - 40000)  //SENSOR_SUBSTANCE_CODE 
 #define SENSOR_SUBSTANCE_CODE_16               (uint16_t)(41046 - 40000)  //SENSOR_SUBSTANCE_CODE 
 
-#define CALIBRATION_PROCESS_STATUS             (uint16_t)(40922 - 40000)  //CALIBRATION_PROCESS_STATUS 
+
 
 
 
@@ -110,15 +112,15 @@ extern "C" {
 
 
 
-#define CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH_INTERN   (uint16_t)(28)  
-#define CALIBRATION_PRIMATY_ZERO_SIGNAL_LOW_INTERN    (uint16_t)(29) 
-#define CALIBRATION_PRIMATY_ZERO_INTERN               (uint16_t)(30)  
-#define CALIBRATION_PRIMATY_ZERO_STATUS_INTERN        (uint16_t)(31)  
+#define CALIBRATION_PRIMARY_ZERO_VALUE_HIGH_INTERN   (uint16_t)(28)  
+#define CALIBRATION_PRIMARY_ZERO_VALUE_LOW_INTERN    (uint16_t)(29) 
+#define CALIBRATION_PRIMARY_ZERO_INTERN               (uint16_t)(30)  
+#define CALIBRATION_PRIMARY_ZERO_STATUS_INTERN        (uint16_t)(31)  
  
-#define CALIBRATION_PRIMATY_SPAN_SIGNAL_HIGH_INTERN   (uint16_t)(32)  
-#define CALIBRATION_PRIMATY_SPAN_SIGNAL_LOW_INTERN    (uint16_t)(33)  
-#define CALIBRATION_PRIMATY_SPAN_INTERN               (uint16_t)(34)  
-#define CALIBRATION_PRIMATY_SPAN_STATUS_INTERN        (uint16_t)(35)  
+#define CALIBRATION_PRIMARY_SPAN_VALUE_HIGH_INTERN   (uint16_t)(32)  
+#define CALIBRATION_PRIMARY_SPAN_VALUE_LOW_INTERN    (uint16_t)(33)  
+#define CALIBRATION_PRIMARY_SPAN_INTERN               (uint16_t)(34)  
+#define CALIBRATION_PRIMARY_SPAN_STATUS_INTERN        (uint16_t)(35)  
 
 #define CALIBRATION_PROCESS_STATUS_INTERN             (uint16_t)(36) 
 

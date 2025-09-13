@@ -178,7 +178,7 @@ extern  SensorCurrentState_t	readParams  ;
     for(char* p = por2_str; *p; p++) if(*p == '.') *p = ',';
 	  for(char* p = por3_str; *p; p++) if(*p == '.') *p = ',';
 		
-		 SendNextionCommand("page%d.ch%d.txt=\"Канал %d\"", page, pos, nextChannel); 
+	;	 SendNextionCommand("page%d.ch%d.txt=\"Канал %d\"", page, pos, nextChannel); 
 	   SendNextionCommand("page%d.val%d.txt=\"%s\"", page, pos, value_str);
 		 SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].SensorGas);
 	   SendNextionCommand("page%d.ran%d.txt=\"%s\"", page, pos, scale_max_str);

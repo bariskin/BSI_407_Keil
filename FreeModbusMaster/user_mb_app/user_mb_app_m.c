@@ -162,8 +162,7 @@ eMBErrorCode eMBMasterRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
     }
     else
     {   
-			  osDelay(1);
-        eStatus = MB_ENOREG;
+      eStatus = MB_ENOREG;
     }
     return eStatus;
 }
