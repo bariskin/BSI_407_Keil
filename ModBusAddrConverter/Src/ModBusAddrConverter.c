@@ -133,13 +133,13 @@ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress)
      MBReg = SENSOR_SUBSTANCE_CODE_16_INTERN;  
     break; 
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/   
-	case	CALIBRATION_PRIMARY_ZERO:	
-		MBReg = CALIBRATION_PRIMARY_ZERO_INTERN;
-    break; 		
+//	case	CALIBRATION_PRIMARY_ZERO:	
+//		MBReg = CALIBRATION_PRIMARY_ZERO_INTERN;
+//    break; 		
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/   
-	case CALIBRATION_PRIMARY_ZERO_STATUS: 	
-    MBReg = CALIBRATION_PRIMARY_ZERO_STATUS_INTERN;
-		break; 
+//	case CALIBRATION_PRIMARY_ZERO_STATUS: 	
+ //   MBReg = CALIBRATION_PRIMARY_ZERO_STATUS_INTERN;
+	//	break; 
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/   
 	//case	CALIBRATION_PRIMATY_ZERO_VALUE_HIGH:		
 //		MBReg = CALIBRATION_PRIMATY_ZERO_SIGNAL_HIGH_INTERN;
@@ -149,34 +149,35 @@ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress)
 	//	MBReg = CALIBRATION_PRIMATY_ZERO_SIGNAL_LOW_INTERN;
 	//  break; 
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/   
-	case	CALIBRATION_PRIMARY_SPAN:	
-		MBReg = CALIBRATION_PRIMARY_SPAN;
-    break; 		
+//	case	CALIBRATION_PRIMARY_SPAN:	
+//		MBReg = CALIBRATION_PRIMARY_SPAN;
+//    break; 		
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/   
-	case	CALIBRATION_PRIMARY_SPAN_STATUS: 	
-		MBReg = CALIBRATION_PRIMARY_SPAN_STATUS_INTERN;
-   break;     
+	//case	CALIBRATION_PRIMARY_SPAN_STATUS: 	
+	//	MBReg = CALIBRATION_PRIMARY_SPAN_STATUS_INTERN;
+ //  break;     
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/   
 	case	CALIBRATION_PRIMARY_SPAN_VALUE_HIGH:
-		MBReg = CALIBRATION_PRIMARY_SPAN_VALUE_HIGH_INTERN;
+	//	MBReg = CALIBRATION_PRIMARY_SPAN_VALUE_HIGH_INTERN;
 		break; 
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/   
 	case	CALIBRATION_PRIMARY_SPAN_VALUE_LOW: 	
-		MBReg = CALIBRATION_PRIMARY_SPAN_VALUE_LOW_INTERN;
+	//	MBReg = CALIBRATION_PRIMARY_SPAN_VALUE_LOW_INTERN;
 		break; 
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/   
 	
 	case CALIBRATION_PRIMARY_ZERO_VALUE_HIGH:
 		
-    MBReg =  CALIBRATION_PRIMARY_ZERO_VALUE_HIGH_INTERN;
+ //   MBReg =  CALIBRATION_PRIMARY_ZERO_VALUE_HIGH_INTERN;
 	break;	
 
   case CALIBRATION_PRIMARY_ZERO_VALUE_LOW:
 		
-    MBReg =  CALIBRATION_PRIMARY_ZERO_VALUE_LOW_INTERN;
+   // MBReg =  CALIBRATION_PRIMARY_ZERO_VALUE_LOW_INTERN;
 	break;	
-	case     CALIBRATION_PROCESS_STATUS:
-		MBReg =   CALIBRATION_PROCESS_STATUS_INTERN;
+	
+	case     CALIBRATION_PROCESS_STATUS + 1: // так работает 
+		MBReg =   CALIBRATION_PROCESS_STATUS_INTERN + 1;
 	break;		
 	
 	}  
@@ -210,16 +211,6 @@ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress)
     break;
  
 		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
-  case CALIBRATION_PROCESS_STATUS:
-    
-    MBReg = CALIBRATION_PROCESS_STATUS_INTERN; 
-    
-   break;
- 
-		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
- 
- 
- 
 	}
    return MBReg;
  }

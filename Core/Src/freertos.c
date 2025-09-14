@@ -303,7 +303,7 @@ DisplayCommand_t displayCmd;
 void HoldingHandlerFunction(void const * argument)
 {
   /* USER CODE BEGIN HoldingHandlerFunction */
-		
+	static uint8_t tempRunFlag = 0;
 	static uint8_t HoldingPollsDone = 0;  // Счётчик выполненных опросов Holding-регистров
   osDelay(10000);
 	/* Infinite loop */
@@ -319,33 +319,33 @@ void HoldingHandlerFunction(void const * argument)
 			     /* *********************************  Handling HOLDING registers *************************** */
 				    if(SelectRunFlag == 0)
 				     { // вычитывается модель прибора   
-					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, DEVICE_MODEL_CODE - 1,2, 200 );
+					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, DEVICE_MODEL_CODE,2, 200 );
 					
 							 SelectRunFlag = 1;
 				     }
 				    else if(SelectRunFlag == 1)
 				     { // вычитываются значения дипазона  всей шкалы и единицы измерения
-					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SCALE_MAX_HIGH - 1 ,3, 200 );
+					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SCALE_MAX_HIGH,3, 200 );
 					     
 							 SelectRunFlag = 2;
 				     }				 
 				    else if (SelectRunFlag == 2)
 					   { //вычитываются пороги 1, 2 и 3
- 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 6, 200 );
+ 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN, 6, 200 );
 	           
 					    SelectRunFlag = 3;
 					   }
 						 
 				    else if (SelectRunFlag == 3)
 					    { //вычитывается тип газа
-					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SUBSTANCE_CODE_1 - 1, 16, 200 );
+					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SUBSTANCE_CODE_1, 16, 200 );
 					    
 							 SelectRunFlag = 4;	
 					    } 	 
 			      /* ********************************* Handling INPUT registers *************************** */
 				     else if (SelectRunFlag == 4)
 					    {
-					     eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
+					     eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH, 3, 200 );
                				    
 							 SelectRunFlag = 5;
 								
@@ -401,15 +401,15 @@ void HoldingHandlerFunction(void const * argument)
 
            else if (SelectRunFlag == 21)
 					   { 
- 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PROCESS_STATUS - 1, 1, 200 );
-	          	
-							 osMutexRelease(myMutex01Handle);
-               osDelay(400);
-               osMutexWait(myMutex01Handle, 10);
-					    SelectRunFlag = 22;
+ 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PROCESS_STATUS, 1, 200 );
+							 SelectRunFlag = 22;
 					   }
 					else if (SelectRunFlag == 22)
 					   {  
+							 osMutexRelease(myMutex01Handle);
+               osDelay(100);
+               osMutexWait(myMutex01Handle, 10);
+							 
 							checkParamsValue = false; 
 							readCurrentCalibrationState (ModBusSlaveCurrentDeviceAddr,usMRegHoldBuf);
 							checkParamsValue = getCalibrationProcessState (ModBusSlaveCurrentDeviceAddr);	
@@ -428,7 +428,7 @@ void HoldingHandlerFunction(void const * argument)
                    SelectRunFlag = 7;
 									
 									if(!CmdIsReady){ 
-					           eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH  - 1, 3, 200 );
+					           eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH, 3, 200 );
 									
 									 }
 									else {
@@ -471,7 +471,7 @@ void HoldingHandlerFunction(void const * argument)
              osMutexWait(myMutex01Handle, 10);
 				    		 
 						 eMBMasterReqWriteMultipleHoldingRegister(  displayCmd.deviceAddr, 
-						                                             SENSOR_SCALE_DIMENSTION - 1, 
+						                                             SENSOR_SCALE_DIMENSTION, 
 						                                             1, 
 						                                             (USHORT *)&registersTX[0], 
 						                                             300); 
@@ -495,7 +495,7 @@ void HoldingHandlerFunction(void const * argument)
            osMutexWait(myMutex01Handle, 10);
 					 	
            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
-				                                            SENSOR_SCALE_MAX_HIGH - 1, 
+				                                            SENSOR_SCALE_MAX_HIGH, 
 				                                            2, 
 				                                            (USHORT *)&registersTX[0], 
 				                                            300); 
@@ -518,7 +518,7 @@ void HoldingHandlerFunction(void const * argument)
           osMutexWait(myMutex01Handle, 10);
 					
           eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
-					                                             CALIBRATION_PRIMARY_ZERO_VALUE_HIGH - 1, 
+					                                             CALIBRATION_PRIMARY_ZERO_VALUE_HIGH, 
 					                                             2, 
 					                                             (USHORT *)&registersTX[0], 
 					                                             300);	 
@@ -538,7 +538,7 @@ void HoldingHandlerFunction(void const * argument)
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;	
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
-	  else   if(displayCmd.command ==DISPLAY_CALIBRATION_POINT_1){	
+	  else   if(displayCmd.command == DISPLAY_CALIBRATION_POINT_1){	
 			      registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;
 			
@@ -548,7 +548,7 @@ void HoldingHandlerFunction(void const * argument)
 			
 				    
             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
-			                                               CALIBRATION_PRIMARY_SPAN_VALUE_HIGH - 1, 
+			                                               CALIBRATION_PRIMARY_SPAN_VALUE_HIGH, 
 			                                               2, 
 			                                               (USHORT *)&registersTX[0], 
 			                                               300);
@@ -578,7 +578,7 @@ void HoldingHandlerFunction(void const * argument)
 				 
 
              eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
-				                                              SENSOR_THRESHOLD_WARNIGN_HIGN - 1, 
+				                                              SENSOR_THRESHOLD_WARNIGN_HIGN, 
 				                                              2, 
 				                                              (USHORT *)&registersTX[0], 
 				                                              300);
@@ -603,7 +603,7 @@ void HoldingHandlerFunction(void const * argument)
 				 
 				 
             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,
-				                                             SENSOR_THRESHOLD_ALARM_HIGH - 1, 
+				                                             SENSOR_THRESHOLD_ALARM_HIGH, 
 				                                             2, 
 				                                             (USHORT *)&registersTX[0], 
 			                                               300);	
@@ -627,7 +627,7 @@ void HoldingHandlerFunction(void const * argument)
 				 
 				 
             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,
-				                                             SENSOR_THRESHOLD_ADDITIONAL_HIGH - 1, 
+				                                             SENSOR_THRESHOLD_ADDITIONAL_HIGH, 
 				                                             2, 
 				                                             (USHORT *)&registersTX[0], 
 				                                             300); 
