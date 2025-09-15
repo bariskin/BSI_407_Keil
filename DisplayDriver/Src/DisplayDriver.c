@@ -598,9 +598,11 @@ void setErrorStatus(int errorCode) {
     if (errorCode == 0) {
         // Нет ошибки
         SendNextionCommand("errore.val=0");
+			
     } else if (errorCode == 1) {
         // Ошибка
         SendNextionCommand("errore.val=1");
     }
+		osDelay(5);
 }
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/

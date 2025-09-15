@@ -94,6 +94,8 @@ volatile uint8_t PauseTaskCounter = 0;
 #define mutexON  1 
 #define mutexOFF 0 
 volatile uint8_t additMutexMbFunctions = mutexOFF;
+
+bool setErrorStatusFlag = false;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -303,7 +305,6 @@ DisplayCommand_t displayCmd;
 void HoldingHandlerFunction(void const * argument)
 {
   /* USER CODE BEGIN HoldingHandlerFunction */
-	static uint8_t tempRunFlag = 0;
 	static uint8_t HoldingPollsDone = 0;  // —чЄтчик выполненных опросов Holding-регистров
   osDelay(10000);
 	/* Infinite loop */
@@ -366,7 +367,8 @@ void HoldingHandlerFunction(void const * argument)
 									SelectRunFlag = 6;
 									checkParamsValue = false;
 								  checkParamsValue	= compareParams((SensorCurrentState_t *)&writeParams,(SensorCurrentState_t *)&readParams);
-								  setErrorStatus(checkParamsValue);
+								  //setErrorStatus(checkParamsValue);
+									setErrorStatusFlag = true;
 								}
 								
 							else{
@@ -413,7 +415,9 @@ void HoldingHandlerFunction(void const * argument)
 							checkParamsValue = false; 
 							readCurrentCalibrationState (ModBusSlaveCurrentDeviceAddr,usMRegHoldBuf);
 							checkParamsValue = getCalibrationProcessState (ModBusSlaveCurrentDeviceAddr);	
-							setErrorStatus(!checkParamsValue);
+							checkParamsValue = !checkParamsValue; 
+							//setErrorStatus(checkParamsValue);
+							setErrorStatusFlag = true;
 					    SelectRunFlag = 6;
 					   }	 
 						 
@@ -698,8 +702,17 @@ void InputHandlerFunction(void const * argument)
   {			
 	 	if(SensorInfo.count)   
 			{ 
-				// обновление конценатрации, если датчики есть
-		    UpdateNextionDisplayWithChannelData(SensorInfo.count);
+				
+				if(setErrorStatusFlag) // отправить на дисплей успешность записи паhаметров т калибровки
+				{
+			    setErrorStatusFlag = false;
+					setErrorStatus(checkParamsValue);
+				}
+				else
+				{	
+				   // обновление конценатрации, если датчики есть
+		      UpdateNextionDisplayWithChannelData(SensorInfo.count);
+				}
 		  }
     osDelay(50);
   }
@@ -748,8 +761,6 @@ void DisplayTaskFunction(void const * argument)
 		{
 	   HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready);	
     }
-		
-		//osDelay(100); // 3 минуты  после нажати€ кнопки пауза 3 сек (+/- 0,5)
     osDelay(20);  // 500 ms
   }
   /* USER CODE END DisplayTaskFunction */
@@ -766,7 +777,6 @@ void DisplayTaskFunction(void const * argument)
 void SendToDispTaskFunction(void const * argument)
 {
   /* USER CODE BEGIN SendToDispTaskFunction */
-	 osStatus status; 
   /* Infinite loop */
   for(;;)
   { 	
