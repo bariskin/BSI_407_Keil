@@ -115,15 +115,17 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     /* *********************************  Read sensor data ********************************** */
 		
 			  //CalibrationProcesStatus
-		 calibrationProcesStatus = (uint16_t)RegHoldingBuff[slave_idx][CALIBRATION_PROCESS_STATUS_INTERN];
+		 //calibrationProcesStatus = (uint16_t)RegHoldingBuff[slave_idx][CALIBRATION_PROCESS_STATUS_INTERN];
       
-     sensor->CalibrationStatus = calibrationProcesStatus; 
+     //sensor->CalibrationStatus = calibrationProcesStatus; 
 		
 		
 			// SensorModelCode
     const char* unit = getDeviceModelNameFromShorts(RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN],RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN_2]);
     snprintf((char*)sensor->DeviceModelCode, sizeof(sensor->DeviceModelCode), "%s", unit);
 		
+		//RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN] = 0x0000;
+		//RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN_2] = 0x0000;
 		// SensorGas
 	  uint16_t *src_ptr = &RegHoldingBuff[slave_idx][SENSOR_SUBSTANCE_CODE_1_INTERN];
      for (int i = 0; i < 6; i++) {
@@ -131,7 +133,11 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
      }
 		// SensorWarning
     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_WARNIGN_HIGN_INTERN ] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_WARNIGN_LOW_INTERN ];
-    // Копируем биты в float (аналог reinterpret_cast в C++)
+     
+		RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_WARNIGN_HIGN_INTERN ] = 0x0000;
+    RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_WARNIGN_LOW_INTERN ] = 0x0000;
+
+		 // Копируем биты в float (аналог reinterpret_cast в C++)
     *(uint32_t*)&result = combined;
     sensor->SensorWarning = result;
 		 
@@ -140,7 +146,10 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 } 
 		// SensorAlarm
     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_HIGH_INTERN] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_LOW_INTERN];
-   
+    
+		 RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_HIGH_INTERN] = 0x0000;
+		 RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_LOW_INTERN]  = 0x0000;
+		 
     *(uint32_t*)&result = combined;
     sensor->SensorAlarm = result;
 		 
@@ -150,6 +159,9 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		// SensorAlarm2
     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_HIGH_INTERN ] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_LOW_INTERN];
    
+		RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_HIGH_INTERN ]  = 0x0000;
+		RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_LOW_INTERN ]   = 0x0000;
+		 
     *(uint32_t*)&result = combined;
     sensor->SensorAlarm2 = result;
 		 if(ControlCycleFlag){
@@ -157,7 +169,11 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 }
 		// SensorScaleMax
     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_HIGH_INTERN] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_LOW_INTERN ];
-    
+     
+		 // for set error 
+		 RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_HIGH_INTERN] = 0x0000;
+		 RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_LOW_INTERN] = 0x0000;
+		 
     *(uint32_t*)&result = combined;
     sensor->SensorScaleMax = result;
 		 
@@ -166,6 +182,9 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 }
 		// SensorScaleDimension
     unit = getUnitStringByCode(RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_INTERN]);
+		 
+    RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_INTERN] = 0x0000;
+		 
     snprintf((char*)sensor->SensorScaleDimension, sizeof(sensor->SensorScaleDimension), "%s",(const char *)unit);
 		 
 		 if(ControlCycleFlag){
@@ -588,11 +607,11 @@ RX_Buffer_State Uart_Get_Byte(RING_buffer_t* buf, uint8_t* a)
 bool compareParams(SensorCurrentState_t *writeParams, SensorCurrentState_t *readParams )
   {
   
-    if (writeParams->SensorWarning != readParams->SensorWarning) return false;
-    if (writeParams->SensorAlarm != readParams->SensorAlarm) return false;
-		if (writeParams->SensorAlarm2 != readParams->SensorAlarm2) return false;
-    if (writeParams->SensorScaleMax != readParams->SensorScaleMax) return false;
-		if (writeParams->SensorScaleDimensionID != readParams->SensorScaleDimensionID) return false;
+    if (writeParams->SensorWarning == readParams->SensorWarning) return false;
+    if (writeParams->SensorAlarm == readParams->SensorAlarm) return false;
+		if (writeParams->SensorAlarm2 == readParams->SensorAlarm2) return false;
+    if (writeParams->SensorScaleMax == readParams->SensorScaleMax) return false;
+		if (writeParams->SensorScaleDimensionID == readParams->SensorScaleDimensionID) return false;
 		
 		
 		 return true;
@@ -615,6 +634,8 @@ void readCurrentCalibrationState(uint8_t slaveaddr,uint16_t RegHoldingBuff[MB_MA
     /* *********************************  Read sensor data ********************************** */
 	
 		 sensor->CalibrationStatus  = (uint16_t)RegHoldingBuff[slave_idx][CALIBRATION_PROCESS_STATUS_INTERN];  // так работает 
+		
+		 RegHoldingBuff[slave_idx][CALIBRATION_PROCESS_STATUS_INTERN] = 0x0000;
       
 	}	
 	

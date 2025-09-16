@@ -3,7 +3,7 @@
 <title>Static Call Graph - [BSI_407\BSI_407.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image BSI_407\BSI_407.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Mon Sep 15 09:56:28 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Tue Sep 16 21:06:02 2025
 <BR><P>
 <H3>Maximum Stack Usage =        556 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1826,7 +1826,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
 </UL>
 
-<P><STRONG><a name="[106]"></a>HandleDisplayCommands</STRONG> (Thumb, 254 bytes, Stack size 40 bytes, displaydriver.o(i.HandleDisplayCommands))
+<P><STRONG><a name="[106]"></a>HandleDisplayCommands</STRONG> (Thumb, 262 bytes, Stack size 40 bytes, displaydriver.o(i.HandleDisplayCommands))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = HandleDisplayCommands &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[107]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
@@ -2872,11 +2872,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1e1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
 </UL>
 
-<P><STRONG><a name="[158]"></a>readCurrentCalibrationState</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, bsp.o(i.readCurrentCalibrationState))
+<P><STRONG><a name="[158]"></a>readCurrentCalibrationState</STRONG> (Thumb, 38 bytes, Stack size 0 bytes, bsp.o(i.readCurrentCalibrationState))
 <BR><BR>[Called By]<UL><LI><a href="#[88]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[152]"></a>readCurrentSensorState</STRONG> (Thumb, 324 bytes, Stack size 32 bytes, bsp.o(i.readCurrentSensorState))
+<P><STRONG><a name="[152]"></a>readCurrentSensorState</STRONG> (Thumb, 352 bytes, Stack size 32 bytes, bsp.o(i.readCurrentSensorState))
 <BR><BR>[Stack]<UL><LI>Max Depth = 176 + Unknown Stack Size
 <LI>Call Chain = readCurrentSensorState &rArr; __2snprintf &rArr; _printf_char_common &rArr; __printf
 </UL>

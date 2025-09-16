@@ -487,7 +487,7 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
     if (processed_without_channel) {
         // Переходим к очистке
     } 
-    else if (channelID != 0x00) {
+    else if (channelID != 0x00 && channelID <= SensorInfo.count) {
         // Команды, которые требуют channelID
         switch (*displayresponse) {
             case DISPLAY_POSITION:

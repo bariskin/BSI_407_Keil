@@ -27,11 +27,18 @@ Project File Date:  09/02/2025
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'BSI_407'
-compiling freertos.c...
+compiling bsp.c...
+..\bsp\Src\bsp.c(104): warning:  #177-D: variable "proccesStatus"  was declared but never referenced
+  	  uint8_t proccesStatus = 0x00;
+..\bsp\Src\bsp.c(623): warning:  #177-D: variable "proccesStatus"  was declared but never referenced
+  	  uint8_t proccesStatus = 0x00;
+..\bsp\Src\bsp.c(655): warning:  #1-D: last line of file ends without a newline
+  /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/
+..\bsp\Src\bsp.c: 3 warnings, 0 errors
 linking...
-Program Size: Code=39384 RO-data=1860 RW-data=744 ZI-data=39944  
+Program Size: Code=39420 RO-data=1860 RW-data=740 ZI-data=39940  
 FromELF: creating hex file...
-"BSI_407\BSI_407.axf" - 0 Error(s), 0 Warning(s).
+"BSI_407\BSI_407.axf" - 0 Error(s), 3 Warning(s).
 
 <h2>Software Packages used:</h2>
 
