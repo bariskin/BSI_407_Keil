@@ -123,7 +123,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  //MX_RTC_Init();
+  MX_RTC_Init();
   //MX_SDIO_SD_Init();
   MX_UART4_Init();
   MX_USART2_UART_Init();

@@ -96,6 +96,8 @@ volatile uint8_t PauseTaskCounter = 0;
 volatile uint8_t additMutexMbFunctions = mutexOFF;
 
 bool setErrorStatusFlag = false;
+
+DisplayCommand_t displayCmd;
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -107,7 +109,7 @@ osThreadId SlaveModbusTaskHandle;
 uint32_t defaultTaskBuffer[ 256 ];
 osStaticThreadDef_t defaultTaskControlBlock;
 osThreadId MasterModbusTasHandle;
-uint32_t MasterModbusTasBuffer[ 256 ];
+uint32_t MasterModbusTasBuffer[ 512 ];
 osStaticThreadDef_t MasterModbusTasControlBlock;
 osThreadId HoldingHandlerHandle;
 uint32_t HoldingHandlerBuffer[ 1024 ];
@@ -300,7 +302,7 @@ void MasterModbusTaskFunction(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_HoldingHandlerFunction */
-DisplayCommand_t displayCmd;
+
 
 void HoldingHandlerFunction(void const * argument)
 {
