@@ -37,6 +37,7 @@
 #include <string.h>
 #include "UARTSlaveSettings.h"
 #include "RingBuffer.h"
+#include "File_Handling.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -124,8 +125,8 @@ osThreadId DisplayTaskHandle;
 uint32_t DisplayTaskBuffer[ 512 ];
 osStaticThreadDef_t DisplayTaskControlBlock;
 osThreadId SendToDispTaskHandle;
-//uint32_t SendToDispTaskBuffer[ 256 ];
-//osStaticThreadDef_t SendToDispTaskControlBlock;
+uint32_t SendToDispTaskBuffer[ 256 ];
+osStaticThreadDef_t SendToDispTaskControlBlock;
 osMutexId myMutex01Handle;
 osStaticMutexDef_t myMutex01ControlBlock;
 
@@ -240,8 +241,8 @@ void MX_FREERTOS_Init(void) {
   DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* definition and creation of SendToDispTask */
-  //osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityRealtime, 0, 256, SendToDispTaskBuffer, &SendToDispTaskControlBlock);
-  //SendToDispTaskHandle = osThreadCreate(osThread(SendToDispTask), NULL);
+  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityRealtime, 0, 256, SendToDispTaskBuffer, &SendToDispTaskControlBlock);
+  SendToDispTaskHandle = osThreadCreate(osThread(SendToDispTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -779,6 +780,13 @@ void DisplayTaskFunction(void const * argument)
 void SendToDispTaskFunction(void const * argument)
 {
   /* USER CODE BEGIN SendToDispTaskFunction */
+	
+	  Mount_SD("");
+	  osDelay(5);   
+    Create_Dir("2032");
+	  osDelay(5);   
+    Unmount_SD("");
+	  osDelay(5);   
   /* Infinite loop */
   for(;;)
   { 	

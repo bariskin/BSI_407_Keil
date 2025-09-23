@@ -45,7 +45,7 @@ typedef uint16_t USHORT;
 typedef int16_t SHORT;
 
 typedef uint32_t ULONG;
-typedef int32_t LONG;
+//typedef int32_t LONG;
 
 #ifndef TRUE
 #define TRUE            1

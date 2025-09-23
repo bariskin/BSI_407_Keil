@@ -95,7 +95,7 @@ void vMBMasterOsResInit(void)
  *
  * @return resource taked result
  */
-BOOL xMBMasterRunResTake(LONG lTimeOut)
+BOOL xMBMasterRunResTake(int32_t lTimeOut)
 {
   return TRUE;
 }

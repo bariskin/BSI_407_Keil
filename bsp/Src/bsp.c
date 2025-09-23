@@ -101,7 +101,6 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 {
 	  uint32_t combined;   // Объединённые 32 бита
 	  float result;        // Результат
-	  uint8_t proccesStatus = 0x00;
 	
     // Validate slave address
     if (slaveaddr < 1 || slaveaddr > MB_MASTER_TOTAL_SLAVE_NUM) {
@@ -620,7 +619,6 @@ bool compareParams(SensorCurrentState_t *writeParams, SensorCurrentState_t *read
 	
 void readCurrentCalibrationState(uint8_t slaveaddr,uint16_t RegHoldingBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS])
 {
-	  uint8_t proccesStatus = 0x00;
 	
     // Validate slave address
     if (slaveaddr < 1 || slaveaddr > MB_MASTER_TOTAL_SLAVE_NUM) {

@@ -77,6 +77,14 @@
 "bsi_407\flashdriver.o"
 "bsi_407\displaydriver.o"
 "bsi_407\ringbuffer.o"
+"bsi_407\bsp_driver_sd.o"
+"bsi_407\sd_diskio.o"
+"bsi_407\fatfs.o"
+"bsi_407\diskio.o"
+"bsi_407\ff.o"
+"bsi_407\ff_gen_drv.o"
+"bsi_407\syscall.o"
+"bsi_407\file_handling.o"
 --strict --scatter "BSI_407\BSI_407.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

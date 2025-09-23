@@ -19,6 +19,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "cmsis_os.h"
+#include "fatfs.h"
 #include "i2c.h"
 #include "rtc.h"
 #include "sdio.h"
@@ -40,6 +41,7 @@
 #include "numberDevices.h"
 #include "DisplayDriver.h"
 #include "RingBuffer.h"
+#include "File_Handling.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -124,7 +126,7 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_RTC_Init();
-  //MX_SDIO_SD_Init();
+  MX_SDIO_SD_Init();
   MX_UART4_Init();
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
@@ -133,6 +135,7 @@ int main(void)
   MX_TIM6_Init();
   MX_USART1_UART_Init();
   MX_TIM10_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
 	
   /* *************start display receiving******************** */
@@ -174,7 +177,19 @@ int main(void)
 	
    /* ************* Initializes  RX and TX ring buffers ***** */    
 	 RING_Init(&ring_Rx, ring_buffer_RX, CIRC_BUF_RX_SIZE );         /*! Init RX buffer for UART3: display */
-  //RING_Init(&ring_Tx, ring_buffer_TX, CIRC_BUF_TX_SIZE );      
+  //RING_Init(&ring_Tx, ring_buffer_TX, CIRC_BUF_TX_SIZE );   
+   
+	 HAL_Delay(2000);
+	 
+	 
+	  Mount_SD("");
+	 
+    Create_Dir("2031");
+  
+    Unmount_SD("");
+	
+	 
+	 
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
