@@ -38,6 +38,7 @@
 #include "UARTSlaveSettings.h"
 #include "RingBuffer.h"
 #include "File_Handling.h"
+#include "SensorLogs.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -83,7 +84,8 @@ uint8_t SelectRunFlag1 = 0;
 uint8_t ControlCycleFlag = 0; 
 // Глобальная очередь для команд
 QueueHandle_t displayCommandQueue = NULL;
-
+QueueHandle_t SD_CardMsgQueue = NULL;
+ 
 volatile uint8_t CmdIsReady = 0;
 volatile uint8_t CmdWriteIsReady = 0;
 volatile uint8_t PauseTaskCounter = 0;
@@ -132,30 +134,6 @@ osStaticMutexDef_t myMutex01ControlBlock;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
-
-
-void wait_for_modbus_response(uint32_t timeout_ms)
-{
-    uint32_t start_time = osKernelSysTick();
-    
-    while ((osKernelSysTick() - start_time) < timeout_ms) {
-        //eMBMasterPoll(); // Обрабатываем Modbus стек
-        
-        // Проверяем, завершился ли запрос
-        if (eMBMasterGetErrorType() != EV_ERROR_EXECUTE_FUNCTION) {
-            break; // Запрос завершён
-        }
-        
-        osDelay(1);
-    }
-    
-    // Небольшая пауза между запросами
-    osDelay(1);
-}
-
-
-
-
 
 /* USER CODE END FunctionPrototypes */
 
@@ -781,12 +759,13 @@ void SendToDispTaskFunction(void const * argument)
 {
   /* USER CODE BEGIN SendToDispTaskFunction */
 	
-	  Mount_SD("");
-	  osDelay(5);   
-    Create_Dir("2032");
-	  osDelay(5);   
-    Unmount_SD("");
-	  osDelay(5);   
+	  //Mount_SD("");
+	 // osDelay(5);   
+    //Create_Dir("2033");
+	  //osDelay(5);   
+    //Unmount_SD("");
+	 // osDelay(5);   
+	
   /* Infinite loop */
   for(;;)
   { 	

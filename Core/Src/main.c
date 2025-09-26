@@ -42,6 +42,7 @@
 #include "DisplayDriver.h"
 #include "RingBuffer.h"
 #include "File_Handling.h"
+#include "SensorLogs.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -179,16 +180,7 @@ int main(void)
 	 RING_Init(&ring_Rx, ring_buffer_RX, CIRC_BUF_RX_SIZE );         /*! Init RX buffer for UART3: display */
   //RING_Init(&ring_Tx, ring_buffer_TX, CIRC_BUF_TX_SIZE );   
    
-	 HAL_Delay(2000);
-	 
-	 
-	  Mount_SD("");
-	 
-    Create_Dir("2031");
-  
-    Unmount_SD("");
-	
-	 
+	 HAL_Delay(1000);
 	 
   /* USER CODE END 2 */
 
