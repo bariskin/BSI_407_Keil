@@ -8,7 +8,8 @@
 */       
 /* ------------------------Includes ----------------------------------*/
 #include "SensorLogs.h"
-
+#include "cmsis_os.h"
+uint16_t in_file_counter = 0;
 /* ------------------------External variables -------------------------*/
 extern FATFS fs;  // file system
 extern FIL fil; // File
@@ -19,12 +20,14 @@ extern UINT br, bw;  // File read/write count
 DateTime_t current_time;
 
 extern RTC_HandleTypeDef hrtc;
+
+extern uint8_t RdyWrittingFlag ;
 /* ------------------------Locale variables----------------------------*/
 
 /* ------------------------Functions-----------------------------------*/
 void GetLogFilePath(char* path, uint32_t sensor_id, DateTime_t* time) {
-    sprintf(path, "/sensor_logs/sensor_%03d/%04d_%02d/%04d_%02d_%02d.log", 
-            sensor_id, time->year, time->month, time->year, time->month, time->day);
+    sprintf(path, "%lu/LOG_%lu.txt", 
+            sensor_id,sensor_id);
 }
 
 void GetCurrentTime(DateTime_t* time) {
@@ -42,64 +45,83 @@ void GetCurrentTime(DateTime_t* time) {
     time->second = rtc_time.Seconds;
 }
 
-
+ FRESULT res22;
 FRESULT CreateSensorDirs(uint32_t sensor_id, DateTime_t* time) {
-    char dir_path[128];
-    FRESULT res;
+    char dir_path[64];
+    FRESULT res22;
     
-    // Создаем папку для датчика
-    sprintf(dir_path, "/sensor_logs/sensor_%03d", sensor_id);
-    res = f_mkdir(dir_path);
-    if (res != FR_OK && res != FR_EXIST) return res;
+    // Создаем каждый уровень отдельно
+    sprintf(dir_path, "%lu", sensor_id);
+    res22 = f_mkdir(dir_path);
+    if (res22 != FR_OK && res22 != FR_EXIST) return res22;
     
-    // Создаем папку для месяца
-    sprintf(dir_path, "/sensor_logs/sensor_%03d/%04d_%02d", 
-            sensor_id, time->year, time->month);
-    res = f_mkdir(dir_path);
-    if (res != FR_OK && res != FR_EXIST) return res;
+   // sprintf(dir_path, "sensor_%lu/%04d", sensor_id, time->year);
+   // res22 = f_mkdir(dir_path);
+   // if (res22 != FR_OK && res22 != FR_EXIST) return res22;
+    
+   // sprintf(dir_path, "sensor_%lu/%04d/%02d", sensor_id, time->year, time->month);
+  //  res22 = f_mkdir(dir_path);
+  //  if (res22 != FR_OK && res22 != FR_EXIST) return res22;
+    
+    //sprintf(dir_path, "sensor_%lu/%04d/%02d/%02d", 
+    //        sensor_id, time->year, time->month, time->day);
+   // res22 = f_mkdir(dir_path);
+    //if (res22 != FR_OK && res22 != FR_EXIST) return res22;
     
     return FR_OK;
 }
 
+
+FRESULT resFILE;
 FRESULT WriteSensorLog(SensorData_t* data) {
-    char filepath[128];
+	
+    char filepath[64];
     FIL file;
     FRESULT res;
     UINT bytes_written;
-    char log_line[256];
+    char log_line[64];
 	
 	    // Проверка монтирования SD карты
     if (f_mount(&fs, "", 1) != FR_OK) {  // Проверка состояния
         return FR_NOT_READY;
     }
-    // Формируем путь к файлу
-    GetLogFilePath(filepath, data->sensor_id, &data->timestamp);
-    
+  
     // Создаем папки если нужно
-    res = CreateSensorDirs(data->sensor_id, &data->timestamp);
-    if (res != FR_OK) return res;
+    resFILE = CreateSensorDirs(data->sensor_id, &data->timestamp);
     
-    // Открываем файл для добавления (создаем если не существует)
-    res = f_open(&file, filepath, FA_WRITE | FA_OPEN_ALWAYS);
-    if (res != FR_OK) return res;
-    
-    // Перемещаемся в конец файла
-    f_lseek(&file, f_size(&file));
-    
+		if (resFILE != FR_OK) 
+		{
+			return resFILE;
+    }
+		
+		 // Формируем путь к файлу
+   GetLogFilePath(filepath, data->sensor_id, &data->timestamp);
+	  
+ 
+  resFILE = f_open(&file, filepath, FA_WRITE | FA_OPEN_APPEND | FA_OPEN_ALWAYS);
+   if (resFILE != FR_OK) {
+        return resFILE;
+  }
+		
     // Форматируем строку лога
-    sprintf(log_line, "[%04d-%02d-%02d %02d:%02d:%02d] %.3f\r\n",
-            data->timestamp.year, data->timestamp.month, data->timestamp.day,
-            data->timestamp.hour, data->timestamp.minute, data->timestamp.second,
-            data->value);
-    
+    sprintf(log_line, "%04d.%02d.%02d %02d:%02d  %d\r\n",
+	         data->timestamp.year, data->timestamp.month, data->timestamp.day,
+           data->timestamp.hour, data->timestamp.minute, 
+           data->value);
+		
+		//sprintf(log_line, "Value:   %d\r\n", data->value);
     // Записываем в файл
-    res = f_write(&file, log_line, strlen(log_line), &bytes_written);
+    resFILE = f_write(&file, log_line, strlen(log_line), &bytes_written);
     
     f_close(&file);
-    return res;
+	 
+		in_file_counter++;
+		RdyWrittingFlag = 0;
+		
+    return resFILE;
 }
 
-void SensorDataCallback(uint32_t sensor_id, float value) {
+void SensorDataCallback(uint32_t sensor_id, uint32_t value) {
     SensorData_t sensor_data;
     
     // Заполняем структуру данных
@@ -112,7 +134,7 @@ void SensorDataCallback(uint32_t sensor_id, float value) {
     // Записываем лог
     FRESULT res = WriteSensorLog(&sensor_data);
     if (res != FR_OK) {
-        printf("Error writing log: %d\n", res);
+        //printf("Error writing log: %d\n", res);
     }
 }
 

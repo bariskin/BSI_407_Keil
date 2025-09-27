@@ -46,7 +46,7 @@ typedef struct {
  
   typedef struct {
     uint32_t sensor_id;
-    float value;
+    uint32_t value;
     DateTime_t timestamp;
  } SensorData_t;
 
@@ -55,6 +55,15 @@ typedef struct {
     FIL file;
     uint8_t is_open;
 } LogFile_t;
+
+
+// Структура лога для 
+typedef struct {
+    uint8_t sensorID;
+    uint8_t deviceAddr;
+    uint32_t Value;
+} SensorLog_t;
+
  /* ------------------------External variables -------------------------*/
   
 
@@ -66,7 +75,7 @@ typedef struct {
   void GetCurrentTime(DateTime_t* time);
   FRESULT CreateSensorDirs(uint32_t sensor_id, DateTime_t* time);
   FRESULT WriteSensorLog(SensorData_t* data) ;
-  void SensorDataCallback(uint32_t sensor_id, float value); 
+  void SensorDataCallback(uint32_t sensor_id, uint32_t value); 
   /**
   * @}
   */

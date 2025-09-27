@@ -152,34 +152,18 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>769</LineNumber>
+          <LineNumber>105</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>../Core/Src/freertos.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>64</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134238682</Address>
+          <Address>134241884</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Core/Src/sdio.c</Filename>
+          <Filename>../Core/Src/main.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\BSI_407\../Core/Src/sdio.c\64</Expression>
+          <Expression>\\BSI_407\../Core/Src/main.c\105</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -227,6 +211,21 @@
           <count>8</count>
           <WinNumber>1</WinNumber>
           <ItemText>CmdIsReady</ItemText>
+        </Ww>
+        <Ww>
+          <count>9</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>sensor_data</ItemText>
+        </Ww>
+        <Ww>
+          <count>10</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>sensorLog</ItemText>
+        </Ww>
+        <Ww>
+          <count>11</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>RdyWrittingFlag</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -385,6 +384,56 @@
           <WinNumber>2</WinNumber>
           <ItemText>fresult</ItemText>
         </Ww>
+        <Ww>
+          <count>31</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>in_file_counter</ItemText>
+        </Ww>
+        <Ww>
+          <count>32</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>filepath</ItemText>
+        </Ww>
+        <Ww>
+          <count>33</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>ReceivedSensorLog</ItemText>
+        </Ww>
+        <Ww>
+          <count>34</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>ReceivedSensorLog</ItemText>
+        </Ww>
+        <Ww>
+          <count>35</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>dir_path_2</ItemText>
+        </Ww>
+        <Ww>
+          <count>36</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>dir_path</ItemText>
+        </Ww>
+        <Ww>
+          <count>37</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>sensorLog</ItemText>
+        </Ww>
+        <Ww>
+          <count>38</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>in_file_counter</ItemText>
+        </Ww>
+        <Ww>
+          <count>39</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>filepath</ItemText>
+        </Ww>
+        <Ww>
+          <count>40</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>log_line</ItemText>
+        </Ww>
       </WatchWindow2>
       <MemoryWindow1>
         <Mm>
@@ -400,7 +449,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>1</periodic>
-        <aLwin>0</aLwin>
+        <aLwin>1</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
@@ -1736,7 +1785,7 @@
 
   <Group>
     <GroupName>SdDriver</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
