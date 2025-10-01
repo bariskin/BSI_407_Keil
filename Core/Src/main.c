@@ -126,7 +126,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_RTC_Init();
+  //MX_RTC_Init();
   MX_SDIO_SD_Init();
   MX_UART4_Init();
   MX_USART2_UART_Init();
@@ -179,9 +179,7 @@ int main(void)
    /* ************* Initializes  RX and TX ring buffers ***** */    
 	 RING_Init(&ring_Rx, ring_buffer_RX, CIRC_BUF_RX_SIZE );         /*! Init RX buffer for UART3: display */
   //RING_Init(&ring_Tx, ring_buffer_TX, CIRC_BUF_TX_SIZE );   
-   
-	 HAL_Delay(1000);
-	 
+    
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
