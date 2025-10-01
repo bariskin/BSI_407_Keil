@@ -23,11 +23,15 @@ extern RTC_HandleTypeDef hrtc;
 
 extern uint8_t RdyWrittingFlag ;
 /* ------------------------Locale variables----------------------------*/
-
+FRESULT resFILE;
 /* ------------------------Functions-----------------------------------*/
 void GetLogFilePath(char* path, uint32_t sensor_id, DateTime_t* time) {
     sprintf(path, "%lu/LOG_%lu.txt", 
             sensor_id,sensor_id);
+}
+
+void GetServiceFilePath(char* path) {
+    sprintf(path, "SERVICE/SERVICE.txt");
 }
 
 void GetCurrentTime(DateTime_t* time) {
@@ -45,7 +49,6 @@ void GetCurrentTime(DateTime_t* time) {
     time->second = rtc_time.Seconds;
 }
 
- FRESULT res22;
 FRESULT CreateSensorDirs(uint32_t sensor_id, DateTime_t* time) {
     char dir_path[64];
     FRESULT res22;
@@ -72,7 +75,8 @@ FRESULT CreateSensorDirs(uint32_t sensor_id, DateTime_t* time) {
 }
 
 
-FRESULT resFILE;
+
+
 FRESULT WriteSensorLog(SensorData_t* data) {
 	
     char filepath[64];
@@ -109,7 +113,6 @@ FRESULT WriteSensorLog(SensorData_t* data) {
            data->timestamp.hour, data->timestamp.minute, 
            data->value);
 		
-		//sprintf(log_line, "Value:   %d\r\n", data->value);
     // Записываем в файл
     resFILE = f_write(&file, log_line, strlen(log_line), &bytes_written);
     
@@ -138,6 +141,80 @@ void SensorDataCallback(uint32_t sensor_id, uint32_t value) {
     }
 }
 
+
+FRESULT  CreateServiceDir(void)
+ {
+   char dir_path[32];
+   FRESULT res;
+	 
+	 snprintf(dir_path, sizeof(dir_path), "SERVICE");
+   res = f_mkdir(dir_path);
+	 
+   if (res == FR_OK ||res == FR_EXIST) 
+	 {  
+	  return FR_OK;
+	 }
+	 // Возвращаем ошибку только в случае других проблем
+    return res;
+ }
+
+FRESULT WriteServiceLog(ServiceData_t* data)
+ {
+    char filepath[64];
+    FIL file;
+    FRESULT res;
+    UINT bytes_written;
+    char log_line[128];
+	
+	    // Проверка монтирования SD карты
+    if (f_mount(&fs, "", 1) != FR_OK) {  // Проверка состояния
+        return FR_NOT_READY;
+    }
+   // Создаем папкe если нужно
+    resFILE = CreateServiceDir();
+    
+		if (resFILE != FR_OK) 
+		{
+			return resFILE;
+    }
+		/* путь к папке SERVICE */
+   GetServiceFilePath(filepath);
+		
+	 resFILE = f_open(&file, filepath, FA_WRITE | FA_OPEN_APPEND | FA_OPEN_ALWAYS);
+   if (resFILE != FR_OK) {
+        return resFILE;
+    }
+	 
+		 // Форматируем строку лога
+    sprintf(log_line, "%04d.%02d.%02d %02d:%02d Количество датчиков: %d\r\n",
+	         data->timestamp.year, data->timestamp.month, data->timestamp.day,
+           data->timestamp.hour, data->timestamp.minute, 
+           data->value);
+		
+		resFILE = f_write(&file, log_line, strlen(log_line), &bytes_written);
+    
+    f_close(&file);
+	 
+		in_file_counter++;
+		RdyWrittingFlag = 0;
+		
+    return resFILE;
+ }
+
+void ServiceDataCallback(uint16_t value)
+ {
+	
+	ServiceData_t servicedata;
+	
+  GetCurrentTime(&servicedata.timestamp);
+	servicedata.value = value;
+	 
+	    // Записываем лог
+   FRESULT res = WriteServiceLog(&servicedata);
+    if (res != FR_OK) {
+        //printf("Error writing log: %d\n", res);
+    }  
+ }
 
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
 

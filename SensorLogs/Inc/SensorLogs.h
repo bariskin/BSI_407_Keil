@@ -47,22 +47,39 @@ typedef struct {
   typedef struct {
     uint32_t sensor_id;
     uint32_t value;
-    DateTime_t timestamp;
+     DateTime_t timestamp;
  } SensorData_t;
 
-typedef struct {
+ typedef struct {
     char filename[64];
     FIL file;
     uint8_t is_open;
-} LogFile_t;
+ } LogFile_t;
+
+ typedef struct {
+    uint32_t value;
+    DateTime_t timestamp;
+ } ServiceData_t;
+ 
+ 
+ 
+ 
+ 
+ typedef enum{
+  DEVICE_POWER = 1 ,
+  CALIBRATION_0    ,
+  CALIBRATION_1    ,
+  ERROR_485
+}  enSensorLog;
 
 
 // Структура лога для 
 typedef struct {
+	  enSensorLog logType;
     uint8_t sensorID;
     uint8_t deviceAddr;
     uint32_t Value;
-} SensorLog_t;
+} SensorLogEvent_t;
 
  /* ------------------------External variables -------------------------*/
   
@@ -72,10 +89,14 @@ typedef struct {
   */
 
   void GetLogFilePath(char* path, uint32_t sensor_id, DateTime_t* time);
+  void GetServiceFilePath(char* path);
   void GetCurrentTime(DateTime_t* time);
   FRESULT CreateSensorDirs(uint32_t sensor_id, DateTime_t* time);
   FRESULT WriteSensorLog(SensorData_t* data) ;
   void SensorDataCallback(uint32_t sensor_id, uint32_t value); 
+  void ServiceDataCallback(uint16_t value);
+  FRESULT  CreateServiceDir(void);
+  FRESULT WriteServiceLog(ServiceData_t* data);
   /**
   * @}
   */

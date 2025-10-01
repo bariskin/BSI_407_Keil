@@ -91,9 +91,12 @@ volatile uint8_t CmdWriteIsReady = 0;
 volatile uint8_t PauseTaskCounter = 0;
  
   /* Глобальная очередь для логов */
+ 
+osMessageQId queueSendLogsHandle;
 QueueHandle_t SD_CardMsgQueue = NULL;
-SensorLog_t sensorLog = {0}; 
-SensorLog_t ReceivedSensorLog = {0};
+ 
+SensorLogEvent_t sensorLog = {0}; 
+
 
 volatile uint8_t RdyWrittingFlag = 0;
 
@@ -136,7 +139,7 @@ osThreadId DisplayTaskHandle;
 uint32_t DisplayTaskBuffer[ 512 ];
 osStaticThreadDef_t DisplayTaskControlBlock;
 osThreadId SendToDispTaskHandle;
-uint32_t SendToDispTaskBuffer[ 1200];
+uint32_t SendToDispTaskBuffer[ 1400];
 osStaticThreadDef_t SendToDispTaskControlBlock;
 osMutexId myMutex01Handle;
 osStaticMutexDef_t myMutex01ControlBlock;
@@ -228,14 +231,19 @@ void MX_FREERTOS_Init(void) {
   DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* definition and creation of SendToDispTask */
-  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityBelowNormal, 0, 1200 , SendToDispTaskBuffer, &SendToDispTaskControlBlock);
+  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityBelowNormal, 0, 1400 , SendToDispTaskBuffer, &SendToDispTaskControlBlock);
   SendToDispTaskHandle = osThreadCreate(osThread(SendToDispTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
 	
 	displayCommandQueue = xQueueCreate(20, sizeof(DisplayCommand_t));
-	SD_CardMsgQueue = xQueueCreate(20, sizeof(SensorLog_t));
+	
+	
+  /* очередь для работы с логами */
+	osMessageQDef(queueSenEvent, 20, SensorLogEvent_t);
+  queueSendLogsHandle = osMessageCreate(osMessageQ(queueSenEvent), NULL);
+	
 	
   /* USER CODE END RTOS_THREADS */
 
@@ -298,6 +306,8 @@ void HoldingHandlerFunction(void const * argument)
 {
   /* USER CODE BEGIN HoldingHandlerFunction */
 	static uint8_t HoldingPollsDone = 0;  // Счётчик выполненных опросов Holding-регистров
+	
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
   osDelay(10000);
 	/* Infinite loop */
   for(;;)
@@ -385,6 +395,16 @@ void HoldingHandlerFunction(void const * argument)
 									
 									   /* получение информации об активных датчиках их адресах */
 									   GetActiveSensors(SensorStateArray, (SensorInfo_t *) &SensorInfo);
+											
+											sensorLog.Value = SensorInfo.count;
+											sensorLog.logType = DEVICE_POWER;
+											
+									    if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+                        }
+                      if (xHigherPriorityTaskWoken == pdTRUE) {
+                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+                       }
+												
 									   /* получение modbus адреса  первого активного датчика на линии */
 								     ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusAddrs[0];  
                     /* вывести окна активных дачтичиков  и перейти на постоянный опрос */
@@ -769,6 +789,9 @@ void DisplayTaskFunction(void const * argument)
 void SendToDispTaskFunction(void const * argument)
 {
   /* USER CODE BEGIN SendToDispTaskFunction */
+	
+	SensorLogEvent_t LogMsg = {0};
+	
 		int i = 1;
 	osDelay(10000);  // 500 ms	
 	
@@ -777,16 +800,27 @@ void SendToDispTaskFunction(void const * argument)
   { 	
  	      if(!RdyWrittingFlag)
 				{
+					 /* постоянно ждем новое сообщение */
+				  if(xQueueReceive(queueSendLogsHandle,&LogMsg,osWaitForever) == pdTRUE){ 
+					
 					 RdyWrittingFlag = 1;
-				   ReceivedSensorLog.sensorID = i;
-		       ReceivedSensorLog.Value = 25;
-		        	
-	         if(i  == 40)  i = 1;
-		       i++;
-				
-			      SensorDataCallback(ReceivedSensorLog.sensorID, ReceivedSensorLog.Value);
+					
+				    switch (LogMsg.logType)
+						{
+							case DEVICE_POWER:				
+								ServiceDataCallback(LogMsg.Value);
+								break;
+							case CALIBRATION_0:
+								break;
+							case CALIBRATION_1:
+								break;
+							case ERROR_485:
+								break;
+						}							
+	        }
+			   //SensorDataCallback(ReceivedSensorLog.sensorID, ReceivedSensorLog.Value);
 				}
-		 osDelay(500);  // 500 ms		
+		 osDelay(50);  // 500 ms		
   }
   /* USER CODE END SendToDispTaskFunction */
 }
