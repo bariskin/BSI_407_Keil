@@ -495,7 +495,7 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
               /* *************************************** */   
             case DISPLAY_SCALE_DIMENSION:
                  CmdIsReady = 1; 
-				
+						
                  cmd.command = DISPLAY_SCALE_DIMENSION;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
@@ -506,8 +506,7 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                 break;
                /* *************************************** */  
             case DISPLAY_SCALE_MAX:
-                // CmdIsReady = 1; 	
-						
+            
                  cmd.command = DISPLAY_SCALE_MAX;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
@@ -518,8 +517,8 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                 break;
               /* *************************************** */   
             case DISPLAY_THRESHOLD_WARNING:
-						     //CmdIsReady = 1; 	
-						
+							
+					       cmd.channelID = channelID;
                  cmd.command = DISPLAY_THRESHOLD_WARNING;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
@@ -529,8 +528,8 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                  break;
                 /* *************************************** */  
             case DISPLAY_THRESHOLD_ALARM: 
-							  //CmdIsReady = 1; 
-						
+					
+						    cmd.channelID = channelID;
                 cmd.command = DISPLAY_THRESHOLD_ALARM;
                 cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                 cmd.binary32 = binary32;
@@ -540,8 +539,8 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                  break;
                 /* *************************************** */ 
             case DISPLAY_THRESHOLD_ADDITIONAL:
-							   //CmdIsReady = 1; 
-						
+							 
+						     cmd.channelID = channelID;
                  cmd.command = DISPLAY_THRESHOLD_ADDITIONAL;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
@@ -557,6 +556,7 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
             case DISPLAY_CALIBRATION_PRIMARY_ZERO: /* for Calibration Primary Zero */
 						     CmdIsReady = 1; // начало записи одной команды 
 						
+						     cmd.channelID = channelID;
                  cmd.command = DISPLAY_CALIBRATION_PRIMARY_ZERO;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                   cmd.binary32 = binary32;
@@ -568,6 +568,7 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
             case DISPLAY_CALIBRATION_POINT_1:    /* for Calibration, Калибровка "Точка 1" */
                  CmdIsReady = 1;      // начало записи одной команды 
 			
+						     cmd.channelID = channelID;
 						     cmd.command = DISPLAY_CALIBRATION_POINT_1;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;

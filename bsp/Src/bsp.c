@@ -19,11 +19,14 @@
 #include "stdlib.h"
 #include <string.h>
 #include "RingBuffer.h"
+#include "SensorLogs.h"
 /* ------------------------External variables -------------------------*/
 extern uint16_t holdingRegsPart1[MAX_MODBUS_SLAVE_REGS_PART];  // Адреса 1-120
 extern UART_HandleTypeDef huart1;
 extern uint8_t ModBusSlaveDefaultDeviceAddr;
 extern uint8_t is_active_rx_uart_buffer; 
+extern SensorLogEvent_t sensorLog; 
+extern osMessageQId queueSendLogsHandle;
 /* ------------------------Global variables----------------------------*/
 uint16_t calibrationProcesStatus = 0x00;
 
@@ -229,6 +232,7 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
  */
 void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS])
 {
+	  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	  uint32_t combined;   // Объединённые 32 бита
 	  float result;        // Результат
     // Validate slave address
@@ -253,7 +257,43 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN]  = 0x0000;
     RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_HIGH_INTERN] = 0x0000;
     RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_LOW_INTERN]  = 0x0000;
-  
+		
+		 if(sensor->Concentration > sensor->SensorAlarm2)
+		 {
+			 sensorLog.sensorID = slave_idx + 1;
+		   sensorLog.Value =   sensor->Concentration; 
+       sensorLog.logType = 	OVER_THRESHOLD_ADDITIONAL;
+			 
+			if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+                        }
+      if (xHigherPriorityTaskWoken == pdTRUE) {
+                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+              } 
+		 }
+		 else if(sensor->Concentration >   sensor->SensorAlarm) 
+		 {
+			sensorLog.sensorID = slave_idx + 1;
+		  sensorLog.Value =   sensor->Concentration; 
+      sensorLog.logType = OVER_THRESHOLD_ALARM;	
+			 
+      if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+                        }
+           if (xHigherPriorityTaskWoken == pdTRUE) {
+                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+              }			 
+		 }
+		 else if(sensor->Concentration >   sensor->SensorWarning) 
+		 {
+			 sensorLog.sensorID = slave_idx + 1;
+		   sensorLog.Value =   sensor->Concentration;
+       sensorLog.logType = OVER_THRESHOLD_WARNING;
+			 
+			if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+                        }
+      if (xHigherPriorityTaskWoken == pdTRUE) {
+                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+             }
+		  }
 }
 
 /**

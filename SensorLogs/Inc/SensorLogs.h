@@ -1,13 +1,13 @@
 /**
 ******************************************************************************
-* @file      SensorLog.h
+* @file      SensorLogs.h
 * @author    OnWert
 * @version   
 * @brief     This file contains defines and all the functions prototypes for the TemplateFile.c
 ******************************************************************************
 */
-#ifndef _TEMPLATE_FILE_H
-#define _TEMPLATE_FILE_H
+#ifndef _SENSOR_LOG_H
+#define _SENSOR_LOG_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,14 +62,18 @@ typedef struct {
  } ServiceData_t;
  
  
- 
- 
- 
  typedef enum{
-  DEVICE_POWER = 1 ,
-  CALIBRATION_0    ,
-  CALIBRATION_1    ,
-  ERROR_485
+    DEVICE_POWER = 1 ,
+    CALIBRATION_0    ,
+    CALIBRATION_1    ,
+    ERROR_485,
+	  THRESHOLD_WARNING,
+	  THRESHOLD_ALARM,
+	  THRESHOLD_ADDITIONAL,
+	  OVER_THRESHOLD_WARNING,
+	  OVER_THRESHOLD_ALARM,
+	  OVER_THRESHOLD_ADDITIONAL,
+    SENSOR_LOG_TYPE_ERROR	 
 }  enSensorLog;
 
 
@@ -91,12 +95,14 @@ typedef struct {
   void GetLogFilePath(char* path, uint32_t sensor_id, DateTime_t* time);
   void GetServiceFilePath(char* path);
   void GetCurrentTime(DateTime_t* time);
-  FRESULT CreateSensorDirs(uint32_t sensor_id, DateTime_t* time);
-  FRESULT WriteSensorLog(SensorData_t* data) ;
-  void SensorDataCallback(uint32_t sensor_id, uint32_t value); 
+  FRESULT CreateSensorDirs(uint32_t sensor_id, DateTime_t*);
+  FRESULT WriteSensorLog(SensorData_t* data,enSensorLog log_type ) ;
+  void SensorDataCallback(uint32_t sensor_id, uint32_t value,enSensorLog log_type);
   void ServiceDataCallback(uint16_t value);
   FRESULT  CreateServiceDir(void);
   FRESULT WriteServiceLog(ServiceData_t* data);
+  const char* get_message(enSensorLog type); 
+  void sendLogToQueue(float value, uint32_t sensor_id);
   /**
   * @}
   */
@@ -105,4 +111,4 @@ typedef struct {
 }
 #endif
 
-#endif  /* _TEMPLATE_FILE_H */
+#endif  /* _SENSOR_LOG_H */

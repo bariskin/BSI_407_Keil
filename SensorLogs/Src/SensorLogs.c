@@ -74,14 +74,11 @@ FRESULT CreateSensorDirs(uint32_t sensor_id, DateTime_t* time) {
     return FR_OK;
 }
 
-
-
-
-FRESULT WriteSensorLog(SensorData_t* data) {
+FRESULT WriteSensorLog(SensorData_t* data,enSensorLog log_type ) {
 	
     char filepath[64];
     FIL file;
-    FRESULT res;
+    
     UINT bytes_written;
     char log_line[64];
 	
@@ -104,14 +101,14 @@ FRESULT WriteSensorLog(SensorData_t* data) {
  
   resFILE = f_open(&file, filepath, FA_WRITE | FA_OPEN_APPEND | FA_OPEN_ALWAYS);
    if (resFILE != FR_OK) {
-        return resFILE;
+        return resFILE; 
   }
-		
+		const char* message  = get_message(log_type); 
     // Форматируем строку лога
-    sprintf(log_line, "%04d.%02d.%02d %02d:%02d  %d\r\n",
+	sprintf(log_line, "%04d.%02d.%02d %02d:%02d %s: %d\r\n",
 	         data->timestamp.year, data->timestamp.month, data->timestamp.day,
            data->timestamp.hour, data->timestamp.minute, 
-           data->value);
+           message, data->value);
 		
     // Записываем в файл
     resFILE = f_write(&file, log_line, strlen(log_line), &bytes_written);
@@ -124,7 +121,7 @@ FRESULT WriteSensorLog(SensorData_t* data) {
     return resFILE;
 }
 
-void SensorDataCallback(uint32_t sensor_id, uint32_t value) {
+void SensorDataCallback(uint32_t sensor_id, uint32_t value,enSensorLog log_type ) {
     SensorData_t sensor_data;
     
     // Заполняем структуру данных
@@ -135,9 +132,9 @@ void SensorDataCallback(uint32_t sensor_id, uint32_t value) {
     GetCurrentTime(&sensor_data.timestamp);
     
     // Записываем лог
-    FRESULT res = WriteSensorLog(&sensor_data);
+    FRESULT res = WriteSensorLog(&sensor_data, log_type);
     if (res != FR_OK) {
-        //printf("Error writing log: %d\n", res);
+ 
     }
 }
 
@@ -162,7 +159,6 @@ FRESULT WriteServiceLog(ServiceData_t* data)
  {
     char filepath[64];
     FIL file;
-    FRESULT res;
     UINT bytes_written;
     char log_line[128];
 	
@@ -216,6 +212,28 @@ void ServiceDataCallback(uint16_t value)
     }  
  }
 
+const char* get_message(enSensorLog type) {
+	switch(type) {
+	 case DEVICE_POWER:                return "test";
+	 case CALIBRATION_0:               return "Калибрование 0";
+	 case CALIBRATION_1:               return "Калибрование 1";
+	 case ERROR_485:                   return "ERROR_484";
+	 case THRESHOLD_WARNING:           return "Порог1";
+	 case THRESHOLD_ALARM:             return "Порог2";
+	 case THRESHOLD_ADDITIONAL:        return "Порог3";
+	 case OVER_THRESHOLD_WARNING:      return "Превышение 1";
+	 case OVER_THRESHOLD_ALARM:        return "Превышение 2";
+	 case OVER_THRESHOLD_ADDITIONAL:   return "Превышение 3";
+	 
+	 case SENSOR_LOG_TYPE_ERROR:  return "unknown";		 
+	}
+}
+void sendLogToQueue(float value, uint32_t sensor_id)
+ {
+ 
+ 
+ 
+ }	
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
 
 

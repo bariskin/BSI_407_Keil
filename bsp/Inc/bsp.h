@@ -67,7 +67,7 @@ extern "C" {
 	
   typedef struct
 	  {
-			uint8_t  SensorModBudAddr;
+			uint8_t SensorModBudAddr;
 			uint8_t DeviceModelCode[10];
 			float SensorScaleMax;
 			char SensorGas[10];
@@ -97,16 +97,16 @@ extern "C" {
 		
 		
 typedef struct {
-    uint8_t count;
-	  uint8_t realChannelNum;
-    uint8_t modbusAddrs[NUMBER_SLAVE_DEVICES];
-} SensorInfo_t; 
+   uint8_t count;
+	 uint8_t realChannelNum;
+   uint8_t modbusAddrs[NUMBER_SLAVE_DEVICES];
+ } SensorInfo_t; 
 		
-	typedef struct
-	  {
-		  uint32_t SetFlag;
-			uint32_t Timestep;
-		}TimeStepReadingSensores_t;	
+typedef struct
+ {
+	 uint32_t SetFlag;
+	 uint32_t Timestep;
+}TimeStepReadingSensores_t;	
 			
  /* ------------------------External variables -------------------------*/
 extern  uint8_t NumberSlaveDevices;

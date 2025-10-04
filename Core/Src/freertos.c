@@ -95,12 +95,20 @@ volatile uint8_t PauseTaskCounter = 0;
 osMessageQId queueSendLogsHandle;
 QueueHandle_t SD_CardMsgQueue = NULL;
  
-SensorLogEvent_t sensorLog = {0}; 
+SensorLogEvent_t sensorLog = {
+	 .logType = SENSOR_LOG_TYPE_ERROR,
+   .sensorID = 0,
+   .deviceAddr = 0,
+   .Value = 0
+}; 
 
+ union {
+     uint32_t i;
+     float f;
+ } converterFloat;
 
 volatile uint8_t RdyWrittingFlag = 0;
-
-
+float currentConcentration = 0.00;
  
 /* USER CODE END PD */
 
@@ -139,7 +147,7 @@ osThreadId DisplayTaskHandle;
 uint32_t DisplayTaskBuffer[ 512 ];
 osStaticThreadDef_t DisplayTaskControlBlock;
 osThreadId SendToDispTaskHandle;
-uint32_t SendToDispTaskBuffer[ 1400];
+uint32_t SendToDispTaskBuffer[ 1600];
 osStaticThreadDef_t SendToDispTaskControlBlock;
 osMutexId myMutex01Handle;
 osStaticMutexDef_t myMutex01ControlBlock;
@@ -231,7 +239,7 @@ void MX_FREERTOS_Init(void) {
   DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* definition and creation of SendToDispTask */
-  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityBelowNormal, 0, 1400 , SendToDispTaskBuffer, &SendToDispTaskControlBlock);
+  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityBelowNormal, 0, 1600 , SendToDispTaskBuffer, &SendToDispTaskControlBlock);
   SendToDispTaskHandle = osThreadCreate(osThread(SendToDispTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -354,8 +362,7 @@ void HoldingHandlerFunction(void const * argument)
 								
 								if( ControlCycleFlag)
 								 {
-									 SelectRunFlag = 5;
-									 
+									 SelectRunFlag = 5; 
 								 }
 					    } 	
 				    /* ********************************* set next slave addr *************************** */	
@@ -369,7 +376,6 @@ void HoldingHandlerFunction(void const * argument)
 									SelectRunFlag = 6;
 									checkParamsValue = false;
 								  checkParamsValue	= compareParams((SensorCurrentState_t *)&writeParams,(SensorCurrentState_t *)&readParams);
-								  //setErrorStatus(checkParamsValue);
 									setErrorStatusFlag = true;
 								}
 								
@@ -395,7 +401,7 @@ void HoldingHandlerFunction(void const * argument)
 									
 									   /* получение информации об активных датчиках их адресах */
 									   GetActiveSensors(SensorStateArray, (SensorInfo_t *) &SensorInfo);
-											
+											/* ************************************* */
 											sensorLog.Value = SensorInfo.count;
 											sensorLog.logType = DEVICE_POWER;
 											
@@ -404,7 +410,8 @@ void HoldingHandlerFunction(void const * argument)
                       if (xHigherPriorityTaskWoken == pdTRUE) {
                           portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
                        }
-												
+											/* ************************************* */	
+											 
 									   /* получение modbus адреса  первого активного датчика на линии */
 								     ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusAddrs[0];  
                     /* вывести окна активных дачтичиков  и перейти на постоянный опрос */
@@ -428,7 +435,6 @@ void HoldingHandlerFunction(void const * argument)
 							readCurrentCalibrationState (ModBusSlaveCurrentDeviceAddr,usMRegHoldBuf);
 							checkParamsValue = getCalibrationProcessState (ModBusSlaveCurrentDeviceAddr);	
 							checkParamsValue = !checkParamsValue; 
-							//setErrorStatus(checkParamsValue);
 							setErrorStatusFlag = true;
 					    SelectRunFlag = 6;
 					   }	 
@@ -439,7 +445,7 @@ void HoldingHandlerFunction(void const * argument)
 				  else if (SelectRunFlag == 6)
 				  	    {
 								 /*  отправка  запроса на считывания значение текущей концентрации */
-								  /* !!!!! на период настройки параметроы с дисплея  отключается запрос концентрации !!!!! */ 
+								  /* !!!!! на период настройки параметров с дисплея  отключается запрос концентрации !!!!! */ 
 									
                    SelectRunFlag = 7;
 									
@@ -459,9 +465,11 @@ void HoldingHandlerFunction(void const * argument)
 									
 									 if(!CmdIsReady){ 
 						    	   /* значение концентрации текущее */
-					           readCurrentSensorValue(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
+					            readCurrentSensorValue(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
 									
-					            /* выбираем только адреса активных приборов */
+										  //sendLogToQueue(currentConcentration);
+										
+					           /* выбираем только адреса активных приборов */
 				            setNextActiveDeviceAddr_(&ModBusSlaveCurrentDeviceAddr,SensorInfo.count);	       // set next active sdevice addr
 									} 
                   		    	
@@ -525,7 +533,21 @@ void HoldingHandlerFunction(void const * argument)
 		    }
 				/* ******************  DISPLAY_CALIBRATION_PRIMARY_ZERO ********************** */	  
 				else	if(displayCmd.command == DISPLAY_CALIBRATION_PRIMARY_ZERO){
-					   
+					 /* ******************************************************************* */
+					
+					sensorLog.sensorID = displayCmd.channelID;
+					
+					converterFloat.i = displayCmd.binary32;
+					sensorLog.Value = converterFloat.f ;
+					
+					sensorLog.logType = CALIBRATION_0;
+											
+					if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+                        }
+           if (xHigherPriorityTaskWoken == pdTRUE) {
+                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+              }
+					 /* ******************************************************************* */ 
 					registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
           registersTX[1] = displayCmd.binary32 & 0xFFFF;
 					
@@ -555,6 +577,22 @@ void HoldingHandlerFunction(void const * argument)
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
 	  else   if(displayCmd.command == DISPLAY_CALIBRATION_POINT_1){	
+			      
+			    /* ******************************************************************* */
+			     sensorLog.sensorID = displayCmd.channelID;
+			
+			     converterFloat.i = displayCmd.binary32;
+					 sensorLog.Value = converterFloat.f; 
+			
+					 sensorLog.logType = CALIBRATION_1;
+											
+					 if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+                        }
+           if (xHigherPriorityTaskWoken == pdTRUE) {
+                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+              }
+			      /* ******************************************************************* */
+	
 			      registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;
 			
@@ -569,7 +607,6 @@ void HoldingHandlerFunction(void const * argument)
 			                                               (USHORT *)&registersTX[0], 
 			                                               300);
 			
-			
             osMutexRelease(myMutex01Handle);
             osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
             osMutexWait(myMutex01Handle, 10);
@@ -583,6 +620,21 @@ void HoldingHandlerFunction(void const * argument)
 		    }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
 			 else	 if(displayCmd.command == DISPLAY_THRESHOLD_WARNING){
+				   
+				    /* ******************************************************************* */
+				    sensorLog.sensorID = displayCmd.channelID;
+				 
+				    converterFloat.i = displayCmd.binary32;
+					  sensorLog.Value = converterFloat.f ; 
+				 
+					  sensorLog.logType = THRESHOLD_WARNING;
+											
+					  if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+                        }
+            if (xHigherPriorityTaskWoken == pdTRUE) {
+                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+              }
+				    /* ******************************************************************* */
 				 
              registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
              registersTX[1] = displayCmd.binary32 & 0xFFFF;
@@ -611,9 +663,23 @@ void HoldingHandlerFunction(void const * argument)
        else if(displayCmd.command == DISPLAY_THRESHOLD_ALARM){
 				 
 				    osMutexRelease(myMutex01Handle);
-             osDelay(TIME_DELAY_PACKET);
+            osDelay(TIME_DELAY_PACKET);
             osMutexWait(myMutex01Handle, 10);
+				  
+				    /* ******************************************************************* */
+				    sensorLog.sensorID = displayCmd.channelID;
 				 
+				    converterFloat.i = displayCmd.binary32;
+					  sensorLog.Value = converterFloat.f; 
+				 
+					  sensorLog.logType = THRESHOLD_ALARM;
+											
+					  if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+                        }
+            if (xHigherPriorityTaskWoken == pdTRUE) {
+                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+              }
+				     /* ******************************************************************* */
             registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;	
 				 
@@ -634,13 +700,27 @@ void HoldingHandlerFunction(void const * argument)
         }
 				/* ******************  DISPLAY_THRESHOLD_ADDITIONAL ************************ */	 
 			 else	if(displayCmd.command == DISPLAY_THRESHOLD_ADDITIONAL){
+				    
+				    /* ******************************************************************* */
+				    sensorLog.sensorID = displayCmd.channelID;
+				 
+				    converterFloat.i = displayCmd.binary32;
+					  sensorLog.Value = converterFloat.f; 
+				 
+					  sensorLog.logType = THRESHOLD_ADDITIONAL;
+											
+					  if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+                        }
+            if (xHigherPriorityTaskWoken == pdTRUE) {
+                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+              }
+				     /* ******************************************************************* */
 				    registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;	
 				 
 				    osMutexRelease(myMutex01Handle);
             osDelay(TIME_DELAY_PACKET);
             osMutexWait(myMutex01Handle, 10);
-				 
 				 
             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,
 				                                             SENSOR_THRESHOLD_ADDITIONAL_HIGH, 
@@ -790,9 +870,13 @@ void SendToDispTaskFunction(void const * argument)
 {
   /* USER CODE BEGIN SendToDispTaskFunction */
 	
-	SensorLogEvent_t LogMsg = {0};
-	
-		int i = 1;
+	SensorLogEvent_t LogMsg = {
+	 .logType = SENSOR_LOG_TYPE_ERROR,
+   .sensorID = 0,
+   .deviceAddr = 0,
+   .Value = 0
+ };
+
 	osDelay(10000);  // 500 ms	
 	
   /* Infinite loop */
@@ -805,22 +889,43 @@ void SendToDispTaskFunction(void const * argument)
 					
 					 RdyWrittingFlag = 1;
 					
-				    switch (LogMsg.logType)
+				    switch ((uint8_t)LogMsg.logType)
 						{
 							case DEVICE_POWER:				
 								ServiceDataCallback(LogMsg.Value);
 								break;
 							case CALIBRATION_0:
+								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,CALIBRATION_0);
 								break;
 							case CALIBRATION_1:
+								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,CALIBRATION_1);
 								break;
 							case ERROR_485:
+								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,ERROR_485);
 								break;
+							case THRESHOLD_WARNING:
+								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,THRESHOLD_WARNING);
+									break;
+	            case THRESHOLD_ALARM:
+								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,THRESHOLD_ALARM);
+									break;
+	            case THRESHOLD_ADDITIONAL:
+								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,THRESHOLD_ADDITIONAL);
+									break;	
+							case OVER_THRESHOLD_WARNING:
+								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_WARNING);
+									break;
+	            case OVER_THRESHOLD_ALARM:
+								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_ALARM);
+									break;
+	            case OVER_THRESHOLD_ADDITIONAL:
+								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_ADDITIONAL);
+									break;
 						}							
 	        }
-			   //SensorDataCallback(ReceivedSensorLog.sensorID, ReceivedSensorLog.Value);
+			  
 				}
-		 osDelay(50);  // 500 ms		
+		 osDelay(50);
   }
   /* USER CODE END SendToDispTaskFunction */
 }

@@ -50,7 +50,6 @@ extern "C" {
 			uint8_t scaleDimension_hex;					
 			uint32_t Porog1_int32;							
 			uint32_t Porog2_int32;	
-  		//uint32_t Porog3_int32;		
 			uint32_t model_hex;						
     }paramDev_t;
 	
@@ -73,6 +72,7 @@ typedef struct {
     uint8_t command;
     uint8_t deviceAddr;
     uint32_t binary32;
+	  uint32_t channelID;
 } DisplayCommand_t;
  /* ------------------------External variables -------------------------*/
   
