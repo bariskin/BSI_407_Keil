@@ -283,6 +283,11 @@ void GetDisplayCmd(uint8_t inputByte) {
                             displayResponse = DISPLAY_BAUD_RATE_CMD;
                         }
                     }
+										else if (arrDisplayRX[0] == DISPLAY_TIME && data_length >= 15) 
+										{
+										
+										
+										}
 										else if (significant_bytes_count == 3 && arrDisplayRX[1] == 0x01 && arrDisplayRX[2] == 0xFE) 
 										{
 											   // ФИЛЬТРАЦИЯ: отбрасываем команду сброса
@@ -457,7 +462,11 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
             //InitNextionDisplayWithDeviceData(numberOfDevices);
             processed_without_channel = 1;
             break;
-            
+				
+				case DISPLAY_TIME:
+					
+				
+        break;    
         case DISPLAY_BAUD_RATE_CMD: // Смена скорости UART
             if (arrDisplayRX[1] >= 1 && arrDisplayRX[1] <= 6) {
                 MB_BaudRateValue = getBaudrate(arrDisplayRX[1]);

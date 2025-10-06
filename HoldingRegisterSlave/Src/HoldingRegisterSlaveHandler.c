@@ -33,6 +33,13 @@ volatile uint32_t  MB_AddresseValue = 0x00000000;
 
 volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
 
+volatile uint16_t  year    = 0x00;
+volatile uint8_t   month   = 0x00;
+volatile uint8_t   day     = 0x00;
+volatile uint8_t   hour    = 0x00;
+volatile uint8_t   minute  = 0x00;
+volatile uint8_t   second  = 0x00;
+
 /* ------------------------Locale variables----------------------------*/
 
 /* ------------------------Functions-----------------------------------*/
@@ -52,7 +59,6 @@ volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
         {
 			    holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_1] = getBaudRateId(MB_BaudRateValue);
 			  }			
-		  osDelay(1);
 			break;
 			/* ************* parity ************ */
 			case HOLDING_REGISTER_SLAVE_IDX_2:
@@ -66,8 +72,6 @@ volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
 			 {
          holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_2] = getParityId(MB_ParityValue); 
 			 }	
-			 
-		   osDelay(1);
 			 break;
 			/* ************* stop bits************ */
 			case HOLDING_REGISTER_SLAVE_IDX_3: 
@@ -80,8 +84,7 @@ volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
 			 else
 			  {
          holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_3] = getStopBitsId(MB_StopBitsValue); 
-			  } 
-        osDelay(1);				
+			  } 			
 			 break;
 			/* ********* SLAVE ID (modbus addr) **** */ 
 			 case HOLDING_REGISTER_SLAVE_IDX_4: 
@@ -96,12 +99,10 @@ volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
 			  else
 			  {
 			   holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_4] =  MB_AddresseValue;
-			  } 
-		   osDelay(1);				
+			  } 			
 			 break;
 		 case HOLDING_REGISTER_SLAVE_IDX_5: 
 
-		 
 			 if(RegValue >= TIME_STEP_MIN_2  && RegValue <= 2000)
 			   { 	 
 					 timeStep = RegValue; 
@@ -111,12 +112,85 @@ volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
 				else
 			  {
 			    holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_5] =  timeStep;
-			  } 			 
-		 osDelay(1);				
+			  } 			 			
 			 break;
-						
+		 case HOLDING_REGISTER_SLAVE_IDX_6: 
+			 
+       if(RegValue >= 2000  && RegValue <= 2099 )
+		     {
+					  year  = RegValue - 2000;
+				  	xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_6, eSetValueWithOverwrite); 
+				 }
+				else
+				{
+				  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_6] =  Get_RTC_Year() + 2000;;
+				}
+				 break;
+		 case HOLDING_REGISTER_SLAVE_IDX_7:
+			 
+		    if(RegValue >= 1  && RegValue <= 12 )
+		     {
+					  month  = RegValue;
+				  	xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_7, eSetValueWithOverwrite); 
+				 }
+				else
+				{
+				  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_7] = Get_RTC_Month();
+				}
+			 
+				 break;		
+		 case HOLDING_REGISTER_SLAVE_IDX_8: 		
+			   if(RegValue >= 1  && RegValue <= 31 )
+		     {
+					  day  = RegValue;
+				  	xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_8, eSetValueWithOverwrite); 
+				 }
+				else
+				{
+				  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_8] = Get_RTC_Day();
+				}
+		     
+				 break; 
+		 case HOLDING_REGISTER_SLAVE_IDX_9: 
+			 
+		     if(RegValue >= 1  && RegValue <= 23 )
+		     {
+					  hour  = RegValue;
+				  	xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_9, eSetValueWithOverwrite); 
+				 }
+				else
+				{
+				  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_9] = Get_RTC_Hour();
+				}
+			 
+				 break;
+		 case HOLDING_REGISTER_SLAVE_IDX_10: 	
+			 
+			   if(RegValue >= 1  && RegValue <= 59 )
+		     {
+					  minute  = RegValue;
+				  	xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_10, eSetValueWithOverwrite); 
+				 }
+				else
+				{
+				  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_10] = Get_RTC_Minute();
+				}
+				 break;		
+		 case HOLDING_REGISTER_SLAVE_IDX_11: 	
+			 
+			   if(RegValue >= 1  && RegValue <= 59 )
+		     {
+					  second  = RegValue;
+				  	xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_11, eSetValueWithOverwrite); 
+				 }
+				else
+				{
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_11] = Get_RTC_Second();
+				}
+				 break; 
+		 
 		}
-		
+		osDelay(1);	
 	}
 	
  uint16_t WriteParamToModbusSlaveStack(uint16_t MBregIdx)
@@ -129,35 +203,61 @@ volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
 			 case HOLDING_REGISTER_SLAVE_IDX_1 :
 				 
 				 OutputValue =  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_1];
-			   osDelay(1);
 				 break;
 			 /* ************* parity ************ */
 			 case HOLDING_REGISTER_SLAVE_IDX_2 :
 				 
 				 OutputValue =  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_2];
-			   osDelay(1);
 				 break;
 			 
 			 /* ************* stop bits************ */
 			 case HOLDING_REGISTER_SLAVE_IDX_3 :
 				
 			   OutputValue =  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_3];
-			   osDelay(1);
 				 break;		 
 			 /* ********* SLAVE ID (modbus addr) **** */ 
 			 case HOLDING_REGISTER_SLAVE_IDX_4 :
 				
 			   OutputValue =  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_4];
-			   osDelay(1);
 				 break;
 			 /* ********* the time step for reading the sensor **** */   
 			 case HOLDING_REGISTER_SLAVE_IDX_5 :
 				
 			   OutputValue =  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_5];
-			   osDelay(1);
 				 break;
+			  /* ************************* год ******************** */   
+			  case HOLDING_REGISTER_SLAVE_IDX_6: 
+					
+				 OutputValue =  Get_RTC_Year() + 2000;
+				
+				 break;
+				/* ************************* мес€ц ******************** */   
+		 case HOLDING_REGISTER_SLAVE_IDX_7: 
 			 
-			}		
+         OutputValue =  Get_RTC_Month();	
+		 
+				 break;	
+        /* ************************* день ******************** */  		 
+		 case HOLDING_REGISTER_SLAVE_IDX_8: 
+
+         OutputValue = Get_RTC_Day() ;			 
+				 break;
+		   /* ************************* час ******************** */  	
+		 case HOLDING_REGISTER_SLAVE_IDX_9: 	
+
+		     OutputValue =  Get_RTC_Hour();		
+				 break;
+		 /* ************************* минуты ******************** */  
+		 case HOLDING_REGISTER_SLAVE_IDX_10: 
+         
+         OutputValue =  Get_RTC_Minute();				 
+				 break;		
+		 case HOLDING_REGISTER_SLAVE_IDX_11: 
+			 
+         OutputValue =  Get_RTC_Second();					 
+				 break;
+			}	
+     osDelay(1);			
 		return	OutputValue;
 	}
  
@@ -245,7 +345,56 @@ volatile uint16_t  timeStep = (uint16_t)TIME_STEP_MIN_2; // ms
 							 
 							 	eMBEnable( );					 
 							 	osDelay(10);
-						 }	 
+						 }	
+          else if(ulNotifiedValue == HOLDING_REGISTER_SLAVE_IDX_6) 
+             { 
+							 eMBDisable( );
+							 osDelay(5);
+							 Set_RTC_Year(year);
+							 eMBEnable( );					 
+							 osDelay(10);
+
+						 }
+					  else if(ulNotifiedValue == HOLDING_REGISTER_SLAVE_IDX_7) 
+             { 
+							 eMBDisable( );
+							 osDelay(5);
+							 Set_RTC_Month(month);
+							 eMBEnable( );					 
+							 osDelay(10);
+						 }	
+             else if(ulNotifiedValue == HOLDING_REGISTER_SLAVE_IDX_8) 
+             { 
+							 eMBDisable( );
+							 osDelay(5);
+							 Set_RTC_Day(day);
+							 eMBEnable( );					 
+							 osDelay(10);
+						 }	
+						 else if(ulNotifiedValue == HOLDING_REGISTER_SLAVE_IDX_9) 
+             { 
+							 eMBDisable( );
+							 osDelay(5);
+							 Set_RTC_Hour(hour);
+							 eMBEnable( );					 
+							 osDelay(10);
+						 }	
+             else if(ulNotifiedValue == HOLDING_REGISTER_SLAVE_IDX_10) 
+             { 
+							 eMBDisable( );
+							 osDelay(5);
+							 Set_RTC_Minute(minute);
+							 eMBEnable( );					 
+							 osDelay(10);
+						 }	
+            else if(ulNotifiedValue == HOLDING_REGISTER_SLAVE_IDX_11) 
+             { 
+							 eMBDisable( );
+							 osDelay(1);
+	             Set_RTC_Second(second);
+							 eMBEnable( );					 
+							 osDelay(10);
+						 }						 
 				 
 	 }
 /************************ (C) COPYRIGHT @OnWert *****END OF FILE****/

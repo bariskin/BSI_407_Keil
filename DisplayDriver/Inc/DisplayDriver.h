@@ -64,7 +64,8 @@ typedef enum {
 	  DISPLAY_THRESHOLD_WARNING        = 0x04, 
     DISPLAY_THRESHOLD_ALARM          = 0x05,
 	  DISPLAY_SUBSTANCE_CODE           = 0x06,	
-	  DISPLAY_THRESHOLD_ADDITIONAL     = 0x07,  
+	  DISPLAY_THRESHOLD_ADDITIONAL     = 0x07, 
+    DISPLAY_TIME                     = 0xA2   	
 } DisplayResponseCmd;
 		
 		// Структура для команд от дисплея

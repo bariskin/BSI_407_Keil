@@ -134,6 +134,18 @@ extern bool checkParamsValue ;
 		bool compareParams(SensorCurrentState_t *writeParams, SensorCurrentState_t *reasParams );
 		void readCurrentCalibrationState(uint8_t slaveaddr,uint16_t RegHoldingBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS]);
     bool getCalibrationProcessState(uint8_t slaveaddr);
+		HAL_StatusTypeDef Set_RTC_Year(uint8_t year);
+		uint16_t Get_RTC_Year(void);
+		HAL_StatusTypeDef Set_RTC_Month(uint8_t month);
+		uint8_t Get_RTC_Month(void);
+		HAL_StatusTypeDef Set_RTC_Day(uint8_t day);
+		uint8_t Get_RTC_Day(void);
+		HAL_StatusTypeDef Set_RTC_Hour(uint8_t hour);
+		uint8_t Get_RTC_Hour(void);
+		HAL_StatusTypeDef Set_RTC_Minute(uint8_t minute);
+		uint8_t Get_RTC_Minute(void);
+		HAL_StatusTypeDef Set_RTC_Second(uint8_t second);
+		uint8_t Get_RTC_Second(void);
  /**
   * @}
   */

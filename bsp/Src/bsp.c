@@ -27,6 +27,7 @@ extern uint8_t ModBusSlaveDefaultDeviceAddr;
 extern uint8_t is_active_rx_uart_buffer; 
 extern SensorLogEvent_t sensorLog; 
 extern osMessageQId queueSendLogsHandle;
+extern RTC_HandleTypeDef hrtc;
 /* ------------------------Global variables----------------------------*/
 uint16_t calibrationProcesStatus = 0x00;
 
@@ -690,4 +691,225 @@ bool getCalibrationProcessState(uint8_t slaveaddr)
 		 return false;
 		}
  }	
+ 
+ // Функция для установки только года
+HAL_StatusTypeDef Set_RTC_Year(uint8_t year)
+{
+    RTC_DateTypeDef sDate;
+    
+    // Сначала читаем текущую дату
+    if (HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    
+    // Меняем только год
+    sDate.Year = year;  // 0-99, где 0 = 2000 год
+    
+    // Устанавливаем обновленную дату
+    if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    
+    return HAL_OK;
+}
+ 
+uint16_t Get_RTC_Year(void)
+ {
+    RTC_DateTypeDef sDate;
+    
+    HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+    
+    return sDate.Year;  // Возвращает год (0-99)
+ }
+ 
+// Функция для установки только месяца
+HAL_StatusTypeDef Set_RTC_Month(uint8_t month)
+{
+    RTC_DateTypeDef sDate;
+    
+    // Проверка корректности месяца
+    if (month < 1 || month > 12) {
+        return HAL_ERROR;
+    }
+    
+    // Сначала читаем текущую дату
+    if (HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    
+    // Меняем только месяц
+    sDate.Month = month;
+    
+    // Устанавливаем обновленную дату
+    if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    
+    return HAL_OK;
+} 
+ 
+// Функция для чтения текущего месяца
+uint8_t Get_RTC_Month(void)
+{
+    RTC_DateTypeDef sDate;
+    
+    HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+    
+    return sDate.Month;  // Возвращает месяц (1-12)
+}
+ 
+// Функция для установки только дня
+HAL_StatusTypeDef Set_RTC_Day(uint8_t day)
+{
+    RTC_DateTypeDef sDate;
+    
+    // Проверка корректности дня
+    if (day < 1 || day > 31) {
+        return HAL_ERROR;
+    }
+    
+    // Сначала читаем текущую дату
+    if (HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    
+    // Дополнительная проверка в зависимости от месяца
+    uint8_t current_month = sDate.Month;
+    
+    // Проверка для месяцев с 30 днями
+    if ((current_month == 4 || current_month == 6 || current_month == 9 || current_month == 11) && day > 30) {
+        return HAL_ERROR;
+    }
+    
+    // Проверка для февраля (упрощенная, без учета високосных лет)
+    if (current_month == 2 && day > 28) {
+        return HAL_ERROR;
+    }
+    
+    // Меняем только день
+    sDate.Date = day;
+    
+    // Устанавливаем обновленную дату
+    if (HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    
+    return HAL_OK;
+}
+
+// Функция для чтения текущего дня
+uint8_t Get_RTC_Day(void)
+{
+    RTC_DateTypeDef sDate;
+    
+    HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+    
+    return sDate.Date;  // Возвращает день (1-31)
+}
+
+// Функция для установки только часа
+HAL_StatusTypeDef Set_RTC_Hour(uint8_t hour)
+{
+    RTC_TimeTypeDef sTime;
+    
+    // Проверка корректности часа (24-часовой формат)
+    if (hour > 23) {
+        return HAL_ERROR;
+    }
+    
+    // Сначала читаем текущее время
+    if (HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    
+    // Меняем только час
+    sTime.Hours = hour;
+    
+    // Устанавливаем обновленное время
+    if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    
+    return HAL_OK;
+}
+// Функция для чтения текущего часа
+uint8_t Get_RTC_Hour(void)
+{
+    RTC_TimeTypeDef sTime;
+    
+    HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+    
+    return sTime.Hours;  // Возвращает час (0-23)
+}
+
+// Функция для установки только минут
+HAL_StatusTypeDef Set_RTC_Minute(uint8_t minute)
+{
+    RTC_TimeTypeDef sTime;
+    
+    // Проверка корректности минут
+    if (minute > 59) {
+        return HAL_ERROR;
+    }
+    
+    // Сначала читаем текущее время
+    if (HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    
+    // Меняем только минуты
+    sTime.Minutes = minute;
+    
+    // Устанавливаем обновленное время
+    if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    
+    return HAL_OK;
+}
+
+// Функция для чтения текущих минут
+uint8_t Get_RTC_Minute(void)
+{
+    RTC_TimeTypeDef sTime;
+    
+    HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+    
+    return sTime.Minutes;  // Возвращает минуты (0-59)
+}
+// Функция для установки только секунд
+HAL_StatusTypeDef Set_RTC_Second(uint8_t second)
+{
+    RTC_TimeTypeDef sTime;
+    
+    // Проверка корректности секунд
+    if (second > 59) {
+        return HAL_ERROR;
+    }
+    
+    // Сначала читаем текущее время
+    if (HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    
+    // Меняем только секунды
+    sTime.Seconds = second;
+    
+    // Устанавливаем обновленное время
+    if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    
+    return HAL_OK;
+}
+
+// Функция для чтения текущих секунд
+uint8_t Get_RTC_Second(void)
+{
+    RTC_TimeTypeDef sTime;
+    
+    HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+    
+    return sTime.Seconds;  // Возвращает секунды (0-59)
+}
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/

@@ -131,9 +131,12 @@ eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNR
                 
                 // Выбираем нужный массив в зависимости от адреса
                 if (currentAddr < MAX_MODBUS_SLAVE_REGS_PART) {
-                    regValue = holdingRegsPart1[currentAddr];
+                     //regValue = holdingRegsPart1[currentAddr];
+									   regValue = WriteParamToModbusSlaveStack(currentAddr);
+									
                 } else {
-                    regValue = holdingRegsPart2[currentAddr - MAX_MODBUS_SLAVE_REGS_PART];
+                    //regValue = holdingRegsPart2[currentAddr - MAX_MODBUS_SLAVE_REGS_PART];
+									  regValue = WriteParamToModbusSlaveStack(currentAddr - MAX_MODBUS_SLAVE_REGS_PART);
                 }
                 
                 // Записываем в буфер в формате big-endian

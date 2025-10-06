@@ -28,13 +28,27 @@ extern "C" {
  #define HOLDING_REGISTER_SLAVE_IDX_3   (uint16_t)0x0002  // setting ModBus Stop Bits
  #define HOLDING_REGISTER_SLAVE_IDX_4   (uint16_t)0x0003  // setting ModBus addr
  #define HOLDING_REGISTER_SLAVE_IDX_5   (uint16_t)0x0004  // setting the time step for reading the sensor
- 
+ #define HOLDING_REGISTER_SLAVE_IDX_6   (uint16_t)0x0005  // год 
+ #define HOLDING_REGISTER_SLAVE_IDX_7   (uint16_t)0x0006  // месяц
+ #define HOLDING_REGISTER_SLAVE_IDX_8   (uint16_t)0x0007  // день
+ #define HOLDING_REGISTER_SLAVE_IDX_9   (uint16_t)0x0008  // часы
+ #define HOLDING_REGISTER_SLAVE_IDX_10  (uint16_t)0x0009  // минуты
+ #define HOLDING_REGISTER_SLAVE_IDX_11  (uint16_t)0x000A  // секунды
  /* ------------------------External variables -------------------------*/
  extern volatile  uint32_t  MB_BaudRateValue;
  extern volatile  uint32_t  MB_ParityValue;
  extern volatile  uint32_t  MB_StopBitsValue;
  extern volatile  uint32_t  MB_AddresseValue;
  extern volatile  uint16_t  timeStep;
+ extern volatile uint16_t   year;
+ extern volatile uint8_t   month;
+ extern volatile uint8_t   day;
+ extern volatile uint8_t   hour;
+ extern volatile uint8_t   minute;
+ extern volatile uint8_t   second;
+ 
+ 
+ 
   /** @addtogroup holding_register_handler
   * @{
   */

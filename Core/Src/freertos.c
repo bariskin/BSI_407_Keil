@@ -141,10 +141,10 @@ osThreadId InputHandlerHandle;
 uint32_t InputHandlerBuffer[ 256 ];
 osStaticThreadDef_t InputHandlerControlBlock;
 osThreadId SlaveEventTaskHandle;
-uint32_t SlaveEventTaskBuffer[ 256 ];
+uint32_t SlaveEventTaskBuffer[ 512 ];
 osStaticThreadDef_t SlaveEventTaskControlBlock;
 osThreadId DisplayTaskHandle;
-uint32_t DisplayTaskBuffer[ 512 ];
+uint32_t DisplayTaskBuffer[ 1024 ];
 osStaticThreadDef_t DisplayTaskControlBlock;
 osThreadId SendToDispTaskHandle;
 uint32_t SendToDispTaskBuffer[ 1600];
@@ -231,11 +231,11 @@ void MX_FREERTOS_Init(void) {
   InputHandlerHandle = osThreadCreate(osThread(InputHandler), NULL);
 
   /* definition and creation of SlaveEventTask */
-  osThreadStaticDef(SlaveEventTask, SlaveEventFunction, osPriorityBelowNormal, 0, 256, SlaveEventTaskBuffer, &SlaveEventTaskControlBlock);
+  osThreadStaticDef(SlaveEventTask, SlaveEventFunction, osPriorityBelowNormal, 0, 512, SlaveEventTaskBuffer, &SlaveEventTaskControlBlock);
   SlaveEventTaskHandle = osThreadCreate(osThread(SlaveEventTask), NULL);
 
   /* definition and creation of DisplayTask */
-  osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 512, DisplayTaskBuffer, &DisplayTaskControlBlock);
+  osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 1024, DisplayTaskBuffer, &DisplayTaskControlBlock);
   DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* definition and creation of SendToDispTask */
@@ -249,7 +249,7 @@ void MX_FREERTOS_Init(void) {
 	
 	
   /* очередь для работы с логами */
-	osMessageQDef(queueSenEvent, 20, SensorLogEvent_t);
+	osMessageQDef(queueSenEvent, 24, SensorLogEvent_t);
   queueSendLogsHandle = osMessageCreate(osMessageQ(queueSenEvent), NULL);
 	
 	
