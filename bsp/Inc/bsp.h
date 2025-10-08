@@ -146,6 +146,8 @@ extern bool checkParamsValue ;
 		uint8_t Get_RTC_Minute(void);
 		HAL_StatusTypeDef Set_RTC_Second(uint8_t second);
 		uint8_t Get_RTC_Second(void);
+		HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size);
+    HAL_StatusTypeDef hex_to_ascii_minimal(char* hex_str, char* ascii_buf);
  /**
   * @}
   */

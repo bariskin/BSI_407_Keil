@@ -20,6 +20,8 @@
 #include <string.h>
 #include "RingBuffer.h"
 #include "SensorLogs.h"
+#include <stdlib.h>
+#include <string.h>
 /* ------------------------External variables -------------------------*/
 extern uint16_t holdingRegsPart1[MAX_MODBUS_SLAVE_REGS_PART];  // Адреса 1-120
 extern UART_HandleTypeDef huart1;
@@ -31,6 +33,8 @@ extern RTC_HandleTypeDef hrtc;
 /* ------------------------Global variables----------------------------*/
 uint16_t calibrationProcesStatus = 0x00;
 
+RTC_TimeTypeDef sTime = {0};
+RTC_DateTypeDef sDate = {0};
 
 uint8_t NumberSlaveDevices       = 0x00;
 SensorState_t  SensorStateArray[NUMBER_SLAVE_DEVICES] = {0};
@@ -912,4 +916,99 @@ uint8_t Get_RTC_Second(void)
     
     return sTime.Seconds;  // Возвращает секунды (0-59)
 }
+
+/**
+  * @brief  Устанавливает время и дату в RTC из HEX-строки формата "HH:MM/DD.MM.YYYY"
+  * @param  hex_str: Указатель на строку с HEX-данными (разделители - пробелы)
+  * @retval HAL status: HAL_OK при успехе, HAL_ERROR при ошибке
+  */
+ char ascii_buffer[17] = {0}; // Буфер для ASCII строки (16 символов + нуль-терминатор)
+ 
+/**
+  * @brief  Полная функция установки времени в RTC из HEX-строки
+  */
+HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size)
+{
+    RTC_TimeTypeDef sTime = {0};
+    RTC_DateTypeDef sDate = {0};
+    
+    // 1. Преобразование HEX-строки в ASCII
+		//char hex_str_[] = "32 31 3A 35 30 2F 30 34 2E 31 30 2E 32 30 32 37";
+		
+		  char hex_str_[64]; // Буфер для результирующей строки
+		  int pos = 0;
+    
+       for (int i = 0; i < size; i++) {
+        // Преобразуем каждый байт в два HEX символа
+        pos += sprintf(&hex_str_[pos], "%02X", hex_str[i]);
+        HAL_Delay(1);
+        // Добавляем пробел (кроме последнего элемента)
+        if (i < size - 1) {
+            hex_str_[pos++] = ' ';
+        }
+      }
+     hex_str_[pos] = '\0'; // Завершаем строку
+		
+		 HAL_Delay(1);
+    if (hex_to_ascii_minimal(hex_str_, ascii_buffer) != HAL_OK) {
+        return HAL_ERROR;
+    }
+		HAL_Delay(1);
+    // 2. Парсинг ASCII строки формата "HH:MM/DD.MM.YYYY"
+    int hours, minutes, day, month, year;
+    if (sscanf(ascii_buffer, "%02d:%02d/%02d.%02d.%04d", 
+               &hours, &minutes, &day, &month, &year) != 5) {
+        return HAL_ERROR;
+    }
+    HAL_Delay(1);
+    // 3. Валидация полученных значений
+    if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59 ||
+        day < 1 || day > 31 || month < 1 || month > 12 || year < 2000) {
+        return HAL_ERROR;
+    } 
+    // 4. Настройка структуры времени
+    sTime.Hours = hours;
+    sTime.Minutes = minutes;
+    sTime.Seconds = 0;
+    sTime.TimeFormat = RTC_HOURFORMAT_24;
+ 
+    // 5. Настройка структуры даты
+    sDate.Month = month;
+    sDate.Date = day;
+    sDate.Year = year - 2000; // Преобразование года в формат RTC (0-99)
+    
+    // 6. Установка времени и даты в RTC
+    HAL_StatusTypeDef status;
+    HAL_Delay(1);
+    status = HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+    if (status != HAL_OK) return status;
+    HAL_Delay(1);
+    status = HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+    if (status != HAL_OK) return status;
+    
+    return HAL_OK;
+}
+
+HAL_StatusTypeDef hex_to_ascii_minimal(char* hex_str, char* ascii_buf)
+{
+    // Просто игнорируем пробелы и преобразуем подряд
+    int ascii_index = 0;
+    int hex_index = 0;
+    
+    while (ascii_index < 16) {
+        // Пропускаем пробелы
+        while (hex_str[hex_index] == ' ') hex_index++;
+        
+        if (hex_str[hex_index] == '\0') return HAL_ERROR;
+        
+        // Берем два символа подряд
+        char hex_byte[3] = {hex_str[hex_index], hex_str[hex_index + 1], '\0'};
+        ascii_buf[ascii_index++] = (char)strtoul(hex_byte, NULL, 16);
+        hex_index += 2;
+    }
+    
+    ascii_buf[16] = '\0';
+    return HAL_OK;
+}
+
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/

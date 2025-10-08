@@ -38,7 +38,7 @@ extern  SensorInfo_t  SensorInfo;
  uint8_t channelID = 0x00;
 extern   uint32_t binary32;
  
- #define MAX_SIGNIFICANT_BYTES  12 // Максимум значимых байтов для сохранения 
+ #define MAX_SIGNIFICANT_BYTES  20 // Максимум значимых байтов для сохранения 
  #define CHECK_3_ZEROS(arr) (arr[0] == 0 && arr[1] == 0 && arr[2] == 0)
  volatile uint16_t rx_index = 0;             
  volatile uint8_t displayResponse = 0;
@@ -71,7 +71,7 @@ extern  SensorCurrentState_t	readParams  ;
 	uint16_t speed;
 	char posit[NUMBER_SLAVE_DEVICES][20];
  } flash_struct;
- 
+ char time_input_string[16] = {0};
 /* ------------------------Functions-----------------------------------*/
  void Init_qDev(void){
 	 flash_struct.dev_quan = 10;
@@ -283,14 +283,19 @@ void GetDisplayCmd(uint8_t inputByte) {
                             displayResponse = DISPLAY_BAUD_RATE_CMD;
                         }
                     }
-										else if (arrDisplayRX[0] == DISPLAY_TIME && data_length >= 15) 
-										{
-										
-										
+										else if (arrDisplayRX[0] == DISPLAY_TIME_CMD && data_length >= 15) 
+										{	 
+										      displayResponse = DISPLAY_TIME_CMD;
+											
+											/* извлечь время и дату из строки и установить */
+											  HAL_Delay(1);
+												memcpy(time_input_string, (void *)&arrDisplayRX[1], 16);
+											  HAL_Delay(1);
+										  	RTC_SetFromHexString((char *)&time_input_string,16);
 										}
 										else if (significant_bytes_count == 3 && arrDisplayRX[1] == 0x01 && arrDisplayRX[2] == 0xFE) 
 										{
-											   // ФИЛЬТРАЦИЯ: отбрасываем команду сброса
+											   // ФИЛЬТРАЦИЯ: отбрасываем команду сброс
                             //printf("Обнаружена команда сброса - пакет отбрасывается\n");
                             displayResponse = 0x00;
                             channelID = 0x00;
@@ -463,9 +468,9 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
             processed_without_channel = 1;
             break;
 				
-				case DISPLAY_TIME:
-					
-				
+				case DISPLAY_TIME_CMD:	
+		
+				 processed_without_channel = 1;
         break;    
         case DISPLAY_BAUD_RATE_CMD: // Смена скорости UART
             if (arrDisplayRX[1] >= 1 && arrDisplayRX[1] <= 6) {

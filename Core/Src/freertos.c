@@ -144,7 +144,7 @@ osThreadId SlaveEventTaskHandle;
 uint32_t SlaveEventTaskBuffer[ 512 ];
 osStaticThreadDef_t SlaveEventTaskControlBlock;
 osThreadId DisplayTaskHandle;
-uint32_t DisplayTaskBuffer[ 1024 ];
+uint32_t DisplayTaskBuffer[ 1080 ];
 osStaticThreadDef_t DisplayTaskControlBlock;
 osThreadId SendToDispTaskHandle;
 uint32_t SendToDispTaskBuffer[ 1600];
@@ -235,7 +235,7 @@ void MX_FREERTOS_Init(void) {
   SlaveEventTaskHandle = osThreadCreate(osThread(SlaveEventTask), NULL);
 
   /* definition and creation of DisplayTask */
-  osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 1024, DisplayTaskBuffer, &DisplayTaskControlBlock);
+  osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 1080, DisplayTaskBuffer, &DisplayTaskControlBlock);
   DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* definition and creation of SendToDispTask */

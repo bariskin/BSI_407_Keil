@@ -437,6 +437,31 @@
           <WinNumber>2</WinNumber>
           <ItemText>sTime</ItemText>
         </Ww>
+        <Ww>
+          <count>45</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>arrDisplayRX</ItemText>
+        </Ww>
+        <Ww>
+          <count>46</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>ascii_buffer[17]</ItemText>
+        </Ww>
+        <Ww>
+          <count>47</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>ascii_buffer</ItemText>
+        </Ww>
+        <Ww>
+          <count>48</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>hex_str_</ItemText>
+        </Ww>
+        <Ww>
+          <count>49</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>time_input_string</ItemText>
+        </Ww>
       </WatchWindow2>
       <MemoryWindow1>
         <Mm>
@@ -452,7 +477,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>1</periodic>
-        <aLwin>1</aLwin>
+        <aLwin>0</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
