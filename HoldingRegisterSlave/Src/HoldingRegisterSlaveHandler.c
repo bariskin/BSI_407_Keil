@@ -14,6 +14,8 @@
 #include "task.h"
 #include "FlashDriver.h"
 #include "bsp.h"
+#include "DisplayDriver.h"
+#include "SensorLogs.h"
 /* ------------------------External variables -------------------------*/
 
 extern uint16_t holdingRegsPart1[MAX_MODBUS_SLAVE_REGS_PART];  // Адреса 1-120
@@ -394,8 +396,8 @@ volatile uint8_t   second  = 0x00;
 	             Set_RTC_Second(second);
 							 eMBEnable( );					 
 							 osDelay(10);
-						 }						 
-				 
+						 }	
+					 
 	 }
 /************************ (C) COPYRIGHT @OnWert *****END OF FILE****/
 

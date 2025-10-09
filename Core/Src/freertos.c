@@ -141,7 +141,7 @@ osThreadId InputHandlerHandle;
 uint32_t InputHandlerBuffer[ 256 ];
 osStaticThreadDef_t InputHandlerControlBlock;
 osThreadId SlaveEventTaskHandle;
-uint32_t SlaveEventTaskBuffer[ 512 ];
+uint32_t SlaveEventTaskBuffer[ 512];
 osStaticThreadDef_t SlaveEventTaskControlBlock;
 osThreadId DisplayTaskHandle;
 uint32_t DisplayTaskBuffer[ 1080 ];
@@ -231,7 +231,7 @@ void MX_FREERTOS_Init(void) {
   InputHandlerHandle = osThreadCreate(osThread(InputHandler), NULL);
 
   /* definition and creation of SlaveEventTask */
-  osThreadStaticDef(SlaveEventTask, SlaveEventFunction, osPriorityBelowNormal, 0, 512, SlaveEventTaskBuffer, &SlaveEventTaskControlBlock);
+  osThreadStaticDef(SlaveEventTask, SlaveEventFunction, osPriorityBelowNormal, 0,512 , SlaveEventTaskBuffer, &SlaveEventTaskControlBlock);
   SlaveEventTaskHandle = osThreadCreate(osThread(SlaveEventTask), NULL);
 
   /* definition and creation of DisplayTask */
@@ -921,7 +921,23 @@ void SendToDispTaskFunction(void const * argument)
 	            case OVER_THRESHOLD_ADDITIONAL:
 								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_ADDITIONAL);
 									break;
-						}							
+							case REQUEST_LOGS:
+								   char log_string[64];
+								   uint8_t line_count = GetServiceLinesCount();
+							     for(int i = 1; i < line_count; i++)
+							      { 
+											
+											osDelay(1);
+										  FRESULT res = ReadServiceLine((char *)log_string, sizeof(log_string), i);
+										   if (res == FR_OK)
+											  {
+												  SendNextionCommand("t%d.txt=\"%s\"", i,(const char* )log_string);
+												}
+										
+										}
+									  RdyWrittingFlag = 0;
+							   break;
+						 }							
 	        }
 			  
 				}

@@ -18,6 +18,7 @@
 #include "UARTSlaveSettings.h"
 #include "HoldingRegisterSlaveHandler.h"
 #include "bsp.h"
+#include "SensorLogs.h"
 /* ------------------------External variables -------------------------*/
 extern UART_HandleTypeDef huart3;
 extern osThreadId SlaveEventTaskHandle;
@@ -61,6 +62,9 @@ extern   uint32_t binary32;
  
 extern  SensorCurrentState_t	writeParams ;	 
 extern  SensorCurrentState_t	readParams  ;
+ 
+extern  osMessageQId queueSendLogsHandle;
+extern SensorLogEvent_t sensorLog;
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  
@@ -116,7 +120,7 @@ extern  SensorCurrentState_t	readParams  ;
     // Включаем прерывание передачи
     huart3.Instance->CR1 |= USART_CR1_TXEIE;
     
-    osDelay(40); // Задержка между командами
+    osDelay(50); // Задержка между командами
 }
 
  void InitNextionDisplayWithDeviceData(uint8_t numberOfdevices){
@@ -233,6 +237,8 @@ void initDeviceData(uint8_t numberOfdevices)
 }	 
 	   
 void GetDisplayCmd(uint8_t inputByte) {
+	
+	  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     // Если буфер не переполнен
     if (rx_index < ARRAY_RX_SIZE - 1) {
         arrDisplayRX[rx_index++] = inputByte;  // Сохраняем байт в буфер
@@ -283,14 +289,24 @@ void GetDisplayCmd(uint8_t inputByte) {
                             displayResponse = DISPLAY_BAUD_RATE_CMD;
                         }
                     }
+										/* запрос на вывод логов с файла service.txt */
+										else if (arrDisplayRX[0] == DISPLAY_LOGS_CMD )
+										 {
+											  sensorLog.logType = REQUEST_LOGS;
+											  if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+                        }
+                        if (xHigherPriorityTaskWoken == pdTRUE) {
+                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+                         }
+										 }
 										else if (arrDisplayRX[0] == DISPLAY_TIME_CMD && data_length >= 15) 
 										{	 
-										      displayResponse = DISPLAY_TIME_CMD;
+										     displayResponse = DISPLAY_TIME_CMD;
 											
 											/* извлечь время и дату из строки и установить */
-											  HAL_Delay(1);
+											  osDelay(1);
 												memcpy(time_input_string, (void *)&arrDisplayRX[1], 16);
-											  HAL_Delay(1);
+											  osDelay(1);
 										  	RTC_SetFromHexString((char *)&time_input_string,16);
 										}
 										else if (significant_bytes_count == 3 && arrDisplayRX[1] == 0x01 && arrDisplayRX[2] == 0xFE) 
@@ -411,15 +427,6 @@ void GetDisplayCmd(uint8_t inputByte) {
 										/*1. channel ID: arrDisplayRX[0]*/	
 										 //channelID = arrDisplayRX[0];			
 									}			
-									 
-									 
-                    #ifdef DEBUG
-                    printf("Complete packet received (%d bytes): ", data_length);
-                    for (int i = 0; i < data_length; i++) {
-                        printf("%02X ", arrDisplayRX[i]);
-                    }
-                    printf("\n");
-                    #endif
                 }
                 
                 packet_ready = 1;  // Флаг готовности пакета

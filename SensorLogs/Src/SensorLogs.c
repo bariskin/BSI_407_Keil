@@ -51,26 +51,14 @@ void GetCurrentTime(DateTime_t* time) {
 
 FRESULT CreateSensorDirs(uint32_t sensor_id, DateTime_t* time) {
     char dir_path[64];
-    FRESULT res22;
+    FRESULT res;
     
     // Создаем каждый уровень отдельно
     sprintf(dir_path, "%lu", sensor_id);
-    res22 = f_mkdir(dir_path);
-    if (res22 != FR_OK && res22 != FR_EXIST) return res22;
-    
-   // sprintf(dir_path, "sensor_%lu/%04d", sensor_id, time->year);
-   // res22 = f_mkdir(dir_path);
-   // if (res22 != FR_OK && res22 != FR_EXIST) return res22;
-    
-   // sprintf(dir_path, "sensor_%lu/%04d/%02d", sensor_id, time->year, time->month);
-  //  res22 = f_mkdir(dir_path);
-  //  if (res22 != FR_OK && res22 != FR_EXIST) return res22;
-    
-    //sprintf(dir_path, "sensor_%lu/%04d/%02d/%02d", 
-    //        sensor_id, time->year, time->month, time->day);
-   // res22 = f_mkdir(dir_path);
-    //if (res22 != FR_OK && res22 != FR_EXIST) return res22;
-    
+    res = f_mkdir(dir_path);
+    if (res != FR_OK && res != FR_EXIST){
+   			return res;
+    }
     return FR_OK;
 }
 
@@ -166,7 +154,7 @@ FRESULT WriteServiceLog(ServiceData_t* data)
     if (f_mount(&fs, "", 1) != FR_OK) {  // Проверка состояния
         return FR_NOT_READY;
     }
-   // Создаем папкe если нужно
+   // Создаем папку если нужно
     resFILE = CreateServiceDir();
     
 		if (resFILE != FR_OK) 
@@ -208,7 +196,7 @@ void ServiceDataCallback(uint16_t value)
 	    // Записываем лог
    FRESULT res = WriteServiceLog(&servicedata);
     if (res != FR_OK) {
-        //printf("Error writing log: %d\n", res);
+
     }  
  }
 
@@ -217,7 +205,7 @@ const char* get_message(enSensorLog type) {
 	 case DEVICE_POWER:                return "test";
 	 case CALIBRATION_0:               return "Калибрование 0";
 	 case CALIBRATION_1:               return "Калибрование 1";
-	 case ERROR_485:                   return "ERROR_484";
+	 case ERROR_485:                   return "ERROR_485";
 	 case THRESHOLD_WARNING:           return "Порог1";
 	 case THRESHOLD_ALARM:             return "Порог2";
 	 case THRESHOLD_ADDITIONAL:        return "Порог3";
@@ -228,12 +216,181 @@ const char* get_message(enSensorLog type) {
 	 case SENSOR_LOG_TYPE_ERROR:  return "unknown";		 
 	}
 }
-void sendLogToQueue(float value, uint32_t sensor_id)
- {
- 
- 
- 
- }	
+
+/**
+  * @brief  Чтение строки из файла SERVICE/SERVICE.txt
+  * @param  buffer: буфер для хранения прочитанной строки
+  * @param  buffer_size: размер буфера
+  * @param  line_number: номер строки для чтения (начиная с 1)
+  * @retval FRESULT: результат операции
+  */
+FRESULT ReadServiceLine(char* buffer, uint16_t buffer_size, uint16_t line_number)
+{
+    char filepath[64];
+    FIL file;
+    FRESULT res;
+    UINT bytes_read;
+    char ch;
+    uint16_t current_line = 1;
+    uint16_t buf_pos = 0;
+    uint32_t start_time = HAL_GetTick();
+    
+    // Проверка параметров
+    if (buffer == NULL || buffer_size == 0 || line_number == 0) {
+        return FR_INVALID_PARAMETER;
+    }
+    
+    memset(buffer, 0, buffer_size);
+    
+    // Проверка SD карты
+    if (f_mount(&fs, "", 1) != FR_OK) {
+        return FR_NOT_READY;
+    }
+    
+    GetServiceFilePath(filepath);
+    
+    res = f_open(&file, filepath, FA_READ);
+    if (res != FR_OK) {
+        return res;
+    }
+    
+    // Читаем файл посимвольно
+    while (current_line <= line_number) {
+        // Проверка таймаута
+        if (HAL_GetTick() - start_time > 1000) {
+            f_close(&file);
+            return FR_TIMEOUT;
+        }
+        
+        // Читаем один символ
+        res = f_read(&file, &ch, 1, &bytes_read);
+        
+        if (res != FR_OK || bytes_read == 0) {
+            // Конец файла или ошибка
+            f_close(&file);
+            return FR_NO_FILE;
+        }
+        
+        if (current_line == line_number) {
+            // Записываем символ в буфер (исключая символы новой строки)
+            if (ch != '\r' && ch != '\n' && buf_pos < buffer_size - 1) {
+                buffer[buf_pos++] = ch;
+            }
+        }
+        
+        // Переход на новую строку
+        if (ch == '\n') {
+            current_line++;
+            
+            // Если достигли нужной строки и она закончилась
+            if (current_line > line_number) {
+                buffer[buf_pos] = '\0';
+                f_close(&file);
+                return FR_OK;
+            }
+            
+            // Сбрасываем позицию буфера для новой строки
+            buf_pos = 0;
+        }
+    }
+    //RdyWrittingFlag = 0;
+    f_close(&file);
+    return FR_NO_FILE;
+}
+/**
+  * @brief  Чтение последней строки из файла SERVICE/SERVICE.txt
+  * @param  buffer: буфер для хранения прочитанной строки
+  * @param  buffer_size: размер буфера
+  * @retval FRESULT: результат операции
+  */
+FRESULT ReadLastServiceLine(char* buffer, uint16_t buffer_size)
+{
+    char filepath[64];
+    FIL file;
+    FRESULT res;
+    char line_buf[128];
+    char last_line[128] = "";
+    
+    // Проверка монтирования SD карты
+    if (f_mount(&fs, "", 1) != FR_OK) {
+        return FR_NOT_READY;
+    }
+    
+    // Получаем путь к файлу
+    GetServiceFilePath(filepath);
+    
+    // Открываем файл для чтения
+    res = f_open(&file, filepath, FA_READ);
+    if (res != FR_OK) {
+        return res;
+    }
+    
+    // Читаем все строки, сохраняя последнюю
+    while (f_gets(line_buf, sizeof(line_buf), &file) != 0) {
+        if (strlen(line_buf) > 0) {
+            strncpy(last_line, line_buf, sizeof(last_line) - 1);
+            last_line[sizeof(last_line) - 1] = '\0';
+        }
+				osDelay(1);
+    }
+    
+    f_close(&file);
+    
+    // Если нашли строку, копируем в буфер
+    if (strlen(last_line) > 0) {
+        // Убираем символы возврата каретки и новой строки
+        char* newline_pos = strchr(last_line, '\r');
+        if (newline_pos) *newline_pos = '\0';
+        
+        newline_pos = strchr(last_line, '\n');
+        if (newline_pos) *newline_pos = '\0';
+        
+        strncpy(buffer, last_line, buffer_size - 1);
+        buffer[buffer_size - 1] = '\0';
+        return FR_OK;
+    }
+    
+    return FR_NO_FILE;
+}
+
+/**
+  * @brief  Получение количества строк в файле SERVICE/SERVICE.txt
+  * @retval uint16_t: количество строк
+  */
+uint16_t GetServiceLinesCount(void)
+{
+    char filepath[64];
+    FIL file;
+    FRESULT res;
+    char line_buf[128];
+    uint16_t line_count = 0;
+    
+    // Проверка монтирования SD карты
+    if (f_mount(&fs, "", 1) != FR_OK) {
+        return 0;
+    }
+    
+    // Получаем путь к файлу
+    GetServiceFilePath(filepath);
+    
+    // Открываем файл для чтения
+    res = f_open(&file, filepath, FA_READ);
+    if (res != FR_OK) {
+        return 0;
+    }
+    
+    // Считаем строки
+    while (f_gets(line_buf, sizeof(line_buf), &file) != 0) {
+        line_count++;
+    }
+    
+    f_close(&file);
+		
+		//RdyWrittingFlag = 0;
+    
+		return line_count;
+}
+	
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
 
 

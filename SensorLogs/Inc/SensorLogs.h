@@ -73,7 +73,8 @@ typedef struct {
 	  OVER_THRESHOLD_WARNING,
 	  OVER_THRESHOLD_ALARM,
 	  OVER_THRESHOLD_ADDITIONAL,
-    SENSOR_LOG_TYPE_ERROR	 
+    SENSOR_LOG_TYPE_ERROR,
+    REQUEST_LOGS	 
 }  enSensorLog;
 
 
@@ -103,6 +104,9 @@ typedef struct {
   FRESULT WriteServiceLog(ServiceData_t* data);
   const char* get_message(enSensorLog type); 
   void sendLogToQueue(float value, uint32_t sensor_id);
+  FRESULT ReadServiceLine(char* buffer, uint16_t buffer_size, uint16_t line_number);
+  FRESULT ReadLastServiceLine(char* buffer, uint16_t buffer_size);
+  uint16_t GetServiceLinesCount(void);
   /**
   * @}
   */

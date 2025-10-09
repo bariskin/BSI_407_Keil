@@ -941,7 +941,7 @@ HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size)
        for (int i = 0; i < size; i++) {
         // Преобразуем каждый байт в два HEX символа
         pos += sprintf(&hex_str_[pos], "%02X", hex_str[i]);
-        HAL_Delay(1);
+        osDelay(1);;
         // Добавляем пробел (кроме последнего элемента)
         if (i < size - 1) {
             hex_str_[pos++] = ' ';
@@ -949,18 +949,18 @@ HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size)
       }
      hex_str_[pos] = '\0'; // Завершаем строку
 		
-		 HAL_Delay(1);
+		 osDelay(1);
     if (hex_to_ascii_minimal(hex_str_, ascii_buffer) != HAL_OK) {
         return HAL_ERROR;
     }
-		HAL_Delay(1);
+		 osDelay(1);
     // 2. Парсинг ASCII строки формата "HH:MM/DD.MM.YYYY"
     int hours, minutes, day, month, year;
     if (sscanf(ascii_buffer, "%02d:%02d/%02d.%02d.%04d", 
                &hours, &minutes, &day, &month, &year) != 5) {
         return HAL_ERROR;
     }
-    HAL_Delay(1);
+     osDelay(1);
     // 3. Валидация полученных значений
     if (hours < 0 || hours > 23 || minutes < 0 || minutes > 59 ||
         day < 1 || day > 31 || month < 1 || month > 12 || year < 2000) {
@@ -979,10 +979,10 @@ HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size)
     
     // 6. Установка времени и даты в RTC
     HAL_StatusTypeDef status;
-    HAL_Delay(1);
+     osDelay(1);
     status = HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
     if (status != HAL_OK) return status;
-    HAL_Delay(1);
+     osDelay(1);
     status = HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
     if (status != HAL_OK) return status;
     
