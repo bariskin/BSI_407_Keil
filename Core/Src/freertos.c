@@ -109,7 +109,8 @@ SensorLogEvent_t sensorLog = {
 
 volatile uint8_t RdyWrittingFlag = 0;
 float currentConcentration = 0.00;
- 
+
+volatile uint8_t  flagDisplayLogsBusy = 0;
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -144,7 +145,7 @@ osThreadId SlaveEventTaskHandle;
 uint32_t SlaveEventTaskBuffer[ 512];
 osStaticThreadDef_t SlaveEventTaskControlBlock;
 osThreadId DisplayTaskHandle;
-uint32_t DisplayTaskBuffer[ 1080 ];
+uint32_t DisplayTaskBuffer[ 1080];
 osStaticThreadDef_t DisplayTaskControlBlock;
 osThreadId SendToDispTaskHandle;
 uint32_t SendToDispTaskBuffer[ 1600];
@@ -449,7 +450,7 @@ void HoldingHandlerFunction(void const * argument)
 									
                    SelectRunFlag = 7;
 									
-									if(!CmdIsReady){ 
+									if(!CmdIsReady && !flagDisplayLogsBusy){ 
 					           eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH, 3, 200 );
 									
 									 }
@@ -463,7 +464,7 @@ void HoldingHandlerFunction(void const * argument)
 				        {
 									 SelectRunFlag = 8;
 									
-									 if(!CmdIsReady){ 
+									 if(!CmdIsReady && !flagDisplayLogsBusy){ 
 						    	   /* значение концентрации текущее */
 					            readCurrentSensorValue(ModBusSlaveCurrentDeviceAddr,usMRegInBuf);
 									
@@ -792,7 +793,7 @@ void InputHandlerFunction(void const * argument)
   /* Infinite loop */
   for(;;)
   {			
-	 	if(SensorInfo.count)   
+	 	if(SensorInfo.count && !flagDisplayLogsBusy)   
 			{ 
 				
 				if(setErrorStatusFlag) // отправить на дисплей успешность записи паhаметров т калибровки
@@ -801,9 +802,9 @@ void InputHandlerFunction(void const * argument)
 					setErrorStatus(checkParamsValue);
 				}
 				else
-				{	
+				{		
 				   // обновление конценатрации, если датчики есть
-		      UpdateNextionDisplayWithChannelData(SensorInfo.count);
+		         UpdateNextionDisplayWithChannelData(SensorInfo.count);
 				}
 		  }
     osDelay(50);
@@ -922,19 +923,28 @@ void SendToDispTaskFunction(void const * argument)
 								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_ADDITIONAL);
 									break;
 							case REQUEST_LOGS:
+								   osDelay(200);
 								   char log_string[64];
 								   uint8_t line_count = GetServiceLinesCount();
-							     for(int i = 1; i < line_count; i++)
+							     flagDisplayLogsBusy = 1;
+							     osDelay(1000);
+							      if (line_count > 10)
+										{
+										 line_count = 10;
+										}
+							     for(int i = 1; i <= line_count; i++)
 							      { 
-											
-											osDelay(1);
+											osDelay(2);
 										  FRESULT res = ReadServiceLine((char *)log_string, sizeof(log_string), i);
+											osDelay(2);
 										   if (res == FR_OK)
 											  {
 												  SendNextionCommand("t%d.txt=\"%s\"", i,(const char* )log_string);
 												}
 										
 										}
+										osDelay(150);
+										flagDisplayLogsBusy = 0;
 									  RdyWrittingFlag = 0;
 							   break;
 						 }							
