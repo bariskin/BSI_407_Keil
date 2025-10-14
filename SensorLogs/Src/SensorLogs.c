@@ -187,7 +187,7 @@ FRESULT  CreateServiceDir(void)
 	 
 				const char* message  = get_message(log_type); 
     // Форматируем строку лога
-	 sprintf(log_line, "%04d.%02d.%02d %02d:%02d %s:%d   %d\r\n",
+		sprintf(log_line, "%04d.%02d.%02d %02d:%02d %s Канал %d:   %d\r\n",
 	         data->timestamp.year, data->timestamp.month, data->timestamp.day,
            data->timestamp.hour, data->timestamp.minute, 
            message, sensor_id , data->value);

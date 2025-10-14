@@ -933,15 +933,16 @@ void SendToDispTaskFunction(void const * argument)
 									break;
 							case REQUEST_LOGS:
 								   osDelay(200);
+							     uint8_t first_line = 0;
 								   char log_string[64];
 								   uint8_t line_count = GetServiceLinesCount();
 							     flagDisplayLogsBusy = 1;
 							     osDelay(1000);
 							      if (line_count > 10)
 										{
-										 line_count = 10;
+										 first_line =  line_count - 10;
 										}
-							     for(int i = 1; i <= line_count; i++)
+							     for(int i = line_count; i >= first_line; i--)
 							      { 
 											osDelay(2);
 										  FRESULT res = ReadServiceLine((char *)log_string, sizeof(log_string), i);
