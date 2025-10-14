@@ -49,17 +49,20 @@ typedef struct {
     uint32_t value;
      DateTime_t timestamp;
  } SensorData_t;
-
+	
+ typedef struct {
+    uint32_t value;
+    DateTime_t timestamp;
+ } ServiceData_t;
+ 
+ 
  typedef struct {
     char filename[64];
     FIL file;
     uint8_t is_open;
  } LogFile_t;
 
- typedef struct {
-    uint32_t value;
-    DateTime_t timestamp;
- } ServiceData_t;
+
  
  
  typedef enum{
@@ -99,9 +102,9 @@ typedef struct {
   FRESULT CreateSensorDirs(uint32_t sensor_id);
   FRESULT WriteSensorLog(SensorData_t* data,enSensorLog log_type ) ;
   void SensorDataCallback(uint32_t sensor_id, uint32_t value,enSensorLog log_type);
-  void ServiceDataCallback(uint16_t value);
+  void ServiceDataCallback(uint32_t sensor_id, uint16_t value,enSensorLog log_type);
   FRESULT  CreateServiceDir(void);
-  FRESULT WriteServiceLog(ServiceData_t* data);
+  FRESULT WriteServiceLog(uint32_t sensor_id,ServiceData_t* data, enSensorLog log_type);
   const char* get_message(enSensorLog type); 
   void sendLogToQueue(float value, uint32_t sensor_id);
   FRESULT ReadServiceLine(char* buffer, uint16_t buffer_size, uint16_t line_number);

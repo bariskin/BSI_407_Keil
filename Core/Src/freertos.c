@@ -893,34 +893,43 @@ void SendToDispTaskFunction(void const * argument)
 				    switch ((uint8_t)LogMsg.logType)
 						{
 							case DEVICE_POWER:				
-								ServiceDataCallback(LogMsg.Value);
+								ServiceDataCallback(LogMsg.sensorID, LogMsg.Value,DEVICE_POWER);
 								break;
 							case CALIBRATION_0:
-								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,CALIBRATION_0);
+									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, CALIBRATION_0);
+								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,CALIBRATION_0);
 								break;
 							case CALIBRATION_1:
-								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,CALIBRATION_1);
+									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,CALIBRATION_1);
+								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,CALIBRATION_1);
 								break;
 							case ERROR_485:
-								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,ERROR_485);
+									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,ERROR_485);
+								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,ERROR_485);
 								break;
 							case THRESHOLD_WARNING:
-								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,THRESHOLD_WARNING);
+									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,THRESHOLD_WARNING);
+								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,THRESHOLD_WARNING);
 									break;
 	            case THRESHOLD_ALARM:
-								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,THRESHOLD_ALARM);
+									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, THRESHOLD_ALARM);
+								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,THRESHOLD_ALARM);
 									break;
 	            case THRESHOLD_ADDITIONAL:
-								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,THRESHOLD_ADDITIONAL);
+									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, THRESHOLD_ADDITIONAL);
+								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,THRESHOLD_ADDITIONAL);
 									break;	
 							case OVER_THRESHOLD_WARNING:
-								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_WARNING);
+									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_WARNING);
+								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_WARNING);
 									break;
 	            case OVER_THRESHOLD_ALARM:
-								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_ALARM);
+									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_ALARM);
+								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_ALARM);
 									break;
 	            case OVER_THRESHOLD_ADDITIONAL:
-								 SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_ADDITIONAL);
+									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_ADDITIONAL);
+								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_ADDITIONAL);
 									break;
 							case REQUEST_LOGS:
 								   osDelay(200);

@@ -110,7 +110,8 @@ FRESULT WriteSensorLog(SensorData_t* data,enSensorLog log_type ) {
 }
 
 void SensorDataCallback(uint32_t sensor_id, uint32_t value,enSensorLog log_type ) {
-    SensorData_t sensor_data;
+    
+	SensorData_t sensor_data;
     
     // Заполняем структуру данных
     sensor_data.sensor_id = sensor_id;
@@ -126,6 +127,21 @@ void SensorDataCallback(uint32_t sensor_id, uint32_t value,enSensorLog log_type 
     }
 }
 
+
+void ServiceDataCallback(uint32_t sensor_id, uint16_t value, enSensorLog log_type)
+ {
+	
+	ServiceData_t servicedata;
+	
+  GetCurrentTime(&servicedata.timestamp);
+	servicedata.value = value;
+	 
+	    // Записываем лог
+   FRESULT res = WriteServiceLog(sensor_id, &servicedata, log_type);
+    if (res != FR_OK) {
+
+    }  
+ }
 
 FRESULT  CreateServiceDir(void)
  {
@@ -143,7 +159,7 @@ FRESULT  CreateServiceDir(void)
     return res;
  }
 
-FRESULT WriteServiceLog(ServiceData_t* data)
+ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log_type)
  {
     char filepath[64];
     FIL file;
@@ -169,11 +185,12 @@ FRESULT WriteServiceLog(ServiceData_t* data)
         return resFILE;
     }
 	 
-		 // Форматируем строку лога
-    sprintf(log_line, "%04d.%02d.%02d %02d:%02d Количество датчиков: %d\r\n",
+				const char* message  = get_message(log_type); 
+    // Форматируем строку лога
+	 sprintf(log_line, "%04d.%02d.%02d %02d:%02d %s:%d   %d\r\n",
 	         data->timestamp.year, data->timestamp.month, data->timestamp.day,
            data->timestamp.hour, data->timestamp.minute, 
-           data->value);
+           message, sensor_id , data->value);
 		
 		resFILE = f_write(&file, log_line, strlen(log_line), &bytes_written);
     
@@ -185,24 +202,11 @@ FRESULT WriteServiceLog(ServiceData_t* data)
     return resFILE;
  }
 
-void ServiceDataCallback(uint16_t value)
- {
-	
-	ServiceData_t servicedata;
-	
-  GetCurrentTime(&servicedata.timestamp);
-	servicedata.value = value;
-	 
-	    // Записываем лог
-   FRESULT res = WriteServiceLog(&servicedata);
-    if (res != FR_OK) {
 
-    }  
- }
 
 const char* get_message(enSensorLog type) {
-	switch(type) {
-	 case DEVICE_POWER:                return "test";
+	switch((uint8_t)type) {
+	 case DEVICE_POWER:                return "Power";
 	 case CALIBRATION_0:               return "Калибрование 0";
 	 case CALIBRATION_1:               return "Калибрование 1";
 	 case ERROR_485:                   return "ERROR_485";
@@ -215,6 +219,7 @@ const char* get_message(enSensorLog type) {
 	 
 	 case SENSOR_LOG_TYPE_ERROR:  return "unknown";		 
 	}
+	return "unknown";
 }
 
 /**
