@@ -49,7 +49,7 @@ void GetCurrentTime(DateTime_t* time) {
     time->second = rtc_time.Seconds;
 }
 
-FRESULT CreateSensorDirs(uint32_t sensor_id, DateTime_t* time) {
+FRESULT CreateSensorDirs(uint32_t sensor_id) {
     char dir_path[64];
     FRESULT res;
     
@@ -76,7 +76,7 @@ FRESULT WriteSensorLog(SensorData_t* data,enSensorLog log_type ) {
     }
   
     // Создаем папки если нужно
-    resFILE = CreateSensorDirs(data->sensor_id, &data->timestamp);
+    resFILE = CreateSensorDirs(data->sensor_id);
     
 		if (resFILE != FR_OK) 
 		{
