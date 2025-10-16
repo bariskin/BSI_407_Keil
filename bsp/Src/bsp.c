@@ -75,7 +75,7 @@ volatile 	TimeStepReadingSensores_t TimeStep =
  bool checkParamsValue = false;
  extern uint8_t ControlCycleFlag; 
  
- 
+ ThresholdState thresholdStates[NUMBER_SLAVE_DEVICES] = {0};
 /* ------------------------Functions-----------------------------------*/
 void initSensorStateArray(uint8_t numberdevices)
   {
@@ -121,18 +121,10 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     sensor->DeviceStatus =  0;
     /* *********************************  Read sensor data ********************************** */
 		
-			  //CalibrationProcesStatus
-		 //calibrationProcesStatus = (uint16_t)RegHoldingBuff[slave_idx][CALIBRATION_PROCESS_STATUS_INTERN];
-      
-     //sensor->CalibrationStatus = calibrationProcesStatus; 
-		
-		
 			// SensorModelCode
     const char* unit = getDeviceModelNameFromShorts(RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN],RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN_2]);
     snprintf((char*)sensor->DeviceModelCode, sizeof(sensor->DeviceModelCode), "%s", unit);
 		
-		//RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN] = 0x0000;
-		//RegHoldingBuff[slave_idx][DEVICE_MODEL_CODE_INTERN_2] = 0x0000;
 		// SensorGas
 	  uint16_t *src_ptr = &RegHoldingBuff[slave_idx][SENSOR_SUBSTANCE_CODE_1_INTERN];
      for (int i = 0; i < 6; i++) {
@@ -239,6 +231,8 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 {
 	  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	  uint32_t combined;   // Объединённые 32 бита
+	
+	  uint8_t sensorID = 0;
 	  float result;        // Результат
     // Validate slave address
     if (slaveaddr < 1 || slaveaddr > MB_MASTER_TOTAL_SLAVE_NUM) {
@@ -263,42 +257,88 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_HIGH_INTERN] = 0x0000;
     RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_LOW_INTERN]  = 0x0000;
 		
-		 if(sensor->Concentration > sensor->SensorAlarm2)
+		 sensorID = findSensoriD(SensorInfo.modbusAddrs,SensorInfo.count, slaveaddr);
+		 
+		 if(sensor->Concentration > sensor->SensorAlarm2) // максимальный третий порог 
 		 {
-			 sensorLog.sensorID = findSensoriD(SensorInfo.modbusAddrs,SensorInfo.count, slave_idx + 1);
-		   sensorLog.Value =   sensor->Concentration; 
-       sensorLog.logType = 	OVER_THRESHOLD_ADDITIONAL;
 			 
-			if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+			 if (!thresholdStates[sensorID].alarm2_triggered) { 
+			  sensorLog.sensorID = sensorID;
+		    sensorLog.Value =   sensor->Concentration; 
+        sensorLog.logType = 	OVER_THRESHOLD_ADDITIONAL;
+			 
+			  if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
                         }
-      if (xHigherPriorityTaskWoken == pdTRUE) {
+        if (xHigherPriorityTaskWoken == pdTRUE) {
                           portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
               } 
+			
+			    // Устанавливаем флаги для всех порогов (так как Alarm2 включает и нижние уровни)
+        thresholdStates[sensorID].alarm2_triggered = true;
+        thresholdStates[sensorID].alarm_triggered = true;
+        thresholdStates[sensorID].warning_triggered = true;				
+			 }				
+							
 		 }
-		 else if(sensor->Concentration >   sensor->SensorAlarm) 
+		 else if(sensor->Concentration >   sensor->SensorAlarm)  // средний второй  порог 
 		 {
-			sensorLog.sensorID = findSensoriD(SensorInfo.modbusAddrs,SensorInfo.count, slave_idx + 1);
-		  sensorLog.Value =   sensor->Concentration; 
-      sensorLog.logType = OVER_THRESHOLD_ALARM;	
 			 
-      if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+		   if (!thresholdStates[sensorID].alarm_triggered) {
+			   sensorLog.sensorID = sensorID;
+		     sensorLog.Value =   sensor->Concentration; 
+         sensorLog.logType = OVER_THRESHOLD_ALARM;	
+			 
+         if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
                         }
            if (xHigherPriorityTaskWoken == pdTRUE) {
                           portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-              }			 
+              }	
+         thresholdStates[slave_idx].alarm_triggered = true;
+         thresholdStates[slave_idx].warning_triggered = true;
+        // Сбрасываем более высокий порог, так как мы на уровне Alarm
+         thresholdStates[slave_idx].alarm2_triggered = false;
+			}					
 		 }
-		 else if(sensor->Concentration >   sensor->SensorWarning) 
+		 else if(sensor->Concentration >   sensor->SensorWarning)  //  минимальный первый  порог 
 		 {
-			 sensorLog.sensorID = findSensoriD(SensorInfo.modbusAddrs,SensorInfo.count, slave_idx + 1);
-		   sensorLog.Value =   sensor->Concentration;
-       sensorLog.logType = OVER_THRESHOLD_WARNING;
+			  if (!thresholdStates[sensorID].warning_triggered) {
 			 
-			if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+			    sensorLog.sensorID = sensorID;
+		      sensorLog.Value =   sensor->Concentration;
+          sensorLog.logType = OVER_THRESHOLD_WARNING;
+			 
+			    if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
                         }
-      if (xHigherPriorityTaskWoken == pdTRUE) {
+           if (xHigherPriorityTaskWoken == pdTRUE) {
                           portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
              }
+			     thresholdStates[sensorID].warning_triggered = true;
+           // Сбрасываем более высокие пороги
+           thresholdStates[sensorID].alarm_triggered = false;
+           thresholdStates[sensorID].alarm2_triggered = false;
+				 }			 
 		  }
+		 else
+        {
+				    // Если было какое-то превышение, отправляем сообщение о возврате к норме
+         if (thresholdStates[sensorID].warning_triggered || 
+             thresholdStates[sensorID].alarm_triggered || 
+             thresholdStates[sensorID].alarm2_triggered) {
+        
+               sensorLog.sensorID = sensorID;
+               sensorLog.Value = sensor->Concentration;
+               sensorLog.logType = NORMAL_LEVEL;  // Добавьте этот тип в enum
+        
+               if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+                  // Обработка ошибки
+                }
+				  
+				        // Сбрасываем все флаги
+             thresholdStates[sensorID].warning_triggered = false;
+             thresholdStates[sensorID].alarm_triggered = false;
+             thresholdStates[sensorID].alarm2_triggered = false;
+				}
+			}
 }
 
 /**

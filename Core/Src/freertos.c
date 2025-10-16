@@ -922,6 +922,10 @@ void SendToDispTaskFunction(void const * argument)
 	            case OVER_THRESHOLD_ADDITIONAL:
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_ADDITIONAL);
 									break;
+							 case NORMAL_LEVEL:
+									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, NORMAL_LEVEL);
+									break;
+							
 							case REQUEST_LOGS:
 								   osDelay(200);
 							     uint8_t first_line = 0;

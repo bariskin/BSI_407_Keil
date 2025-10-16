@@ -107,6 +107,13 @@ typedef struct
 	 uint32_t SetFlag;
 	 uint32_t Timestep;
 }TimeStepReadingSensores_t;	
+ 
+
+typedef struct {
+    bool alarm2_triggered;
+    bool alarm_triggered; 
+    bool warning_triggered;
+} ThresholdState;
 			
  /* ------------------------External variables -------------------------*/
 extern  uint8_t NumberSlaveDevices;
