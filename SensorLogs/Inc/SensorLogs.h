@@ -66,7 +66,7 @@ typedef struct {
  
  
  typedef enum{
-    DEVICE_POWER = 1 ,
+    SERVICE = 1 ,
     CALIBRATION_0    ,
     CALIBRATION_1    ,
     ERROR_485,

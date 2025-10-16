@@ -185,13 +185,22 @@ FRESULT  CreateServiceDir(void)
         return resFILE;
     }
 	 
-				const char* message  = get_message(log_type); 
+		const char* message  = get_message(log_type); 
+		 if(log_type == SERVICE)
+		 {
+		   sprintf(log_line, "%04d.%02d.%02d %02d:%02d Приборов: %d\r\n",
+	         data->timestamp.year, data->timestamp.month, data->timestamp.day,
+           data->timestamp.hour, data->timestamp.minute, 
+           data->value);
+		 }
+		else
+		{
     // Форматируем строку лога
 		sprintf(log_line, "%04d.%02d.%02d %02d:%02d %s Канал %d:   %d\r\n",
 	         data->timestamp.year, data->timestamp.month, data->timestamp.day,
            data->timestamp.hour, data->timestamp.minute, 
            message, sensor_id , data->value);
-		
+		}
 		resFILE = f_write(&file, log_line, strlen(log_line), &bytes_written);
     
     f_close(&file);
@@ -206,7 +215,7 @@ FRESULT  CreateServiceDir(void)
 
 const char* get_message(enSensorLog type) {
 	switch((uint8_t)type) {
-	 case DEVICE_POWER:                return "Power";
+	 case SERVICE:                     return "Сервис";
 	 case CALIBRATION_0:               return "Калибрование 0";
 	 case CALIBRATION_1:               return "Калибрование 1";
 	 case ERROR_485:                   return "ERROR_485";

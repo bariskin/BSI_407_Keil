@@ -404,8 +404,8 @@ void HoldingHandlerFunction(void const * argument)
 									   GetActiveSensors(SensorStateArray, (SensorInfo_t *) &SensorInfo);
 											/* ************************************* */
 											sensorLog.Value = SensorInfo.count;
-											sensorLog.logType = DEVICE_POWER;
-											
+											sensorLog.logType = SERVICE;
+											sensorLog.sensorID = 0;
 									    if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
                         }
                       if (xHigherPriorityTaskWoken == pdTRUE) {
@@ -892,44 +892,35 @@ void SendToDispTaskFunction(void const * argument)
 					
 				    switch ((uint8_t)LogMsg.logType)
 						{
-							case DEVICE_POWER:				
-								ServiceDataCallback(LogMsg.sensorID, LogMsg.Value,DEVICE_POWER);
+							case SERVICE:	
+								ServiceDataCallback(LogMsg.sensorID, LogMsg.Value,SERVICE);
 								break;
 							case CALIBRATION_0:
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, CALIBRATION_0);
-								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,CALIBRATION_0);
 								break;
 							case CALIBRATION_1:
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,CALIBRATION_1);
-								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,CALIBRATION_1);
 								break;
 							case ERROR_485:
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,ERROR_485);
-								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,ERROR_485);
 								break;
 							case THRESHOLD_WARNING:
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,THRESHOLD_WARNING);
-								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,THRESHOLD_WARNING);
 									break;
 	            case THRESHOLD_ALARM:
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, THRESHOLD_ALARM);
-								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,THRESHOLD_ALARM);
 									break;
 	            case THRESHOLD_ADDITIONAL:
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, THRESHOLD_ADDITIONAL);
-								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,THRESHOLD_ADDITIONAL);
 									break;	
 							case OVER_THRESHOLD_WARNING:
-									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_WARNING);
-								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_WARNING);
+									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_WARNING);	
 									break;
 	            case OVER_THRESHOLD_ALARM:
-									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_ALARM);
-								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_ALARM);
+							   ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_ALARM);
 									break;
 	            case OVER_THRESHOLD_ADDITIONAL:
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_ADDITIONAL);
-								 //SensorDataCallback(LogMsg.sensorID, LogMsg.Value,OVER_THRESHOLD_ADDITIONAL);
 									break;
 							case REQUEST_LOGS:
 								   osDelay(200);
@@ -942,7 +933,12 @@ void SendToDispTaskFunction(void const * argument)
 										{
 										 first_line =  line_count - 10;
 										}
-							     for(int i = line_count; i >= first_line; i--)
+										else
+										 {
+										  first_line = 1;
+										 }
+							     line_count = 10;
+							     for(int i = first_line; i <= line_count; i++)
 							      { 
 											osDelay(2);
 										  FRESULT res = ReadServiceLine((char *)log_string, sizeof(log_string), i);

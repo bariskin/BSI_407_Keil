@@ -148,6 +148,7 @@ extern bool checkParamsValue ;
 		uint8_t Get_RTC_Second(void);
 		HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size);
     HAL_StatusTypeDef hex_to_ascii_minimal(char* hex_str, char* ascii_buf);
+		uint8_t findSensoriD(uint8_t arr[], int size, int value);
  /**
   * @}
   */

@@ -265,7 +265,7 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		
 		 if(sensor->Concentration > sensor->SensorAlarm2)
 		 {
-			 sensorLog.sensorID = slave_idx + 1;
+			 sensorLog.sensorID = findSensoriD(SensorInfo.modbusAddrs,SensorInfo.count, slave_idx + 1);
 		   sensorLog.Value =   sensor->Concentration; 
        sensorLog.logType = 	OVER_THRESHOLD_ADDITIONAL;
 			 
@@ -277,7 +277,7 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 }
 		 else if(sensor->Concentration >   sensor->SensorAlarm) 
 		 {
-			sensorLog.sensorID = slave_idx + 1;
+			sensorLog.sensorID = findSensoriD(SensorInfo.modbusAddrs,SensorInfo.count, slave_idx + 1);
 		  sensorLog.Value =   sensor->Concentration; 
       sensorLog.logType = OVER_THRESHOLD_ALARM;	
 			 
@@ -289,7 +289,7 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 }
 		 else if(sensor->Concentration >   sensor->SensorWarning) 
 		 {
-			 sensorLog.sensorID = slave_idx + 1;
+			 sensorLog.sensorID = findSensoriD(SensorInfo.modbusAddrs,SensorInfo.count, slave_idx + 1);
 		   sensorLog.Value =   sensor->Concentration;
        sensorLog.logType = OVER_THRESHOLD_WARNING;
 			 
@@ -1009,6 +1009,16 @@ HAL_StatusTypeDef hex_to_ascii_minimal(char* hex_str, char* ascii_buf)
     
     ascii_buf[16] = '\0';
     return HAL_OK;
+}
+
+
+uint8_t findSensoriD(uint8_t arr[], int size, int value) {
+    for (int i = 0; i < size; i++) {
+        if (arr[i] == value) {
+            return i + 1;
+        }
+    }
+    return 0; // элемент не найден
 }
 
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/
