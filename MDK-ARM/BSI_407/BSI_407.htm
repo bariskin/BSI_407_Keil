@@ -3,7 +3,7 @@
 <title>Static Call Graph - [BSI_407\BSI_407.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image BSI_407\BSI_407.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Oct 17 10:41:33 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Oct 17 12:54:19 2025
 <BR><P>
 <H3>Maximum Stack Usage =       4872 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1581,7 +1581,7 @@ Global Symbols
 <LI><a href="#[253]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setModBusSlaveAddr
 </UL>
 
-<P><STRONG><a name="[131]"></a>GetActiveSensors</STRONG> (Thumb, 64 bytes, Stack size 24 bytes, bsp.o(i.GetActiveSensors))
+<P><STRONG><a name="[131]"></a>GetActiveSensors</STRONG> (Thumb, 68 bytes, Stack size 24 bytes, bsp.o(i.GetActiveSensors))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = GetActiveSensors &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[123]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
@@ -2812,7 +2812,7 @@ Global Symbols
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[92]"></a>SendToDispTaskFunction</STRONG> (Thumb, 324 bytes, Stack size 72 bytes, freertos.o(i.SendToDispTaskFunction))
+<P><STRONG><a name="[92]"></a>SendToDispTaskFunction</STRONG> (Thumb, 302 bytes, Stack size 72 bytes, freertos.o(i.SendToDispTaskFunction))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4872 + Unknown Stack Size
 <LI>Call Chain = SendToDispTaskFunction &rArr; ServiceDataCallback &rArr; WriteServiceLog &rArr; CreateServiceDir &rArr; f_mkdir &rArr; follow_path &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
@@ -3013,7 +3013,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[91]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisplayTaskFunction
 </UL>
 
-<P><STRONG><a name="[1af]"></a>UpdateNextionDisplayWithChannelData</STRONG> (Thumb, 406 bytes, Stack size 136 bytes, displaydriver.o(i.UpdateNextionDisplayWithChannelData))
+<P><STRONG><a name="[1af]"></a>UpdateNextionDisplayWithChannelData</STRONG> (Thumb, 432 bytes, Stack size 136 bytes, displaydriver.o(i.UpdateNextionDisplayWithChannelData))
 <BR><BR>[Stack]<UL><LI>Max Depth = 288 + Unknown Stack Size
 <LI>Call Chain = UpdateNextionDisplayWithChannelData &rArr; SendNextionCommand &rArr; vsnprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -3045,7 +3045,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[20c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBRegHoldingCB
 </UL>
 
-<P><STRONG><a name="[1e3]"></a>WriteServiceLog</STRONG> (Thumb, 196 bytes, Stack size 4448 bytes, sensorlogs.o(i.WriteServiceLog))
+<P><STRONG><a name="[1e3]"></a>WriteServiceLog</STRONG> (Thumb, 236 bytes, Stack size 4448 bytes, sensorlogs.o(i.WriteServiceLog))
 <BR><BR>[Stack]<UL><LI>Max Depth = 4768 + Unknown Stack Size
 <LI>Call Chain = WriteServiceLog &rArr; CreateServiceDir &rArr; f_mkdir &rArr; follow_path &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
@@ -3712,7 +3712,7 @@ Global Symbols
 <LI><a href="#[1a8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
 </UL>
 
-<P><STRONG><a name="[1a3]"></a>getCalibrationProcessState</STRONG> (Thumb, 28 bytes, Stack size 0 bytes, bsp.o(i.getCalibrationProcessState))
+<P><STRONG><a name="[1a3]"></a>getCalibrationProcessState</STRONG> (Thumb, 32 bytes, Stack size 0 bytes, bsp.o(i.getCalibrationProcessState))
 <BR><BR>[Called By]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
@@ -3953,11 +3953,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[276]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
 </UL>
 
-<P><STRONG><a name="[1a2]"></a>readCurrentCalibrationState</STRONG> (Thumb, 38 bytes, Stack size 0 bytes, bsp.o(i.readCurrentCalibrationState))
+<P><STRONG><a name="[1a2]"></a>readCurrentCalibrationState</STRONG> (Thumb, 46 bytes, Stack size 0 bytes, bsp.o(i.readCurrentCalibrationState))
 <BR><BR>[Called By]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[19c]"></a>readCurrentSensorState</STRONG> (Thumb, 352 bytes, Stack size 32 bytes, bsp.o(i.readCurrentSensorState))
+<P><STRONG><a name="[19c]"></a>readCurrentSensorState</STRONG> (Thumb, 362 bytes, Stack size 32 bytes, bsp.o(i.readCurrentSensorState))
 <BR><BR>[Stack]<UL><LI>Max Depth = 176 + Unknown Stack Size
 <LI>Call Chain = readCurrentSensorState &rArr; __2snprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -3968,8 +3968,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[1a4]"></a>readCurrentSensorValue</STRONG> (Thumb, 382 bytes, Stack size 32 bytes, bsp.o(i.readCurrentSensorValue))
-<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = readCurrentSensorValue &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[1a4]"></a>readCurrentSensorValue</STRONG> (Thumb, 466 bytes, Stack size 40 bytes, bsp.o(i.readCurrentSensorValue))
+<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = readCurrentSensorValue &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
 <LI><a href="#[283]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;findSensoriD

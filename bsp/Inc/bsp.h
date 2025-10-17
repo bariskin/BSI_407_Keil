@@ -81,8 +81,9 @@ extern "C" {
 		  uint16_t DeviceStatus;
 			float  Concentration;
 		  uint16_t NotResponsCounter;
-			_Bool ErrorState;
+			bool ErrorState;
 			uint8_t CalibrationStatus;
+			bool WasConnected;
 		}SensorState_t;
 		
 			

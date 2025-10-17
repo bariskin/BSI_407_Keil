@@ -188,13 +188,22 @@ FRESULT  CreateServiceDir(void)
         return resFILE;
     }
 	 
-		const char* message  = get_message(log_type); 
+		 const char* message  = get_message(log_type); 
+		
 		 if(log_type == SERVICE)
 		 {
 		   sprintf(log_line, "%04d.%02d.%02d %02d:%02d Приборов: %d\r\n",
 	         data->timestamp.year, data->timestamp.month, data->timestamp.day,
            data->timestamp.hour, data->timestamp.minute, 
            data->value);
+		 }
+		 else if (log_type == ERROR_485) 
+		 {
+		    // Форматируем строку лога
+		   sprintf(log_line, "%04d.%02d.%02d %02d:%02d %s Канал %d \r\n",
+	         data->timestamp.year, data->timestamp.month, data->timestamp.day,
+           data->timestamp.hour, data->timestamp.minute, 
+           message, sensor_id);
 		 }
 		else
 		{

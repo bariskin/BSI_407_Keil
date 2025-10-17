@@ -950,16 +950,16 @@ void SendToDispTaskFunction(void const * argument)
 								   uint8_t line_count = GetServiceLinesCount();
 							     flagDisplayLogsBusy = 1;
 							     osDelay(1000);
-							      if (line_count > 10)
-										{
-										 first_line =  line_count - 10;
-										}
-										else
-										 {
+							     // if (line_count > 10)
+									//	{
+									//	 first_line =  line_count - 10;
+									//	}
+									//	else
+									//	 {
 										  first_line = 1;
-										 }
+									//	 }
 							     line_count = 10;
-							     for(int i = first_line; i <= line_count; i++)
+							     for(int i = first_line; i <= 10; i++)
 							      { 
 											osDelay(2);
 										  FRESULT res = ReadServiceLine((char *)log_string, sizeof(log_string), i);

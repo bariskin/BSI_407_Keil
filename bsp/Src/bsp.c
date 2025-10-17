@@ -212,6 +212,7 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
         // Device responded successfully
         sensor->NotResponsCounter = 0;
         sensor->ErrorState = false;
+			  sensor->WasConnected = true;
     } else {
         // Device didn't respond
         sensor->NotResponsCounter++;
@@ -219,6 +220,7 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
         // Mark as error after 3 consecutive failures
         if (sensor->NotResponsCounter >= 3) {
             sensor->ErrorState = true;
+					  sensor->WasConnected = false;
             // Consider additional error handling here if needed
         }
     }
@@ -260,7 +262,33 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_LOW_INTERN]  = 0x0000;
 		
 		 sensorID = findSensoriD(SensorInfo.modbusAddrs,SensorInfo.count, slaveaddr);
+ 
+   /* *********** проверка наличния датчика на линии начало ************ */
+		  // Process device status
+     if (sensor->DeviceStatus > 0) {
+        // Device responded successfully
+        sensor->ErrorState = false;
+			  sensor->WasConnected = true; // подключен
+      } else {   
+         sensor->ErrorState = true;
+        }
 		 
+			if(sensor->ErrorState && sensor->WasConnected) // был ранее подключен, а сейчас пропал
+			{
+			  sensorLog.sensorID = sensorID;	
+        sensorLog.logType = ERROR_485;
+				
+			  if(sd_card_present)		{	
+					if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+													}
+					if (xHigherPriorityTaskWoken == pdTRUE) {
+														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+								} 
+						}
+	      sensor->WasConnected = false; // отключен
+			}	
+		 /* *********** проверка наличния датчика на линии конец ************ */
+			
 		 if(sensor->Concentration > sensor->SensorAlarm2) // максимальный третий порог 
 		 {
 			 

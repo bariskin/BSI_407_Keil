@@ -177,13 +177,19 @@ extern  bool sd_card_present;
     snprintf(por1_str,  sizeof(por1_str),  "%.2f", SensorStateArray[currentModbusIdx - 1].SensorWarning);
     snprintf(por2_str,  sizeof(por2_str),  "%.2f", SensorStateArray[currentModbusIdx - 1].SensorAlarm);
 	  snprintf(por3_str,  sizeof(por3_str),  "%.2f" , SensorStateArray[currentModbusIdx - 1].SensorAlarm2);
-	  for(char* p = value_str; *p; p++) if(*p == '.') *p = ',';
+	  
+	  if(SensorStateArray[currentModbusIdx - 1].WasConnected == false){
+			snprintf(value_str, sizeof(value_str), "----"); // если датчик пропал уже после того как подклоючился
+		}
+    else {			
+	    for(char* p = value_str; *p; p++) if(*p == '.') *p = ',';
+		}
 	  for(char* p = scale_max_str; *p; p++) if(*p == '.') *p = ',';
     for(char* p = por1_str; *p; p++) if(*p == '.') *p = ',';
     for(char* p = por2_str; *p; p++) if(*p == '.') *p = ',';
 	  for(char* p = por3_str; *p; p++) if(*p == '.') *p = ',';
 		
-	;	 SendNextionCommand("page%d.ch%d.txt=\"Канал %d\"", page, pos, nextChannel); 
+	 	 SendNextionCommand("page%d.ch%d.txt=\"Канал %d\"", page, pos, nextChannel); 
 	   SendNextionCommand("page%d.val%d.txt=\"%s\"", page, pos, value_str);
 		 SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].SensorGas);
 	   SendNextionCommand("page%d.ran%d.txt=\"%s\"", page, pos, scale_max_str);
