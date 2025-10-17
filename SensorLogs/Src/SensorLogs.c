@@ -9,6 +9,7 @@
 /* ------------------------Includes ----------------------------------*/
 #include "SensorLogs.h"
 #include "cmsis_os.h"
+#include "stdbool.h"
 uint16_t in_file_counter = 0;
 /* ------------------------External variables -------------------------*/
 extern FATFS fs;  // file system
@@ -22,6 +23,8 @@ DateTime_t current_time;
 extern RTC_HandleTypeDef hrtc;
 
 extern uint8_t RdyWrittingFlag ;
+
+bool sd_card_present = false;
 /* ------------------------Locale variables----------------------------*/
 FRESULT resFILE;
 /* ------------------------Functions-----------------------------------*/
@@ -400,11 +403,22 @@ uint16_t GetServiceLinesCount(void)
     
     f_close(&file);
 		
-		//RdyWrittingFlag = 0;
-    
 		return line_count;
 }
 	
+
+/**
+ * @brief ѕроверка наличи€ SD карты
+ * @return true - карта присутствует, false - отсутствует
+ */
+bool check_sd_card(void) {
+    if (f_mount(&fs, "0:/", 1) == FR_OK) {
+        f_mount(NULL, "0:/", 0); // –азмонтировать
+        return true;
+    }
+    return false;
+}
+
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
 
 

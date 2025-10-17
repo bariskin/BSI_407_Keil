@@ -22,6 +22,7 @@
 #include "SensorLogs.h"
 #include <stdlib.h>
 #include <string.h>
+
 /* ------------------------External variables -------------------------*/
 extern uint16_t holdingRegsPart1[MAX_MODBUS_SLAVE_REGS_PART];  // Адреса 1-120
 extern UART_HandleTypeDef huart1;
@@ -30,6 +31,7 @@ extern uint8_t is_active_rx_uart_buffer;
 extern SensorLogEvent_t sensorLog; 
 extern osMessageQId queueSendLogsHandle;
 extern RTC_HandleTypeDef hrtc;
+extern bool sd_card_present;
 /* ------------------------Global variables----------------------------*/
 uint16_t calibrationProcesStatus = 0x00;
 
@@ -266,13 +268,13 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 			  sensorLog.sensorID = sensorID;
 		    sensorLog.Value =   sensor->Concentration; 
         sensorLog.logType = 	OVER_THRESHOLD_ADDITIONAL;
-			 
-			  if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-                        }
-        if (xHigherPriorityTaskWoken == pdTRUE) {
-                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-              } 
-			
+			 if(sd_card_present)		{	
+					if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+													}
+					if (xHigherPriorityTaskWoken == pdTRUE) {
+														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+								} 
+						}
 			    // Устанавливаем флаги для всех порогов (так как Alarm2 включает и нижние уровни)
         thresholdStates[sensorID].alarm2_triggered = true;
         thresholdStates[sensorID].alarm_triggered = true;
@@ -287,16 +289,18 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 			   sensorLog.sensorID = sensorID;
 		     sensorLog.Value =   sensor->Concentration; 
          sensorLog.logType = OVER_THRESHOLD_ALARM;	
-			 
-         if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-                        }
-           if (xHigherPriorityTaskWoken == pdTRUE) {
-                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-              }	
-         thresholdStates[slave_idx].alarm_triggered = true;
-         thresholdStates[slave_idx].warning_triggered = true;
+			  
+				 if(sd_card_present)		{	
+						 if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+														}
+						 if (xHigherPriorityTaskWoken == pdTRUE) {
+															portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+									}	
+						}
+         thresholdStates[sensorID].alarm_triggered = true;
+         thresholdStates[sensorID].warning_triggered = true;
         // Сбрасываем более высокий порог, так как мы на уровне Alarm
-         thresholdStates[slave_idx].alarm2_triggered = false;
+         thresholdStates[sensorID].alarm2_triggered = false;
 			}					
 		 }
 		 else if(sensor->Concentration >   sensor->SensorWarning)  //  минимальный первый  порог 
@@ -306,12 +310,14 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 			    sensorLog.sensorID = sensorID;
 		      sensorLog.Value =   sensor->Concentration;
           sensorLog.logType = OVER_THRESHOLD_WARNING;
-			 
-			    if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-                        }
-           if (xHigherPriorityTaskWoken == pdTRUE) {
-                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-             }
+			    
+					if(sd_card_present)		{	
+							if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+														}
+							if (xHigherPriorityTaskWoken == pdTRUE) {
+															portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+								 }
+							 }
 			     thresholdStates[sensorID].warning_triggered = true;
            // Сбрасываем более высокие пороги
            thresholdStates[sensorID].alarm_triggered = false;
@@ -328,10 +334,15 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
                sensorLog.sensorID = sensorID;
                sensorLog.Value = sensor->Concentration;
                sensorLog.logType = NORMAL_LEVEL;  // Добавьте этот тип в enum
-        
-               if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-                  // Обработка ошибки
-                }
+               
+							 if(sd_card_present)		{	
+									 if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+											// Обработка ошибки
+										}
+									 if (xHigherPriorityTaskWoken == pdTRUE) {
+																	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+										 }	
+							 }
 				  
 				        // Сбрасываем все флаги
              thresholdStates[sensorID].warning_triggered = false;

@@ -20,7 +20,7 @@ extern "C" {
  #include "stdio.h"
  #include "stdlib.h"
  #include <string.h>
-
+ #include "stdbool.h"
 /** @defgroup sensor_log_file
   * @{
   */
@@ -111,6 +111,7 @@ typedef struct {
   FRESULT ReadServiceLine(char* buffer, uint16_t buffer_size, uint16_t line_number);
   FRESULT ReadLastServiceLine(char* buffer, uint16_t buffer_size);
   uint16_t GetServiceLinesCount(void);
+	bool check_sd_card(void);
   /**
   * @}
   */

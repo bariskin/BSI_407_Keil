@@ -83,6 +83,8 @@ uint8_t SelectRunFlag1 = 0;
  
 uint8_t ControlCycleFlag = 0; 
  
+extern bool sd_card_present; 
+ 
   /* Глобальная очередь для команд */
 QueueHandle_t displayCommandQueue = NULL;
 
@@ -406,11 +408,15 @@ void HoldingHandlerFunction(void const * argument)
 											sensorLog.Value = SensorInfo.count;
 											sensorLog.logType = SERVICE;
 											sensorLog.sensorID = 0;
-									    if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-                        }
-                      if (xHigherPriorityTaskWoken == pdTRUE) {
-                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-                       }
+											
+											if(sd_card_present)
+											{
+												if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+													}
+												if (xHigherPriorityTaskWoken == pdTRUE) {
+														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+												 }
+										  }
 											/* ************************************* */	
 											 
 									   /* получение modbus адреса  первого активного датчика на линии */
@@ -542,12 +548,15 @@ void HoldingHandlerFunction(void const * argument)
 					sensorLog.Value = converterFloat.f ;
 					
 					sensorLog.logType = CALIBRATION_0;
-											
-					if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-                        }
-           if (xHigherPriorityTaskWoken == pdTRUE) {
-                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-              }
+					
+						if(sd_card_present)		{				
+								if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+															}
+								if (xHigherPriorityTaskWoken == pdTRUE) {
+									 
+																portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+										}
+						}
 					 /* ******************************************************************* */ 
 					registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
           registersTX[1] = displayCmd.binary32 & 0xFFFF;
@@ -586,12 +595,14 @@ void HoldingHandlerFunction(void const * argument)
 					 sensorLog.Value = converterFloat.f; 
 			
 					 sensorLog.logType = CALIBRATION_1;
-											
-					 if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-                        }
-           if (xHigherPriorityTaskWoken == pdTRUE) {
-                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-              }
+			
+						if(sd_card_present)		{						
+							 if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+														}
+							 if (xHigherPriorityTaskWoken == pdTRUE) {
+															portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+									}
+						}
 			      /* ******************************************************************* */
 	
 			      registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
@@ -629,12 +640,14 @@ void HoldingHandlerFunction(void const * argument)
 					  sensorLog.Value = converterFloat.f ; 
 				 
 					  sensorLog.logType = THRESHOLD_WARNING;
-											
-					  if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-                        }
-            if (xHigherPriorityTaskWoken == pdTRUE) {
-                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-              }
+						
+				    if(sd_card_present)		{						
+								if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+														}
+								if (xHigherPriorityTaskWoken == pdTRUE) {
+															portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+									}
+						}
 				    /* ******************************************************************* */
 				 
              registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
@@ -674,12 +687,14 @@ void HoldingHandlerFunction(void const * argument)
 					  sensorLog.Value = converterFloat.f; 
 				 
 					  sensorLog.logType = THRESHOLD_ALARM;
-											
-					  if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-                        }
-            if (xHigherPriorityTaskWoken == pdTRUE) {
-                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-              }
+						
+				    if(sd_card_present)		{						
+							if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+													}
+							if (xHigherPriorityTaskWoken == pdTRUE) {
+														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+								}
+						}
 				     /* ******************************************************************* */
             registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;	
@@ -709,12 +724,14 @@ void HoldingHandlerFunction(void const * argument)
 					  sensorLog.Value = converterFloat.f; 
 				 
 					  sensorLog.logType = THRESHOLD_ADDITIONAL;
-											
-					  if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-                        }
-            if (xHigherPriorityTaskWoken == pdTRUE) {
-                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-              }
+						
+				    if(sd_card_present)		{						
+								if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+														}
+								if (xHigherPriorityTaskWoken == pdTRUE) {
+															portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+									}
+						}
 				     /* ******************************************************************* */
 				    registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;	
@@ -883,7 +900,7 @@ void SendToDispTaskFunction(void const * argument)
   /* Infinite loop */
   for(;;)
   { 	
- 	      if(!RdyWrittingFlag)
+ 	      if(!RdyWrittingFlag && sd_card_present)
 				{
 					 /* постоянно ждем новое сообщение */
 				  if(xQueueReceive(queueSendLogsHandle,&LogMsg,osWaitForever) == pdTRUE){ 

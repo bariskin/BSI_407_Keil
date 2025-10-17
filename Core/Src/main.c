@@ -43,6 +43,7 @@
 #include "RingBuffer.h"
 #include "File_Handling.h"
 #include "SensorLogs.h"
+#include "stdbool.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -71,7 +72,7 @@ extern uint8_t ModBusSlaveDefaultDeviceAddr;
 extern uint16_t timerPeriod;
 extern volatile uint16_t timerCounter;
 extern uint8_t  numberOfDevices;
-
+extern bool sd_card_present;
 //**********Variables for ring biffer*******************/
 
 RING_buffer_t ring_Rx;   /* RX ring buffer structur */
@@ -139,6 +140,9 @@ int main(void)
   MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
 	
+	/* *************** checking SD card ************** */ 
+	
+	sd_card_present = check_sd_card();
   /* *************start display receiving******************** */
   UART_Display_StartReceiving();
   initDeviceData(numberOfDevices);

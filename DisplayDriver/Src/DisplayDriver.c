@@ -65,6 +65,7 @@ extern  SensorCurrentState_t	readParams  ;
  
 extern  osMessageQId queueSendLogsHandle;
 extern SensorLogEvent_t sensorLog;
+extern  bool sd_card_present;
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  
@@ -293,11 +294,14 @@ void GetDisplayCmd(uint8_t inputByte) {
 										else if (arrDisplayRX[0] == DISPLAY_LOGS_CMD )
 										 {
 											  sensorLog.logType = REQUEST_LOGS;
-											  if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-                        }
-                        if (xHigherPriorityTaskWoken == pdTRUE) {
-                          portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-                         }
+											 	if(sd_card_present)
+												{
+													if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+													}
+													if (xHigherPriorityTaskWoken == pdTRUE) {
+														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+													 }
+											 }
 										 }
 										else if (arrDisplayRX[0] == DISPLAY_TIME_CMD && data_length >= 15) 
 										{	 
@@ -520,6 +524,7 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                  cmd.command = DISPLAY_SCALE_DIMENSION;
                  cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
                  cmd.binary32 = binary32;
+						
                 if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS)
 									{	
                   } else{ 
