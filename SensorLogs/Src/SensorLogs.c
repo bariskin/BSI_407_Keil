@@ -34,7 +34,10 @@ void GetLogFilePath(char* path, uint32_t sensor_id, DateTime_t* time) {
 }
 
 void GetServiceFilePath(char* path) {
-    sprintf(path, "SERVICE/SERVICE.txt");
+    RTC_DateTypeDef date;
+    HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+    
+    sprintf(path, "%d_%d_%d.txt", date.Year, date.Month, date.Date);
 }
 
 void GetCurrentTime(DateTime_t* time) {
@@ -112,23 +115,23 @@ FRESULT WriteSensorLog(SensorData_t* data,enSensorLog log_type ) {
     return resFILE;
 }
 
-void SensorDataCallback(uint32_t sensor_id, uint32_t value,enSensorLog log_type ) {
-    
-	SensorData_t sensor_data;
-    
-    // Заполняем структуру данных
-    sensor_data.sensor_id = sensor_id;
-    sensor_data.value = value;
-    
-    // Получаем текущее время
-    GetCurrentTime(&sensor_data.timestamp);
-    
-    // Записываем лог
-    FRESULT res = WriteSensorLog(&sensor_data, log_type);
-    if (res != FR_OK) {
- 
-    }
-}
+//void SensorDataCallback(uint32_t sensor_id, uint32_t value,enSensorLog log_type ) {
+//    
+//	SensorData_t sensor_data;
+//    
+//    // Заполняем структуру данных
+//    sensor_data.sensor_id = sensor_id;
+//    sensor_data.value = value;
+//    
+//    // Получаем текущее время
+//    GetCurrentTime(&sensor_data.timestamp);
+//    
+//    // Записываем лог
+//    FRESULT res = WriteSensorLog(&sensor_data, log_type);
+//    if (res != FR_OK) {
+// 
+//    }
+//}
 
 
 void ServiceDataCallback(uint32_t sensor_id, uint16_t value, enSensorLog log_type)
@@ -164,7 +167,6 @@ FRESULT  CreateServiceDir(void)
 
  FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log_type)
  {
-    char filepath[64];
     FIL file;
     UINT bytes_written;
     char log_line[128];
@@ -173,50 +175,36 @@ FRESULT  CreateServiceDir(void)
     if (f_mount(&fs, "", 1) != FR_OK) {  // Проверка состояния
         return FR_NOT_READY;
     }
-   // Создаем папку если нужно
-    resFILE = CreateServiceDir();
-    
-		if (resFILE != FR_OK) 
-		{
-			return resFILE;
-    }
-		/* путь к папке SERVICE */
-   GetServiceFilePath(filepath);
+  
+	   resFILE = CreateDatedFile(&file);
 		
-	 resFILE = f_open(&file, filepath, FA_WRITE | FA_OPEN_APPEND | FA_OPEN_ALWAYS);
-   if (resFILE != FR_OK) {
-        return resFILE;
-    }
-	 
+	  if (resFILE == FR_OK) {
 		 const char* message  = get_message(log_type); 
 		
 		 if(log_type == SERVICE)
 		 {
-		   sprintf(log_line, "%04d.%02d.%02d %02d:%02d Приборов: %d\r\n",
-	         data->timestamp.year, data->timestamp.month, data->timestamp.day,
+		   sprintf(log_line, "%02d:%02d Приборов: %d\r\n",
            data->timestamp.hour, data->timestamp.minute, 
            data->value);
 		 }
 		 else if (log_type == ERROR_485) 
 		 {
 		    // Форматируем строку лога
-		   sprintf(log_line, "%04d.%02d.%02d %02d:%02d %s Канал %d \r\n",
-	         data->timestamp.year, data->timestamp.month, data->timestamp.day,
+		   sprintf(log_line, "%02d:%02d %s Канал %d \r\n",
            data->timestamp.hour, data->timestamp.minute, 
            message, sensor_id);
 		 }
 		else
 		{
     // Форматируем строку лога
-		sprintf(log_line, "%04d.%02d.%02d %02d:%02d %s Канал %d:   %d\r\n",
-	         data->timestamp.year, data->timestamp.month, data->timestamp.day,
+		 sprintf(log_line, "%02d:%02d %s Канал %d:   %d\r\n",
            data->timestamp.hour, data->timestamp.minute, 
            message, sensor_id , data->value);
 		}
 		resFILE = f_write(&file, log_line, strlen(log_line), &bytes_written);
     
     f_close(&file);
-	 
+	} 
 		in_file_counter++;
 		RdyWrittingFlag = 0;
 		
@@ -426,6 +414,32 @@ bool check_sd_card(void) {
         return true;
     }
     return false;
+}
+
+
+FRESULT CreateDatedFile(FIL* file)
+{
+    char file_path[64];
+    FRESULT res;
+    
+    // Получаем текущую дату
+    RTC_DateTypeDef date;
+    HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+    
+    // Формируем путь в формате "2025_10_17"
+    snprintf(file_path, sizeof(file_path), "%d_%d_%d.txt", 
+             date.Year, date.Month, date.Date);
+
+       // Пытаемся открыть файл для добавления (если существует)
+    res = f_open(file, file_path, FA_OPEN_APPEND | FA_WRITE);
+    
+    // Если файл не существует, создаем новый
+    if (res == FR_NO_FILE) {
+        res = f_open(file, file_path, FA_CREATE_NEW | FA_WRITE);
+    }
+    
+    return res;
+
 }
 
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/

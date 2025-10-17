@@ -102,7 +102,7 @@ typedef struct {
   void GetCurrentTime(DateTime_t* time);
   FRESULT CreateSensorDirs(uint32_t sensor_id);
   FRESULT WriteSensorLog(SensorData_t* data,enSensorLog log_type ) ;
-  void SensorDataCallback(uint32_t sensor_id, uint32_t value,enSensorLog log_type);
+  //void SensorDataCallback(uint32_t sensor_id, uint32_t value,enSensorLog log_type);
   void ServiceDataCallback(uint32_t sensor_id, uint16_t value,enSensorLog log_type);
   FRESULT  CreateServiceDir(void);
   FRESULT WriteServiceLog(uint32_t sensor_id,ServiceData_t* data, enSensorLog log_type);
@@ -112,6 +112,7 @@ typedef struct {
   FRESULT ReadLastServiceLine(char* buffer, uint16_t buffer_size);
   uint16_t GetServiceLinesCount(void);
 	bool check_sd_card(void);
+	FRESULT CreateDatedFile(FIL* file);
   /**
   * @}
   */
