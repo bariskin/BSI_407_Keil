@@ -813,7 +813,7 @@ void InputHandlerFunction(void const * argument)
 	 	if(SensorInfo.count && !flagDisplayLogsBusy)   
 			{ 
 				
-				if(setErrorStatusFlag) // отправить на дисплей успешность записи паhаметров т калибровки
+				if(setErrorStatusFlag) // отправить на дисплей успешность записи паhаметров и калибровки
 				{
 			    setErrorStatusFlag = false;
 					setErrorStatus(checkParamsValue);
