@@ -113,6 +113,8 @@ typedef struct {
   uint16_t GetServiceLinesCount(void);
 	bool check_sd_card(void);
 	FRESULT CreateDatedFile(FIL* file);
+	//FRESULT CreateDailyFile(void);
+	//void TestDailyFiles(void);
   /**
   * @}
   */

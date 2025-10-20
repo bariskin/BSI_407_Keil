@@ -37,7 +37,7 @@ void GetServiceFilePath(char* path) {
     RTC_DateTypeDef date;
     HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
     
-    sprintf(path, "%d_%d_%d.txt", date.Year, date.Month, date.Date);
+    sprintf(path, "%02d_%02d_%02d.txt", date.Year, date.Month, date.Date);
 }
 
 void GetCurrentTime(DateTime_t* time) {
@@ -115,31 +115,10 @@ FRESULT WriteSensorLog(SensorData_t* data,enSensorLog log_type ) {
     return resFILE;
 }
 
-//void SensorDataCallback(uint32_t sensor_id, uint32_t value,enSensorLog log_type ) {
-//    
-//	SensorData_t sensor_data;
-//    
-//    // Заполняем структуру данных
-//    sensor_data.sensor_id = sensor_id;
-//    sensor_data.value = value;
-//    
-//    // Получаем текущее время
-//    GetCurrentTime(&sensor_data.timestamp);
-//    
-//    // Записываем лог
-//    FRESULT res = WriteSensorLog(&sensor_data, log_type);
-//    if (res != FR_OK) {
-// 
-//    }
-//}
-
-
 void ServiceDataCallback(uint32_t sensor_id, uint16_t value, enSensorLog log_type)
  {
 	
 	ServiceData_t servicedata;
-	
-  GetCurrentTime(&servicedata.timestamp);
 	servicedata.value = value;
 	 
 	    // Записываем лог
@@ -149,23 +128,7 @@ void ServiceDataCallback(uint32_t sensor_id, uint16_t value, enSensorLog log_typ
     }  
  }
 
-FRESULT  CreateServiceDir(void)
- {
-   char dir_path[32];
-   FRESULT res;
-	 
-	 snprintf(dir_path, sizeof(dir_path), "SERVICE");
-   res = f_mkdir(dir_path);
-	 
-   if (res == FR_OK ||res == FR_EXIST) 
-	 {  
-	  return FR_OK;
-	 }
-	 // Возвращаем ошибку только в случае других проблем
-    return res;
- }
-
- FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log_type)
+ FRESULT WriteServiceLog_(uint32_t sensor_id, ServiceData_t* data, enSensorLog log_type)
  {
     FIL file;
     UINT bytes_written;
@@ -422,26 +385,111 @@ FRESULT CreateDatedFile(FIL* file)
     char file_path[64];
     FRESULT res;
     
-    // Получаем текущую дату
+		    /* ВСЕГДА получаем актуальную дату при каждой записи */
     RTC_DateTypeDef date;
+    RTC_TimeTypeDef time;
     HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
-    
-    // Формируем путь в формате "2025_10_17"
-    snprintf(file_path, sizeof(file_path), "%d_%d_%d.txt", 
-             date.Year, date.Month, date.Date);
+    HAL_RTC_GetTime(&hrtc, &time, RTC_FORMAT_BIN);
 
+    // Формируем путь с текущей датой
+    snprintf(file_path, sizeof(file_path), "%02d_%02d_%02d.txt", 
+             date.Year, date.Month, date.Date);
+		
+		
        // Пытаемся открыть файл для добавления (если существует)
     res = f_open(file, file_path, FA_OPEN_APPEND | FA_WRITE);
     
     // Если файл не существует, создаем новый
     if (res == FR_NO_FILE) {
         res = f_open(file, file_path, FA_CREATE_NEW | FA_WRITE);
-    }
-    
+    } 
     return res;
-
 }
 
+FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log_type)
+{
+    char file_path[64];
+    FIL file;
+    UINT bytes_written;
+    char log_line[128];
+    FRESULT res;
+    static uint8_t last_hour = 0;
+	  static uint8_t current_day = 0;
+    // Проверка монтирования SD карты
+    if (f_mount(&fs, "", 1) != FR_OK) {
+        return FR_NOT_READY;
+    }
+  
+    /* ВСЕГДА получаем актуальную дату при каждой записи */
+		RTC_TimeTypeDef sTime;
+    RTC_DateTypeDef date;
+    HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+    HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+	
+		
+     /* ИСПРАВЛЕНИЕ ВРЕМЕНИ 24:00 -> 00:00 */
+    uint8_t corrected_hours = sTime.Hours;
+    if (corrected_hours >= 24) {
+        corrected_hours = 0;
+        sTime.Hours = 0;
+			  sTime.TimeFormat = RTC_HOURFORMAT_24;
+        // Принудительно обновляем время в RTC
+        HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+			  osDelay(2);
+    }
+		 /* АВТОМАТИЧЕСКАЯ СМЕНА ДАТЫ В 00:00 */
+    if (corrected_hours == 0 && last_hour == 23) {
+        date.Date++;
+        if (date.Date > 31)date.Date = 1;
+			
+			  HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
+			  osDelay(2);
+    }
+    last_hour = corrected_hours;
+		
+    // Формируем путь с текущей датой
+    snprintf(file_path, sizeof(file_path), "%02d_%02d_%02d.txt", 
+             date.Year, date.Month, date.Date);
+    
+    // Открываем файл текущей даты
+    res = f_open(&file, file_path, FA_OPEN_APPEND | FA_WRITE);
+    
+		  // Если файл не существует, создаем новый
+    if (res == FR_NO_FILE) {
+        res = f_open(&file, file_path, FA_CREATE_NEW | FA_WRITE);
+    }
+    
+    
+    // Формируем строку лога
+    const char* message = get_message(log_type);
+    
+    if(log_type == SERVICE) {
+        sprintf(log_line, "%02d.%02d.%02d  %02d:%02d Приборов: %d\r\n",
+			            date.Year,date.Month,date.Date,
+                  sTime.Hours, sTime.Minutes, data->value);  // ? Используем time от RTC ?
+    }
+    else if (log_type == ERROR_485) {
+        sprintf(log_line, "%02d.%02d.%02d  %02d:%02d %s Канал %d \r\n",
+			         date.Year,date.Month,date.Date,
+               sTime.Hours, sTime.Minutes, message, sensor_id); 
+    }
+    else {
+        sprintf(log_line, "%02d.%02d.%02d  %02d:%02d %s Канал %d:   %d\r\n",
+			          date.Year,date.Month,date.Date,
+                sTime.Hours, sTime.Minutes, message, sensor_id, data->value); 
+    }
+    
+    // Пишем в файл
+		if (res == FR_OK){
+      res = f_write(&file, log_line, strlen(log_line), &bytes_written);
+	  }
+    f_close(&file);
+    
+    in_file_counter++;
+    RdyWrittingFlag = 0;
+    
+    return res;
+}
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
 
 

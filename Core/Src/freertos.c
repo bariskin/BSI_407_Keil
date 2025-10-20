@@ -887,7 +887,7 @@ void DisplayTaskFunction(void const * argument)
 void SendToDispTaskFunction(void const * argument)
 {
   /* USER CODE BEGIN SendToDispTaskFunction */
-	
+
 	SensorLogEvent_t LogMsg = {
 	 .logType = SENSOR_LOG_TYPE_ERROR,
    .sensorID = 0,
@@ -895,8 +895,8 @@ void SendToDispTaskFunction(void const * argument)
    .Value = 0
  };
 
-	osDelay(10000);  // 500 ms	
-	
+	osDelay(10000);  // 500 ms
+
   /* Infinite loop */
   for(;;)
   { 	
@@ -946,30 +946,27 @@ void SendToDispTaskFunction(void const * argument)
 							case REQUEST_LOGS:
 								   osDelay(200);
 							     uint8_t first_line = 0;
-								   char log_string[64];
+								   char log_string[128];
 								   uint8_t line_count = GetServiceLinesCount();
 							     flagDisplayLogsBusy = 1;
 							     osDelay(1000);
-							     // if (line_count > 10)
-									//	{
-									//	 first_line =  line_count - 10;
-									//	}
-									//	else
-									//	 {
-										  first_line = 1;
-									//	 }
-							     line_count = 10;
-							     for(int i = first_line; i <= 10; i++)
-							      { 
-											osDelay(2);
-										  FRESULT res = ReadServiceLine((char *)log_string, sizeof(log_string), i);
-											osDelay(2);
-										   if (res == FR_OK)
-											  {
-												  SendNextionCommand("t%d.txt=\"%s\"", i,(const char* )log_string);
-												}
-										
+							      if (line_count > 10)
+										{
+										 line_count =  10;
 										}
+									if(line_count > 0)
+									 {
+							      for(int i = 0; i <= line_count; i++)
+							       { 
+											 osDelay(2);
+										   FRESULT res = ReadServiceLine((char *)log_string, sizeof(log_string), i);
+											 osDelay(2);
+										    if (res == FR_OK)
+											   {
+												   SendNextionCommand("t%d.txt=\"%s\"", i,(const char* )log_string);
+												 }
+										 }
+									 }
 										osDelay(150);
 										flagDisplayLogsBusy = 0;
 									  RdyWrittingFlag = 0;
