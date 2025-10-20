@@ -945,6 +945,8 @@ void SendToDispTaskFunction(void const * argument)
 							
 							case REQUEST_LOGS:
 								   osDelay(200);
+									 if(LogMsg.Value == 0x00)
+									 {	
 							     uint8_t first_line = 0;
 								   char log_string[128];
 								   uint8_t line_count = GetServiceLinesCount();
@@ -967,6 +969,14 @@ void SendToDispTaskFunction(void const * argument)
 												 }
 										 }
 									 }
+								  }
+									 
+									else if (LogMsg.Value > 0x09) // 10, 20 ,30 ....
+									{
+									
+									
+									
+									}
 										osDelay(150);
 										flagDisplayLogsBusy = 0;
 									  RdyWrittingFlag = 0;

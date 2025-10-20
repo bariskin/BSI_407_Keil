@@ -77,6 +77,7 @@ extern  bool sd_card_present;
 	char posit[NUMBER_SLAVE_DEVICES][20];
  } flash_struct;
  char time_input_string[16] = {0};
+ char log_input_string[4]= {0}; 
 /* ------------------------Functions-----------------------------------*/
  void Init_qDev(void){
 	 flash_struct.dev_quan = 10;
@@ -296,10 +297,11 @@ void GetDisplayCmd(uint8_t inputByte) {
                             displayResponse = DISPLAY_BAUD_RATE_CMD;
                         }
                     }
-										/* запрос на вывод логов с файла service.txt */
+										/* запрос на вывод логов со строки 0x00 */
 										else if (arrDisplayRX[0] == DISPLAY_LOGS_CMD )
 										 {
 											  sensorLog.logType = REQUEST_LOGS;
+											  sensorLog.Value   = 0x00;
 											 	if(sd_card_present)
 												{
 													if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
@@ -307,8 +309,26 @@ void GetDisplayCmd(uint8_t inputByte) {
 													if (xHigherPriorityTaskWoken == pdTRUE) {
 														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 													 }
-											 }
+											  }
 										 }
+										 /* запрос на вывод логов после 10, next/prev
+										    ожидаем начало каждого десятка строк, кроме первого(с 0x00)
+										 */
+										else if (arrDisplayRX[0] == DISPLAY_NEXT_LOGS_CMD && data_length >= 4)
+										 {
+											   sensorLog.logType = REQUEST_LOGS;
+											   memcpy(log_input_string, (void *)&arrDisplayRX[1], 4);
+											   sensorLog.Value   = bytes_to_uint32((const unsigned char *)log_input_string);
+											 
+											 	if(sd_card_present)
+												{
+													if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+													}
+													if (xHigherPriorityTaskWoken == pdTRUE) {
+														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+													 }
+												}
+										 }	  	 
 										else if (arrDisplayRX[0] == DISPLAY_TIME_CMD && data_length >= 15) 
 										{	 
 										     displayResponse = DISPLAY_TIME_CMD;
@@ -637,5 +657,13 @@ void setErrorStatus(int errorCode) {
         SendNextionCommand("errore.val=1");
     }
 		osDelay(5);
+}
+
+// Простая конвертация 4 байт little-endian в число
+uint32_t bytes_to_uint32(const unsigned char bytes[4]) {
+    return (uint32_t)bytes[0] | 
+           ((uint32_t)bytes[1] << 8) | 
+           ((uint32_t)bytes[2] << 16) | 
+           ((uint32_t)bytes[3] << 24);
 }
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/

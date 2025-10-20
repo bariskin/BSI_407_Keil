@@ -66,7 +66,8 @@ typedef enum {
 	  DISPLAY_SUBSTANCE_CODE           = 0x06,	
 	  DISPLAY_THRESHOLD_ADDITIONAL     = 0x07, 
     DISPLAY_TIME_CMD                 = 0xA2,  
-    DISPLAY_LOGS_CMD                 = 0x70 // команда с дисплея на запрос вывода логов
+    DISPLAY_LOGS_CMD                 = 0x70, // команда с дисплея на запрос вывода логов
+	  DISPLAY_NEXT_LOGS_CMD            = 0xA4 // next/prev logs
 } DisplayResponseCmd;
 		
 		// Структура для команд от дисплея
@@ -94,6 +95,7 @@ typedef struct {
 	 void GetDisplayCmd(uint8_t inputByte);
    void updateProgressBar(int PollIsDone);
    void setErrorStatus(int errorCode);
+   uint32_t bytes_to_uint32(const unsigned char bytes[4]) ;
 		/**
   * @}
   */

@@ -269,7 +269,8 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
         // Device responded successfully
         sensor->ErrorState = false;
 			  sensor->WasConnected = true; // подключен
-      } else {   
+      } 
+		  else {   
          sensor->ErrorState = true;
         }
 		 
@@ -280,6 +281,8 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 				
 			  if(sd_card_present)		{	
 					if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+						               // —брасываем флаг только при успешной отправке
+                            sensor->WasConnected = false;
 													}
 					if (xHigherPriorityTaskWoken == pdTRUE) {
 														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
