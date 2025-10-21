@@ -3,8 +3,7 @@
 * @file      SensorLogs.c
 * @author    OnWert
 * @version   
-* @brief     This file provides common functions for the   SensorLogs
-*           
+* @brief     This file provides common functions for the   SensorLogs          
 */       
 /* ------------------------Includes ----------------------------------*/
 #include "SensorLogs.h"
@@ -127,54 +126,6 @@ void ServiceDataCallback(uint32_t sensor_id, uint16_t value, enSensorLog log_typ
 
     }  
  }
-
-// FRESULT WriteServiceLog_(uint32_t sensor_id, ServiceData_t* data, enSensorLog log_type)
-// {
-//    FIL file;
-//    UINT bytes_written;
-//    char log_line[128];
-//	
-//	    // Проверка монтирования SD карты
-//    if (f_mount(&fs, "", 1) != FR_OK) {  // Проверка состояния
-//        return FR_NOT_READY;
-//    }
-//  
-//	   resFILE = CreateDatedFile(&file);
-//		
-//	  if (resFILE == FR_OK) {
-//		 const char* message  = get_message(log_type); 
-//		
-//		 if(log_type == SERVICE)
-//		 {
-//		   sprintf(log_line, "%02d:%02d Приборов: %d\r\n",
-//           data->timestamp.hour, data->timestamp.minute, 
-//           data->value);
-//		 }
-//		 else if (log_type == ERROR_485) 
-//		 {
-//		    // Форматируем строку лога
-//		   sprintf(log_line, "%02d:%02d %s Канал %d \r\n",
-//           data->timestamp.hour, data->timestamp.minute, 
-//           message, sensor_id);
-//		 }
-//		else
-//		{
-//    // Форматируем строку лога
-//		 sprintf(log_line, "%02d:%02d %s Канал %d:   %d\r\n",
-//           data->timestamp.hour, data->timestamp.minute, 
-//           message, sensor_id , data->value);
-//		}
-//		resFILE = f_write(&file, log_line, strlen(log_line), &bytes_written);
-//    
-//    f_close(&file);
-//	} 
-//		in_file_counter++;
-//		RdyWrittingFlag = 0;
-//		
-//    return resFILE;
-// }
-
-
 
 const char* get_message(enSensorLog type) {
 	switch((uint8_t)type) {
@@ -492,6 +443,3 @@ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log
     return res;
 }
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
-
-
-
