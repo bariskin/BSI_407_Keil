@@ -282,7 +282,7 @@ FRESULT ReadLastServiceLine(char* buffer, uint16_t buffer_size)
 }
 
 /**
-  * @brief  Получение количества строк в файле SERVICE/SERVICE.txt
+  * @brief  Получение количества строк в файле
   * @retval uint16_t: количество строк
   */
 uint16_t GetServiceLinesCount(void)
@@ -416,17 +416,17 @@ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log
     const char* message = get_message(log_type);
     
     if(log_type == SERVICE) {
-        sprintf(log_line, "%02d.%02d.%02d  %02d:%02d Приборов: %d\r\n",
+        sprintf(log_line, "%02d.%02d.%02d %02d:%02d Приборов: %d\r\n",
 			            date.Year,date.Month,date.Date,
                   sTime.Hours, sTime.Minutes, data->value);  // ? Используем time от RTC ?
     }
     else if (log_type == ERROR_485) {
-        sprintf(log_line, "%02d.%02d.%02d  %02d:%02d %s Канал %d \r\n",
+        sprintf(log_line, "%02d.%02d.%02d %02d:%02d %s Канал %d \r\n",
 			         date.Year,date.Month,date.Date,
                sTime.Hours, sTime.Minutes, message, sensor_id); 
     }
     else {
-        sprintf(log_line, "%02d.%02d.%02d  %02d:%02d %s Канал %d:   %d\r\n",
+        sprintf(log_line, "%02d.%02d.%02d %02d:%02d %s Канал %d: %d\r\n",
 			          date.Year,date.Month,date.Date,
                 sTime.Hours, sTime.Minutes, message, sensor_id, data->value); 
     }
