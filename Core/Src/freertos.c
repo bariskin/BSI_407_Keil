@@ -888,6 +888,10 @@ void SendToDispTaskFunction(void const * argument)
 {
   /* USER CODE BEGIN SendToDispTaskFunction */
 
+	  int first_line = 0;
+		int last_line = 0; 
+	  char log_string[128];
+	  uint8_t line_count = 0;
 	SensorLogEvent_t LogMsg = {
 	 .logType = SENSOR_LOG_TYPE_ERROR,
    .sensorID = 0,
@@ -946,37 +950,64 @@ void SendToDispTaskFunction(void const * argument)
 							case REQUEST_LOGS:
 								   osDelay(200);
 									 if(LogMsg.Value == 0x00)
-									 {	
-							     uint8_t first_line = 0;
-								   char log_string[128];
-								   uint8_t line_count = GetServiceLinesCount();
-							     flagDisplayLogsBusy = 1;
-							     osDelay(1000);
-							      if (line_count > 10)
-										{
-										 line_count =  10;
-										}
-									if(line_count > 0)
-									 {
-							      for(int i = 0; i <= line_count; i++)
-							       { 
-											 osDelay(2);
-										   FRESULT res = ReadServiceLine((char *)log_string, sizeof(log_string), i);
-											 osDelay(2);
-										    if (res == FR_OK)
-											   {
-												   SendNextionCommand("t%d.txt=\"%s\"", i,(const char* )log_string);
+									 {		 
+											 line_count = GetServiceLinesCount();
+											 flagDisplayLogsBusy = 1;
+											 osDelay(1000);
+										    if (line_count < 10 )
+												  {
+												  	first_line = line_count;
+														last_line = 0;
+													}													
+									      else
+												  {
+														first_line = line_count;
+														last_line = line_count - 10;
+													}
+												for(int i = first_line; i > last_line; i--)
+												 { 
+													 osDelay(2);
+													 FRESULT res = ReadServiceLine((char *)log_string, sizeof(log_string), i);
+													 osDelay(2);
+														if (res == FR_OK)
+														 {
+															 SendNextionCommand("t%d.txt=\"%s\"", i,(const char* )log_string);
+														 }
 												 }
-										 }
-									 }
-								  }
+								     }
 									 
-									else if (LogMsg.Value > 0x09) // 10, 20 ,30 ....
-									{
-									
-									
-									
-									}
+										else if (LogMsg.Value > 0x09) // 10, 20 ,30 ....
+											{	 
+												 line_count = GetServiceLinesCount();
+												 flagDisplayLogsBusy = 1;
+												 osDelay(1000);
+												
+												 if(line_count > 10)
+													 {
+												      // Определяем целевую границу для уменьшения
+                              // Например: для значения 20 целевая граница = 10
+                              // для значения 30 целевая граница = 20
+                              int target_line = LogMsg.Value - 10;
+														 
+														  // Проверяем, что текущее количество строк превышает целевую границу
+                               if(line_count > target_line)
+                                  {
+																		  for(int i = line_count; i > target_line; i--)
+                                              {
+																						   osDelay(2);
+													                     FRESULT res = ReadServiceLine((char *)log_string, sizeof(log_string), i);
+													                     osDelay(2);
+														                   if (res == FR_OK)
+														                      {
+															                      SendNextionCommand("t%d.txt=\"%s\"", i,(const char* )log_string);
+														                     }
+              
+                                              }
+
+                                   }
+												 
+													  }											 
+											}
 										osDelay(150);
 										flagDisplayLogsBusy = 0;
 									  RdyWrittingFlag = 0;
