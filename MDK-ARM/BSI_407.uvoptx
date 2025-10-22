@@ -492,6 +492,11 @@
           <WinNumber>2</WinNumber>
           <ItemText>hrtc</ItemText>
         </Ww>
+        <Ww>
+          <count>56</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>line_count</ItemText>
+        </Ww>
       </WatchWindow2>
       <MemoryWindow1>
         <Mm>
