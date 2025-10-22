@@ -953,7 +953,7 @@ void SendToDispTaskFunction(void const * argument)
 									 {		 
 											 line_count = GetServiceLinesCount();
 											 flagDisplayLogsBusy = 1;
-											 osDelay(1000);
+											 osDelay(900);
 										    if (line_count <= 10 )
 											  	  {
 												  	 first_line = line_count;
@@ -985,12 +985,15 @@ void SendToDispTaskFunction(void const * argument)
 											{	 
 												 line_count = GetServiceLinesCount();
 												 flagDisplayLogsBusy = 1;
-												 osDelay(1000);
+												 osDelay(900);
 												
-												 if(line_count >=10)
-													 {
-												    
-														  first_line  = line_count - LogMsg.Value;
+												 // Проверяем, что запрошенное количество строк ИМЕННО равно 10, 20, 30 и т.д.
+                          // и что общее количество строк >= запрошенному количеству
+                         if((LogMsg.Value % 10 == 0) && (line_count >= LogMsg.Value))
+                          {
+                             first_line = line_count - LogMsg.Value;
+												
+														 
 														  if (first_line < 0 )
 															 {
 															   first_line = 11;
@@ -1020,10 +1023,14 @@ void SendToDispTaskFunction(void const * argument)
 														                     }
               
                                               }
-
                                    }
-												 
-													  }											 
+													  }	
+		                        else
+														{
+														
+														
+														}
+			
 											}
 										osDelay(250);
 										flagDisplayLogsBusy = 0;

@@ -53,67 +53,6 @@ void GetCurrentTime(DateTime_t* time) {
     time->minute = rtc_time.Minutes;
     time->second = rtc_time.Seconds;
 }
-
-FRESULT CreateSensorDirs(uint32_t sensor_id) {
-    char dir_path[64];
-    FRESULT res;
-    
-    // Создаем каждый уровень отдельно
-    sprintf(dir_path, "%lu", sensor_id);
-    res = f_mkdir(dir_path);
-    if (res != FR_OK && res != FR_EXIST){
-   			return res;
-    }
-    return FR_OK;
-}
-
-FRESULT WriteSensorLog(SensorData_t* data,enSensorLog log_type ) {
-	
-    char filepath[64];
-    FIL file;
-    
-    UINT bytes_written;
-    char log_line[64];
-	
-	    // Проверка монтирования SD карты
-    if (f_mount(&fs, "", 1) != FR_OK) {  // Проверка состояния
-        return FR_NOT_READY;
-    }
-  
-    // Создаем папки если нужно
-    resFILE = CreateSensorDirs(data->sensor_id);
-    
-		if (resFILE != FR_OK) 
-		{
-			return resFILE;
-    }
-		
-		 // Формируем путь к файлу
-   GetLogFilePath(filepath, data->sensor_id, &data->timestamp);
-	  
- 
-  resFILE = f_open(&file, filepath, FA_WRITE | FA_OPEN_APPEND | FA_OPEN_ALWAYS);
-   if (resFILE != FR_OK) {
-        return resFILE; 
-  }
-		const char* message  = get_message(log_type); 
-    // Форматируем строку лога
-	sprintf(log_line, "%04d.%02d.%02d %02d:%02d %s: %d\r\n",
-	         data->timestamp.year, data->timestamp.month, data->timestamp.day,
-           data->timestamp.hour, data->timestamp.minute, 
-           message, data->value);
-		
-    // Записываем в файл
-    resFILE = f_write(&file, log_line, strlen(log_line), &bytes_written);
-    
-    f_close(&file);
-	 
-		in_file_counter++;
-		RdyWrittingFlag = 0;
-		
-    return resFILE;
-}
-
 void ServiceDataCallback(uint32_t sensor_id, uint16_t value, enSensorLog log_type)
  {
 	
@@ -139,7 +78,7 @@ const char* get_message(enSensorLog type) {
 	 case OVER_THRESHOLD_WARNING:      return "Превышение 1";
 	 case OVER_THRESHOLD_ALARM:        return "Превышение 2";
 	 case OVER_THRESHOLD_ADDITIONAL:   return "Превышение 3";
-	 case NORMAL_LEVEL:                return "Норамальный уровень";
+	 case NORMAL_LEVEL:                return "Нормальный уровень";
 	 case SENSOR_LOG_TYPE_ERROR:  return "unknown";		 
 	}
 	return "unknown";
@@ -366,20 +305,17 @@ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log
     char log_line[128];
     FRESULT res;
     static uint8_t last_hour = 0;
-	  //static uint8_t current_day = 0;
     // Проверка монтирования SD карты
     if (f_mount(&fs, "", 1) != FR_OK) {
         return FR_NOT_READY;
     }
-  
     /* ВСЕГДА получаем актуальную дату при каждой записи */
 		RTC_TimeTypeDef sTime;
     RTC_DateTypeDef date;
     HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
     HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
 	
-		
-     /* ИСПРАВЛЕНИЕ ВРЕМЕНИ 24:00 -> 00:00 */
+    /* ИСПРАВЛЕНИЕ ВРЕМЕНИ 24:00 -> 00:00 */
     uint8_t corrected_hours = sTime.Hours;
     if (corrected_hours >= 24) {
         corrected_hours = 0;
