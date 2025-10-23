@@ -807,6 +807,8 @@ void HoldingHandlerFunction(void const * argument)
 void InputHandlerFunction(void const * argument)
 {
   /* USER CODE BEGIN InputHandlerFunction */
+	
+	uint16_t timeCounter = 0;
   /* Infinite loop */
   for(;;)
   {			
@@ -824,6 +826,13 @@ void InputHandlerFunction(void const * argument)
 		         UpdateNextionDisplayWithChannelData(SensorInfo.count);
 				}
 		  }
+		
+     timeCounter++;
+     if(timeCounter == 1200 )
+		 {	 
+			 timeCounter = 0;
+   		 UpdateDisplayTime();
+		 }
     osDelay(50);
   }
   /* USER CODE END InputHandlerFunction */
@@ -900,7 +909,10 @@ void SendToDispTaskFunction(void const * argument)
  };
 
 	osDelay(10000);  // 500 ms
-
+  
+ /* Отравить в дисплей текущую дату */
+ 
+ 
   /* Infinite loop */
   for(;;)
   { 	

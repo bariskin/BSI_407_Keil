@@ -22,7 +22,7 @@
 #include "SensorLogs.h"
 #include <stdlib.h>
 #include <string.h>
-
+#include "DisplayDriver.h"
 /* ------------------------External variables -------------------------*/
 extern uint16_t holdingRegsPart1[MAX_MODBUS_SLAVE_REGS_PART];  // Адреса 1-120
 extern UART_HandleTypeDef huart1;
@@ -781,7 +781,7 @@ bool getCalibrationProcessState(uint8_t slaveaddr)
  // Функция для установки только года
 HAL_StatusTypeDef Set_RTC_Year(uint8_t year)
 {
-    RTC_DateTypeDef sDate;
+    //RTC_DateTypeDef sDate;
     
     // Сначала читаем текущую дату
     if (HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
@@ -801,7 +801,7 @@ HAL_StatusTypeDef Set_RTC_Year(uint8_t year)
  
 uint16_t Get_RTC_Year(void)
  {
-    RTC_DateTypeDef sDate;
+    //RTC_DateTypeDef sDate;
     
     HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
     
@@ -811,7 +811,7 @@ uint16_t Get_RTC_Year(void)
 // Функция для установки только месяца
 HAL_StatusTypeDef Set_RTC_Month(uint8_t month)
 {
-    RTC_DateTypeDef sDate;
+    //RTC_DateTypeDef sDate;
     
     // Проверка корректности месяца
     if (month < 1 || month > 12) {
@@ -837,7 +837,7 @@ HAL_StatusTypeDef Set_RTC_Month(uint8_t month)
 // Функция для чтения текущего месяца
 uint8_t Get_RTC_Month(void)
 {
-    RTC_DateTypeDef sDate;
+    //RTC_DateTypeDef sDate;
     
     HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
     
@@ -847,7 +847,7 @@ uint8_t Get_RTC_Month(void)
 // Функция для установки только дня
 HAL_StatusTypeDef Set_RTC_Day(uint8_t day)
 {
-    RTC_DateTypeDef sDate;
+    //RTC_DateTypeDef sDate;
     
     // Проверка корректности дня
     if (day < 1 || day > 31) {
@@ -886,7 +886,7 @@ HAL_StatusTypeDef Set_RTC_Day(uint8_t day)
 // Функция для чтения текущего дня
 uint8_t Get_RTC_Day(void)
 {
-    RTC_DateTypeDef sDate;
+    //RTC_DateTypeDef sDate;
     
     HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
     
@@ -896,7 +896,7 @@ uint8_t Get_RTC_Day(void)
 // Функция для установки только часа
 HAL_StatusTypeDef Set_RTC_Hour(uint8_t hour)
 {
-    RTC_TimeTypeDef sTime;
+    //RTC_TimeTypeDef sTime;
     
     // Проверка корректности часа (24-часовой формат)
     if (hour > 23) {
@@ -921,7 +921,7 @@ HAL_StatusTypeDef Set_RTC_Hour(uint8_t hour)
 // Функция для чтения текущего часа
 uint8_t Get_RTC_Hour(void)
 {
-    RTC_TimeTypeDef sTime;
+    //RTC_TimeTypeDef sTime;
     
     HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
     
@@ -931,7 +931,7 @@ uint8_t Get_RTC_Hour(void)
 // Функция для установки только минут
 HAL_StatusTypeDef Set_RTC_Minute(uint8_t minute)
 {
-    RTC_TimeTypeDef sTime;
+    //RTC_TimeTypeDef sTime;
     
     // Проверка корректности минут
     if (minute > 59) {
@@ -957,7 +957,7 @@ HAL_StatusTypeDef Set_RTC_Minute(uint8_t minute)
 // Функция для чтения текущих минут
 uint8_t Get_RTC_Minute(void)
 {
-    RTC_TimeTypeDef sTime;
+    //RTC_TimeTypeDef sTime;
     
     HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
     
@@ -966,7 +966,7 @@ uint8_t Get_RTC_Minute(void)
 // Функция для установки только секунд
 HAL_StatusTypeDef Set_RTC_Second(uint8_t second)
 {
-    RTC_TimeTypeDef sTime;
+    //RTC_TimeTypeDef sTime;
     
     // Проверка корректности секунд
     if (second > 59) {
@@ -992,7 +992,7 @@ HAL_StatusTypeDef Set_RTC_Second(uint8_t second)
 // Функция для чтения текущих секунд
 uint8_t Get_RTC_Second(void)
 {
-    RTC_TimeTypeDef sTime;
+    //RTC_TimeTypeDef sTime;
     
     HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
     
@@ -1011,8 +1011,8 @@ uint8_t Get_RTC_Second(void)
   */
 HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size)
 {
-    RTC_TimeTypeDef sTime = {0};
-    RTC_DateTypeDef sDate = {0};
+    //RTC_TimeTypeDef sTime = {0};
+    //RTC_DateTypeDef sDate = {0};
     
     // 1. Преобразование HEX-строки в ASCII
 		//char hex_str_[] = "32 31 3A 35 30 2F 30 34 2E 31 30 2E 32 30 32 37";
@@ -1103,4 +1103,43 @@ uint8_t findSensoriD(uint8_t arr[], int size, int value) {
     return 0; // элемент не найден
 }
 
+// Функция для отправки времени на Nextion
+void SendTimeToNextion(uint8_t day, uint8_t month, uint16_t year, uint8_t hour, uint8_t minute)
+{
+    // Отправляем день
+    SendNextionCommand("day=%u", day);
+    
+    // Отправляем месяц  
+    SendNextionCommand("month=%u", month);
+    
+    // Отправляем год
+    SendNextionCommand("year=%u", year);
+    
+    // Отправляем час
+    SendNextionCommand("hour=%u", hour);
+    
+    // Отправляем минуты
+    SendNextionCommand("minute=%u", minute);
+}
+
+// Пример использования
+void UpdateDisplayTime(void)
+{ 
+	
+	 if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
+        return;
+   }
+	   // Сначала читаем текущую дату
+    if (HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
+        return ;
+    }	
+		 uint8_t hour = sTime.Hours;
+ 	   uint8_t minute = sTime.Minutes;
+		
+		 uint8_t day = sDate.Date;
+     uint8_t month = sDate.Month;
+     uint16_t year = sDate.Year + 2000; 		
+    // Для даты: 25.12.2023 14:30
+   SendTimeToNextion(day, month, year, hour, minute);
+}
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/

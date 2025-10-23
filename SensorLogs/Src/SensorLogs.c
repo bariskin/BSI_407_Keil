@@ -269,7 +269,6 @@ bool check_sd_card(void) {
     return false;
 }
 
-
 FRESULT CreateDatedFile(FIL* file)
 {
     char file_path[64];

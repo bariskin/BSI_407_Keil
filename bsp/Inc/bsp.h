@@ -157,6 +157,8 @@ extern bool checkParamsValue ;
 		HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size);
     HAL_StatusTypeDef hex_to_ascii_minimal(char* hex_str, char* ascii_buf);
 		uint8_t findSensoriD(uint8_t arr[], int size, int value);
+		void SendTimeToNextion(uint8_t day, uint8_t month, uint16_t year, uint8_t hour, uint8_t minute);
+		void UpdateDisplayTime(void);
  /**
   * @}
   */
