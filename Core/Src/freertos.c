@@ -808,7 +808,7 @@ void InputHandlerFunction(void const * argument)
 {
   /* USER CODE BEGIN InputHandlerFunction */
 	
-	uint16_t timeCounter = 0;
+	volatile uint16_t timeCounter = 0;
   /* Infinite loop */
   for(;;)
   {			
@@ -828,7 +828,7 @@ void InputHandlerFunction(void const * argument)
 		  }
 		
      timeCounter++;
-     if(timeCounter == 1200 )
+     if(timeCounter >= 120 )  // это примерно раз в одну минуту 
 		 {	 
 			 timeCounter = 0;
    		 UpdateDisplayTime();

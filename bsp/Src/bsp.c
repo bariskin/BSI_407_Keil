@@ -1126,7 +1126,7 @@ void SendTimeToNextion(uint8_t day, uint8_t month, uint16_t year, uint8_t hour, 
 void UpdateDisplayTime(void)
 { 
 	
-	 if (HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
+	 if (HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
         return;
    }
 	   // Сначала читаем текущую дату
