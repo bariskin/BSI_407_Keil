@@ -96,6 +96,7 @@ typedef struct {
    void updateProgressBar(int PollIsDone);
    void setErrorStatus(int errorCode);
    uint32_t bytes_to_uint32(const unsigned char bytes[4]) ;
+   uint8_t get_modbus_address(int device_id, int count); 
 		/**
   * @}
   */

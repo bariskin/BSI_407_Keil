@@ -157,28 +157,109 @@ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress)
 	//	MBReg = CALIBRATION_PRIMARY_SPAN_STATUS_INTERN;
  //  break;     
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/   
-	case	CALIBRATION_PRIMARY_SPAN_VALUE_HIGH:
+//	case	CALIBRATION_PRIMARY_SPAN_VALUE_HIGH:
 	//	MBReg = CALIBRATION_PRIMARY_SPAN_VALUE_HIGH_INTERN;
-		break; 
+//		break; 
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/   
-	case	CALIBRATION_PRIMARY_SPAN_VALUE_LOW: 	
+//	case	CALIBRATION_PRIMARY_SPAN_VALUE_LOW: 	
 	//	MBReg = CALIBRATION_PRIMARY_SPAN_VALUE_LOW_INTERN;
-		break; 
+//		break; 
 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/   
 	
-	case CALIBRATION_PRIMARY_ZERO_VALUE_HIGH:
+//	case CALIBRATION_PRIMARY_ZERO_VALUE_HIGH:
 		
  //   MBReg =  CALIBRATION_PRIMARY_ZERO_VALUE_HIGH_INTERN;
-	break;	
+//	break;	
 
-  case CALIBRATION_PRIMARY_ZERO_VALUE_LOW:
+//  case CALIBRATION_PRIMARY_ZERO_VALUE_LOW:
 		
    // MBReg =  CALIBRATION_PRIMARY_ZERO_VALUE_LOW_INTERN;
-	break;	
+//	break;	
 	
 	case     CALIBRATION_PROCESS_STATUS + 1: // так работает 
 		MBReg =   CALIBRATION_PROCESS_STATUS_INTERN + 1;
-	break;		
+	break;	
+	case     	SENSOR_SCALE_MIN_HIGH_2:  
+		MBReg = 	SENSOR_SCALE_MIN_HIGH_2_INTERN; 
+	break;			
+	case     	SENSOR_SCALE_MIN_LOW_2:
+		MBReg = SENSOR_SCALE_MIN_LOW_2_INTERN;  
+	break;			
+	case     	SENSOR_SCALE_MAX_HIGH_2:
+		MBReg =  SENSOR_SCALE_MAX_HIGH_2_INTERN; 
+	break;			
+	case     	SENSOR_SCALE_MAX_LOW_2:
+		MBReg =  SENSOR_SCALE_MAX_LOW_2_INTERN;  
+	break;			
+	case     	SENSOR_SCALE_DIMENSTION_2:
+    MBReg = SENSOR_SCALE_DIMENSTION_2_INTERN;		
+	break;	
+	case     	SENSOR_THRESHOLD_WARNIGN_HIGN_2:
+		MBReg = SENSOR_THRESHOLD_WARNIGN_HIGN_2_INTERN;   
+	break;			
+	case     	SENSOR_THRESHOLD_WARNIGN_LOW_2:
+		MBReg =  SENSOR_THRESHOLD_WARNIGN_LOW_2_INTERN; 
+	break;			
+	case     	SENSOR_THRESHOLD_ALARM_HIGH_2:
+		MBReg = SENSOR_THRESHOLD_ALARM_HIGH_2_INTERN; 
+	break;			
+	case     	SENSOR_THRESHOLD_ALARM_LOW_2:
+		MBReg = SENSOR_THRESHOLD_ALARM_LOW_2_INTERN; 
+	
+	case     	SENSOR_THRESHOLD_ADDITIONAL_HIGH_2:
+		MBReg = SENSOR_THRESHOLD_ADDITIONAL_HIGH_2_INTERN; 
+	break;			
+	case     	SENSOR_THRESHOLD_ADDITIONAL_LOW_2: 
+    MBReg = SENSOR_THRESHOLD_ADDITIONAL_LOW_2_INTERN;  		
+	break;	
+	case     	SENSOR_SUBSTANCE_CODE_1_2:
+		MBReg = SENSOR_SUBSTANCE_CODE_1_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_2_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_2_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_3_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_3_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_4_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_4_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_5_2:
+    MBReg =  SENSOR_SUBSTANCE_CODE_5_2_INTERN;		
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_6_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_6_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_7_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_7_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_8_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_8_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_9_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_9_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_10_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_10_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_11_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_11_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_12_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_12_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_13_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_13_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_14_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_14_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_15_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_15_2_INTERN;
+	break;			
+	case     	SENSOR_SUBSTANCE_CODE_16_2:
+		MBReg =  SENSOR_SUBSTANCE_CODE_16_2_INTERN;
+	break;			
 	
 	}  
   return MBReg;  
@@ -195,21 +276,29 @@ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress)
 	 case SENSOR_PRIMARY_VALUE_HIGH:
     
     MBReg = SENSOR_PRIMARY_VALUE_HIGH_INTERN; 
-    
     break;
 		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
  case SENSOR_PRIMARY_VALUE_LOW:
     
-    MBReg = SENSOR_PRIMARY_VALUE_LOW_INTERN; 
-    
+    MBReg = SENSOR_PRIMARY_VALUE_LOW_INTERN;  
     break;
 		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
  case SENSOR_PRIMARY_STATUS:
     
     MBReg = SENSOR_PRIMARY_STATUS_INTERN; 
-    
     break;
- 
+ 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
+ case SENSOR_SECONDARY_VALUE_HIGH:
+	  MBReg = SENSOR_SECONDARY_VALUE_HIGH_INTERN;
+		break;
+ 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
+ case SENSOR_SECONDARY_VALUE_LOW:
+	 MBReg = SENSOR_SECONDARY_VALUE_LOW;
+		break;
+ 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
+ case SENSOR_SECONADARY_STATUS:
+	  MBReg = SENSOR_SECONADARY_STATUS;
+		break;
 		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 	}
    return MBReg;

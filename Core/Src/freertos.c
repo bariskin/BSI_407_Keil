@@ -339,23 +339,42 @@ void HoldingHandlerFunction(void const * argument)
 				     }
 				    else if(SelectRunFlag == 1)
 				     { // вычитываются значения дипазона  всей шкалы и единицы измерения
+					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SCALE_MAX_HIGH_2,3, 200 );
+					     
+							 SelectRunFlag = 11;
+				     }	
+						else if(SelectRunFlag == 11)
+				     { // вычитываются значения дипазона  всей шкалы и единицы измерения
 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SCALE_MAX_HIGH,3, 200 );
 					     
 							 SelectRunFlag = 2;
-				     }				 
+				     }	
+						  
 				    else if (SelectRunFlag == 2)
 					   { //вычитываются пороги 1, 2 и 3
  					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN, 6, 200 );
 	           
-					    SelectRunFlag = 3;
+					    SelectRunFlag = 33;
 					   }
-						 
+						else if (SelectRunFlag == 33)
+					   { //вычитываются пороги 1, 2 и 3
+ 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN_2, 6, 200 );
+	           
+					    SelectRunFlag = 3;
+					   } 
 				    else if (SelectRunFlag == 3)
 					    { //вычитывается тип газа
 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SUBSTANCE_CODE_1, 16, 200 );
 					    
+							 SelectRunFlag = 44;	
+					    } 
+            else if (SelectRunFlag == 44)
+					    { //вычитывается тип газа
+					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SUBSTANCE_CODE_1_2, 16, 200 );
+					    
 							 SelectRunFlag = 4;	
-					    } 	 
+					    } 
+							
 			      /* ********************************* Handling INPUT registers *************************** */
 				     else if (SelectRunFlag == 4)
 					    {
