@@ -145,7 +145,7 @@ int main(void)
 	sd_card_present = check_sd_card();
   /* *************start display receiving******************** */
   UART_Display_StartReceiving();
-  initDeviceData(numberOfDevices);
+  //initDeviceData(numberOfDevices);
 	/* *************MODBUS SLAVE init******************** */
 	
 	  if (HAL_UART_Init(&huart1) != HAL_OK)  /* restart  UART1 */

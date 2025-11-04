@@ -68,6 +68,18 @@ extern "C" {
   typedef struct
 	  {
 			uint8_t SensorModBudAddr;
+			
+			bool WasConnected;
+			uint16_t NotResponsCounter;
+			bool ErrorState;
+			uint8_t CalibrationStatus;
+			
+			bool WasConnected_2;
+			uint16_t NotResponsCounter_2;
+			bool ErrorState_2;
+			uint8_t CalibrationStatus_2;
+			
+		/* Для первого  датчика по адресу modbus  */	  	
 			uint8_t DeviceModelCode[10];
 			float SensorScaleMax;
 			char SensorGas[10];
@@ -80,10 +92,19 @@ extern "C" {
 			uint16_t Concentration_L;
 		  uint16_t DeviceStatus;
 			float  Concentration;
-		  uint16_t NotResponsCounter;
-			bool ErrorState;
-			uint8_t CalibrationStatus;
-			bool WasConnected;
+	/* Для второго датчика по тому же адресу modbus  */	  
+			uint8_t DeviceModelCode_2[10];
+			float SensorScaleMax_2;
+			char SensorGas_2[10];
+			char SensorScaleDimension_2[10];
+			float SensorWarning_2;            // Порог 1
+			float SensorAlarm_2;              // Порог 2
+			float SensorAlarm2_2;             // Порог 3
+			uint8_t SensorSubstanceCode_2[16]; //тип газа
+			uint16_t Concentration_H_2;
+			uint16_t Concentration_L_2;
+		  uint16_t DeviceStatus_2;
+			float  Concentration_2;		
 		}SensorState_t;
 		
 			

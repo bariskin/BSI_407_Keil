@@ -185,14 +185,14 @@ extern "C" {
 
 #define SENSOR_SECONDARY_VALUE_HIGH     (uint16_t)(33003 - INPUT_OFFSET) // один адрес , концентрация 2
 #define SENSOR_SECONDARY_VALUE_LOW      (uint16_t)(33004 - INPUT_OFFSET) // один адрес , концентрация 2
-#define SENSOR_SECONADARY_STATUS        (uint16_t)(33005 - INPUT_OFFSET) // один адрес 2
+#define SENSOR_SECONDARY_STATUS        (uint16_t)(33005 - INPUT_OFFSET) // один адрес 2
  
 #define SENSOR_PRIMARY_VALUE_HIGH_INTERN     (uint16_t)(0) // один адрес , концентрация   */
 #define SENSOR_PRIMARY_VALUE_LOW_INTERN      (uint16_t)(1) // один адрес , концентрация   */
 #define SENSOR_PRIMARY_STATUS_INTERN         (uint16_t)(2) 
 #define SENSOR_SECONDARY_VALUE_HIGH_INTERN   (uint16_t)(3) // один адрес , концентрация   */
 #define SENSOR_SECONDARY_VALUE_LOW_INTERN    (uint16_t)(4) // один адрес , концентрация   */
-#define SENSOR_SECONADARY_STATUS_INTERN      (uint16_t)(5) 
+#define SENSOR_SECONDARY_STATUS_INTERN      (uint16_t)(5) 
  
  
  /* ------------------------ END INPUT REGISTERS --------------------------------------*/

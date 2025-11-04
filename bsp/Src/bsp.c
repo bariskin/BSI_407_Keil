@@ -32,6 +32,9 @@ extern SensorLogEvent_t sensorLog;
 extern osMessageQId queueSendLogsHandle;
 extern RTC_HandleTypeDef hrtc;
 extern bool sd_card_present;
+
+extern volatile  bool requestConcetration1; 
+extern volatile  bool requestConcetration2 ; 
 /* ------------------------Global variables----------------------------*/
 uint16_t calibrationProcesStatus = 0x00;
 
@@ -83,8 +86,8 @@ void initSensorStateArray(uint8_t numberdevices)
   {
 		for(int i = 0; i < numberdevices; i++)
 		{
-			SensorStateArray[i].SensorModBudAddr     = 0x00;	
-			  // Обнуление массива DeviceModelCode,строковое значение вещества 
+		 SensorStateArray[i].SensorModBudAddr     = 0x00;	
+
      memset((void *)SensorStateArray[i].SensorSubstanceCode, 0, sizeof(SensorStateArray[i].SensorSubstanceCode));
 		 memset((void *)SensorStateArray[i].DeviceModelCode, 0, sizeof(SensorStateArray[i].DeviceModelCode)); 
 		 SensorStateArray[i].SensorScaleMax       = 0;
@@ -100,6 +103,25 @@ void initSensorStateArray(uint8_t numberdevices)
 		 SensorStateArray[i].NotResponsCounter    = 0;
 		 SensorStateArray[i].ErrorState           = true;
 		 SensorStateArray[i].CalibrationStatus    = 0x00;	
+			
+
+     memset((void *)SensorStateArray[i].SensorSubstanceCode_2, 0, sizeof(SensorStateArray[i].SensorSubstanceCode_2));
+		 memset((void *)SensorStateArray[i].DeviceModelCode_2, 0, sizeof(SensorStateArray[i].DeviceModelCode_2)); 
+		 SensorStateArray[i].SensorScaleMax_2       = 0;
+		 memset((void *)SensorStateArray[i].SensorGas_2, 0, sizeof(SensorStateArray[i].SensorGas_2));
+		 memset((void *)SensorStateArray[i].SensorScaleDimension_2, 0, sizeof(SensorStateArray[i].SensorScaleDimension_2));
+		 SensorStateArray[i].SensorWarning_2        = 0.00;
+     SensorStateArray[i].SensorAlarm_2          = 0.00;
+		 SensorStateArray[i].SensorAlarm2_2         = 0.00;
+		 SensorStateArray[i].DeviceStatus_2         = 0;
+		 SensorStateArray[i].Concentration_H_2      = 0;
+		 SensorStateArray[i].Concentration_L_2      = 0;
+		 SensorStateArray[i].DeviceStatus_2         = 0;
+		 SensorStateArray[i].Concentration_2        = 0.00;
+		
+     SensorStateArray[i].NotResponsCounter_2    = 0;
+		 SensorStateArray[i].ErrorState_2           = true; 		
+				
 		}
   }
 /**
@@ -132,6 +154,12 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
      for (int i = 0; i < 6; i++) {
        sensor->SensorGas[i] = src_ptr[i] & 0xFF;  // Берём только младший байт
      }
+		 
+		 src_ptr = &RegHoldingBuff[slave_idx][SENSOR_SUBSTANCE_CODE_1_2_INTERN ];
+     for (int i = 0; i < 6; i++) {
+       sensor->SensorGas_2[i] = src_ptr[i] & 0xFF;  // Берём только младший байт
+     }
+		  
 		// SensorWarning
     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_WARNIGN_HIGN_INTERN ] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_WARNIGN_LOW_INTERN ];
      
@@ -145,8 +173,21 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 if(ControlCycleFlag){
 	  	readParams.SensorWarning = (uint32_t)result;     // for check
 		 } 
+		 
+		combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_WARNIGN_HIGN_2_INTERN ] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_WARNIGN_LOW_2_INTERN ];
+     
+		RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_WARNIGN_HIGN_2_INTERN ] = 0x0000;
+    RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_WARNIGN_LOW_2_INTERN ] = 0x0000;
+
+		 // Копируем биты в float (аналог reinterpret_cast в C++)
+    *(uint32_t*)&result = combined;
+    sensor->SensorWarning_2 = result; 
+		
+     //if(ControlCycleFlag){
+	   //	readParams.SensorWarning = (uint32_t)result;     // for check
+		 //}
+ 
 		// SensorAlarm
-    combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_HIGH_INTERN] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_LOW_INTERN];
     
 		 RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_HIGH_INTERN] = 0x0000;
 		 RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_LOW_INTERN]  = 0x0000;
@@ -157,6 +198,19 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 if(ControlCycleFlag){
 		 readParams.SensorAlarm = (uint32_t)result ;       // for check
 		 }
+		
+     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_HIGH_2_INTERN] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_LOW_2_INTERN];
+		
+		 RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_HIGH_2_INTERN] = 0x0000;
+		 RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_LOW_2_INTERN]  = 0x0000;
+		 
+    *(uint32_t*)&result = combined;
+    sensor->SensorAlarm_2 = result;
+		 
+		 //if(ControlCycleFlag){
+		 //readParams.SensorAlarm = (uint32_t)result ;       // for check
+		// }		 
+		  
 		// SensorAlarm2
     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_HIGH_INTERN ] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_LOW_INTERN];
    
@@ -165,22 +219,50 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 
     *(uint32_t*)&result = combined;
     sensor->SensorAlarm2 = result;
-		 if(ControlCycleFlag){
-		 readParams.SensorAlarm2 = (uint32_t)result;       // for check
-		 }
+		
+		if(ControlCycleFlag){
+	  readParams.SensorAlarm2 = (uint32_t)result;       // for check
+		}
+		
+		 combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_HIGH_2_INTERN ] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_LOW_2_INTERN];
+   
+		RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_HIGH_2_INTERN ]  = 0x0000;
+		RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_LOW_2_INTERN ]   = 0x0000;
+		 
+    *(uint32_t*)&result = combined;
+    sensor->SensorAlarm2_2 = result;
+		
+   //if(ControlCycleFlag){
+	 //	 readParams.SensorAlarm2 = (uint32_t)result;       // for check
+	 //	 }
+		  
 		// SensorScaleMax
     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_HIGH_INTERN] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_LOW_INTERN ];
-     
-		 // for set error 
-		 RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_HIGH_INTERN] = 0x0000;
-		 RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_LOW_INTERN] = 0x0000;
+    
+   
+		RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_HIGH_INTERN] = 0x0000;
+		RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_LOW_INTERN] = 0x0000;
 		 
     *(uint32_t*)&result = combined;
     sensor->SensorScaleMax = result;
 		 
-		 if(ControlCycleFlag){
-		 readParams.SensorScaleMax =  (uint32_t)result;  // for check
-		 }
+		if(ControlCycleFlag){
+		readParams.SensorScaleMax =  (uint32_t)result;  // for check
+		}
+		 
+		combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_HIGH_2_INTERN] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_LOW_2_INTERN ];
+    
+  
+		RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_HIGH_2_INTERN] = 0x0000;
+		RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_LOW_2_INTERN] = 0x0000;
+		 
+    *(uint32_t*)&result = combined;
+    sensor->SensorScaleMax_2 = result;
+		 
+		// if(ControlCycleFlag){
+		// readParams.SensorScaleMax =  (uint32_t)result;  // for check
+		// }
+		 
 		// SensorScaleDimension
     unit = getUnitStringByCode(RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_INTERN]);
 		 
@@ -188,42 +270,99 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 
     snprintf((char*)sensor->SensorScaleDimension, sizeof(sensor->SensorScaleDimension), "%s",(const char *)unit);
 		 
-		 if(ControlCycleFlag){
+		if(ControlCycleFlag){
 		  readParams.SensorScaleDimensionID = RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_INTERN - 1] ; // for check
 		 }
+		 
+		unit = getUnitStringByCode(RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_2_INTERN]);
+		 
+    RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_2_INTERN] = 0x0000;
+		 
+    snprintf((char*)sensor->SensorScaleDimension_2, sizeof(sensor->SensorScaleDimension_2), "%s",(const char *)unit);
+		 
+		 //if(ControlCycleFlag){
+		 // readParams.SensorScaleDimensionID = RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_2_INTERN - 1] ; // for check
+		// } 
+		 
+		 
 		//Concentration 
-    sensor->DeviceStatus    = RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN];
-    sensor->Concentration_H = RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_HIGH_INTERN];
-    sensor->Concentration_L = RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_LOW_INTERN];
-		  // Собираем 32 бита из двух 16-битных short
-    combined = ((uint32_t)(uint16_t)sensor->Concentration_H ) << 16 | (uint16_t)  sensor->Concentration_L;
+		 
+		if(requestConcetration1)
+    {			
+				sensor->DeviceStatus    = RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN];
+				sensor->Concentration_H = RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_HIGH_INTERN];
+				sensor->Concentration_L = RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_LOW_INTERN];
+					// Собираем 32 бита из двух 16-битных short
+				combined = ((uint32_t)(uint16_t)sensor->Concentration_H ) << 16 | (uint16_t)  sensor->Concentration_L;
 
-    // Копируем биты в float (аналог reinterpret_cast в C++)
-    *(uint32_t*)&result = combined;
-    sensor->Concentration   = result;
+				// Копируем биты в float (аналог reinterpret_cast в C++)
+				*(uint32_t*)&result = combined;
+				sensor->Concentration   = result;
+				
+				// Clear the input buffer
+				RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN]  = 0x0000;
+				RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_HIGH_INTERN] = 0x0000;
+				RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_LOW_INTERN]  = 0x0000;
 		
-    // Clear the input buffer
-    RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN]  = 0x0000;
-    RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_HIGH_INTERN] = 0x0000;
-    RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_LOW_INTERN]  = 0x0000;
-    
-    // Process device status
-    if (sensor->DeviceStatus > 0) {
-        // Device responded successfully
-        sensor->NotResponsCounter = 0;
-        sensor->ErrorState = false;
-			  sensor->WasConnected = true;
-    } else {
-        // Device didn't respond
-        sensor->NotResponsCounter++;
-        
-        // Mark as error after 3 consecutive failures
-        if (sensor->NotResponsCounter >= 3) {
-            sensor->ErrorState = true;
-					  sensor->WasConnected = false;
-            // Consider additional error handling here if needed
-        }
-    }
+								// Process device status
+					if (sensor->DeviceStatus > 0) {
+							// Device responded successfully
+							sensor->NotResponsCounter = 0;
+							sensor->ErrorState = false;
+							sensor->WasConnected = true;
+					} else {
+							// Device didn't respond
+							sensor->NotResponsCounter++;
+							
+							// Mark as error after 3 consecutive failures
+							if (sensor->NotResponsCounter >= 3) {
+									sensor->ErrorState = true;
+									sensor->WasConnected = false;
+									// Consider additional error handling here if needed
+							}
+					}
+
+			 requestConcetration1 =false;
+		}
+	 
+		if(requestConcetration2)
+    {
+			sensor->DeviceStatus_2    = RegInputBuff[slave_idx][SENSOR_SECONDARY_STATUS_INTERN];
+			sensor->Concentration_H_2 = RegInputBuff[slave_idx][SENSOR_SECONDARY_VALUE_HIGH_INTERN];
+			sensor->Concentration_L_2 = RegInputBuff[slave_idx][SENSOR_SECONDARY_VALUE_HIGH_INTERN];
+				// Собираем 32 бита из двух 16-битных short
+			combined = ((uint32_t)(uint16_t)sensor->Concentration_H_2 ) << 16 | (uint16_t)  sensor->Concentration_L_2;
+
+			// Копируем биты в float (аналог reinterpret_cast в C++)
+			*(uint32_t*)&result = combined;
+			sensor->Concentration_2   = result;
+			
+			// Clear the input buffer
+			RegInputBuff[slave_idx][SENSOR_SECONDARY_STATUS_INTERN]  = 0x0000;
+			RegInputBuff[slave_idx][SENSOR_SECONDARY_VALUE_HIGH_INTERN] = 0x0000;
+			RegInputBuff[slave_idx][SENSOR_SECONDARY_VALUE_HIGH_INTERN]  = 0x0000;
+		
+				// Process device status secondary sensor
+				if (sensor->DeviceStatus_2 > 0) {
+						// Device responded successfully
+						sensor->NotResponsCounter_2 = 0;
+						sensor->ErrorState_2 = false;
+						sensor->WasConnected_2 = true;
+				} else {
+						// Device didn't respond
+						sensor->NotResponsCounter_2++;
+						
+						// Mark as error after 3 consecutive failures
+						if (sensor->NotResponsCounter_2 >= 3) {
+								sensor->ErrorState_2 = true;
+								sensor->WasConnected_2 = false;
+								// Consider additional error handling here if needed
+						}
+				}	
+				
+			requestConcetration2 = false;
+	}
+		
 }
 
 /**
@@ -245,35 +384,74 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     const size_t slave_idx = slaveaddr - 1;
     SensorState_t* sensor = &SensorStateArray[slave_idx];
     
-		//Concentration 
-    sensor->DeviceStatus    = RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN];
-    sensor->Concentration_H = RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_HIGH_INTERN];
-    sensor->Concentration_L = RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_LOW_INTERN];
-		  // Собираем 32 бита из двух 16-битных short
-    combined = ((uint32_t)(uint16_t)sensor->Concentration_H ) << 16 | (uint16_t)  sensor->Concentration_L;
+		
+		if(requestConcetration1)
+		{
+				//Concentration 
+				sensor->DeviceStatus    = RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN];
+				sensor->Concentration_H = RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_HIGH_INTERN];
+				sensor->Concentration_L = RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_LOW_INTERN];
+					// Собираем 32 бита из двух 16-битных short
+				combined = ((uint32_t)(uint16_t)sensor->Concentration_H ) << 16 | (uint16_t)  sensor->Concentration_L;
 
-    // Копируем биты в float (аналог reinterpret_cast в C++)
-    *(uint32_t*)&result = combined;
-    sensor->Concentration   = result;
+				// Копируем биты в float (аналог reinterpret_cast в C++)
+				*(uint32_t*)&result = combined;
+				sensor->Concentration   = result;
+				
+				// Clear the input buffer
+				RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN]  = 0x0000;
+				RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_HIGH_INTERN] = 0x0000;
+				RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_LOW_INTERN]  = 0x0000;
+					
+					// Process device status, for first sensor
+				 if (sensor->DeviceStatus > 0) {
+						// Device responded successfully
+						sensor->ErrorState = false;
+						sensor->WasConnected = true; // подключен
+					} 
+					else {   
+						 sensor->ErrorState = true;
+						}	
+			
+		  requestConcetration1 = false;
+		}		
+			
+		if(requestConcetration2)
+		{
+		//Concentration secondary sensor 
+				sensor->DeviceStatus_2    = RegInputBuff[slave_idx][SENSOR_SECONDARY_STATUS_INTERN];
+				sensor->Concentration_H_2 = RegInputBuff[slave_idx][SENSOR_SECONDARY_VALUE_HIGH_INTERN];
+				sensor->Concentration_L_2 = RegInputBuff[slave_idx][SENSOR_SECONDARY_VALUE_LOW_INTERN];
+					// Собираем 32 бита из двух 16-битных short
+				combined = ((uint32_t)(uint16_t)sensor->Concentration_H_2 ) << 16 | (uint16_t)  sensor->Concentration_L_2;
+
+				// Копируем биты в float (аналог reinterpret_cast в C++)
+				*(uint32_t*)&result = combined;
+				sensor->Concentration_2   = result;
+				
+				// Clear the input buffer
+				RegInputBuff[slave_idx][SENSOR_SECONDARY_STATUS_INTERN]  = 0x0000;
+				RegInputBuff[slave_idx][SENSOR_SECONDARY_VALUE_HIGH_INTERN] = 0x0000;
+				RegInputBuff[slave_idx][SENSOR_SECONDARY_VALUE_LOW_INTERN]  = 0x0000;
+			
+					// for secondary sensor
+				if (sensor->DeviceStatus_2 > 0) {
+					// Device responded successfully
+					sensor->ErrorState_2 = false;
+					sensor->WasConnected_2 = true; // подключен
+				} 
+				else {   
+					 sensor->ErrorState_2 = true;
+					}
+			
+		  requestConcetration2 = false;
 		
-    // Clear the input buffer
-    RegInputBuff[slave_idx][SENSOR_PRIMARY_STATUS_INTERN]  = 0x0000;
-    RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_HIGH_INTERN] = 0x0000;
-    RegInputBuff[slave_idx][SENSOR_PRIMARY_VALUE_LOW_INTERN]  = 0x0000;
-		
-		 sensorID = findSensoriD(SensorInfo.modbusAddrs,SensorInfo.count, slaveaddr);
+		}
+		sensorID = findSensoriD(SensorInfo.modbusAddrs,SensorInfo.count, slaveaddr);
  
    /* *********** проверка наличния датчика на линии начало ************ */
-		  // Process device status
-     if (sensor->DeviceStatus > 0) {
-        // Device responded successfully
-        sensor->ErrorState = false;
-			  sensor->WasConnected = true; // подключен
-      } 
-		  else {   
-         sensor->ErrorState = true;
-        }
-		 
+		
+		 // first sensor
 			if(sensor->ErrorState && sensor->WasConnected) // был ранее подключен, а сейчас пропал
 			{
 			  sensorLog.sensorID = sensorID;	
@@ -290,6 +468,11 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 						}
 	      sensor->WasConnected = false; // отключен
 			}	
+			 // second sensor
+		  if(sensor->ErrorState_2 && sensor->WasConnected_2) // был ранее подключен, а сейчас пропал
+			{
+	      sensor->WasConnected_2 = false; // отключен
+			}
 		 /* *********** проверка наличния датчика на линии конец ************ */
 			
 		 if(sensor->Concentration > sensor->SensorAlarm2) // максимальный третий порог 
@@ -732,15 +915,13 @@ RX_Buffer_State Uart_Get_Byte(RING_buffer_t* buf, uint8_t* a)
 
 bool compareParams(SensorCurrentState_t *writeParams, SensorCurrentState_t *readParams )
   {
-  
-    if (writeParams->SensorWarning == readParams->SensorWarning) return false;
-    if (writeParams->SensorAlarm == readParams->SensorAlarm) return false;
-		if (writeParams->SensorAlarm2 == readParams->SensorAlarm2) return false;
-    if (writeParams->SensorScaleMax == readParams->SensorScaleMax) return false;
-		if (writeParams->SensorScaleDimensionID == readParams->SensorScaleDimensionID) return false;
+    if (writeParams->SensorWarning != readParams->SensorWarning ) return true;
+    if (writeParams->SensorAlarm != readParams->SensorAlarm) return true;
+		if (writeParams->SensorAlarm2 != readParams->SensorAlarm2) return true;
+    if (writeParams->SensorScaleMax != readParams->SensorScaleMax) return true;
+		if (writeParams->SensorScaleDimensionID != readParams->SensorScaleDimensionID) return true;
 		
-		
-		 return true;
+	return false;
   }
 	
 	

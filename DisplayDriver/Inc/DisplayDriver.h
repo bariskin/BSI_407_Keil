@@ -69,13 +69,22 @@ typedef enum {
     DISPLAY_LOGS_CMD                 = 0x70, // команда с дисплея на запрос вывода логов
 	  DISPLAY_NEXT_LOGS_CMD            = 0xA4 // next/prev logs
 } DisplayResponseCmd;
-		
+	
+typedef enum 
+ {
+   FIRST_SENSOR =  0x00,
+   SECOND_SENSOR = 0x01
+ }eSensor;
+
+
+
 		// Структура для команд от дисплея
 typedef struct {
     uint8_t command;
     uint8_t deviceAddr;
     uint32_t binary32;
 	  uint32_t channelID;
+	  uint8_t  sensorPOSITION; // FIRST,SECOND
 } DisplayCommand_t;
  /* ------------------------External variables -------------------------*/
   
@@ -97,6 +106,7 @@ typedef struct {
    void setErrorStatus(int errorCode);
    uint32_t bytes_to_uint32(const unsigned char bytes[4]) ;
    uint8_t get_modbus_address(int device_id, int count); 
+   uint8_t is_even(int id_value);
 		/**
   * @}
   */

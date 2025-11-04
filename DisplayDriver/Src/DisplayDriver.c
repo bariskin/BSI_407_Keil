@@ -169,7 +169,7 @@ extern  bool sd_card_present;
 	 
 	  // Форматируем числа с запятой вместо точки
      char value_str[20], scale_max_str[20], por1_str[20], por2_str[20], por3_str[20];
-	  
+	   char value_str2[20], scale_max_str2[20], por1_str2[20], por2_str2[20], por3_str2[20];
 	 // получение очередного активного modbus addr
 	  uint8_t currentModbusIdx = SensorInfo.modbusAddrs[nextAddr - 1];
 	 
@@ -200,17 +200,34 @@ extern  bool sd_card_present;
 		 SendNextionCommand("page%d.por3%d.txt=\"%s\"", page, pos, por3_str);	
 		 SendNextionCommand("page%d.unit%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].SensorScaleDimension);
 		 SendNextionCommand("page%d.mod%d.txt=\"%s\"", page, pos,  SensorStateArray[currentModbusIdx - 1].DeviceModelCode);
-			
+
+		 snprintf(value_str2, sizeof(value_str2), "%.2f", SensorStateArray[currentModbusIdx - 1].Concentration_2);
+		 snprintf(scale_max_str2, sizeof(scale_max_str2), "%.2f", SensorStateArray[currentModbusIdx - 1].SensorScaleMax_2);
+		 snprintf(por1_str2,  sizeof(por1_str2),  "%.2f", SensorStateArray[currentModbusIdx - 1].SensorWarning_2);
+     snprintf(por2_str2,  sizeof(por2_str2),  "%.2f", SensorStateArray[currentModbusIdx - 1].SensorAlarm_2);
+	   snprintf(por3_str2,  sizeof(por3_str2),  "%.2f" , SensorStateArray[currentModbusIdx - 1].SensorAlarm2_2);
+		  
+		 if(SensorStateArray[currentModbusIdx - 1].WasConnected_2 == false){
+			snprintf(value_str2, sizeof(value_str2), "----"); // если датчик пропал уже после того как подклоючился
+		 }
+     else {			
+	     for(char* p = value_str2; *p; p++) if(*p == '.') *p = ',';
+		 }
+		 for(char* p = scale_max_str2; *p; p++) if(*p == '.') *p = ',';
+		 for(char* p = por1_str2; *p; p++) if(*p == '.') *p = ',';
+     for(char* p = por2_str2; *p; p++) if(*p == '.') *p = ',';
+	   for(char* p = por3_str2; *p; p++) if(*p == '.') *p = ',';
+		 
 		 SendNextionCommand("page%d.ch%d.txt=\"Канал %d\"", page, pos + 1, nextChannel + 1); 
-	   SendNextionCommand("page%d.val%d.txt=\"%s\"", page, pos + 1, value_str);
-		 SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos + 1, SensorStateArray[currentModbusIdx - 1].SensorGas);
-	   SendNextionCommand("page%d.ran%d.txt=\"%s\"", page, pos + 1, scale_max_str);
+	   SendNextionCommand("page%d.val%d.txt=\"%s\"", page, pos + 1, value_str2);
+		 SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos + 1, SensorStateArray[currentModbusIdx - 1].SensorGas_2);
+	   SendNextionCommand("page%d.ran%d.txt=\"%s\"", page, pos + 1, scale_max_str2);
 		 SendNextionCommand("page%d.poz%d.txt=\"%s\"", page, pos + 1,device[nextChannel].posit);
-	   SendNextionCommand("page%d.por1%d.txt=\"%s\"", page, pos + 1 , por1_str);
-		 SendNextionCommand("page%d.por2%d.txt=\"%s\"", page, pos + 1, por2_str);	
-		 SendNextionCommand("page%d.por3%d.txt=\"%s\"", page, pos + 1, por3_str);	
-		 SendNextionCommand("page%d.unit%d.txt=\"%s\"", page, pos + 1, SensorStateArray[currentModbusIdx - 1].SensorScaleDimension);
-		 SendNextionCommand("page%d.mod%d.txt=\"%s\"", page, pos,  SensorStateArray[currentModbusIdx - 1].DeviceModelCode);
+	   SendNextionCommand("page%d.por1%d.txt=\"%s\"", page, pos + 1 , por1_str2);
+		 SendNextionCommand("page%d.por2%d.txt=\"%s\"", page, pos + 1, por2_str2);	
+		 SendNextionCommand("page%d.por3%d.txt=\"%s\"", page, pos + 1, por3_str2);	
+		 SendNextionCommand("page%d.unit%d.txt=\"%s\"", page, pos + 1, SensorStateArray[currentModbusIdx - 1].SensorScaleDimension_2);
+		 SendNextionCommand("page%d.mod%d.txt=\"%s\"", page, pos + 1,  SensorStateArray[currentModbusIdx - 1].DeviceModelCode);
 		
 	
 		 nextChannel   += 2;  // на кажый датчик два окошка на дисплей
@@ -412,9 +429,7 @@ void GetDisplayCmd(uint8_t inputByte) {
                         uint8_t input[10] = {0};
                         memcpy(input, (void *)&arrDisplayRX[3], value_bytes_count); 
                         binary32 = getCodeByUnitString((const char *)input);
-												
-												writeParams.SensorScaleDimensionID = (uint32_t)binary32; 
-                      			
+												writeParams.SensorScaleDimensionID = (uint32_t)binary32;                      			
                     }
                     /* Scale Max */
                     else if (significant_bytes_count > 3 && arrDisplayRX[1] == 0x01 && arrDisplayRX[2] == DISPLAY_SCALE_MAX) {
@@ -565,11 +580,9 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
               /* *************************************** */   
             case DISPLAY_SCALE_DIMENSION:
                  CmdIsReady = 1; 
-						
+						     cmd.sensorPOSITION = is_even(channelID);
                  cmd.command = DISPLAY_SCALE_DIMENSION;
-                 //cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
 						     cmd.deviceAddr = get_modbus_address(channelID,SensorInfo.count);
-						
                  cmd.binary32 = binary32;
 						
                 if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS)
@@ -581,10 +594,10 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
             case DISPLAY_SCALE_MAX:
             
                  cmd.command = DISPLAY_SCALE_MAX;
-                 //cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
-						      cmd.deviceAddr = get_modbus_address(channelID,SensorInfo.count);
-						
+						     cmd.sensorPOSITION = is_even(channelID);
+						     cmd.deviceAddr = get_modbus_address(channelID,SensorInfo.count);
                  cmd.binary32 = binary32;
+						
                 if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY) ==pdPASS)
 									{	
                   } else{ 
@@ -594,9 +607,9 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
             case DISPLAY_THRESHOLD_WARNING:
 							
 					       cmd.channelID = channelID;
+						     cmd.sensorPOSITION = is_even(channelID);
                  cmd.command = DISPLAY_THRESHOLD_WARNING;
-                 //cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
-						    cmd.deviceAddr = get_modbus_address(channelID,SensorInfo.count);
+						     cmd.deviceAddr = get_modbus_address(channelID,SensorInfo.count);
                  cmd.binary32 = binary32;
                  if(xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else { 
@@ -606,8 +619,8 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
             case DISPLAY_THRESHOLD_ALARM: 
 					
 						    cmd.channelID = channelID;
+						    cmd.sensorPOSITION = is_even(channelID);
                 cmd.command = DISPLAY_THRESHOLD_ALARM;
-                //cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
 						    cmd.deviceAddr = get_modbus_address(channelID,SensorInfo.count);
                 cmd.binary32 = binary32;
                 if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
@@ -618,8 +631,8 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
             case DISPLAY_THRESHOLD_ADDITIONAL:
 							 
 						     cmd.channelID = channelID;
+						     cmd.sensorPOSITION = is_even(channelID);
                  cmd.command = DISPLAY_THRESHOLD_ADDITIONAL;
-                 //cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
 						     cmd.deviceAddr = get_modbus_address(channelID,SensorInfo.count);
                  cmd.binary32 = binary32;
                  if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
@@ -635,11 +648,11 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 						     CmdIsReady = 1; // начало записи одной команды 
 						
 						     cmd.channelID = channelID;
+						     cmd.sensorPOSITION = is_even(channelID);
                  cmd.command = DISPLAY_CALIBRATION_PRIMARY_ZERO;
-                 //cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
 						     cmd.deviceAddr = get_modbus_address(channelID,SensorInfo.count);
+                 cmd.binary32 = binary32;
 						
-                  cmd.binary32 = binary32;
 						     if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else {  
                     }
@@ -649,10 +662,11 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
                  CmdIsReady = 1;      // начало записи одной команды 
 			
 						     cmd.channelID = channelID;
+						     cmd.sensorPOSITION = is_even(channelID);
 						     cmd.command = DISPLAY_CALIBRATION_POINT_1;
-                 //cmd.deviceAddr = SensorInfo.modbusAddrs[channelID - 1];
 						     cmd.deviceAddr = get_modbus_address(channelID, SensorInfo.count);
                  cmd.binary32 = binary32;
+						
 						     if( xQueueSend(displayCommandQueue, &cmd, portMAX_DELAY)==pdPASS){ 
                     } else {  
                     }
@@ -699,6 +713,18 @@ uint32_t bytes_to_uint32(const unsigned char bytes[4]) {
 uint8_t get_modbus_address(int device_id, int count) {
     int idx = (device_id - 1) / 2;
     return (idx >= 0 && idx < count) ? SensorInfo.modbusAddrs[idx] : 0;
+}
+
+// Функция возвращает 1 для четного, 0 для нечетного
+uint8_t is_even(int id_value) {
+  if(id_value % 2 == 0)
+		{
+		  return SECOND_SENSOR;
+		}
+		else
+	  {
+		  return FIRST_SENSOR;
+		}		
 }
 
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
