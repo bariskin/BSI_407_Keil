@@ -183,12 +183,10 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     *(uint32_t*)&result = combined;
     sensor->SensorWarning_2 = result; 
 		
-     //if(ControlCycleFlag){
-	   //	readParams.SensorWarning = (uint32_t)result;     // for check
-		 //}
- 
 		// SensorAlarm
-    
+		 
+		 combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_HIGH_INTERN] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_LOW_INTERN]; 
+		 
 		 RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_HIGH_INTERN] = 0x0000;
 		 RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_LOW_INTERN]  = 0x0000;
 		 
@@ -205,12 +203,9 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_LOW_2_INTERN]  = 0x0000;
 		 
     *(uint32_t*)&result = combined;
-    sensor->SensorAlarm_2 = result;
+     sensor->SensorAlarm_2 = result;
 		 
-		 //if(ControlCycleFlag){
-		 //readParams.SensorAlarm = (uint32_t)result ;       // for check
-		// }		 
-		  
+		 
 		// SensorAlarm2
     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_HIGH_INTERN ] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ADDITIONAL_LOW_INTERN];
    
@@ -232,14 +227,10 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     *(uint32_t*)&result = combined;
     sensor->SensorAlarm2_2 = result;
 		
-   //if(ControlCycleFlag){
-	 //	 readParams.SensorAlarm2 = (uint32_t)result;       // for check
-	 //	 }
-		  
+    
 		// SensorScaleMax
     combined = ((uint32_t)(uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_HIGH_INTERN] ) << 16 | (uint16_t)RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_LOW_INTERN ];
     
-   
 		RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_HIGH_INTERN] = 0x0000;
 		RegHoldingBuff[slave_idx][SENSOR_SCALE_MAX_LOW_INTERN] = 0x0000;
 		 
@@ -259,10 +250,6 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     *(uint32_t*)&result = combined;
     sensor->SensorScaleMax_2 = result;
 		 
-		// if(ControlCycleFlag){
-		// readParams.SensorScaleMax =  (uint32_t)result;  // for check
-		// }
-		 
 		// SensorScaleDimension
     unit = getUnitStringByCode(RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_INTERN]);
 		 
@@ -279,11 +266,7 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_2_INTERN] = 0x0000;
 		 
     snprintf((char*)sensor->SensorScaleDimension_2, sizeof(sensor->SensorScaleDimension_2), "%s",(const char *)unit);
-		 
-		 //if(ControlCycleFlag){
-		 // readParams.SensorScaleDimensionID = RegHoldingBuff[slave_idx][SENSOR_SCALE_DIMENSTION_2_INTERN - 1] ; // for check
-		// } 
-		 
+
 		 
 		//Concentration 
 		 
