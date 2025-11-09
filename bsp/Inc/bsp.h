@@ -135,6 +135,9 @@ typedef struct {
     bool alarm2_triggered;
     bool alarm_triggered; 
     bool warning_triggered;
+	  bool alarm2_triggered2;
+    bool alarm_triggered2; 
+    bool warning_triggered2;	
 } ThresholdState;
 			
  /* ------------------------External variables -------------------------*/
@@ -177,9 +180,9 @@ extern bool checkParamsValue ;
 		uint8_t Get_RTC_Second(void);
 		HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size);
     HAL_StatusTypeDef hex_to_ascii_minimal(char* hex_str, char* ascii_buf);
-		uint8_t findSensoriD(uint8_t arr[], int size, int value);
 		void SendTimeToNextion(uint8_t day, uint8_t month, uint16_t year, uint8_t hour, uint8_t minute);
 		void UpdateDisplayTime(void);
+		uint8_t findSensorID(uint8_t addrArr[], int size, uint8_t addrValue, uint8_t sensorNumber); 
  /**
   * @}
   */

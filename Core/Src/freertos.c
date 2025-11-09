@@ -406,8 +406,7 @@ void HoldingHandlerFunction(void const * argument)
 								if( ControlCycleFlag)
 								 {
 									 SelectRunFlag = 5; 
-								 }
-								
+								 }		
               }
 				    /* ********************************* set next slave addr *************************** */	
 				     else if (SelectRunFlag == 5)
