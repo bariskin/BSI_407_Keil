@@ -34,9 +34,10 @@ extern RTC_HandleTypeDef hrtc;
 extern bool sd_card_present;
 
 extern volatile  bool requestConcetration1; 
-extern volatile  bool requestConcetration2 ; 
+extern volatile  bool requestConcetration2; 
 
-uint8_t ControlCycleFlag2; 
+extern uint8_t ControlCycleFlag; 
+extern uint8_t ControlCycleFlag2; 
 /* ------------------------Global variables----------------------------*/
 uint16_t calibrationProcesStatus = 0x00;
 
@@ -80,7 +81,7 @@ volatile 	TimeStepReadingSensores_t TimeStep =
  SensorCurrentState_t	readParams  = {0};	
 
  bool checkParamsValue = false;
- extern uint8_t ControlCycleFlag; 
+
  
  ThresholdState thresholdStates[NUMBER_SLAVE_DEVICES] = {0};
 /* ------------------------Functions-----------------------------------*/
@@ -185,9 +186,9 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
     *(uint32_t*)&result = combined;
     sensor->SensorWarning_2 = result; 
 		 
-		 if(ControlCycleFlag2){
-	  	readParams.SensorWarning = (uint32_t)result;     // for check
-		 }  
+		if(ControlCycleFlag2){
+	  readParams.SensorWarning = (uint32_t)result;     // for check
+		}  
 		
 		// SensorAlarm
 		 
@@ -196,8 +197,8 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_HIGH_INTERN] = 0x0000;
 		 RegHoldingBuff[slave_idx][SENSOR_THRESHOLD_ALARM_LOW_INTERN]  = 0x0000;
 		 
-    *(uint32_t*)&result = combined;
-    sensor->SensorAlarm = result;
+     *(uint32_t*)&result = combined;
+     sensor->SensorAlarm = result;
 		 
 		 if(ControlCycleFlag){
 		 readParams.SensorAlarm = (uint32_t)result ;       // for check

@@ -85,6 +85,7 @@ uint8_t SelectRunFlag = 0;
 uint8_t SelectRunFlag1 = 0;
  
 uint8_t ControlCycleFlag = 0; 
+uint8_t ControlCycleFlag2 = 0;  
  
 extern bool sd_card_present; 
  
@@ -422,6 +423,17 @@ void HoldingHandlerFunction(void const * argument)
 									setErrorStatusFlag = true;
 								}
 								
+						 else	if(ControlCycleFlag2)
+								{
+								  readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf,usMRegHoldBuf);
+								  ControlCycleFlag2 = 0;
+									HoldingPollsDone = 3;
+									SelectRunFlag = 6;
+									checkParamsValue = false;
+								  checkParamsValue	= compareParams((SensorCurrentState_t *)&writeParams,(SensorCurrentState_t *)&readParams);
+									setErrorStatusFlag = true;
+								}	
+									
 							else{
 								
 					         readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf,usMRegHoldBuf);
@@ -794,8 +806,20 @@ void HoldingHandlerFunction(void const * argument)
 				    CmdWriteIsReady = 1;
 				   /* Для вычичитки записанных данных  пройти один цикл опроса */
 				    SelectRunFlag = 0;
-						ControlCycleFlag = 1;
+						
+						if(displayCmd.sensorPOSITION == FIRST_SENSOR)
+						{
+							ControlCycleFlag = 1;
+							ControlCycleFlag2 = 0;
+						}
+						else 
+						{
+							ControlCycleFlag = 0;
+							ControlCycleFlag2 = 1;
+						}	
+						
 						HoldingPollsDone = 0;
+						
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;
 				 	 /* ******************************************************** */
 				    
