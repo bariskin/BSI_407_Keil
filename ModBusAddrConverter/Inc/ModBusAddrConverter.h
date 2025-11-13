@@ -91,6 +91,12 @@ extern "C" {
 #define SENSOR_THRESHOLD_ADDITIONAL_HIGH_2       (uint16_t)(42014 - HOLDING_OFFSET)  //Sensor Threshold ADDITIONAL LOW 2
 #define SENSOR_THRESHOLD_ADDITIONAL_LOW_2        (uint16_t)(42015 - HOLDING_OFFSET)  //Sensor Threshold ADDITIONAL LOW 2
 
+#define CALIBRATION_SECONDARY_ZERO_VALUE_HIGH    (uint16_t)(42018 - HOLDING_OFFSET)  //Calibration Primary Zero Signal High
+#define CALIBRATION_SECONDARY_ZERO_VALUE_LOW     (uint16_t)(42019 - HOLDING_OFFSET)  //Calibration Primary Zero Signal Low
+#define CALIBRATION_SECONDARY_ZERO               (uint16_t)(42020 - HOLDING_OFFSET)  //Calibration Primary Zero 
+#define CALIBRATION_SECONDARY_ZERO_STATUS        (uint16_t)(42021 - HOLDING_OFFSET)  //Calibration Primary Zero Status !!!!TODO!!!!
+
+
 #define SENSOR_SUBSTANCE_CODE_1_2                (uint16_t)(42030 - HOLDING_OFFSET)  //SENSOR_SUBSTANCE_CODE 2
 #define SENSOR_SUBSTANCE_CODE_2_2                (uint16_t)(42031 - HOLDING_OFFSET)  //SENSOR_SUBSTANCE_CODE 2
 #define SENSOR_SUBSTANCE_CODE_3_2                (uint16_t)(42032 - HOLDING_OFFSET)  //SENSOR_SUBSTANCE_CODE 2
@@ -123,56 +129,62 @@ extern "C" {
 #define SENSOR_THRESHOLD_ADDITIONAL_HIGH_INTERN         (uint16_t)(9) 
 #define SENSOR_THRESHOLD_ADDITIONAL_LOW_INTERN          (uint16_t)(10) 
 
-#define SENSOR_SUBSTANCE_CODE_1_INTERN                  (uint16_t)(11) 
-#define SENSOR_SUBSTANCE_CODE_2_INTERN                  (uint16_t)(12) 
-#define SENSOR_SUBSTANCE_CODE_3_INTERN                  (uint16_t)(13) 
-#define SENSOR_SUBSTANCE_CODE_4_INTERN                  (uint16_t)(14) 
-#define SENSOR_SUBSTANCE_CODE_5_INTERN                  (uint16_t)(15) 
-#define SENSOR_SUBSTANCE_CODE_6_INTERN              	  (uint16_t)(16) 
-#define SENSOR_SUBSTANCE_CODE_7_INTERN                  (uint16_t)(17) 
-#define SENSOR_SUBSTANCE_CODE_8_INTERN                  (uint16_t)(18) 
-#define SENSOR_SUBSTANCE_CODE_9_INTERN                  (uint16_t)(19) 
-#define SENSOR_SUBSTANCE_CODE_10_INTERN                 (uint16_t)(20) 
-#define SENSOR_SUBSTANCE_CODE_11_INTERN                 (uint16_t)(21) 
-#define SENSOR_SUBSTANCE_CODE_12_INTERN                 (uint16_t)(22) 
-#define SENSOR_SUBSTANCE_CODE_13_INTERN                 (uint16_t)(23) 
-#define SENSOR_SUBSTANCE_CODE_14_INTERN                 (uint16_t)(24) 
-#define SENSOR_SUBSTANCE_CODE_15_INTERN                 (uint16_t)(25) 
-#define SENSOR_SUBSTANCE_CODE_16_INTERN                 (uint16_t)(26) 
+#define CALIBRATION_SECONDARY_ZERO_VALUE_HIGH_INTERN    (uint16_t)(11) 
+#define CALIBRATION_SECONDARY_ZERO_VALUE_LOW_INTERN    (uint16_t)(12) 
+#define CALIBRATION_SECONDARY_ZERO_INTERN               (uint16_t)(13) 
+#define CALIBRATION_SECONDARY_ZERO_STATUS_INTERN        (uint16_t)(14) 
+
+
+#define SENSOR_SUBSTANCE_CODE_1_INTERN                  (uint16_t)(15) 
+#define SENSOR_SUBSTANCE_CODE_2_INTERN                  (uint16_t)(16) 
+#define SENSOR_SUBSTANCE_CODE_3_INTERN                  (uint16_t)(17) 
+#define SENSOR_SUBSTANCE_CODE_4_INTERN                  (uint16_t)(18) 
+#define SENSOR_SUBSTANCE_CODE_5_INTERN                  (uint16_t)(19) 
+#define SENSOR_SUBSTANCE_CODE_6_INTERN              	  (uint16_t)(20) 
+#define SENSOR_SUBSTANCE_CODE_7_INTERN                  (uint16_t)(21) 
+#define SENSOR_SUBSTANCE_CODE_8_INTERN                  (uint16_t)(22) 
+#define SENSOR_SUBSTANCE_CODE_9_INTERN                  (uint16_t)(23) 
+#define SENSOR_SUBSTANCE_CODE_10_INTERN                 (uint16_t)(24) 
+#define SENSOR_SUBSTANCE_CODE_11_INTERN                 (uint16_t)(25) 
+#define SENSOR_SUBSTANCE_CODE_12_INTERN                 (uint16_t)(26) 
+#define SENSOR_SUBSTANCE_CODE_13_INTERN                 (uint16_t)(27) 
+#define SENSOR_SUBSTANCE_CODE_14_INTERN                 (uint16_t)(28) 
+#define SENSOR_SUBSTANCE_CODE_15_INTERN                 (uint16_t)(29) 
+#define SENSOR_SUBSTANCE_CODE_16_INTERN                 (uint16_t)(30) 
 
 
 /*-------------------------------------  SECONADARY SENSOR   -------------------------------   */
-#define SENSOR_SCALE_MIN_HIGH_2_INTERN                  (uint16_t)(27)    
-#define SENSOR_SCALE_MIN_LOW_2_INTERN                   (uint16_t)(28) 
-#define SENSOR_SCALE_MAX_HIGH_2_INTERN                  (uint16_t)(29)    
-#define SENSOR_SCALE_MAX_LOW_2_INTERN                   (uint16_t)(30)     
-#define SENSOR_SCALE_DIMENSTION_2_INTERN                (uint16_t)(31)  
+#define SENSOR_SCALE_MIN_HIGH_2_INTERN                  (uint16_t)(31)    
+#define SENSOR_SCALE_MIN_LOW_2_INTERN                   (uint16_t)(32) 
+#define SENSOR_SCALE_MAX_HIGH_2_INTERN                  (uint16_t)(33)    
+#define SENSOR_SCALE_MAX_LOW_2_INTERN                   (uint16_t)(34)     
+#define SENSOR_SCALE_DIMENSTION_2_INTERN                (uint16_t)(35)  
 
-#define SENSOR_THRESHOLD_WARNIGN_HIGN_2_INTERN          (uint16_t)(32) 
-#define SENSOR_THRESHOLD_WARNIGN_LOW_2_INTERN           (uint16_t)(33)  
-#define SENSOR_THRESHOLD_ALARM_HIGH_2_INTERN            (uint16_t)(34) 
-#define SENSOR_THRESHOLD_ALARM_LOW_2_INTERN             (uint16_t)(35)  
-#define SENSOR_THRESHOLD_ADDITIONAL_HIGH_2_INTERN       (uint16_t)(36) 
-#define SENSOR_THRESHOLD_ADDITIONAL_LOW_2_INTERN        (uint16_t)(37) 
+#define SENSOR_THRESHOLD_WARNIGN_HIGN_2_INTERN          (uint16_t)(36) 
+#define SENSOR_THRESHOLD_WARNIGN_LOW_2_INTERN           (uint16_t)(37)  
+#define SENSOR_THRESHOLD_ALARM_HIGH_2_INTERN            (uint16_t)(38) 
+#define SENSOR_THRESHOLD_ALARM_LOW_2_INTERN             (uint16_t)(39)  
+#define SENSOR_THRESHOLD_ADDITIONAL_HIGH_2_INTERN       (uint16_t)(40) 
+#define SENSOR_THRESHOLD_ADDITIONAL_LOW_2_INTERN        (uint16_t)(41) 
 
-#define SENSOR_SUBSTANCE_CODE_1_2_INTERN                (uint16_t)(38) 
-#define SENSOR_SUBSTANCE_CODE_2_2_INTERN                (uint16_t)(39) 
-#define SENSOR_SUBSTANCE_CODE_3_2_INTERN                (uint16_t)(40) 
-#define SENSOR_SUBSTANCE_CODE_4_2_INTERN                (uint16_t)(41) 
-#define SENSOR_SUBSTANCE_CODE_5_2_INTERN                (uint16_t)(44) 
-#define SENSOR_SUBSTANCE_CODE_6_2_INTERN                (uint16_t)(45) 
-#define SENSOR_SUBSTANCE_CODE_7_2_INTERN                (uint16_t)(46) 
-#define SENSOR_SUBSTANCE_CODE_8_2_INTERN                (uint16_t)(47) 
-#define SENSOR_SUBSTANCE_CODE_9_2_INTERN                (uint16_t)(48) 
-#define SENSOR_SUBSTANCE_CODE_10_2_INTERN               (uint16_t)(49) 
-#define SENSOR_SUBSTANCE_CODE_11_2_INTERN               (uint16_t)(50) 
-#define SENSOR_SUBSTANCE_CODE_12_2_INTERN               (uint16_t)(51) 
-#define SENSOR_SUBSTANCE_CODE_13_2_INTERN               (uint16_t)(52) 
-#define SENSOR_SUBSTANCE_CODE_14_2_INTERN               (uint16_t)(53) 
-#define SENSOR_SUBSTANCE_CODE_15_2_INTERN               (uint16_t)(54) 
-#define SENSOR_SUBSTANCE_CODE_16_2_INTERN               (uint16_t)(55) 
+#define SENSOR_SUBSTANCE_CODE_1_2_INTERN                (uint16_t)(42) 
+#define SENSOR_SUBSTANCE_CODE_2_2_INTERN                (uint16_t)(43) 
+#define SENSOR_SUBSTANCE_CODE_3_2_INTERN                (uint16_t)(44) 
+#define SENSOR_SUBSTANCE_CODE_4_2_INTERN                (uint16_t)(45) 
+#define SENSOR_SUBSTANCE_CODE_5_2_INTERN                (uint16_t)(46) 
+#define SENSOR_SUBSTANCE_CODE_6_2_INTERN                (uint16_t)(47) 
+#define SENSOR_SUBSTANCE_CODE_7_2_INTERN                (uint16_t)(48) 
+#define SENSOR_SUBSTANCE_CODE_8_2_INTERN                (uint16_t)(49) 
+#define SENSOR_SUBSTANCE_CODE_9_2_INTERN                (uint16_t)(50) 
+#define SENSOR_SUBSTANCE_CODE_10_2_INTERN               (uint16_t)(51) 
+#define SENSOR_SUBSTANCE_CODE_11_2_INTERN               (uint16_t)(52) 
+#define SENSOR_SUBSTANCE_CODE_12_2_INTERN               (uint16_t)(53) 
+#define SENSOR_SUBSTANCE_CODE_13_2_INTERN               (uint16_t)(54) 
+#define SENSOR_SUBSTANCE_CODE_14_2_INTERN               (uint16_t)(55) 
+#define SENSOR_SUBSTANCE_CODE_15_2_INTERN               (uint16_t)(56) 
+#define SENSOR_SUBSTANCE_CODE_16_2_INTERN               (uint16_t)(57) 
 
-#define CALIBRATION_PROCESS_STATUS_INTERN               (uint16_t)(56) 
+#define CALIBRATION_PROCESS_STATUS_INTERN               (uint16_t)(58) 
 /* ------------------------ END HOLDING REGISTERS ------------------------------------*/	
 
 /* ------------------------ Defines INPUT REGISTERS ----------------------------------*/

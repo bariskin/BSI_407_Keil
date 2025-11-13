@@ -166,6 +166,7 @@ uint16_t scale_maxArray[] = {SENSOR_SCALE_MAX_HIGH, SENSOR_SCALE_MAX_HIGH_2};
 uint16_t warningArray[]   = {SENSOR_THRESHOLD_WARNIGN_HIGN, SENSOR_THRESHOLD_WARNIGN_HIGN_2};
 uint16_t alarmArray[]     = {SENSOR_THRESHOLD_ALARM_HIGH, SENSOR_THRESHOLD_ALARM_HIGH_2};
 uint16_t additionalArray[]  = {SENSOR_THRESHOLD_ADDITIONAL_HIGH,SENSOR_THRESHOLD_ADDITIONAL_HIGH_2};
+uint16_t calibrationArray[] = {CALIBRATION_PRIMARY_ZERO_VALUE_HIGH,CALIBRATION_SECONDARY_ZERO_VALUE_HIGH};
 /* USER CODE END FunctionPrototypes */
 
 void SlaveModbusTaskFunction(void const * argument);
@@ -633,7 +634,7 @@ void HoldingHandlerFunction(void const * argument)
           osMutexWait(myMutex01Handle, 10);
 					
           eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
-					                                             CALIBRATION_PRIMARY_ZERO_VALUE_HIGH, 
+					                                             calibrationArray[displayCmd.sensorPOSITION], 
 					                                             2, 
 					                                             (USHORT *)&registersTX[0], 
 					                                             300);	 

@@ -586,7 +586,7 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 }			
 		 else if(sensor->Concentration_2 >   sensor->SensorWarning_2)  //  минимальный первый  порог 
 		 {
-			  if (!thresholdStates[sensorID].warning_triggered) {
+			  if (!thresholdStates[sensorID].warning_triggered2) {
 			 
 			    sensorLog.sensorID = sensorID2;
 		      sensorLog.Value =   sensor->Concentration_2;
@@ -1003,19 +1003,21 @@ void readCurrentCalibrationState(uint8_t slaveaddr,uint16_t RegHoldingBuff[MB_MA
     // Reset buffer values before reading
     sensor->CalibrationStatus =  0;
     /* *********************************  Read sensor data ********************************** */
-	
+	   osDelay(10000);
 		 sensor->CalibrationStatus  = (uint16_t)RegHoldingBuff[slave_idx][CALIBRATION_PROCESS_STATUS_INTERN];  // так работает 
 		
 		 RegHoldingBuff[slave_idx][CALIBRATION_PROCESS_STATUS_INTERN] = 0x0000;
       
 	}	
-	
+uint8_t TestCalubrationID;
 bool getCalibrationProcessState(uint8_t slaveaddr)
  {
     const size_t slave_idx = slaveaddr - 1;
     SensorState_t* sensor = &SensorStateArray[slave_idx];
-    
-    if( sensor->CalibrationStatus ==  CALIBRATION_STATUS_SUCCESFUL_COMPLETED)
+   
+	  TestCalubrationID = sensor->CalibrationStatus ;
+	  
+    if( sensor->CalibrationStatus ==  CALIBRATION_STATUS_IN_PROGRESS)
 		{
 		  return true;
 		}
