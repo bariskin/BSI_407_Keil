@@ -3,7 +3,7 @@
 <title>Static Call Graph - [BSI_407\BSI_407.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image BSI_407\BSI_407.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Thu Nov 13 23:01:04 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Nov 14 21:46:01 2025
 <BR><P>
 <H3>Maximum Stack Usage =       4824 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -2229,7 +2229,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
-<P><STRONG><a name="[8e]"></a>HoldingHandlerFunction</STRONG> (Thumb, 1758 bytes, Stack size 8 bytes, freertos.o(i.HoldingHandlerFunction))
+<P><STRONG><a name="[8e]"></a>HoldingHandlerFunction</STRONG> (Thumb, 1834 bytes, Stack size 8 bytes, freertos.o(i.HoldingHandlerFunction))
 <BR><BR>[Stack]<UL><LI>Max Depth = 192 + Unknown Stack Size
 <LI>Call Chain = HoldingHandlerFunction &rArr; readCurrentSensorState &rArr; __2snprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -3429,7 +3429,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> mb_m.o(i.eMBMasterInit)
 </UL>
-<P><STRONG><a name="[215]"></a>eMBMasterRegHoldingCB</STRONG> (Thumb, 100 bytes, Stack size 32 bytes, user_mb_app_m.o(i.eMBMasterRegHoldingCB))
+<P><STRONG><a name="[215]"></a>eMBMasterRegHoldingCB</STRONG> (Thumb, 104 bytes, Stack size 32 bytes, user_mb_app_m.o(i.eMBMasterRegHoldingCB))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = eMBMasterRegHoldingCB
 </UL>
 <BR>[Calls]<UL><LI><a href="#[22c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;convertModBusAddrHolding_M
@@ -3699,7 +3699,7 @@ Global Symbols
 <LI><a href="#[1a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
 </UL>
 
-<P><STRONG><a name="[1a2]"></a>getCalibrationProcessState</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, bsp.o(i.getCalibrationProcessState))
+<P><STRONG><a name="[1a2]"></a>getCalibrationProcessState</STRONG> (Thumb, 34 bytes, Stack size 0 bytes, bsp.o(i.getCalibrationProcessState))
 <BR><BR>[Called By]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
@@ -3827,7 +3827,6 @@ Global Symbols
 </UL>
 <BR>[Called By]<UL><LI><a href="#[19d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setNextDeviceAddr
 <LI><a href="#[1ad]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;setErrorStatus
-<LI><a href="#[1a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;readCurrentCalibrationState
 <LI><a href="#[19f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SendNextionCommand
 <LI><a href="#[1c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ModBusSlaveEventHoldingRegHandler
 <LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HandleDisplayCommands
@@ -3940,15 +3939,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[276]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
 </UL>
 
-<P><STRONG><a name="[1a1]"></a>readCurrentCalibrationState</STRONG> (Thumb, 62 bytes, Stack size 24 bytes, bsp.o(i.readCurrentCalibrationState))
-<BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = readCurrentCalibrationState &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
-</UL>
-<BR>[Calls]<UL><LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
-</UL>
-<BR>[Called By]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
+<P><STRONG><a name="[1a1]"></a>readCurrentCalibrationState</STRONG> (Thumb, 46 bytes, Stack size 0 bytes, bsp.o(i.readCurrentCalibrationState))
+<BR><BR>[Called By]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[19b]"></a>readCurrentSensorState</STRONG> (Thumb, 652 bytes, Stack size 40 bytes, bsp.o(i.readCurrentSensorState))
+<P><STRONG><a name="[19b]"></a>readCurrentSensorState</STRONG> (Thumb, 656 bytes, Stack size 40 bytes, bsp.o(i.readCurrentSensorState))
 <BR><BR>[Stack]<UL><LI>Max Depth = 184 + Unknown Stack Size
 <LI>Call Chain = readCurrentSensorState &rArr; __2snprintf &rArr; _printf_char_common &rArr; __printf
 </UL>

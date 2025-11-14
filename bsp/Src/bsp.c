@@ -1003,13 +1003,13 @@ void readCurrentCalibrationState(uint8_t slaveaddr,uint16_t RegHoldingBuff[MB_MA
     // Reset buffer values before reading
     sensor->CalibrationStatus =  0;
     /* *********************************  Read sensor data ********************************** */
-	   osDelay(10000);
 		 sensor->CalibrationStatus  = (uint16_t)RegHoldingBuff[slave_idx][CALIBRATION_PROCESS_STATUS_INTERN];  // так работает 
 		
-		 RegHoldingBuff[slave_idx][CALIBRATION_PROCESS_STATUS_INTERN] = 0x0000;
+		 //RegHoldingBuff[slave_idx][CALIBRATION_PROCESS_STATUS_INTERN] = 0x0000;
       
 	}	
 uint8_t TestCalubrationID;
+	
 bool getCalibrationProcessState(uint8_t slaveaddr)
  {
     const size_t slave_idx = slaveaddr - 1;
@@ -1017,7 +1017,7 @@ bool getCalibrationProcessState(uint8_t slaveaddr)
    
 	  TestCalubrationID = sensor->CalibrationStatus ;
 	  
-    if( sensor->CalibrationStatus ==  CALIBRATION_STATUS_IN_PROGRESS)
+    if( sensor->CalibrationStatus ==  CALIBRATION_STATUS_SUCCESFUL_COMPLETED)
 		{
 		  return true;
 		}

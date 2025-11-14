@@ -255,32 +255,32 @@
         <Ww>
           <count>8</count>
           <WinNumber>2</WinNumber>
-          <ItemText>updateThresholdWarning</ItemText>
+          <ItemText>ModbusSensoraddr</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ModbusSensoraddr</ItemText>
+          <ItemText>updateThresholdAlarm</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>2</WinNumber>
-          <ItemText>updateThresholdAlarm</ItemText>
+          <ItemText>cmd</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>2</WinNumber>
-          <ItemText>cmd</ItemText>
+          <ItemText>registersTX</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>2</WinNumber>
-          <ItemText>registersTX</ItemText>
+          <ItemText>ModBusSlaveCurrentDeviceAddr</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ModBusSlaveCurrentDeviceAddr</ItemText>
+          <ItemText>updateScaleMax</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
@@ -290,92 +290,92 @@
         <Ww>
           <count>15</count>
           <WinNumber>2</WinNumber>
-          <ItemText>updateScaleMax</ItemText>
+          <ItemText>updateCalibrationValue</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
           <WinNumber>2</WinNumber>
-          <ItemText>updateCalibrationValue</ItemText>
+          <ItemText>updateThresholdAdditional</ItemText>
         </Ww>
         <Ww>
           <count>17</count>
           <WinNumber>2</WinNumber>
-          <ItemText>updateThresholdAdditional</ItemText>
+          <ItemText>updateThresholdAlarm</ItemText>
         </Ww>
         <Ww>
           <count>18</count>
           <WinNumber>2</WinNumber>
-          <ItemText>updateThresholdAlarm</ItemText>
+          <ItemText>updateThresholdWarning</ItemText>
         </Ww>
         <Ww>
           <count>19</count>
           <WinNumber>2</WinNumber>
-          <ItemText>updateThresholdWarning</ItemText>
+          <ItemText>dimensionCode</ItemText>
         </Ww>
         <Ww>
           <count>20</count>
           <WinNumber>2</WinNumber>
-          <ItemText>dimensionCode</ItemText>
+          <ItemText>PauseTaskCounter</ItemText>
         </Ww>
         <Ww>
           <count>21</count>
           <WinNumber>2</WinNumber>
-          <ItemText>PauseTaskCounter</ItemText>
+          <ItemText>CmdIsReady</ItemText>
         </Ww>
         <Ww>
           <count>22</count>
           <WinNumber>2</WinNumber>
-          <ItemText>CmdIsReady</ItemText>
+          <ItemText>CmdWriteIsReady</ItemText>
         </Ww>
         <Ww>
           <count>23</count>
           <WinNumber>2</WinNumber>
-          <ItemText>CmdWriteIsReady</ItemText>
+          <ItemText>checkParamsValue</ItemText>
         </Ww>
         <Ww>
           <count>24</count>
           <WinNumber>2</WinNumber>
-          <ItemText>checkParamsValue</ItemText>
+          <ItemText>writeParams</ItemText>
         </Ww>
         <Ww>
           <count>25</count>
           <WinNumber>2</WinNumber>
-          <ItemText>writeParams</ItemText>
+          <ItemText>readParams</ItemText>
         </Ww>
         <Ww>
           <count>26</count>
           <WinNumber>2</WinNumber>
-          <ItemText>readParams</ItemText>
+          <ItemText>SensorStateArray</ItemText>
         </Ww>
         <Ww>
           <count>27</count>
           <WinNumber>2</WinNumber>
-          <ItemText>SensorStateArray</ItemText>
+          <ItemText>calibrationProcesStatus</ItemText>
         </Ww>
         <Ww>
           <count>28</count>
           <WinNumber>2</WinNumber>
-          <ItemText>calibrationProcesStatus</ItemText>
+          <ItemText>checkParamsValue</ItemText>
         </Ww>
         <Ww>
           <count>29</count>
           <WinNumber>2</WinNumber>
-          <ItemText>checkParamsValue</ItemText>
+          <ItemText>fresult</ItemText>
         </Ww>
         <Ww>
           <count>30</count>
           <WinNumber>2</WinNumber>
-          <ItemText>fresult</ItemText>
+          <ItemText>in_file_counter</ItemText>
         </Ww>
         <Ww>
           <count>31</count>
           <WinNumber>2</WinNumber>
-          <ItemText>in_file_counter</ItemText>
+          <ItemText>filepath</ItemText>
         </Ww>
         <Ww>
           <count>32</count>
           <WinNumber>2</WinNumber>
-          <ItemText>filepath</ItemText>
+          <ItemText>ReceivedSensorLog</ItemText>
         </Ww>
         <Ww>
           <count>33</count>
@@ -385,142 +385,117 @@
         <Ww>
           <count>34</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ReceivedSensorLog</ItemText>
+          <ItemText>sensorLog</ItemText>
         </Ww>
         <Ww>
           <count>35</count>
           <WinNumber>2</WinNumber>
-          <ItemText>dir_path_2</ItemText>
+          <ItemText>in_file_counter</ItemText>
         </Ww>
         <Ww>
           <count>36</count>
           <WinNumber>2</WinNumber>
-          <ItemText>dir_path</ItemText>
+          <ItemText>filepath</ItemText>
         </Ww>
         <Ww>
           <count>37</count>
           <WinNumber>2</WinNumber>
-          <ItemText>sensorLog</ItemText>
+          <ItemText>log_line</ItemText>
         </Ww>
         <Ww>
           <count>38</count>
           <WinNumber>2</WinNumber>
-          <ItemText>in_file_counter</ItemText>
+          <ItemText>RdyWrittingFlag</ItemText>
         </Ww>
         <Ww>
           <count>39</count>
           <WinNumber>2</WinNumber>
-          <ItemText>filepath</ItemText>
+          <ItemText>hrtc</ItemText>
         </Ww>
         <Ww>
           <count>40</count>
           <WinNumber>2</WinNumber>
-          <ItemText>log_line</ItemText>
+          <ItemText>timestamp</ItemText>
         </Ww>
         <Ww>
           <count>41</count>
           <WinNumber>2</WinNumber>
-          <ItemText>RdyWrittingFlag</ItemText>
+          <ItemText>sTime</ItemText>
         </Ww>
         <Ww>
           <count>42</count>
           <WinNumber>2</WinNumber>
-          <ItemText>hrtc</ItemText>
+          <ItemText>arrDisplayRX</ItemText>
         </Ww>
         <Ww>
           <count>43</count>
           <WinNumber>2</WinNumber>
-          <ItemText>timestamp</ItemText>
+          <ItemText>ascii_buffer[17]</ItemText>
         </Ww>
         <Ww>
           <count>44</count>
           <WinNumber>2</WinNumber>
-          <ItemText>sTime</ItemText>
+          <ItemText>ascii_buffer</ItemText>
         </Ww>
         <Ww>
           <count>45</count>
           <WinNumber>2</WinNumber>
-          <ItemText>arrDisplayRX</ItemText>
+          <ItemText>time_input_string</ItemText>
         </Ww>
         <Ww>
           <count>46</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ascii_buffer[17]</ItemText>
+          <ItemText>line_count</ItemText>
         </Ww>
         <Ww>
           <count>47</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ascii_buffer</ItemText>
+          <ItemText>RdyWrittingFlag</ItemText>
         </Ww>
         <Ww>
           <count>48</count>
           <WinNumber>2</WinNumber>
-          <ItemText>hex_str_</ItemText>
+          <ItemText>hrtc</ItemText>
         </Ww>
         <Ww>
           <count>49</count>
           <WinNumber>2</WinNumber>
-          <ItemText>time_input_string</ItemText>
+          <ItemText>line_count</ItemText>
         </Ww>
         <Ww>
           <count>50</count>
           <WinNumber>2</WinNumber>
-          <ItemText>line_count</ItemText>
+          <ItemText>sensor</ItemText>
         </Ww>
         <Ww>
           <count>51</count>
           <WinNumber>2</WinNumber>
-          <ItemText>RdyWrittingFlag</ItemText>
+          <ItemText>displayCmd</ItemText>
         </Ww>
         <Ww>
           <count>52</count>
           <WinNumber>2</WinNumber>
-          <ItemText>time,0x0A</ItemText>
+          <ItemText>displayCmd</ItemText>
         </Ww>
         <Ww>
           <count>53</count>
           <WinNumber>2</WinNumber>
-          <ItemText>date</ItemText>
+          <ItemText>ControlCycleFlag</ItemText>
         </Ww>
         <Ww>
           <count>54</count>
           <WinNumber>2</WinNumber>
-          <ItemText>line_count</ItemText>
+          <ItemText>ControlCycleFlag2</ItemText>
         </Ww>
         <Ww>
           <count>55</count>
           <WinNumber>2</WinNumber>
-          <ItemText>hrtc</ItemText>
+          <ItemText>SelectRunFlag</ItemText>
         </Ww>
         <Ww>
           <count>56</count>
           <WinNumber>2</WinNumber>
-          <ItemText>line_count</ItemText>
-        </Ww>
-        <Ww>
-          <count>57</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>sensor</ItemText>
-        </Ww>
-        <Ww>
-          <count>58</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>displayCmd</ItemText>
-        </Ww>
-        <Ww>
-          <count>59</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>displayCmd</ItemText>
-        </Ww>
-        <Ww>
-          <count>60</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>ControlCycleFlag</ItemText>
-        </Ww>
-        <Ww>
-          <count>61</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>ControlCycleFlag2</ItemText>
+          <ItemText>TestCalubrationID</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>
@@ -537,7 +512,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>1</periodic>
-        <aLwin>1</aLwin>
+        <aLwin>0</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
