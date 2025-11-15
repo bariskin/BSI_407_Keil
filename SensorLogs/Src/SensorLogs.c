@@ -79,7 +79,7 @@ const char* get_message(enSensorLog type) {
 	 case OVER_THRESHOLD_ALARM:        return "Превышение 2";
 	 case OVER_THRESHOLD_ADDITIONAL:   return "Превышение 3";
 	 case NORMAL_LEVEL:                return "Нормальный уровень";
-	 case SENSOR_LOG_TYPE_ERROR:  return "unknown";		 
+	 case SENSOR_LOG_TYPE_ERROR:       return "unknown";		 
 	}
 	return "unknown";
 }

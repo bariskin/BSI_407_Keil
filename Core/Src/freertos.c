@@ -81,9 +81,8 @@ extern  SensorCurrentState_t	readParams ;
  uint32_t binary32 = 0;
  uint8_t ModbusSensoraddr = 0;
 
-uint8_t SelectRunFlag = 0;
-uint8_t SelectRunFlag1 = 0;
- 
+eCase SelectRunFlag = CASE_DEVICE_MODEL_CODE;
+
 uint8_t ControlCycleFlag = 0; 
 uint8_t ControlCycleFlag2 = 0;  
  
@@ -340,84 +339,84 @@ void HoldingHandlerFunction(void const * argument)
 				 {	 
 			
 			     /* *********************************  Handling HOLDING registers *************************** */
-				    if(SelectRunFlag == 0)
+				    if(SelectRunFlag == CASE_DEVICE_MODEL_CODE)
 				     { // вычитывается модель прибора   
 					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, DEVICE_MODEL_CODE,2, 200 );
 					
-							 SelectRunFlag = 1;
+							 SelectRunFlag = CASE_SENSOR_SCALE_MAX_HIGH;
 				     }
-				    else if(SelectRunFlag == 1)
+				    else if(SelectRunFlag == CASE_SENSOR_SCALE_MAX_HIGH)
 				     { // вычитываются значения дипазона  всей шкалы и единицы измерения
 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SCALE_MAX_HIGH,3, 200 );
 					     
-							 SelectRunFlag = 11;
+							 SelectRunFlag = CASE_SENSOR_SCALE_MAX_HIGH_2;
 				     }	
-						else if(SelectRunFlag == 11)
+						else if(SelectRunFlag == CASE_SENSOR_SCALE_MAX_HIGH_2)
 				     { // вычитываются значения дипазона  всей шкалы и единицы измерения
 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SCALE_MAX_HIGH_2,3, 200 );
 					     
-							 SelectRunFlag = 2;
+							 SelectRunFlag = CASE_SENSOR_THRESHOLD_WARNIGN_HIGN;
 				     }	
 						  
-				    else if (SelectRunFlag == 2)
+				    else if (SelectRunFlag == CASE_SENSOR_THRESHOLD_WARNIGN_HIGN)
 					   { //вычитываются пороги 1, 2 и 3
  					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN, 6, 200 );
 	           
-					    SelectRunFlag = 33;
+					    SelectRunFlag = CASE_SENSOR_THRESHOLD_WARNIGN_HIGN_2;
 					   }
-						else if (SelectRunFlag == 33)
+						else if (SelectRunFlag == CASE_SENSOR_THRESHOLD_WARNIGN_HIGN_2)
 					   { //вычитываются пороги 1, 2 и 3
  					    eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_THRESHOLD_WARNIGN_HIGN_2, 6, 200 );
 	           
-					    SelectRunFlag = 3;
+					    SelectRunFlag = CASE_SENSOR_SUBSTANCE_CODE_1;
 					   } 
-				    else if (SelectRunFlag == 3)
+				    else if (SelectRunFlag == CASE_SENSOR_SUBSTANCE_CODE_1)
 					    { //вычитывается тип газа
 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SUBSTANCE_CODE_1, 16, 200 );
 					    
-							 SelectRunFlag = 44;	
+							 SelectRunFlag = CASE_SENSOR_SUBSTANCE_CODE_1_2;	
 					    } 
-            else if (SelectRunFlag == 44)
+            else if (SelectRunFlag == CASE_SENSOR_SUBSTANCE_CODE_1_2)
 					    { //вычитывается тип газа
 					     eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SUBSTANCE_CODE_1_2, 16, 200 );
 					    
-							 SelectRunFlag = 4;	
+							 SelectRunFlag = CASE_SENSOR_PRIMARY_VALUE_HIGH;	
 					    } 
 							
 			      /* ********************************* Handling INPUT registers *************************** */
-				     else if (SelectRunFlag == 4)
+				     else if (SelectRunFlag == CASE_SENSOR_PRIMARY_VALUE_HIGH)
 					    {
 							 requestConcetration1 = true;
 					     eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH, 3, 200 );
                				    
-							 SelectRunFlag = 42;
+							 SelectRunFlag = CASE_SENSOR_SECONDARY_VALUE_HIGH;
 								
 								if( ControlCycleFlag)
 								 {
-									 SelectRunFlag = 42; 
+									 SelectRunFlag = CASE_SENSOR_SECONDARY_VALUE_HIGH; 
 								 }
 					    } 	
-						 else if (SelectRunFlag == 42)
+						 else if (SelectRunFlag == CASE_SENSOR_SECONDARY_VALUE_HIGH)
 					    {			
 								 requestConcetration2 = true;
 								 eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SECONDARY_VALUE_HIGH, 3, 200 );
 								
-								 SelectRunFlag = 5;
+								 SelectRunFlag = CASE_READ_CURRENT_STATTE;
 								
 								if( ControlCycleFlag)
 								 {
-									 SelectRunFlag = 5; 
+									 SelectRunFlag = CASE_READ_CURRENT_STATTE; 
 								 }		
               }
 				    /* ********************************* set next slave addr *************************** */	
-				     else if (SelectRunFlag == 5)
+				     else if (SelectRunFlag == CASE_READ_CURRENT_STATTE)
 				      {
 								if(ControlCycleFlag)
 								{
 								  readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf,usMRegHoldBuf);
 								  ControlCycleFlag = 0;
 									HoldingPollsDone = 3;
-									SelectRunFlag = 6;
+									SelectRunFlag = CASE_READING_CONCENTRATION_1;
 									checkParamsValue = false;
 								  checkParamsValue	= compareParams((SensorCurrentState_t *)&writeParams,(SensorCurrentState_t *)&readParams);
 									setErrorStatusFlag = true;
@@ -428,7 +427,7 @@ void HoldingHandlerFunction(void const * argument)
 								  readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf,usMRegHoldBuf);
 								  ControlCycleFlag2 = 0;
 									HoldingPollsDone = 3;
-									SelectRunFlag = 6;
+									SelectRunFlag = CASE_READING_CONCENTRATION_1;
 									checkParamsValue = false;
 								  checkParamsValue	= compareParams((SensorCurrentState_t *)&writeParams,(SensorCurrentState_t *)&readParams);
 									setErrorStatusFlag = true;
@@ -438,7 +437,7 @@ void HoldingHandlerFunction(void const * argument)
 								
 					         readCurrentSensorState(ModBusSlaveCurrentDeviceAddr,usMRegInBuf,usMRegHoldBuf);
 				           setNextDeviceAddr(&ModBusSlaveCurrentDeviceAddr);	       // set next device addr
-                   SelectRunFlag = 0;
+                   SelectRunFlag = CASE_DEVICE_MODEL_CODE;
 								
 			
 					         if(ModBusSlaveCurrentDeviceAddr == NUMBER_SLAVE_DEVICES)
@@ -452,7 +451,7 @@ void HoldingHandlerFunction(void const * argument)
 					         if(HoldingPollsDone == 3) // после трех проходов определяем наличие активных приборов
 					          {
 									    SendNextionCommand ("page page%d", 0);
-						          SelectRunFlag = 6;	               // переход на постояный цикл опроса значений концентрации
+						          SelectRunFlag = CASE_READING_CONCENTRATION_1;	               // переход на постояный цикл опроса значений концентрации
 									
 									   /* получение информации об активных датчиках их адресах */
 									   GetActiveSensors(SensorStateArray, (SensorInfo_t *) &SensorInfo);
@@ -479,7 +478,7 @@ void HoldingHandlerFunction(void const * argument)
 						 }								
 			     }	
 
-           else if (SelectRunFlag == 21)
+           else if (SelectRunFlag == CASE_WAITNG_CALBRATION_STATE)
 					   { 
 							  static uint8_t waitingTimeCounter = 0;
 							 
@@ -495,67 +494,67 @@ void HoldingHandlerFunction(void const * argument)
 								}
 							  if(waitingTimeCounter == 0)
 							  {
-							   SelectRunFlag = 22;
+							   SelectRunFlag = CASE_READING_CALBRATION_STATE;
 								}
 					   }
-				  	else if (SelectRunFlag == 22)
+				  	else if (SelectRunFlag == CASE_READING_CALBRATION_STATE)
 					   { 
  					      eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PROCESS_STATUS, 1, 300 );
 							 
-							  SelectRunFlag = 23;
+							  SelectRunFlag = CASE_GET_CALBRATION_STATE;
 					   } 
 						 	 	 
-					 else if (SelectRunFlag == 23)
+					 else if (SelectRunFlag == CASE_GET_CALBRATION_STATE)
 					   {  
 							   checkParamsValue = false; 
 							   readCurrentCalibrationState (ModBusSlaveCurrentDeviceAddr,usMRegHoldBuf);
 							   checkParamsValue = getCalibrationProcessState (ModBusSlaveCurrentDeviceAddr);	
 							   checkParamsValue = !checkParamsValue; 
 							   setErrorStatusFlag = true;
-					       SelectRunFlag = 6;
+					       SelectRunFlag = CASE_READING_CONCENTRATION_1;
 					   }	 
 						 
 			      /* постоянный цикл опроса активных приборов */
 				
 			        /* ********************************* Handling INPUT registers *************************** */
-				  else if (SelectRunFlag == 6)
+				  else if (SelectRunFlag == CASE_READING_CONCENTRATION_1)
 				  	    {
 								 /*  отправка  запроса на считывания значение текущей концентрации */
 								  /* !!!!! на период настройки параметров с дисплея  отключается запрос концентрации !!!!! */ 
 									
-                   SelectRunFlag = 77;
+                   SelectRunFlag = CASE_READING_CONCENTRATION_2;
 									
 									if(!CmdIsReady && !flagDisplayLogsBusy){ 
 										 requestConcetration1 = true;
 					           eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH, 3, 200 );
 									 }
 									else {
-									   SelectRunFlag = 8;
+									   SelectRunFlag = CASE_WRITING_SETTING;
 									}
 					       
 					      } 		
 								
-					else if(SelectRunFlag == 77)
+					else if(SelectRunFlag == CASE_READING_CONCENTRATION_2)
 					      {
 								 /*  отправка  запроса на считывания значение текущей концентрации */
 								  /* !!!!! на период настройки параметров с дисплея  отключается запрос концентрации !!!!! */ 
 									
-                   SelectRunFlag = 7;
+                   SelectRunFlag = CASE_SET_NEXT_ADDR;
 									
 									if(!CmdIsReady && !flagDisplayLogsBusy){ 
 										 requestConcetration2 = true;
 					           eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SECONDARY_VALUE_HIGH, 3, 200 );
 									 }
 									else {
-									   SelectRunFlag = 8;
+									   SelectRunFlag = CASE_WRITING_SETTING;
 									}
 								
 								}
 					
 				      /* ********************************* set next slave addr *************************** */	
-				   else if (SelectRunFlag == 7)
+				   else if (SelectRunFlag == CASE_SET_NEXT_ADDR)
 				        {
-									 SelectRunFlag = 8;
+									 SelectRunFlag = CASE_WRITING_SETTING;
 									
 									 if(!CmdIsReady && !flagDisplayLogsBusy){ 
 						    	   /* значение концентрации текущее */
@@ -567,7 +566,7 @@ void HoldingHandlerFunction(void const * argument)
 									} 
                   		    	
 				       }									 
-		else if (SelectRunFlag == 8)	
+		else if (SelectRunFlag == CASE_WRITING_SETTING)	
 		{		
       uint8_t shouldChangeFlag = 1;	 // для обычного цикла, когда команды не прилетают
 
@@ -599,7 +598,7 @@ void HoldingHandlerFunction(void const * argument)
             osMutexWait(myMutex01Handle, 10);
 						
 						shouldChangeFlag = 0;
-				    SelectRunFlag = 8;
+				    SelectRunFlag = CASE_WRITING_SETTING;
 					 }
 			
 				/* ******************  DISPLAY_SCALE_MAX *************************** */	
@@ -623,7 +622,7 @@ void HoldingHandlerFunction(void const * argument)
            osMutexWait(myMutex01Handle, 10);
 
 				   shouldChangeFlag = 0;
-				   SelectRunFlag = 8; 
+				   SelectRunFlag = CASE_WRITING_SETTING; 
 		    }
 				/* ******************  DISPLAY_CALIBRATION_PRIMARY_ZERO ********************** */	  
 				else	if(displayCmd.command == DISPLAY_CALIBRATION_PRIMARY_ZERO){
@@ -667,7 +666,7 @@ void HoldingHandlerFunction(void const * argument)
 			      CmdWriteIsReady = 1;
 					
 					 /* пройти один цикл опроса состояния калибровки  */
-				    SelectRunFlag = 21;
+				    SelectRunFlag = CASE_WAITNG_CALBRATION_STATE;
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;	
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
@@ -708,7 +707,7 @@ void HoldingHandlerFunction(void const * argument)
 			      CmdWriteIsReady = 1;   
 						
 						/* пройти один цикл опроса состояния калибровки  */
-				    SelectRunFlag = 21;
+				    SelectRunFlag = CASE_WAITNG_CALBRATION_STATE;
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;
 		    }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
@@ -747,7 +746,7 @@ void HoldingHandlerFunction(void const * argument)
              osMutexWait(myMutex01Handle, 10);
 				   
              shouldChangeFlag = 0;
-				     SelectRunFlag = 8;
+				     SelectRunFlag = CASE_WRITING_SETTING;
 	      }
           /* ******************  DISPLAY_THRESHOLD_ALARM ************************ */	  
        else if(displayCmd.command == DISPLAY_THRESHOLD_ALARM){
@@ -784,7 +783,7 @@ void HoldingHandlerFunction(void const * argument)
 
 				 
 				    shouldChangeFlag = 0;
-				    SelectRunFlag = 8;
+				    SelectRunFlag = CASE_WRITING_SETTING;
         }
 				/* ******************  DISPLAY_THRESHOLD_ADDITIONAL ************************ */	 
 			 else	if(displayCmd.command == DISPLAY_THRESHOLD_ADDITIONAL){
@@ -822,7 +821,7 @@ void HoldingHandlerFunction(void const * argument)
 				    shouldChangeFlag = 0;
 				    CmdWriteIsReady = 1;
 				   /* Для вычичитки записанных данных  пройти один цикл опроса */
-				    SelectRunFlag = 0;
+				    SelectRunFlag = CASE_DEVICE_MODEL_CODE;
 						
 						if(displayCmd.sensorPOSITION == FIRST_SENSOR)
 						{
@@ -845,7 +844,7 @@ void HoldingHandlerFunction(void const * argument)
 		}
 	   if(shouldChangeFlag)
 		   {	    
-		    SelectRunFlag = 6;
+		    SelectRunFlag = CASE_READING_CONCENTRATION_1;
 	    }		 
 	 }	
 			//Освобождаем мьютекс

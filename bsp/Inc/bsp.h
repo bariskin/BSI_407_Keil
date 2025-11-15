@@ -145,6 +145,27 @@ extern  uint8_t NumberSlaveDevices;
 		
 extern bool checkParamsValue ;
 
+typedef enum 
+  {
+    CASE_DEVICE_MODEL_CODE                =    0,
+		CASE_SENSOR_SCALE_MAX_HIGH            =    1,
+    CASE_SENSOR_SCALE_MAX_HIGH_2          =    2,
+		CASE_SENSOR_THRESHOLD_WARNIGN_HIGN    =    3,
+		CASE_SENSOR_THRESHOLD_WARNIGN_HIGN_2  =    4,
+		CASE_SENSOR_SUBSTANCE_CODE_1          =    5,
+		CASE_SENSOR_SUBSTANCE_CODE_1_2        =    6,
+		CASE_SENSOR_PRIMARY_VALUE_HIGH        =    7, 
+		CASE_SENSOR_SECONDARY_VALUE_HIGH      =    8,
+		CASE_READ_CURRENT_STATTE              =    9,
+		CASE_WAITNG_CALBRATION_STATE          =    10,
+		CASE_READING_CALBRATION_STATE         =    11,
+		CASE_GET_CALBRATION_STATE             =    12,
+		CASE_READING_CONCENTRATION_1          =    13,
+		CASE_READING_CONCENTRATION_2          =    14,
+		CASE_SET_NEXT_ADDR                    =    15,
+	  CASE_WRITING_SETTING                  =    16
+  } eCase;
+
   /** @addtogroup board_support
   * @{
   */

@@ -1,8 +1,8 @@
 --cpu=Cortex-M4.fp.sp
 "bsi_407\startup_stm32f407xx.o"
 "bsi_407\main.o"
-"bsi_407\gpio.o"
 "bsi_407\i2c.o"
+"bsi_407\gpio.o"
 "bsi_407\rtc.o"
 "bsi_407\sdio.o"
 "bsi_407\tim.o"

@@ -3,9 +3,9 @@
 <title>Static Call Graph - [BSI_407\BSI_407.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image BSI_407\BSI_407.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Sat Nov 15 18:05:34 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Sat Nov 15 19:19:08 2025
 <BR><P>
-<H3>Maximum Stack Usage =       4824 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
+<H3>Maximum Stack Usage =       4872 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
 SendToDispTaskFunction &rArr; ServiceDataCallback &rArr; WriteServiceLog &rArr; f_open &rArr; follow_path &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 <P>
@@ -182,8 +182,8 @@ Function Pointers
 Global Symbols
 </H3>
 <P><STRONG><a name="[93]"></a>__main</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, __main.o(!!!main))
-<BR><BR>[Calls]<UL><LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
-<LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
+<BR><BR>[Calls]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload
+<LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_entry
 </UL>
 
 <P><STRONG><a name="[94]"></a>__scatterload</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __scatter.o(!!!scatter))
@@ -438,8 +438,8 @@ Global Symbols
 <P><STRONG><a name="[2cd]"></a>__rt_lib_shutdown_user_alloc_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, libshutdown2.o(.ARM.Collect$$libshutdown$$0000000E))
 
 <P><STRONG><a name="[95]"></a>__rt_entry</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry.o(.ARM.Collect$$rtentry$$00000000))
-<BR><BR>[Called By]<UL><LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
-<LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_rt2
+<BR><BR>[Called By]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__scatterload_rt2
+<LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__main
 </UL>
 
 <P><STRONG><a name="[2ce]"></a>__rt_entry_presh_1</STRONG> (Thumb, 0 bytes, Stack size unknown bytes, __rtentry2.o(.ARM.Collect$$rtentry$$00000002))
@@ -757,9 +757,9 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[6d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_sputc
 <LI><a href="#[cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_char_common
 </UL>
-<BR>[Called By]<UL><LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WriteServiceLog
+<BR>[Called By]<UL><LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_SetFromHexString
+<LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WriteServiceLog
 <LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GetServiceFilePath
-<LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_SetFromHexString
 </UL>
 
 <P><STRONG><a name="[cf]"></a>__2snprintf</STRONG> (Thumb, 50 bytes, Stack size 40 bytes, __2snprintf.o(.text))
@@ -957,9 +957,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[24a]"></a>strcmp</STRONG> (Thumb, 128 bytes, Stack size 0 bytes, strcmpv7m.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_get_lc_numeric
+<BR><BR>[Called By]<UL><LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getCodeByUnitString
+<LI><a href="#[bf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_get_lc_numeric
 <LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_get_lc_ctype
-<LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getCodeByUnitString
 </UL>
 
 <P><STRONG><a name="[2da]"></a>__use_two_region_memory</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, heapauxi.o(.text), UNUSED)
@@ -1050,8 +1050,8 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> __2sprintf.o(.text)
 </UL>
 <P><STRONG><a name="[6c]"></a>_snputc</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, _snputc.o(.text))
-<BR>[Address Reference Count : 2]<UL><LI> vsnprintf.o(.text)
-<LI> __2snprintf.o(.text)
+<BR>[Address Reference Count : 2]<UL><LI> __2snprintf.o(.text)
+<LI> vsnprintf.o(.text)
 </UL>
 <P><STRONG><a name="[ef]"></a>_printf_cs_common</STRONG> (Thumb, 20 bytes, Stack size 8 bytes, _printf_char.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = _printf_cs_common &rArr; _printf_str &rArr; _printf_post_padding
@@ -1176,10 +1176,10 @@ Global Symbols
 <P><STRONG><a name="[2e1]"></a>__user_perthread_libspace</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, libspace.o(.text), UNUSED)
 
 <P><STRONG><a name="[bc]"></a>__rt_locale</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, rt_locale_intlibspace.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_scanf_really_real
+<BR><BR>[Called By]<UL><LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_lib_init_lc_common
+<LI><a href="#[f6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_scanf_really_real
 <LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_printf_fp_dec_real
 <LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_ctype_table
-<LI><a href="#[bb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__rt_lib_init_lc_common
 </UL>
 
 <P><STRONG><a name="[eb]"></a>_ll_udiv10</STRONG> (Thumb, 138 bytes, Stack size 12 bytes, lludiv10.o(.text))
@@ -1288,17 +1288,17 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_errno_addr
 </UL>
-<BR>[Called By]<UL><LI><a href="#[1ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp___mathlib_tofloat
-<LI><a href="#[1f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_ldexp
+<BR>[Called By]<UL><LI><a href="#[1f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_ldexp
+<LI><a href="#[1ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp___mathlib_tofloat
 </UL>
 
 <P><STRONG><a name="[102]"></a>_scanf_really_hex_real</STRONG> (Thumb, 786 bytes, Stack size 80 bytes, scanf_hexfp.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = _scanf_really_hex_real &rArr; __support_ldexp &rArr; __hardfp_ldexp &rArr; __mathlib_dbl_underflow &rArr; __aeabi_dmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_narrow
-<LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_chval
-<LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__support_ldexp
+<BR>[Calls]<UL><LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__support_ldexp
 <LI><a href="#[103]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_llsl
+<LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_narrow
+<LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_chval
 </UL>
 <BR>[Called By]<UL><LI><a href="#[f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_scanf_hex_real
 </UL>
@@ -1451,7 +1451,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[113]"></a>BSP_SD_ReadBlocks</STRONG> (Thumb, 26 bytes, Stack size 16 bytes, bsp_driver_sd.o(i.BSP_SD_ReadBlocks))
-<BR><BR>[Stack]<UL><LI>Max Depth = 132<LI>Call Chain = BSP_SD_ReadBlocks &rArr; HAL_SD_ReadBlocks &rArr; SDMMC_CmdStopTransfer &rArr; SDMMC_GetCmdResp1
+<BR><BR>[Stack]<UL><LI>Max Depth = 116<LI>Call Chain = BSP_SD_ReadBlocks &rArr; HAL_SD_ReadBlocks &rArr; SDMMC_CmdStopTransfer &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SD_ReadBlocks
 </UL>
@@ -1459,7 +1459,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[115]"></a>BSP_SD_WriteBlocks</STRONG> (Thumb, 26 bytes, Stack size 16 bytes, bsp_driver_sd.o(i.BSP_SD_WriteBlocks))
-<BR><BR>[Stack]<UL><LI>Max Depth = 124<LI>Call Chain = BSP_SD_WriteBlocks &rArr; HAL_SD_WriteBlocks &rArr; SDMMC_CmdWriteSingleBlock &rArr; SDMMC_GetCmdResp1
+<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = BSP_SD_WriteBlocks &rArr; HAL_SD_WriteBlocks &rArr; SDMMC_CmdWriteSingleBlock &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[116]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SD_WriteBlocks
 </UL>
@@ -1569,18 +1569,18 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[118]"></a>GetDisplayCmd</STRONG> (Thumb, 876 bytes, Stack size 48 bytes, displaydriver.o(i.GetDisplayCmd))
+<P><STRONG><a name="[118]"></a>GetDisplayCmd</STRONG> (Thumb, 872 bytes, Stack size 48 bytes, displaydriver.o(i.GetDisplayCmd))
 <BR><BR>[Stack]<UL><LI>Max Depth = 684 + Unknown Stack Size
 <LI>Call Chain = GetDisplayCmd &rArr; RTC_SetFromHexString &rArr; __0sscanf &rArr; __vfscanf_char &rArr; __vfscanf &rArr; _scanf_real &rArr; _scanf_really_real &rArr; _fp_value &rArr; _btod_etento &rArr; _btod_emul &rArr; _e2e
 </UL>
 <BR>[Calls]<UL><LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
 <LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
+<LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getCodeByUnitString
+<LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_SetFromHexString
 <LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;bytes_to_uint32
 <LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 <LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 <LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__0sscanf
-<LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getCodeByUnitString
-<LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_SetFromHexString
 </UL>
 <BR>[Called By]<UL><LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisplayTaskFunction
 </UL>
@@ -1597,7 +1597,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[131]"></a>GetServiceLinesCount</STRONG> (Thumb, 90 bytes, Stack size 4368 bytes, sensorlogs.o(i.GetServiceLinesCount))
-<BR><BR>[Stack]<UL><LI>Max Depth = 4648 + Unknown Stack Size
+<BR><BR>[Stack]<UL><LI>Max Depth = 4672 + Unknown Stack Size
 <LI>Call Chain = GetServiceLinesCount &rArr; f_open &rArr; follow_path &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_open
@@ -1724,7 +1724,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[121]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Flash_Write_Data
 </UL>
 
-<P><STRONG><a name="[169]"></a>HAL_GPIO_Init</STRONG> (Thumb, 418 bytes, Stack size 40 bytes, stm32f4xx_hal_gpio.o(i.HAL_GPIO_Init))
+<P><STRONG><a name="[169]"></a>HAL_GPIO_Init</STRONG> (Thumb, 450 bytes, Stack size 40 bytes, stm32f4xx_hal_gpio.o(i.HAL_GPIO_Init))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = HAL_GPIO_Init
 </UL>
 <BR>[Called By]<UL><LI><a href="#[189]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_MspInit
@@ -1809,7 +1809,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[146]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Init
 </UL>
 
-<P><STRONG><a name="[151]"></a>HAL_RCCEx_PeriphCLKConfig</STRONG> (Thumb, 294 bytes, Stack size 32 bytes, stm32f4xx_hal_rcc_ex.o(i.HAL_RCCEx_PeriphCLKConfig))
+<P><STRONG><a name="[151]"></a>HAL_RCCEx_PeriphCLKConfig</STRONG> (Thumb, 296 bytes, Stack size 32 bytes, stm32f4xx_hal_rcc_ex.o(i.HAL_RCCEx_PeriphCLKConfig))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = HAL_RCCEx_PeriphCLKConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
@@ -1848,7 +1848,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[152]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_ClockConfig
 </UL>
 
-<P><STRONG><a name="[155]"></a>HAL_RCC_OscConfig</STRONG> (Thumb, 836 bytes, Stack size 40 bytes, stm32f4xx_hal_rcc.o(i.HAL_RCC_OscConfig))
+<P><STRONG><a name="[155]"></a>HAL_RCC_OscConfig</STRONG> (Thumb, 856 bytes, Stack size 40 bytes, stm32f4xx_hal_rcc.o(i.HAL_RCC_OscConfig))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = HAL_RCC_OscConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
@@ -1916,8 +1916,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1c2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_RTC_Year
 <LI><a href="#[1c4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_RTC_Month
 <LI><a href="#[1c5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_RTC_Day
-<LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WriteServiceLog
 <LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_SetFromHexString
+<LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WriteServiceLog
 </UL>
 
 <P><STRONG><a name="[15e]"></a>HAL_RTC_SetTime</STRONG> (Thumb, 186 bytes, Stack size 24 bytes, stm32f4xx_hal_rtc.o(i.HAL_RTC_SetTime))
@@ -1930,11 +1930,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_RTC_Second
 <LI><a href="#[1c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_RTC_Minute
 <LI><a href="#[1c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Set_RTC_Hour
-<LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WriteServiceLog
 <LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_SetFromHexString
+<LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WriteServiceLog
 </UL>
 
-<P><STRONG><a name="[15f]"></a>HAL_RTC_WaitForSynchro</STRONG> (Thumb, 48 bytes, Stack size 16 bytes, stm32f4xx_hal_rtc.o(i.HAL_RTC_WaitForSynchro))
+<P><STRONG><a name="[15f]"></a>HAL_RTC_WaitForSynchro</STRONG> (Thumb, 50 bytes, Stack size 16 bytes, stm32f4xx_hal_rtc.o(i.HAL_RTC_WaitForSynchro))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = HAL_RTC_WaitForSynchro
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
@@ -1952,7 +1952,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[10c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_SD_GetCardInfo
 </UL>
 
-<P><STRONG><a name="[10f]"></a>HAL_SD_GetCardState</STRONG> (Thumb, 50 bytes, Stack size 16 bytes, stm32f4xx_hal_sd.o(i.HAL_SD_GetCardState))
+<P><STRONG><a name="[10f]"></a>HAL_SD_GetCardState</STRONG> (Thumb, 44 bytes, Stack size 16 bytes, stm32f4xx_hal_sd.o(i.HAL_SD_GetCardState))
 <BR><BR>[Stack]<UL><LI>Max Depth = 52<LI>Call Chain = HAL_SD_GetCardState &rArr; SDMMC_CmdSendStatus &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[160]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_CmdSendStatus
@@ -1970,7 +1970,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[110]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_SD_Init
 </UL>
 
-<P><STRONG><a name="[163]"></a>HAL_SD_InitCard</STRONG> (Thumb, 114 bytes, Stack size 32 bytes, stm32f4xx_hal_sd.o(i.HAL_SD_InitCard))
+<P><STRONG><a name="[163]"></a>HAL_SD_InitCard</STRONG> (Thumb, 116 bytes, Stack size 32 bytes, stm32f4xx_hal_sd.o(i.HAL_SD_InitCard))
 <BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = HAL_SD_InitCard &rArr; SD_InitCard &rArr; SDMMC_CmdSetRelAdd &rArr; SDMMC_GetCmdResp6
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
@@ -1992,8 +1992,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[112]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SD_Init
 </UL>
 
-<P><STRONG><a name="[114]"></a>HAL_SD_ReadBlocks</STRONG> (Thumb, 476 bytes, Stack size 80 bytes, stm32f4xx_hal_sd.o(i.HAL_SD_ReadBlocks))
-<BR><BR>[Stack]<UL><LI>Max Depth = 116<LI>Call Chain = HAL_SD_ReadBlocks &rArr; SDMMC_CmdStopTransfer &rArr; SDMMC_GetCmdResp1
+<P><STRONG><a name="[114]"></a>HAL_SD_ReadBlocks</STRONG> (Thumb, 476 bytes, Stack size 64 bytes, stm32f4xx_hal_sd.o(i.HAL_SD_ReadBlocks))
+<BR><BR>[Stack]<UL><LI>Max Depth = 100<LI>Call Chain = HAL_SD_ReadBlocks &rArr; SDMMC_CmdStopTransfer &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 <LI><a href="#[16e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_CmdStopTransfer
@@ -2005,8 +2005,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_SD_ReadBlocks
 </UL>
 
-<P><STRONG><a name="[116]"></a>HAL_SD_WriteBlocks</STRONG> (Thumb, 426 bytes, Stack size 72 bytes, stm32f4xx_hal_sd.o(i.HAL_SD_WriteBlocks))
-<BR><BR>[Stack]<UL><LI>Max Depth = 108<LI>Call Chain = HAL_SD_WriteBlocks &rArr; SDMMC_CmdWriteSingleBlock &rArr; SDMMC_GetCmdResp1
+<P><STRONG><a name="[116]"></a>HAL_SD_WriteBlocks</STRONG> (Thumb, 428 bytes, Stack size 88 bytes, stm32f4xx_hal_sd.o(i.HAL_SD_WriteBlocks))
+<BR><BR>[Stack]<UL><LI>Max Depth = 124<LI>Call Chain = HAL_SD_WriteBlocks &rArr; SDMMC_CmdWriteSingleBlock &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 <LI><a href="#[170]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_CmdWriteSingleBlock
@@ -2126,7 +2126,7 @@ Global Symbols
 <LI><a href="#[75]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_DMATxOnlyAbortCallback
 </UL>
 
-<P><STRONG><a name="[180]"></a>HAL_UART_AbortTransmit_IT</STRONG> (Thumb, 96 bytes, Stack size 16 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_AbortTransmit_IT))
+<P><STRONG><a name="[180]"></a>HAL_UART_AbortTransmit_IT</STRONG> (Thumb, 98 bytes, Stack size 16 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_AbortTransmit_IT))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = HAL_UART_AbortTransmit_IT
 </UL>
 <BR>[Calls]<UL><LI><a href="#[181]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_AbortTransmitCpltCallback
@@ -2208,7 +2208,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[119]"></a>HandleDisplayCommands</STRONG> (Thumb, 328 bytes, Stack size 40 bytes, displaydriver.o(i.HandleDisplayCommands))
-<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = HandleDisplayCommands &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = HandleDisplayCommands &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[18e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
 <LI><a href="#[18d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getBaudrate
@@ -2229,7 +2229,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
-<P><STRONG><a name="[89]"></a>HoldingHandlerFunction</STRONG> (Thumb, 1776 bytes, Stack size 8 bytes, freertos.o(i.HoldingHandlerFunction))
+<P><STRONG><a name="[89]"></a>HoldingHandlerFunction</STRONG> (Thumb, 1752 bytes, Stack size 8 bytes, freertos.o(i.HoldingHandlerFunction))
 <BR><BR>[Stack]<UL><LI>Max Depth = 192 + Unknown Stack Size
 <LI>Call Chain = HoldingHandlerFunction &rArr; readCurrentSensorState &rArr; __2snprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -2254,7 +2254,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.constdata)
 </UL>
-<P><STRONG><a name="[1a2]"></a>HoldingRegisterFromModbusSlaveStack</STRONG> (Thumb, 336 bytes, Stack size 24 bytes, holdingregisterslavehandler.o(i.HoldingRegisterFromModbusSlaveStack))
+<P><STRONG><a name="[1a2]"></a>HoldingRegisterFromModbusSlaveStack</STRONG> (Thumb, 340 bytes, Stack size 24 bytes, holdingregisterslavehandler.o(i.HoldingRegisterFromModbusSlaveStack))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = HoldingRegisterFromModbusSlaveStack &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[18e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGenericNotify
@@ -2394,7 +2394,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[88]"></a>MasterModbusTaskFunction</STRONG> (Thumb, 30 bytes, Stack size 0 bytes, freertos.o(i.MasterModbusTaskFunction))
-<BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = MasterModbusTaskFunction &rArr; osMutexRelease &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = MasterModbusTaskFunction &rArr; osMutexRelease &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[193]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexWait
 <LI><a href="#[19b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osMutexRelease
@@ -2463,7 +2463,7 @@ Global Symbols
 <LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RTC_SetDate
 </UL>
 
-<P><STRONG><a name="[159]"></a>RTC_EnterInitMode</STRONG> (Thumb, 70 bytes, Stack size 24 bytes, stm32f4xx_hal_rtc.o(i.RTC_EnterInitMode))
+<P><STRONG><a name="[159]"></a>RTC_EnterInitMode</STRONG> (Thumb, 72 bytes, Stack size 24 bytes, stm32f4xx_hal_rtc.o(i.RTC_EnterInitMode))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = RTC_EnterInitMode
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
@@ -2483,22 +2483,22 @@ Global Symbols
 <LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RTC_SetDate
 </UL>
 
-<P><STRONG><a name="[12c]"></a>RTC_SetFromHexString</STRONG> (Thumb, 232 bytes, Stack size 128 bytes, bsp.o(i.RTC_SetFromHexString))
+<P><STRONG><a name="[12c]"></a>RTC_SetFromHexString</STRONG> (Thumb, 238 bytes, Stack size 128 bytes, bsp.o(i.RTC_SetFromHexString))
 <BR><BR>[Stack]<UL><LI>Max Depth = 636 + Unknown Stack Size
 <LI>Call Chain = RTC_SetFromHexString &rArr; __0sscanf &rArr; __vfscanf_char &rArr; __vfscanf &rArr; _scanf_real &rArr; _scanf_really_real &rArr; _fp_value &rArr; _btod_etento &rArr; _btod_emul &rArr; _e2e
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[15e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RTC_SetTime
 <LI><a href="#[15c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RTC_SetDate
+<LI><a href="#[1c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hex_to_ascii_minimal
 <LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__0sscanf
 <LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
-<LI><a href="#[1c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hex_to_ascii_minimal
 </UL>
 <BR>[Called By]<UL><LI><a href="#[118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GetDisplayCmd
 </UL>
 
 <P><STRONG><a name="[1c9]"></a>ReadServiceLine</STRONG> (Thumb, 220 bytes, Stack size 4264 bytes, sensorlogs.o(i.ReadServiceLine))
-<BR><BR>[Stack]<UL><LI>Max Depth = 4544 + Unknown Stack Size
+<BR><BR>[Stack]<UL><LI>Max Depth = 4568 + Unknown Stack Size
 <LI>Call Chain = ReadServiceLine &rArr; f_open &rArr; follow_path &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
@@ -2566,7 +2566,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[116]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SD_WriteBlocks
 </UL>
 
-<P><STRONG><a name="[1cb]"></a>SDMMC_CmdAppCommand</STRONG> (Thumb, 48 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdAppCommand))
+<P><STRONG><a name="[1cb]"></a>SDMMC_CmdAppCommand</STRONG> (Thumb, 50 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdAppCommand))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = SDMMC_CmdAppCommand &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_GetCmdResp1
@@ -2575,7 +2575,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[166]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SD_PowerON
 </UL>
 
-<P><STRONG><a name="[1ce]"></a>SDMMC_CmdAppOperCommand</STRONG> (Thumb, 46 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdAppOperCommand))
+<P><STRONG><a name="[1ce]"></a>SDMMC_CmdAppOperCommand</STRONG> (Thumb, 48 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdAppOperCommand))
 <BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = SDMMC_CmdAppOperCommand
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_GetCmdResp3
@@ -2584,7 +2584,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[166]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SD_PowerON
 </UL>
 
-<P><STRONG><a name="[168]"></a>SDMMC_CmdBlockLength</STRONG> (Thumb, 48 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdBlockLength))
+<P><STRONG><a name="[168]"></a>SDMMC_CmdBlockLength</STRONG> (Thumb, 50 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdBlockLength))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = SDMMC_CmdBlockLength &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_GetCmdResp1
@@ -2601,7 +2601,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[166]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SD_PowerON
 </UL>
 
-<P><STRONG><a name="[1d1]"></a>SDMMC_CmdOperCond</STRONG> (Thumb, 46 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdOperCond))
+<P><STRONG><a name="[1d1]"></a>SDMMC_CmdOperCond</STRONG> (Thumb, 48 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdOperCond))
 <BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = SDMMC_CmdOperCond
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_GetCmdResp7
@@ -2610,7 +2610,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[166]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SD_PowerON
 </UL>
 
-<P><STRONG><a name="[16b]"></a>SDMMC_CmdReadMultiBlock</STRONG> (Thumb, 48 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdReadMultiBlock))
+<P><STRONG><a name="[16b]"></a>SDMMC_CmdReadMultiBlock</STRONG> (Thumb, 50 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdReadMultiBlock))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = SDMMC_CmdReadMultiBlock &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_GetCmdResp1
@@ -2619,7 +2619,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SD_ReadBlocks
 </UL>
 
-<P><STRONG><a name="[16c]"></a>SDMMC_CmdReadSingleBlock</STRONG> (Thumb, 48 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdReadSingleBlock))
+<P><STRONG><a name="[16c]"></a>SDMMC_CmdReadSingleBlock</STRONG> (Thumb, 50 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdReadSingleBlock))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = SDMMC_CmdReadSingleBlock &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_GetCmdResp1
@@ -2637,7 +2637,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[167]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SD_InitCard
 </UL>
 
-<P><STRONG><a name="[1d4]"></a>SDMMC_CmdSendCID</STRONG> (Thumb, 42 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdSendCID))
+<P><STRONG><a name="[1d4]"></a>SDMMC_CmdSendCID</STRONG> (Thumb, 44 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdSendCID))
 <BR><BR>[Stack]<UL><LI>Max Depth = 28<LI>Call Chain = SDMMC_CmdSendCID
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_GetCmdResp2
@@ -2655,7 +2655,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[167]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SD_InitCard
 </UL>
 
-<P><STRONG><a name="[160]"></a>SDMMC_CmdSendStatus</STRONG> (Thumb, 48 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdSendStatus))
+<P><STRONG><a name="[160]"></a>SDMMC_CmdSendStatus</STRONG> (Thumb, 50 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdSendStatus))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = SDMMC_CmdSendStatus &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_GetCmdResp1
@@ -2683,7 +2683,7 @@ Global Symbols
 <LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SD_ReadBlocks
 </UL>
 
-<P><STRONG><a name="[16f]"></a>SDMMC_CmdWriteMultiBlock</STRONG> (Thumb, 48 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdWriteMultiBlock))
+<P><STRONG><a name="[16f]"></a>SDMMC_CmdWriteMultiBlock</STRONG> (Thumb, 50 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdWriteMultiBlock))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = SDMMC_CmdWriteMultiBlock &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_GetCmdResp1
@@ -2692,7 +2692,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[116]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SD_WriteBlocks
 </UL>
 
-<P><STRONG><a name="[170]"></a>SDMMC_CmdWriteSingleBlock</STRONG> (Thumb, 48 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdWriteSingleBlock))
+<P><STRONG><a name="[170]"></a>SDMMC_CmdWriteSingleBlock</STRONG> (Thumb, 50 bytes, Stack size 28 bytes, stm32f4xx_ll_sdmmc.o(i.SDMMC_CmdWriteSingleBlock))
 <BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = SDMMC_CmdWriteSingleBlock &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1cd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_GetCmdResp1
@@ -2753,8 +2753,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> sd_diskio.o(.constdata)
 </UL>
-<P><STRONG><a name="[90]"></a>SD_read</STRONG> (Thumb, 36 bytes, Stack size 16 bytes, sd_diskio.o(i.SD_read))
-<BR><BR>[Stack]<UL><LI>Max Depth = 148<LI>Call Chain = SD_read &rArr; BSP_SD_ReadBlocks &rArr; HAL_SD_ReadBlocks &rArr; SDMMC_CmdStopTransfer &rArr; SDMMC_GetCmdResp1
+<P><STRONG><a name="[90]"></a>SD_read</STRONG> (Thumb, 38 bytes, Stack size 16 bytes, sd_diskio.o(i.SD_read))
+<BR><BR>[Stack]<UL><LI>Max Depth = 132<LI>Call Chain = SD_read &rArr; BSP_SD_ReadBlocks &rArr; HAL_SD_ReadBlocks &rArr; SDMMC_CmdStopTransfer &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_SD_ReadBlocks
 <LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_SD_GetCardState
@@ -2768,8 +2768,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> sd_diskio.o(.constdata)
 </UL>
-<P><STRONG><a name="[91]"></a>SD_write</STRONG> (Thumb, 36 bytes, Stack size 16 bytes, sd_diskio.o(i.SD_write))
-<BR><BR>[Stack]<UL><LI>Max Depth = 140<LI>Call Chain = SD_write &rArr; BSP_SD_WriteBlocks &rArr; HAL_SD_WriteBlocks &rArr; SDMMC_CmdWriteSingleBlock &rArr; SDMMC_GetCmdResp1
+<P><STRONG><a name="[91]"></a>SD_write</STRONG> (Thumb, 38 bytes, Stack size 16 bytes, sd_diskio.o(i.SD_write))
+<BR><BR>[Stack]<UL><LI>Max Depth = 156<LI>Call Chain = SD_write &rArr; BSP_SD_WriteBlocks &rArr; HAL_SD_WriteBlocks &rArr; SDMMC_CmdWriteSingleBlock &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[115]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_SD_WriteBlocks
 <LI><a href="#[10e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_SD_GetCardState
@@ -2801,8 +2801,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UpdateDisplayTime
 </UL>
 
-<P><STRONG><a name="[8d]"></a>SendToDispTaskFunction</STRONG> (Thumb, 452 bytes, Stack size 72 bytes, freertos.o(i.SendToDispTaskFunction))
-<BR><BR>[Stack]<UL><LI>Max Depth = 4824 + Unknown Stack Size
+<P><STRONG><a name="[8d]"></a>SendToDispTaskFunction</STRONG> (Thumb, 454 bytes, Stack size 96 bytes, freertos.o(i.SendToDispTaskFunction))
+<BR><BR>[Stack]<UL><LI>Max Depth = 4872 + Unknown Stack Size
 <LI>Call Chain = SendToDispTaskFunction &rArr; ServiceDataCallback &rArr; WriteServiceLog &rArr; f_open &rArr; follow_path &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
@@ -2815,7 +2815,7 @@ Global Symbols
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(.constdata)
 </UL>
 <P><STRONG><a name="[1de]"></a>ServiceDataCallback</STRONG> (Thumb, 12 bytes, Stack size 16 bytes, sensorlogs.o(i.ServiceDataCallback))
-<BR><BR>[Stack]<UL><LI>Max Depth = 4752 + Unknown Stack Size
+<BR><BR>[Stack]<UL><LI>Max Depth = 4776 + Unknown Stack Size
 <LI>Call Chain = ServiceDataCallback &rArr; WriteServiceLog &rArr; f_open &rArr; follow_path &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WriteServiceLog
@@ -3012,7 +3012,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;InputHandlerFunction
 </UL>
 
-<P><STRONG><a name="[1a9]"></a>UpdateNextionDisplayWithChannelData</STRONG> (Thumb, 818 bytes, Stack size 248 bytes, displaydriver.o(i.UpdateNextionDisplayWithChannelData))
+<P><STRONG><a name="[1a9]"></a>UpdateNextionDisplayWithChannelData</STRONG> (Thumb, 810 bytes, Stack size 248 bytes, displaydriver.o(i.UpdateNextionDisplayWithChannelData))
 <BR><BR>[Stack]<UL><LI>Max Depth = 400 + Unknown Stack Size
 <LI>Call Chain = UpdateNextionDisplayWithChannelData &rArr; SendNextionCommand &rArr; vsnprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
@@ -3044,8 +3044,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[208]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBRegHoldingCB
 </UL>
 
-<P><STRONG><a name="[1df]"></a>WriteServiceLog</STRONG> (Thumb, 414 bytes, Stack size 4456 bytes, sensorlogs.o(i.WriteServiceLog))
-<BR><BR>[Stack]<UL><LI>Max Depth = 4736 + Unknown Stack Size
+<P><STRONG><a name="[1df]"></a>WriteServiceLog</STRONG> (Thumb, 420 bytes, Stack size 4456 bytes, sensorlogs.o(i.WriteServiceLog))
+<BR><BR>[Stack]<UL><LI>Max Depth = 4760 + Unknown Stack Size
 <LI>Call Chain = WriteServiceLog &rArr; f_open &rArr; follow_path &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
@@ -3101,11 +3101,11 @@ Global Symbols
 <P><STRONG><a name="[1ed]"></a>__hardfp___mathlib_tofloat</STRONG> (Thumb, 232 bytes, Stack size 32 bytes, narrow.o(i.__hardfp___mathlib_tofloat))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = __hardfp___mathlib_tofloat &rArr; frexp &rArr; __aeabi_dmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
-<LI><a href="#[1ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;frexp
+<BR>[Calls]<UL><LI><a href="#[1ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;frexp
 <LI><a href="#[1f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdrcmple
 <LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmpeq
 <LI><a href="#[1f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
+<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
 </UL>
 <BR>[Called By]<UL><LI><a href="#[f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_narrow
 </UL>
@@ -3113,11 +3113,11 @@ Global Symbols
 <P><STRONG><a name="[1f2]"></a>__hardfp_ldexp</STRONG> (Thumb, 200 bytes, Stack size 48 bytes, ldexp.o(i.__hardfp_ldexp))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = __hardfp_ldexp &rArr; __mathlib_dbl_underflow &rArr; __aeabi_dmul
 </UL>
-<BR>[Calls]<UL><LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
-<LI><a href="#[1f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_underflow
+<BR>[Calls]<UL><LI><a href="#[1f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_underflow
 <LI><a href="#[1f5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__mathlib_dbl_overflow
 <LI><a href="#[1f3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__ARM_scalbn
 <LI><a href="#[1ef]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmpeq
+<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__set_errno
 </UL>
 <BR>[Called By]<UL><LI><a href="#[104]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__support_ldexp
 </UL>
@@ -3190,7 +3190,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[239]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;find_volume
 </UL>
 
-<P><STRONG><a name="[249]"></a>disk_ioctl</STRONG> (Thumb, 22 bytes, Stack size 8 bytes, diskio.o(i.disk_ioctl))
+<P><STRONG><a name="[249]"></a>disk_ioctl</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, diskio.o(i.disk_ioctl))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = disk_ioctl
 </UL>
 <BR>[Called By]<UL><LI><a href="#[246]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sync_fs
@@ -3352,7 +3352,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> mb_m.o(.data)
 </UL>
-<P><STRONG><a name="[212]"></a>eMBMasterInit</STRONG> (Thumb, 82 bytes, Stack size 16 bytes, mb_m.o(i.eMBMasterInit))
+<P><STRONG><a name="[212]"></a>eMBMasterInit</STRONG> (Thumb, 84 bytes, Stack size 16 bytes, mb_m.o(i.eMBMasterInit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = eMBMasterInit &rArr; eMBMasterRTUInit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[213]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterRTUInit
@@ -3399,8 +3399,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> mb_m.o(i.eMBMasterInit)
 </UL>
-<P><STRONG><a name="[80]"></a>eMBMasterRTUSend</STRONG> (Thumb, 112 bytes, Stack size 32 bytes, mbrtu_m.o(i.eMBMasterRTUSend))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = eMBMasterRTUSend &rArr; vMBMasterPortSerialEnable &rArr; HAL_UART_AbortTransmit_IT
+<P><STRONG><a name="[80]"></a>eMBMasterRTUSend</STRONG> (Thumb, 104 bytes, Stack size 24 bytes, mbrtu_m.o(i.eMBMasterRTUSend))
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = eMBMasterRTUSend &rArr; vMBMasterPortSerialEnable &rArr; HAL_UART_AbortTransmit_IT
 </UL>
 <BR>[Calls]<UL><LI><a href="#[222]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;usMBCRC16
 <LI><a href="#[221]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__critical_exit
@@ -3429,7 +3429,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> mb_m.o(i.eMBMasterInit)
 </UL>
-<P><STRONG><a name="[210]"></a>eMBMasterRegHoldingCB</STRONG> (Thumb, 104 bytes, Stack size 32 bytes, user_mb_app_m.o(i.eMBMasterRegHoldingCB))
+<P><STRONG><a name="[210]"></a>eMBMasterRegHoldingCB</STRONG> (Thumb, 106 bytes, Stack size 32 bytes, user_mb_app_m.o(i.eMBMasterRegHoldingCB))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = eMBMasterRegHoldingCB
 </UL>
 <BR>[Calls]<UL><LI><a href="#[227]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;convertModBusAddrHolding_M
@@ -3441,7 +3441,7 @@ Global Symbols
 <LI><a href="#[b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBMasterFuncReadHoldingRegister
 </UL>
 
-<P><STRONG><a name="[211]"></a>eMBMasterRegInputCB</STRONG> (Thumb, 100 bytes, Stack size 32 bytes, user_mb_app_m.o(i.eMBMasterRegInputCB))
+<P><STRONG><a name="[211]"></a>eMBMasterRegInputCB</STRONG> (Thumb, 102 bytes, Stack size 32 bytes, user_mb_app_m.o(i.eMBMasterRegInputCB))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = eMBMasterRegInputCB
 </UL>
 <BR>[Calls]<UL><LI><a href="#[228]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;convertModBusAddrInput_M
@@ -3476,7 +3476,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[1a1]"></a>eMBMasterReqWriteMultipleHoldingRegister</STRONG> (Thumb, 142 bytes, Stack size 32 bytes, mbfuncholding_m.o(i.eMBMasterReqWriteMultipleHoldingRegister))
+<P><STRONG><a name="[1a1]"></a>eMBMasterReqWriteMultipleHoldingRegister</STRONG> (Thumb, 144 bytes, Stack size 32 bytes, mbfuncholding_m.o(i.eMBMasterReqWriteMultipleHoldingRegister))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = eMBMasterReqWriteMultipleHoldingRegister
 </UL>
 <BR>[Calls]<UL><LI><a href="#[22a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBMasterSetDestAddress
@@ -3524,8 +3524,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> mb.o(i.eMBInit)
 </UL>
-<P><STRONG><a name="[79]"></a>eMBRTUSend</STRONG> (Thumb, 104 bytes, Stack size 32 bytes, mbrtu.o(i.eMBRTUSend))
-<BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = eMBRTUSend &rArr; vMBPortSerialEnable &rArr; HAL_UART_AbortTransmit_IT
+<P><STRONG><a name="[79]"></a>eMBRTUSend</STRONG> (Thumb, 98 bytes, Stack size 24 bytes, mbrtu.o(i.eMBRTUSend))
+<BR><BR>[Stack]<UL><LI>Max Depth = 64<LI>Call Chain = eMBRTUSend &rArr; vMBPortSerialEnable &rArr; HAL_UART_AbortTransmit_IT
 </UL>
 <BR>[Calls]<UL><LI><a href="#[222]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;usMBCRC16
 <LI><a href="#[231]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBPortSerialEnable
@@ -3566,7 +3566,7 @@ Global Symbols
 <LI><a href="#[6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBFuncReadHoldingRegister
 </UL>
 
-<P><STRONG><a name="[20a]"></a>eMBRegInputCB</STRONG> (Thumb, 64 bytes, Stack size 16 bytes, user_mb_app.o(i.eMBRegInputCB))
+<P><STRONG><a name="[20a]"></a>eMBRegInputCB</STRONG> (Thumb, 66 bytes, Stack size 16 bytes, user_mb_app.o(i.eMBRegInputCB))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = eMBRegInputCB
 </UL>
 <BR>[Called By]<UL><LI><a href="#[5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBFuncReadInputRegister
@@ -3585,7 +3585,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[134]"></a>f_gets</STRONG> (Thumb, 72 bytes, Stack size 32 bytes, ff.o(i.f_gets))
-<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = f_gets &rArr; f_read &rArr; get_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
+<BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = f_gets &rArr; f_read &rArr; get_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_read
 </UL>
@@ -3605,8 +3605,8 @@ Global Symbols
 <LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WriteServiceLog
 </UL>
 
-<P><STRONG><a name="[133]"></a>f_open</STRONG> (Thumb, 524 bytes, Stack size 96 bytes, ff.o(i.f_open))
-<BR><BR>[Stack]<UL><LI>Max Depth = 280<LI>Call Chain = f_open &rArr; follow_path &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
+<P><STRONG><a name="[133]"></a>f_open</STRONG> (Thumb, 534 bytes, Stack size 120 bytes, ff.o(i.f_open))
+<BR><BR>[Stack]<UL><LI>Max Depth = 304<LI>Call Chain = f_open &rArr; follow_path &rArr; dir_find &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[23d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;st_dword
 <LI><a href="#[23f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;st_clust
@@ -3630,8 +3630,8 @@ Global Symbols
 <LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WriteServiceLog
 </UL>
 
-<P><STRONG><a name="[1ca]"></a>f_read</STRONG> (Thumb, 360 bytes, Stack size 48 bytes, ff.o(i.f_read))
-<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = f_read &rArr; get_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
+<P><STRONG><a name="[1ca]"></a>f_read</STRONG> (Thumb, 374 bytes, Stack size 72 bytes, ff.o(i.f_read))
+<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = f_read &rArr; get_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[235]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate
 <LI><a href="#[207]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mem_cpy
@@ -3660,8 +3660,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_close
 </UL>
 
-<P><STRONG><a name="[1ec]"></a>f_write</STRONG> (Thumb, 418 bytes, Stack size 48 bytes, ff.o(i.f_write))
-<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = f_write &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
+<P><STRONG><a name="[1ec]"></a>f_write</STRONG> (Thumb, 434 bytes, Stack size 72 bytes, ff.o(i.f_write))
+<BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = f_write &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[235]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;validate
 <LI><a href="#[207]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mem_cpy
@@ -3711,7 +3711,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[118]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GetDisplayCmd
 </UL>
 
-<P><STRONG><a name="[24b]"></a>getDeviceModelNameFromShorts</STRONG> (Thumb, 58 bytes, Stack size 16 bytes, bsp.o(i.getDeviceModelNameFromShorts))
+<P><STRONG><a name="[24b]"></a>getDeviceModelNameFromShorts</STRONG> (Thumb, 60 bytes, Stack size 16 bytes, bsp.o(i.getDeviceModelNameFromShorts))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = getDeviceModelNameFromShorts &rArr; memcmp
 </UL>
 <BR>[Calls]<UL><LI><a href="#[24c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;memcmp
@@ -3841,9 +3841,9 @@ Global Symbols
 <LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;InputHandlerFunction
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 <LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;DisplayTaskFunction
+<LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_SetFromHexString
 <LI><a href="#[18f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getIntFromChar
 <LI><a href="#[1df]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WriteServiceLog
-<LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_SetFromHexString
 </UL>
 
 <P><STRONG><a name="[254]"></a>osKernelStart</STRONG> (Thumb, 10 bytes, Stack size 8 bytes, cmsis_os.o(i.osKernelStart))
@@ -3864,7 +3864,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1ad]"></a>osMutexCreate</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, cmsis_os.o(i.osMutexCreate))
-<BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = osMutexCreate &rArr; xQueueCreateMutexStatic &rArr; prvInitialiseMutex &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = osMutexCreate &rArr; xQueueCreateMutexStatic &rArr; prvInitialiseMutex &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[258]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueCreateMutexStatic
 <LI><a href="#[259]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueCreateMutex
@@ -3873,7 +3873,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[19b]"></a>osMutexRelease</STRONG> (Thumb, 74 bytes, Stack size 16 bytes, cmsis_os.o(i.osMutexRelease))
-<BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = osMutexRelease &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = osMutexRelease &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
 <LI><a href="#[25a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;inHandlerMode
@@ -3943,19 +3943,19 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[196]"></a>readCurrentSensorState</STRONG> (Thumb, 656 bytes, Stack size 40 bytes, bsp.o(i.readCurrentSensorState))
+<P><STRONG><a name="[196]"></a>readCurrentSensorState</STRONG> (Thumb, 642 bytes, Stack size 40 bytes, bsp.o(i.readCurrentSensorState))
 <BR><BR>[Stack]<UL><LI>Max Depth = 184 + Unknown Stack Size
 <LI>Call Chain = readCurrentSensorState &rArr; __2snprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2snprintf
-<LI><a href="#[27d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getUnitStringByCode
+<BR>[Calls]<UL><LI><a href="#[27d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getUnitStringByCode
 <LI><a href="#[24b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;getDeviceModelNameFromShorts
+<LI><a href="#[cf]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2snprintf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[19e]"></a>readCurrentSensorValue</STRONG> (Thumb, 996 bytes, Stack size 48 bytes, bsp.o(i.readCurrentSensorValue))
-<BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = readCurrentSensorValue &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[19e]"></a>readCurrentSensorValue</STRONG> (Thumb, 986 bytes, Stack size 48 bytes, bsp.o(i.readCurrentSensorValue))
+<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = readCurrentSensorValue &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
 <LI><a href="#[27e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;findSensorID
@@ -4044,7 +4044,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[222]"></a>usMBCRC16</STRONG> (Thumb, 38 bytes, Stack size 16 bytes, mbcrc.o(i.usMBCRC16))
+<P><STRONG><a name="[222]"></a>usMBCRC16</STRONG> (Thumb, 40 bytes, Stack size 16 bytes, mbcrc.o(i.usMBCRC16))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = usMBCRC16
 </UL>
 <BR>[Called By]<UL><LI><a href="#[79]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;eMBRTUSend
@@ -4326,7 +4326,7 @@ Global Symbols
 <LI><a href="#[25d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueSemaphoreTake
 </UL>
 
-<P><STRONG><a name="[288]"></a>vTaskPriorityDisinheritAfterTimeout</STRONG> (Thumb, 154 bytes, Stack size 16 bytes, tasks.o(i.vTaskPriorityDisinheritAfterTimeout))
+<P><STRONG><a name="[288]"></a>vTaskPriorityDisinheritAfterTimeout</STRONG> (Thumb, 152 bytes, Stack size 16 bytes, tasks.o(i.vTaskPriorityDisinheritAfterTimeout))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = vTaskPriorityDisinheritAfterTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[263]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
@@ -4507,7 +4507,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> mb.o(i.eMBInit)
 </UL>
-<P><STRONG><a name="[28a]"></a>xPortStartScheduler</STRONG> (Thumb, 224 bytes, Stack size 16 bytes, port.o(i.xPortStartScheduler))
+<P><STRONG><a name="[28a]"></a>xPortStartScheduler</STRONG> (Thumb, 222 bytes, Stack size 16 bytes, port.o(i.xPortStartScheduler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = xPortStartScheduler
 </UL>
 <BR>[Calls]<UL><LI><a href="#[291]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortSetupTimerInterrupt
@@ -4518,7 +4518,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[259]"></a>xQueueCreateMutex</STRONG> (Thumb, 22 bytes, Stack size 8 bytes, queue.o(i.xQueueCreateMutex))
-<BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = xQueueCreateMutex &rArr; prvInitialiseMutex &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = xQueueCreateMutex &rArr; prvInitialiseMutex &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1af]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericCreate
 <LI><a href="#[26e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseMutex
@@ -4527,7 +4527,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[258]"></a>xQueueCreateMutexStatic</STRONG> (Thumb, 26 bytes, Stack size 16 bytes, queue.o(i.xQueueCreateMutexStatic))
-<BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = xQueueCreateMutexStatic &rArr; prvInitialiseMutex &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = xQueueCreateMutexStatic &rArr; prvInitialiseMutex &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[257]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericCreateStatic
 <LI><a href="#[26e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseMutex
@@ -4566,8 +4566,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[26f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewQueue
 </UL>
 
-<P><STRONG><a name="[12a]"></a>xQueueGenericSend</STRONG> (Thumb, 350 bytes, Stack size 64 bytes, queue.o(i.xQueueGenericSend))
-<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[12a]"></a>xQueueGenericSend</STRONG> (Thumb, 346 bytes, Stack size 56 bytes, queue.o(i.xQueueGenericSend))
+<BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[276]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskRemoveFromEventList
 <LI><a href="#[296]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCheckForTimeOut
@@ -4672,7 +4672,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osThreadCreate
 </UL>
 
-<P><STRONG><a name="[25f]"></a>xTaskCreateStatic</STRONG> (Thumb, 90 bytes, Stack size 40 bytes, tasks.o(i.xTaskCreateStatic))
+<P><STRONG><a name="[25f]"></a>xTaskCreateStatic</STRONG> (Thumb, 86 bytes, Stack size 40 bytes, tasks.o(i.xTaskCreateStatic))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = xTaskCreateStatic &rArr; prvInitialiseNewTask &rArr; pxPortInitialiseStack
 </UL>
 <BR>[Calls]<UL><LI><a href="#[271]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInitialiseNewTask
@@ -4730,7 +4730,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[26a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCopyDataToQueue
 </UL>
 
-<P><STRONG><a name="[298]"></a>xTaskPriorityInherit</STRONG> (Thumb, 132 bytes, Stack size 16 bytes, tasks.o(i.xTaskPriorityInherit))
+<P><STRONG><a name="[298]"></a>xTaskPriorityInherit</STRONG> (Thumb, 130 bytes, Stack size 16 bytes, tasks.o(i.xTaskPriorityInherit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = xTaskPriorityInherit
 </UL>
 <BR>[Calls]<UL><LI><a href="#[263]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
@@ -4814,8 +4814,8 @@ Global Symbols
 <P><STRONG><a name="[1ef]"></a>__aeabi_cdcmpeq</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, deqf.o(x$fpl$deqf))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_cdcmpeq
 </UL>
-<BR>[Called By]<UL><LI><a href="#[1ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp___mathlib_tofloat
-<LI><a href="#[1f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_ldexp
+<BR>[Called By]<UL><LI><a href="#[1f2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_ldexp
+<LI><a href="#[1ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp___mathlib_tofloat
 </UL>
 
 <P><STRONG><a name="[29f]"></a>_dcmpeq</STRONG> (Thumb, 120 bytes, Stack size 32 bytes, deqf.o(x$fpl$deqf), UNUSED)
@@ -4843,8 +4843,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[2a2]"></a>_dmul</STRONG> (Thumb, 332 bytes, Stack size 32 bytes, dmul.o(x$fpl$dmul), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[2a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dretinf
-<LI><a href="#[29c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dnaninf
+<BR><BR>[Calls]<UL><LI><a href="#[29c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dnaninf
+<LI><a href="#[2a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dretinf
 </UL>
 
 <P><STRONG><a name="[29c]"></a>__fpl_dnaninf</STRONG> (Thumb, 156 bytes, Stack size 16 bytes, dnaninf.o(x$fpl$dnaninf), UNUSED)
@@ -4855,8 +4855,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[2a3]"></a>__fpl_dretinf</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, dretinf.o(x$fpl$dretinf), UNUSED)
-<BR><BR>[Called By]<UL><LI><a href="#[2a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_f2d
-<LI><a href="#[2a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dmul
+<BR><BR>[Called By]<UL><LI><a href="#[2a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dmul
+<LI><a href="#[2a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_f2d
 </UL>
 
 <P><STRONG><a name="[1f1]"></a>__aeabi_cdrcmple</STRONG> (Thumb, 0 bytes, Stack size 16 bytes, drleqf.o(x$fpl$drleqf))
@@ -5006,7 +5006,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[163]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_SD_InitCard
 </UL>
 
-<P><STRONG><a name="[166]"></a>SD_PowerON</STRONG> (Thumb, 168 bytes, Stack size 40 bytes, stm32f4xx_hal_sd.o(i.SD_PowerON))
+<P><STRONG><a name="[166]"></a>SD_PowerON</STRONG> (Thumb, 174 bytes, Stack size 40 bytes, stm32f4xx_hal_sd.o(i.SD_PowerON))
 <BR><BR>[Stack]<UL><LI>Max Depth = 76<LI>Call Chain = SD_PowerON &rArr; SDMMC_CmdAppCommand &rArr; SDMMC_GetCmdResp1
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SDMMC_CmdOperCond
@@ -5081,14 +5081,14 @@ Local Symbols
 <P><STRONG><a name="[26a]"></a>prvCopyDataToQueue</STRONG> (Thumb, 108 bytes, Stack size 24 bytes, queue.o(i.prvCopyDataToQueue))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = prvCopyDataToQueue &rArr; xTaskPriorityDisinherit
 </UL>
-<BR>[Calls]<UL><LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
-<LI><a href="#[26b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskPriorityDisinherit
+<BR>[Calls]<UL><LI><a href="#[26b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskPriorityDisinherit
+<LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 </UL>
 <BR>[Called By]<UL><LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
 </UL>
 
 <P><STRONG><a name="[26e]"></a>prvInitialiseMutex</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, queue.o(i.prvInitialiseMutex))
-<BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = prvInitialiseMutex &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = prvInitialiseMutex &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
 </UL>
@@ -5105,7 +5105,7 @@ Local Symbols
 <LI><a href="#[257]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericCreateStatic
 </UL>
 
-<P><STRONG><a name="[274]"></a>prvIsQueueEmpty</STRONG> (Thumb, 26 bytes, Stack size 8 bytes, queue.o(i.prvIsQueueEmpty))
+<P><STRONG><a name="[274]"></a>prvIsQueueEmpty</STRONG> (Thumb, 28 bytes, Stack size 8 bytes, queue.o(i.prvIsQueueEmpty))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = prvIsQueueEmpty
 </UL>
 <BR>[Calls]<UL><LI><a href="#[268]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortExitCritical
@@ -5160,7 +5160,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvIdleTask
 </UL>
 
-<P><STRONG><a name="[86]"></a>prvIdleTask</STRONG> (Thumb, 80 bytes, Stack size 0 bytes, tasks.o(i.prvIdleTask))
+<P><STRONG><a name="[86]"></a>prvIdleTask</STRONG> (Thumb, 82 bytes, Stack size 0 bytes, tasks.o(i.prvIdleTask))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = prvIdleTask &rArr; prvDeleteTCB &rArr; vPortFree &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[26c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvDeleteTCB
@@ -5285,7 +5285,7 @@ Local Symbols
 <BR>[Called By]<UL><LI><a href="#[23a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;follow_path
 </UL>
 
-<P><STRONG><a name="[203]"></a>dir_next</STRONG> (Thumb, 252 bytes, Stack size 32 bytes, ff.o(i.dir_next))
+<P><STRONG><a name="[203]"></a>dir_next</STRONG> (Thumb, 258 bytes, Stack size 32 bytes, ff.o(i.dir_next))
 <BR><BR>[Stack]<UL><LI>Max Depth = 136<LI>Call Chain = dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[204]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sync_window
@@ -5298,8 +5298,8 @@ Local Symbols
 <LI><a href="#[201]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dir_find
 </UL>
 
-<P><STRONG><a name="[206]"></a>dir_register</STRONG> (Thumb, 118 bytes, Stack size 24 bytes, ff.o(i.dir_register))
-<BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = dir_register &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
+<P><STRONG><a name="[206]"></a>dir_register</STRONG> (Thumb, 102 bytes, Stack size 16 bytes, ff.o(i.dir_register))
+<BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = dir_register &rArr; dir_next &rArr; create_chain &rArr; put_fat &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;move_window
 <LI><a href="#[200]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;mem_set
@@ -5321,7 +5321,7 @@ Local Symbols
 <LI><a href="#[201]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dir_find
 </UL>
 
-<P><STRONG><a name="[239]"></a>find_volume</STRONG> (Thumb, 632 bytes, Stack size 40 bytes, ff.o(i.find_volume))
+<P><STRONG><a name="[239]"></a>find_volume</STRONG> (Thumb, 636 bytes, Stack size 40 bytes, ff.o(i.find_volume))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = find_volume &rArr; check_fs &rArr; move_window &rArr; sync_window &rArr; disk_write
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;move_window
@@ -5371,7 +5371,7 @@ Local Symbols
 <LI><a href="#[239]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;find_volume
 </UL>
 
-<P><STRONG><a name="[241]"></a>inc_lock</STRONG> (Thumb, 122 bytes, Stack size 20 bytes, ff.o(i.inc_lock))
+<P><STRONG><a name="[241]"></a>inc_lock</STRONG> (Thumb, 124 bytes, Stack size 20 bytes, ff.o(i.inc_lock))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = inc_lock
 </UL>
 <BR>[Called By]<UL><LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_open
@@ -5407,7 +5407,7 @@ Local Symbols
 <LI><a href="#[206]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dir_register
 </UL>
 
-<P><STRONG><a name="[200]"></a>mem_set</STRONG> (Thumb, 12 bytes, Stack size 0 bytes, ff.o(i.mem_set))
+<P><STRONG><a name="[200]"></a>mem_set</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, ff.o(i.mem_set))
 <BR><BR>[Called By]<UL><LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;f_open
 <LI><a href="#[246]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;sync_fs
 <LI><a href="#[206]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;dir_register
