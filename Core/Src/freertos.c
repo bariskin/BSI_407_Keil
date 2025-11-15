@@ -481,37 +481,38 @@ void HoldingHandlerFunction(void const * argument)
 
            else if (SelectRunFlag == 21)
 					   { 
-							 static uint8_t waitingTimeCounter = 0;
+							  static uint8_t waitingTimeCounter = 0;
 							 
-							 if(waitingTimeCounter == 0)
-							  {
- 					       eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PROCESS_STATUS, 1, 200 );
-								 eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PROCESS_STATUS, 1, 200 );
-							  }
-							 	osMutexRelease(myMutex01Handle);
+							  osMutexRelease(myMutex01Handle);
                 osDelay(100);
                 osMutexWait(myMutex01Handle, 10);
+							 
 							  waitingTimeCounter++;
 							 
-							  if(waitingTimeCounter > 120)
+							  if(waitingTimeCounter > 50)
 								{
 									 waitingTimeCounter = 0;
-								   SelectRunFlag = 22;
-								}									
-			 
+								}
+							  if(waitingTimeCounter == 0)
+							  {
+							   SelectRunFlag = 22;
+								}
 					   }
-					else if (SelectRunFlag == 22)
-					   {  
-							 osMutexRelease(myMutex01Handle);
-               osDelay(100);
-               osMutexWait(myMutex01Handle, 10);
+				  	else if (SelectRunFlag == 22)
+					   { 
+ 					      eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PROCESS_STATUS, 1, 300 );
 							 
-							checkParamsValue = false; 
-							readCurrentCalibrationState (ModBusSlaveCurrentDeviceAddr,usMRegHoldBuf);
-							checkParamsValue = getCalibrationProcessState (ModBusSlaveCurrentDeviceAddr);	
-							checkParamsValue = !checkParamsValue; 
-							setErrorStatusFlag = true;
-					    SelectRunFlag = 6;
+							  SelectRunFlag = 23;
+					   } 
+						 	 	 
+					 else if (SelectRunFlag == 23)
+					   {  
+							   checkParamsValue = false; 
+							   readCurrentCalibrationState (ModBusSlaveCurrentDeviceAddr,usMRegHoldBuf);
+							   checkParamsValue = getCalibrationProcessState (ModBusSlaveCurrentDeviceAddr);	
+							   checkParamsValue = !checkParamsValue; 
+							   setErrorStatusFlag = true;
+					       SelectRunFlag = 6;
 					   }	 
 						 
 			      /* постоянный цикл опроса активных приборов */

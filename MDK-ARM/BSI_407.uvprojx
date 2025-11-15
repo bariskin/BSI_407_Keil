@@ -2242,16 +2242,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>SdDriver</GroupName>
-          <Files>
-            <File>
-              <FileName>File_Handling.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\SdDriver\Src\File_Handling.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>SensorLogs</GroupName>
           <Files>
             <File>

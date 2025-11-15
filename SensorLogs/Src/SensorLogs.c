@@ -11,11 +11,11 @@
 #include "stdbool.h"
 uint16_t in_file_counter = 0;
 /* ------------------------External variables -------------------------*/
-extern FATFS fs;  // file system
-extern FIL fil; // File
-extern FILINFO fno;
-extern FRESULT fresult;  // result
-extern UINT br, bw;  // File read/write count
+ FATFS fs;  // file system
+ FIL fil; // File
+ FILINFO fno;
+ FRESULT fresult;  // result
+ UINT br, bw;  // File read/write count
 /* ------------------------Global variables----------------------------*/
 DateTime_t current_time;
 
