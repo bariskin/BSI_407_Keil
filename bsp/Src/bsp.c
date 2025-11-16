@@ -73,7 +73,10 @@ volatile 	TimeStepReadingSensores_t TimeStep =
       {
 			    .SetFlag  =  0x00000000, 
 			    .Timestep =  0x00000000		
-			};		
+			};	
+// переменные дл€ отправки количества сработок порогов 		
+volatile uint8_t  gl_por1 = 0;
+volatile uint8_t  gl_por2 = 0;
 /* ------------------------Locale variables----------------------------*/
  union ShortsToFloat converter;
 			
@@ -1309,12 +1312,16 @@ HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size)
     
     // 6. ”становка времени и даты в RTC
     HAL_StatusTypeDef status;
-     osDelay(1);
-    status = HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
-    if (status != HAL_OK) return status;
-     osDelay(1);
-    status = HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
-    if (status != HAL_OK) return status;
+     
+    if(HAL_OK != HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN))
+		{
+	   return	HAL_ERROR;
+		}	
+   
+    if(HAL_OK !=  HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN))
+    {
+		   return	HAL_ERROR;
+		}
     
     return HAL_OK;
 }
@@ -1389,13 +1396,36 @@ void UpdateDisplayTime(void)
     if (HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
         return ;
     }	
-		 uint8_t hour = sTime.Hours;
+	   uint8_t hour24 = RTC_GetHour24(&sTime);   // < всегда корректный час 0Ц23
  	   uint8_t minute = sTime.Minutes;
 		
 		 uint8_t day = sDate.Date;
      uint8_t month = sDate.Month;
      uint16_t year = sDate.Year + 2000; 		
     // ƒл€ даты: 25.12.2023 14:30
-   SendTimeToNextion(day, month, year, hour, minute);
+   SendTimeToNextion(day, month, year, hour24, minute);
 }
+
+uint8_t RTC_GetHour24(const RTC_TimeTypeDef *t)
+{
+    uint8_t hour = t->Hours;
+
+    // ≈сли RTC работает в 24h режиме
+    if (hrtc.Init.HourFormat == RTC_HOURFORMAT_24) {
+        return hour;   // ”же нормальные 0Ц23
+    }
+
+    // »наче Ч корректируем 12h режим
+    if (t->TimeFormat == RTC_HOURFORMAT12_PM) {
+        if (hour != 12)
+            hour += 12;      // 1 PM > 13, 11 PM > 23
+    }
+    else { // AM
+        if (hour == 12)
+            hour = 0;        // 12 AM > 00
+    }
+
+    return hour;
+}
+
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/

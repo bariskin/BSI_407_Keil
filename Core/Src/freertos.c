@@ -981,11 +981,11 @@ void SendToDispTaskFunction(void const * argument)
 		int last_line = 0; 
 	  char log_string[64];
 	  uint8_t line_count = 0;
-	SensorLogEvent_t LogMsg = {
-	 .logType = SENSOR_LOG_TYPE_ERROR,
-   .sensorID = 0,
-   .deviceAddr = 0,
-   .Value = 0
+  	SensorLogEvent_t LogMsg = {
+	   .logType = SENSOR_LOG_TYPE_ERROR,
+     .sensorID = 0,
+     .deviceAddr = 0,
+     .Value = 0
  };
 
 	osDelay(10000);  // 500 ms
@@ -1015,9 +1015,11 @@ void SendToDispTaskFunction(void const * argument)
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,CALIBRATION_1);
 								break;
 							case ERROR_485:
+							  	HAL_GPIO_WritePin(RY_GPIO_Port, RY3_Pin, GPIO_PIN_SET);
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,ERROR_485);
 								break;
 							case THRESHOLD_WARNING:
+								
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,THRESHOLD_WARNING);
 									break;
 	            case THRESHOLD_ALARM:
@@ -1027,12 +1029,21 @@ void SendToDispTaskFunction(void const * argument)
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, THRESHOLD_ADDITIONAL);
 									break;	
 							case OVER_THRESHOLD_WARNING:
+								  HAL_GPIO_WritePin(RY_GPIO_Port, RY1_Pin, GPIO_PIN_SET);
+								  gl_por1++;
+							    SendNextionCommand ("gl_por1=%u", gl_por1);
+							    osDelay(5);
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_WARNING);	
 									break;
 	            case OVER_THRESHOLD_ALARM:
-							   ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_ALARM);
+								  HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_SET);
+								  gl_por2++;
+							    SendNextionCommand ("gl_por2=%u", gl_por2);
+							    osDelay(5);
+							    ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_ALARM);
 									break;
 	            case OVER_THRESHOLD_ADDITIONAL:
+								
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_ADDITIONAL);
 									break;
 							 case NORMAL_LEVEL:

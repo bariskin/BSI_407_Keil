@@ -9,6 +9,7 @@
 #include "SensorLogs.h"
 #include "cmsis_os.h"
 #include "stdbool.h"
+#include "bsp.h"
 uint16_t in_file_counter = 0;
 /* ------------------------External variables -------------------------*/
  FATFS fs;  // file system
@@ -314,25 +315,25 @@ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log
     HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
     HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
 	
-    /* ИСПРАВЛЕНИЕ ВРЕМЕНИ 24:00 -> 00:00 */
-    uint8_t corrected_hours = sTime.Hours;
-    if (corrected_hours >= 24) {
-        corrected_hours = 0;
-        sTime.Hours = 0;
-			  sTime.TimeFormat = RTC_HOURFORMAT_24;
-        // Принудительно обновляем время в RTC
-        HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
-			  osDelay(2);
-    }
-		 /* АВТОМАТИЧЕСКАЯ СМЕНА ДАТЫ В 00:00 */
-    if (corrected_hours == 0 && last_hour == 23) {
-        date.Date++;
-        if (date.Date > 31)date.Date = 1;
-			
-			  HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
-			  osDelay(2);
-    }
-    last_hour = corrected_hours;
+//    /* ИСПРАВЛЕНИЕ ВРЕМЕНИ 24:00 -> 00:00 */
+//    uint8_t corrected_hours = sTime.Hours;
+//    if (corrected_hours >= 24) {
+//        corrected_hours = 0;
+//        sTime.Hours = 0;
+//			  sTime.TimeFormat = RTC_HOURFORMAT_24;
+//        // Принудительно обновляем время в RTC
+//        HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+//			  osDelay(2);
+//    }
+//		 /* АВТОМАТИЧЕСКАЯ СМЕНА ДАТЫ В 00:00 */
+//    if (corrected_hours == 0 && last_hour == 23) {
+//        date.Date++;
+//        if (date.Date > 31)date.Date = 1;
+//			
+//			  HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
+//			  osDelay(2);
+//    }
+//    last_hour = corrected_hours;
 		
     // Формируем путь с текущей датой
     snprintf(file_path, sizeof(file_path), "%02d_%02d_%02d.txt", 
@@ -346,6 +347,7 @@ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log
         res = f_open(&file, file_path, FA_CREATE_NEW | FA_WRITE);
     }
     
+		uint8_t hour24 = RTC_GetHour24(&sTime);
     
     // Формируем строку лога
     const char* message = get_message(log_type);
@@ -353,17 +355,17 @@ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log
     if(log_type == SERVICE) {
         sprintf(log_line, "%02d.%02d.%02d %02d:%02d Приборов: %d\r\n",
 			            date.Year,date.Month,date.Date,
-                  sTime.Hours, sTime.Minutes, data->value);  // ? Используем time от RTC ?
+                  hour24, sTime.Minutes, data->value);  // ? Используем time от RTC ?
     }
     else if (log_type == ERROR_485) {
         sprintf(log_line, "%02d.%02d.%02d %02d:%02d %s Канал %d \r\n",
 			         date.Year,date.Month,date.Date,
-               sTime.Hours, sTime.Minutes, message, sensor_id); 
+               hour24, sTime.Minutes, message, sensor_id); 
     }
     else {
         sprintf(log_line, "%02d.%02d.%02d %02d:%02d %s Канал %d: %d\r\n",
 			          date.Year,date.Month,date.Date,
-                sTime.Hours, sTime.Minutes, message, sensor_id, data->value); 
+                hour24, sTime.Minutes, message, sensor_id, data->value); 
     }
     
     // Пишем в файл

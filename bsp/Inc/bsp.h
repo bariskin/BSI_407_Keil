@@ -47,7 +47,8 @@ extern "C" {
 	#define CALIBRATION_STATUS_CALIBRATION_ID_NOT_ACTIVE   0x06
 	#define CALIBRATION_STATUS_CORRELATION_TYPE_NOT_MATCH  0x09
 	
-	
+extern 	volatile uint8_t  gl_por1;
+extern volatile uint8_t   gl_por2;
 	
 	union ShortsToFloat {
     struct {
@@ -204,6 +205,7 @@ typedef enum
 		void SendTimeToNextion(uint8_t day, uint8_t month, uint16_t year, uint8_t hour, uint8_t minute);
 		void UpdateDisplayTime(void);
 		uint8_t findSensorID(uint8_t addrArr[], int size, uint8_t addrValue, uint8_t sensorNumber); 
+		uint8_t RTC_GetHour24(const RTC_TimeTypeDef *t);
  /**
   * @}
   */

@@ -97,6 +97,12 @@ void Error_Handler(void);
 #define RDen2_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
+#define RY1_Pin  GPIO_PIN_2
+#define RY2_Pin  GPIO_PIN_3
+#define RY3_Pin  GPIO_PIN_4
+#define RY_GPIO_Port GPIOG
+
+
 typedef struct {
   uint8_t message[20];
 }QUEUE_msg; 
