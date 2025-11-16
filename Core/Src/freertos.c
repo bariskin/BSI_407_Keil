@@ -1030,14 +1030,14 @@ void SendToDispTaskFunction(void const * argument)
 									break;	
 							case OVER_THRESHOLD_WARNING:
 								  HAL_GPIO_WritePin(RY_GPIO_Port, RY1_Pin, GPIO_PIN_SET);
-								  gl_por1++;
+								  ++gl_por1;
 							    SendNextionCommand ("gl_por1=%u", gl_por1);
 							    osDelay(5);
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_WARNING);	
 									break;
 	            case OVER_THRESHOLD_ALARM:
 								  HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_SET);
-								  gl_por2++;
+								  ++gl_por2;
 							    SendNextionCommand ("gl_por2=%u", gl_por2);
 							    osDelay(5);
 							    ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_ALARM);
