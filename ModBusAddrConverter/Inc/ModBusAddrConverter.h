@@ -91,11 +91,11 @@ extern "C" {
 #define SENSOR_THRESHOLD_ADDITIONAL_HIGH_2       (uint16_t)(42014 - HOLDING_OFFSET)  //Sensor Threshold ADDITIONAL LOW 2
 #define SENSOR_THRESHOLD_ADDITIONAL_LOW_2        (uint16_t)(42015 - HOLDING_OFFSET)  //Sensor Threshold ADDITIONAL LOW 2
 
-#define CALIBRATION_SECONDARY_ZERO_VALUE_HIGH    (uint16_t)(42018 - HOLDING_OFFSET)  //Calibration Primary Zero Signal High
-#define CALIBRATION_SECONDARY_ZERO_VALUE_LOW     (uint16_t)(42019 - HOLDING_OFFSET)  //Calibration Primary Zero Signal Low
-#define CALIBRATION_SECONDARY_ZERO               (uint16_t)(42020 - HOLDING_OFFSET)  //Calibration Primary Zero 
-#define CALIBRATION_SECONDARY_ZERO_STATUS        (uint16_t)(42021 - HOLDING_OFFSET)  //Calibration Primary Zero Status !!!!TODO!!!!
+#define CALIBRATION_SECONDARY_ZERO_VALUE_HIGH    (uint16_t)(42018 - HOLDING_OFFSET)  //Calibration Secondary Zero Signal High
+#define CALIBRATION_SECONDARY_ZERO_VALUE_LOW     (uint16_t)(42019 - HOLDING_OFFSET)  //Calibration Secondary  Zero Signal Low
 
+#define CALIBRATION_SECONDARY_SPAN_VALUE_HIGH    (uint16_t)(42023 - HOLDING_OFFSET)  //Calibration Secondary  Span Value High
+#define CALIBRATION_SECONDARY_SPAN_VALUE_LOW     (uint16_t)(42024 - HOLDING_OFFSET)  //Calibration Secondary  Span Value Low
 
 #define SENSOR_SUBSTANCE_CODE_1_2                (uint16_t)(42030 - HOLDING_OFFSET)  //SENSOR_SUBSTANCE_CODE 2
 #define SENSOR_SUBSTANCE_CODE_2_2                (uint16_t)(42031 - HOLDING_OFFSET)  //SENSOR_SUBSTANCE_CODE 2

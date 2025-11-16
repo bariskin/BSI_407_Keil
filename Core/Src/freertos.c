@@ -166,6 +166,7 @@ uint16_t warningArray[]   = {SENSOR_THRESHOLD_WARNIGN_HIGN, SENSOR_THRESHOLD_WAR
 uint16_t alarmArray[]     = {SENSOR_THRESHOLD_ALARM_HIGH, SENSOR_THRESHOLD_ALARM_HIGH_2};
 uint16_t additionalArray[]  = {SENSOR_THRESHOLD_ADDITIONAL_HIGH,SENSOR_THRESHOLD_ADDITIONAL_HIGH_2};
 uint16_t calibrationArray[] = {CALIBRATION_PRIMARY_ZERO_VALUE_HIGH,CALIBRATION_SECONDARY_ZERO_VALUE_HIGH};
+uint16_t calibrationArray2[] = {CALIBRATION_PRIMARY_SPAN_VALUE_HIGH,CALIBRATION_SECONDARY_SPAN_VALUE_HIGH};
 /* USER CODE END FunctionPrototypes */
 
 void SlaveModbusTaskFunction(void const * argument);
@@ -488,7 +489,7 @@ void HoldingHandlerFunction(void const * argument)
 							 
 							  waitingTimeCounter++;
 							 
-							  if(waitingTimeCounter > 50)
+							  if(waitingTimeCounter > 60) // прмиерно 8 секунда время ожидания проответа регистра состояния
 								{
 									 waitingTimeCounter = 0;
 								}
@@ -695,7 +696,7 @@ void HoldingHandlerFunction(void const * argument)
             osMutexWait(myMutex01Handle, 10);
 							    
             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
-			                                               CALIBRATION_PRIMARY_SPAN_VALUE_HIGH, 
+			                                               calibrationArray2[displayCmd.sensorPOSITION], 
 			                                               2, 
 			                                               (USHORT *)&registersTX[0], 
 			                                               300);
