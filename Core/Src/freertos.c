@@ -326,6 +326,13 @@ void HoldingHandlerFunction(void const * argument)
 {
   /* USER CODE BEGIN HoldingHandlerFunction */
 	static uint8_t HoldingPollsDone = 0;  // —чЄтчик выполненных опросов Holding-регистров
+		 SendNextionCommand("gl_por1=0");
+	   osDelay(50);
+	   SendNextionCommand("gl_por2=0");
+	   osDelay(50);
+	   gl_por1 = 0;
+     gl_por2 = 0;
+     gl_NotConnected = 0;	
 	
 	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
   osDelay(10000);
@@ -555,6 +562,7 @@ void HoldingHandlerFunction(void const * argument)
 				      /* ********************************* set next slave addr *************************** */	
 				   else if (SelectRunFlag == CASE_SET_NEXT_ADDR)
 				        {
+										
 									 SelectRunFlag = CASE_WRITING_SETTING;
 									
 									 if(!CmdIsReady && !flagDisplayLogsBusy){ 
@@ -564,9 +572,12 @@ void HoldingHandlerFunction(void const * argument)
 										 
 					           /* выбираем только адреса активных приборов */
 				            setNextActiveDeviceAddr_(&ModBusSlaveCurrentDeviceAddr,SensorInfo.count);	       // set next active sdevice addr
-									} 
-                  		    	
-				       }									 
+										 
+									   // ќтправл€ем только если значение »«ћ≈Ќ»Ћќ—№
+										 
+										
+	   			       }	
+						 }									 
 		else if (SelectRunFlag == CASE_WRITING_SETTING)	
 		{		
       uint8_t shouldChangeFlag = 1;	 // дл€ обычного цикла, когда команды не прилетают

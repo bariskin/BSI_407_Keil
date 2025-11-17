@@ -161,7 +161,11 @@ extern  bool sd_card_present;
  }
 
  void UpdateNextionDisplayWithChannelData(uint8_t SensorInfo_count){
-	 
+	 	static uint16_t prev_gl_por1 = 0;
+    static uint16_t prev_gl_por2 = 0;
+		static uint8_t selectAlert = 0;
+		static uint8_t intoFlag1 = 0;
+		static uint8_t intoFlag2 = 0;
 	  static uint8_t nextChannel = 1;
 	  static uint8_t nextAddr = 1;
     const uint8_t page = (nextChannel - 1) / 4;  // 4 канала на страницу
@@ -243,7 +247,39 @@ extern  bool sd_card_present;
 		{
 		  nextAddr = 1;
 		}
-		 
+		
+		if(selectAlert == 0)
+			 {
+				selectAlert = 1;
+				if(gl_por1 != prev_gl_por1) {
+						SendNextionCommand("gl_por1=%u", gl_por1);
+						prev_gl_por1 = gl_por1; // Сохраняем новое значение
+						intoFlag1 = 1;
+				}
+				else if(gl_por1 == 0 && intoFlag1)
+				 {
+					 intoFlag1 = 0;
+					 prev_gl_por1 = 0;
+					 SendNextionCommand("gl_por1=0");
+				 }																
+			}
+			 
+			 else 
+			 {
+				 selectAlert = 0;
+				 
+				 if(gl_por2 != prev_gl_por2) {
+						SendNextionCommand("gl_por2=%u", gl_por2);
+						prev_gl_por2 = gl_por2; // Сохраняем новое значение
+						intoFlag2 = 1;
+				 } 
+				 else if(gl_por2 == 0 && 	intoFlag2)
+				 {
+						intoFlag2 = 0;
+						prev_gl_por2 = 0;
+					 SendNextionCommand("gl_por2=0");
+				 }
+			}    		    		 
  }
  
 void initDeviceData(uint8_t numberOfdevices)

@@ -30,7 +30,7 @@ extern "C" {
   
 	#define TIME_DEFAULT_1               160
 	#define TIME_STEP_MIN_2              160
-  #define TIME_STEP_DEFAULT_150_MS     58
+  #define TIME_STEP_DEFAULT_150_MS     50
 	
 	#define TIME_DELAY_PACKET            280
 	
@@ -48,7 +48,8 @@ extern "C" {
 	#define CALIBRATION_STATUS_CORRELATION_TYPE_NOT_MATCH  0x09
 	
  extern 	volatile uint16_t  gl_por1;
- extern volatile uint16_t   gl_por2;
+ extern volatile   uint16_t   gl_por2;
+ extern  volatile uint16_t  gl_NotConnected;		
 	
 	union ShortsToFloat {
     struct {
