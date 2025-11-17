@@ -47,8 +47,8 @@ extern "C" {
 	#define CALIBRATION_STATUS_CALIBRATION_ID_NOT_ACTIVE   0x06
 	#define CALIBRATION_STATUS_CORRELATION_TYPE_NOT_MATCH  0x09
 	
-extern 	volatile uint8_t  gl_por1;
-extern volatile uint8_t   gl_por2;
+ extern 	volatile uint16_t  gl_por1;
+ extern volatile uint16_t   gl_por2;
 	
 	union ShortsToFloat {
     struct {

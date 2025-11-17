@@ -75,8 +75,9 @@ volatile 	TimeStepReadingSensores_t TimeStep =
 			    .Timestep =  0x00000000		
 			};	
 // переменные для отправки количества сработок порогов 		
-volatile uint8_t  gl_por1 = 0;
-volatile uint8_t  gl_por2 = 0;
+volatile uint16_t  gl_por1 = 0;
+volatile uint16_t  gl_por2 = 0;
+volatile uint16_t  gl_NotConnected = 0;			
 /* ------------------------Locale variables----------------------------*/
  union ShortsToFloat converter;
 			
@@ -384,7 +385,19 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 				 if (sensor->DeviceStatus > 0) {
 						// Device responded successfully
 						sensor->ErrorState = false;
-						sensor->WasConnected = true; // подключен
+					 
+					 if (sensor->WasConnected == false &&  gl_NotConnected > 0)
+					 {
+					  --gl_NotConnected; 
+					 }
+					 if(gl_NotConnected == 0)
+					 {
+					   HAL_GPIO_WritePin(RY_GPIO_Port, RY3_Pin, GPIO_PIN_RESET);
+					 }
+					 
+					 sensor->WasConnected = true; // подключен
+					 
+					 
 					} 
 					else {   
 						 sensor->ErrorState = true;
@@ -413,7 +426,17 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 				if (sensor->DeviceStatus_2 > 0) {
 					// Device responded successfully
 					sensor->ErrorState_2 = false;
-					sensor->WasConnected_2 = true; // подключен
+					
+					 if (sensor->WasConnected == false &&  gl_NotConnected > 0)
+					 {
+					  --gl_NotConnected; 
+					 }
+					 if(gl_NotConnected == 0)
+					 {
+					   HAL_GPIO_WritePin(RY_GPIO_Port, RY3_Pin, GPIO_PIN_RESET);
+					 }
+							
+					sensor->WasConnected_2 = true; // подключен		
 				} 
 				else {   
 					 sensor->ErrorState_2 = true;
@@ -428,6 +451,10 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 // first sensor
 			if(sensor->ErrorState && sensor->WasConnected) // был ранее подключен, а сейчас пропал
 			{
+				
+				HAL_GPIO_WritePin(RY_GPIO_Port, RY3_Pin, GPIO_PIN_SET);
+				++gl_NotConnected;
+				
 			  sensorLog.sensorID = sensorID ;	
         sensorLog.logType = ERROR_485;
 				
@@ -445,6 +472,9 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 			 // second sensor
 		  if(sensor->ErrorState_2 && sensor->WasConnected_2) // был ранее подключен, а сейчас пропал
 			{
+				HAL_GPIO_WritePin(RY_GPIO_Port, RY3_Pin, GPIO_PIN_SET);
+				++gl_NotConnected;
+				
 				sensorLog.sensorID = sensorID2;	
         sensorLog.logType = ERROR_485;
 				
@@ -484,6 +514,10 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 else if(sensor->Concentration >   sensor->SensorAlarm)  // средний второй  порог 
 		 {		 
 		   if (!thresholdStates[sensorID].alarm_triggered) {
+				 
+				 ++gl_por2;
+				 HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_SET); 
+				 
 			   sensorLog.sensorID = sensorID;
 		     sensorLog.Value =   sensor->Concentration; 
          sensorLog.logType = OVER_THRESHOLD_ALARM;	
@@ -504,10 +538,15 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 else if(sensor->Concentration >   sensor->SensorWarning)  //  минимальный первый  порог 
 		 {
 			  if (!thresholdStates[sensorID].warning_triggered) {	 
+					
+					++gl_por1;
+					SendNextionCommand ("gl_por1=%u", gl_por1);
+					HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_SET);
+					
 			    sensorLog.sensorID = sensorID;
 		      sensorLog.Value =   sensor->Concentration;
           sensorLog.logType = OVER_THRESHOLD_WARNING;
-			    
+					
 					if(sd_card_present)		{	
 							if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
 														}
@@ -527,7 +566,27 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
          if (thresholdStates[sensorID].warning_triggered || 
              thresholdStates[sensorID].alarm_triggered || 
              thresholdStates[sensorID].alarm2_triggered) {
-        
+							 
+							 if (gl_por1 > 0 && thresholdStates[sensorID].warning_triggered)
+							 {
+							    --gl_por1;
+							 }						 
+							 if (gl_por1 == 0)
+							 {
+							   HAL_GPIO_WritePin(RY_GPIO_Port, RY1_Pin, GPIO_PIN_RESET); 
+							 }
+							 
+							 
+							 if (gl_por2 > 0 && thresholdStates[sensorID].alarm_triggered)
+							 {
+							    --gl_por2;
+							 }						 
+							 if (gl_por2 == 0)
+							 {
+							   HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_RESET); 
+							 }
+							 
+
                sensorLog.sensorID = sensorID;
                sensorLog.Value = sensor->Concentration;
                sensorLog.logType = NORMAL_LEVEL;  // Добавьте этот тип в enum
@@ -551,6 +610,7 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 if(sensor->Concentration_2 > sensor->SensorAlarm2_2) // максимальный третий порог 
 		 {
 			 if (!thresholdStates[sensorID].alarm2_triggered2) { 
+	 
 			  sensorLog.sensorID = sensorID2;
 		    sensorLog.Value =   sensor->Concentration_2; 
         sensorLog.logType = 	OVER_THRESHOLD_ADDITIONAL;
@@ -570,6 +630,11 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 else if(sensor->Concentration_2 >  sensor->SensorAlarm_2)  // средний второй  порог 
 		 {		 
 		   if (!thresholdStates[sensorID].alarm_triggered2) {
+				 
+				 ++gl_por2;
+				 SendNextionCommand ("gl_por2=%u", gl_por2);
+				 HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_SET);
+				 
 			   sensorLog.sensorID = sensorID2;
 		     sensorLog.Value =   sensor->Concentration_2; 
          sensorLog.logType = OVER_THRESHOLD_ALARM;	
@@ -591,6 +656,9 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		 {
 			  if (!thresholdStates[sensorID].warning_triggered2) {
 			 
+					++gl_por1;
+					HAL_GPIO_WritePin(RY_GPIO_Port, RY1_Pin, GPIO_PIN_SET);
+					
 			    sensorLog.sensorID = sensorID2;
 		      sensorLog.Value =   sensor->Concentration_2;
           sensorLog.logType = OVER_THRESHOLD_WARNING;
@@ -614,6 +682,25 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
          if (thresholdStates[sensorID].warning_triggered2 || 
              thresholdStates[sensorID].alarm_triggered2|| 
              thresholdStates[sensorID].alarm2_triggered2) {
+							 	 
+							 if (gl_por1 > 0 && thresholdStates[sensorID].warning_triggered2)
+							 {
+							    --gl_por1;
+							 }						 
+							 if (gl_por1 == 0)
+							 {
+							   HAL_GPIO_WritePin(RY_GPIO_Port, RY1_Pin, GPIO_PIN_RESET); 
+							 }
+							 
+							 if (gl_por2 > 0 && thresholdStates[sensorID].alarm_triggered2)
+							 {
+							    --gl_por2;
+							 }						 
+							 if (gl_por2 == 0)
+							 {
+							   HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_RESET); 
+							 }
+							 
         
                sensorLog.sensorID = sensorID2;
                sensorLog.Value = sensor->Concentration_2;
