@@ -22,20 +22,21 @@ Dialog DLL:      TCM.DLL V1.53.0.0
  
 <h2>Project:</h2>
 D:\59_BSI_407_Keil\MDK-ARM\BSI_407.uvprojx
-Project File Date:  11/17/2025
+Project File Date:  11/18/2025
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'BSI_407'
-compiling DisplayDriver.c...
-..\DisplayDriver\Src\DisplayDriver.c(766): warning:  #1-D: last line of file ends without a newline
-  /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
-..\DisplayDriver\Src\DisplayDriver.c: 1 warning, 0 errors
-compiling freertos.c...
+compiling bsp.c...
+..\bsp\Src\bsp.c(1400): warning:  #177-D: variable "status"  was declared but never referenced
+      HAL_StatusTypeDef status;
+..\bsp\Src\bsp.c(1517): warning:  #1-D: last line of file ends without a newline
+  /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/
+..\bsp\Src\bsp.c: 2 warnings, 0 errors
 linking...
-Program Size: Code=57516 RO-data=2104 RW-data=832 ZI-data=62408  
+Program Size: Code=57500 RO-data=2104 RW-data=832 ZI-data=62408  
 FromELF: creating hex file...
-"BSI_407\BSI_407.axf" - 0 Error(s), 1 Warning(s).
+"BSI_407\BSI_407.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -59,7 +60,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

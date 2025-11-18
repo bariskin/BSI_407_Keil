@@ -540,7 +540,6 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 			  if (!thresholdStates[sensorID].warning_triggered) {	 
 					
 					++gl_por1;
-					SendNextionCommand ("gl_por1=%u", gl_por1);
 					HAL_GPIO_WritePin(RY_GPIO_Port, RY1_Pin, GPIO_PIN_SET);
 					
 			    sensorLog.sensorID = sensorID;
@@ -584,7 +583,6 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 							 }						 
 							 if (gl_por2 == 0)
 							 {
-								 //SendNextionCommand ("gl_por2=0");
 							   HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_RESET); 
 							 }
 							 
@@ -634,7 +632,6 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		   if (!thresholdStates[sensorID].alarm_triggered2) {
 				 
 				 ++gl_por2;
-				 //SendNextionCommand ("gl_por2=%u", gl_por2);
 				 HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_SET);
 				 
 			   sensorLog.sensorID = sensorID2;
@@ -691,7 +688,6 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 							 }						 
 							 if (gl_por1 == 0)
 							 {
-								 //SendNextionCommand ("gl_por1=0");
 							   HAL_GPIO_WritePin(RY_GPIO_Port, RY1_Pin, GPIO_PIN_RESET); 
 							 }
 							 
@@ -701,7 +697,6 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 							 }						 
 							 if (gl_por2 == 0)
 							 {
-								  //SendNextionCommand ("gl_por2=0");
 							    HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_RESET); 
 							 }
 							 
