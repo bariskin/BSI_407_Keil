@@ -351,7 +351,6 @@ void readCurrentSensorState(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
  */
 void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS])
 {
-	  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 	  uint32_t combined;   // Объединённые 32 бита
 	  uint8_t sensorID = 0;
 	  uint8_t sensorID2 = 0;
@@ -395,9 +394,7 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 					   HAL_GPIO_WritePin(RY_GPIO_Port, RY3_Pin, GPIO_PIN_RESET);
 					 }
 					 
-					 sensor->WasConnected = true; // подключен
-					 
-					 
+					 sensor->WasConnected = true; // подключен 
 					} 
 					else {   
 						 sensor->ErrorState = true;
@@ -463,10 +460,7 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 						               // Сбрасываем флаг только при успешной отправке
                             sensor->WasConnected = false;
 													}
-					if (xHigherPriorityTaskWoken == pdTRUE) {
-														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-								} 
-						}
+												}		
 	      sensor->WasConnected = false; // отключен
 			}	
 			 // second sensor
@@ -481,12 +475,9 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 			  if(sd_card_present)		{	
 					if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
 						               // Сбрасываем флаг только при успешной отправке
-                            sensor->WasConnected = false;
+                            sensor->WasConnected_2 = false;
 													}
-					if (xHigherPriorityTaskWoken == pdTRUE) {
-														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-								} 
-						}
+												}	
 	      sensor->WasConnected_2 = false; // отключен
 			}
 		 /* *********** проверка наличния датчика на линии конец ************ */
@@ -497,13 +488,11 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 			  sensorLog.sensorID = sensorID;
 		    sensorLog.Value =   sensor->Concentration; 
         sensorLog.logType = 	OVER_THRESHOLD_ADDITIONAL;
-			 if(sd_card_present)		{	
+		  	 if(sd_card_present)		{	
 					if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-													}
-					if (xHigherPriorityTaskWoken == pdTRUE) {
-														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-								} 
-						}
+													
+				   	}
+					 }	
 			    // Устанавливаем флаги для всех порогов (так как Alarm2 включает и нижние уровни)
         thresholdStates[sensorID].alarm2_triggered = true;
         thresholdStates[sensorID].alarm_triggered = true;
@@ -522,13 +511,10 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		     sensorLog.Value =   sensor->Concentration; 
          sensorLog.logType = OVER_THRESHOLD_ALARM;	
 			  
-				 if(sd_card_present)		{	
+				   if(sd_card_present)		{	
 						 if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
 														}
-						 if (xHigherPriorityTaskWoken == pdTRUE) {
-															portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-									}	
-						}
+													}
          thresholdStates[sensorID].alarm_triggered = true;
          thresholdStates[sensorID].warning_triggered = true;
         // Сбрасываем более высокий порог, так как мы на уровне Alarm
@@ -546,66 +532,57 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		      sensorLog.Value =   sensor->Concentration;
           sensorLog.logType = OVER_THRESHOLD_WARNING;
 					
-					if(sd_card_present)		{	
+					   if(sd_card_present)		{	
 							if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-														}
-							if (xHigherPriorityTaskWoken == pdTRUE) {
-															portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-								 }
-							 }
+													   	}
+													}	 
 			     thresholdStates[sensorID].warning_triggered = true;
            // Сбрасываем более высокие пороги
            thresholdStates[sensorID].alarm_triggered = false;
            thresholdStates[sensorID].alarm2_triggered = false;
 				 }			 
 		  }
-		 else
-        {
-				    // Если было какое-то превышение, отправляем сообщение о возврате к норме
-         if (thresholdStates[sensorID].warning_triggered || 
-             thresholdStates[sensorID].alarm_triggered || 
-             thresholdStates[sensorID].alarm2_triggered) {
-							 
-							 if (gl_por1 > 0 && thresholdStates[sensorID].warning_triggered)
-							 {
-							    --gl_por1;
-							 }						 
-							 if (gl_por1 == 0)
-							 {
-								 //SendNextionCommand ("gl_por1=0");
-							   HAL_GPIO_WritePin(RY_GPIO_Port, RY1_Pin, GPIO_PIN_RESET); 
-							 }
-							 
-							 
-							 if (gl_por2 > 0 && thresholdStates[sensorID].alarm_triggered)
-							 {
-							    --gl_por2;
-							 }						 
-							 if (gl_por2 == 0)
-							 {
-							   HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_RESET); 
-							 }
-							 
-
-               sensorLog.sensorID = sensorID;
-               sensorLog.Value = sensor->Concentration;
-               sensorLog.logType = NORMAL_LEVEL;  // Добавьте этот тип в enum
-               
-							 if(sd_card_present)		{	
-									 if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-											// Обработка ошибки
+	/* ************************************************************************* */	 
+			// Сброс RY2 когда значение ниже второго порога
+						if(sensor->Concentration <= sensor->SensorAlarm) {
+								if(thresholdStates[sensorID].alarm_triggered) {
+										if (gl_por2 > 0) {
+												--gl_por2;
+												thresholdStates[sensorID].alarm_triggered = false;
+										}                         
+										if (gl_por2 == 0) {
+												HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_RESET); 
 										}
-									 if (xHigherPriorityTaskWoken == pdTRUE) {
-																	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-										 }	
-							 }
-				        // Сбрасываем все флаги
-             thresholdStates[sensorID].warning_triggered = false;
-             thresholdStates[sensorID].alarm_triggered = false;
-             thresholdStates[sensorID].alarm2_triggered = false;
-				}
-			}
-				
+								}
+						}
+			
+      // Сброс RY1 когда значение ниже первого порога  
+					if(sensor->Concentration <= sensor->SensorWarning) {
+							if(thresholdStates[sensorID].warning_triggered) {
+									if (gl_por1 > 0) {
+											--gl_por1;
+											thresholdStates[sensorID].warning_triggered = false;
+									}                         
+									if (gl_por1 == 0) {
+											HAL_GPIO_WritePin(RY_GPIO_Port, RY1_Pin, GPIO_PIN_RESET); 
+									}
+									
+									// Логирование
+									sensorLog.sensorID = sensorID;
+									sensorLog.Value = sensor->Concentration;
+									sensorLog.logType = NORMAL_LEVEL;
+									if(sd_card_present) {
+											xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY);
+									}
+									
+									// Сброс всех флагов для этого датчика
+									thresholdStates[sensorID].warning_triggered = false;
+									thresholdStates[sensorID].alarm_triggered = false;
+									thresholdStates[sensorID].alarm2_triggered = false;
+							}
+					}				
+	/* ********************************************************************************** */	 		
+					
 			// для второго датчика
 		 if(sensor->Concentration_2 > sensor->SensorAlarm2_2) // максимальный третий порог 
 		 {
@@ -614,14 +591,12 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 			  sensorLog.sensorID = sensorID2;
 		    sensorLog.Value =   sensor->Concentration_2; 
         sensorLog.logType = 	OVER_THRESHOLD_ADDITIONAL;
-			 if(sd_card_present)		{	
+			   if(sd_card_present)		{	
 					if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-													}
-					if (xHigherPriorityTaskWoken == pdTRUE) {
-														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-								} 
-						}
-			    // Устанавливаем флаги для всех порогов (так как Alarm2 включает и нижние уровни)
+													
+					   }
+					}	
+			    //Устанавливаем флаги для всех порогов (так как Alarm2 включает и нижние уровни)
         thresholdStates[sensorID].alarm2_triggered2 = true;
         thresholdStates[sensorID].alarm_triggered2 = true;
         thresholdStates[sensorID].warning_triggered2= true;				
@@ -638,13 +613,11 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		     sensorLog.Value =   sensor->Concentration_2; 
          sensorLog.logType = OVER_THRESHOLD_ALARM;	
 			  
-				 if(sd_card_present)		{	
+				   if(sd_card_present)		{	
 						 if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-														}
-						 if (xHigherPriorityTaskWoken == pdTRUE) {
-															portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-									}	
-						}
+														
+						   }
+						}		 
          thresholdStates[sensorID].alarm_triggered2 = true;
          thresholdStates[sensorID].warning_triggered2 = true;
         // Сбрасываем более высокий порог, так как мы на уровне Alarm
@@ -662,63 +635,47 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		      sensorLog.Value =   sensor->Concentration_2;
           sensorLog.logType = OVER_THRESHOLD_WARNING;
 			    
-					if(sd_card_present)		{	
+					 if(sd_card_present) {	
 							if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-														}
-							if (xHigherPriorityTaskWoken == pdTRUE) {
-															portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-								 }
-							 }
+							
+					  }									
+					 }		 
 			     thresholdStates[sensorID].warning_triggered2 = true;
            // Сбрасываем более высокие пороги
            thresholdStates[sensorID].alarm_triggered2 = false;
            thresholdStates[sensorID].alarm2_triggered2 = false;
 				 }			 
 			 } 
-			 else
-        {
-				    // Если было какое-то превышение, отправляем сообщение о возврате к норме
-         if (thresholdStates[sensorID].warning_triggered2 || 
-             thresholdStates[sensorID].alarm_triggered2|| 
-             thresholdStates[sensorID].alarm2_triggered2) {
-							 	 
-							 if (gl_por1 > 0 && thresholdStates[sensorID].warning_triggered2)
-							 {
-							    --gl_por1;
-							 }						 
-							 if (gl_por1 == 0)
-							 {
-							   HAL_GPIO_WritePin(RY_GPIO_Port, RY1_Pin, GPIO_PIN_RESET); 
-							 }
-							 
-							 if (gl_por2 > 0 && thresholdStates[sensorID].alarm_triggered2)
-							 {
-							    --gl_por2;
-							 }						 
-							 if (gl_por2 == 0)
-							 {
-							    HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_RESET); 
-							 }
-							 
-        
-               sensorLog.sensorID = sensorID2;
-               sensorLog.Value = sensor->Concentration_2;
-               sensorLog.logType = NORMAL_LEVEL;  // Добавьте этот тип в enum
-               
-							 if(sd_card_present)		{	
-									 if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-											// Обработка ошибки
-										}
-									 if (xHigherPriorityTaskWoken == pdTRUE) {
-																	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-										 }	
-							 }	  
-				        // Сбрасываем все флаги
-             thresholdStates[sensorID].warning_triggered2 = false;
-             thresholdStates[sensorID].alarm_triggered2 = false;
-             thresholdStates[sensorID].alarm2_triggered2 = false;
-				}
-		}		
+			/* ************************************************************************* */	 
+            if(sensor->Concentration_2 <= sensor->SensorAlarm_2) {
+								if(thresholdStates[sensorID].alarm_triggered2) {
+										if (gl_por2 > 0) --gl_por2;
+										if (gl_por2 == 0) HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_RESET);
+										thresholdStates[sensorID].alarm_triggered2 = false;
+								}
+						}
+
+						if(sensor->Concentration_2 <= sensor->SensorWarning_2) {
+								if(thresholdStates[sensorID].warning_triggered2) {
+										if (gl_por1 > 0) --gl_por1;
+										if (gl_por1 == 0) HAL_GPIO_WritePin(RY_GPIO_Port, RY1_Pin, GPIO_PIN_RESET);
+										thresholdStates[sensorID].warning_triggered2 = false;
+										
+										// Логирование и сброс флагов
+										sensorLog.sensorID = sensorID2;
+										sensorLog.Value = sensor->Concentration_2;
+										sensorLog.logType = NORMAL_LEVEL;
+										if(sd_card_present) {	
+											if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+											
+										 }									
+									  }
+										thresholdStates[sensorID].warning_triggered2 = false;
+										thresholdStates[sensorID].alarm_triggered2 = false;
+										thresholdStates[sensorID].alarm2_triggered2 = false;
+								}
+						}
+			/* ************************************************************************* */	 						
 }
 /**
  * @brief Get the number of connected slave devices
