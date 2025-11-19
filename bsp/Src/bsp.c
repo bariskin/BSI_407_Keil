@@ -1189,9 +1189,7 @@ uint8_t Get_RTC_Day(void)
 
 // Функция для установки только часа
 HAL_StatusTypeDef Set_RTC_Hour(uint8_t hour)
-{
-    //RTC_TimeTypeDef sTime;
-    
+{  
     // Проверка корректности часа (24-часовой формат)
     if (hour > 23) {
         return HAL_ERROR;
@@ -1215,18 +1213,17 @@ HAL_StatusTypeDef Set_RTC_Hour(uint8_t hour)
 // Функция для чтения текущего часа
 uint8_t Get_RTC_Hour(void)
 {
-    //RTC_TimeTypeDef sTime;
     
     HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
     
-    return sTime.Hours;  // Возвращает час (0-23)
+	  uint8_t hour = Convert12To24( sTime.Hours,sTime.TimeFormat);
+	
+    return hour;  // Возвращает час (0-23)
 }
 
 // Функция для установки только минут
 HAL_StatusTypeDef Set_RTC_Minute(uint8_t minute)
-{
-    //RTC_TimeTypeDef sTime;
-    
+{   
     // Проверка корректности минут
     if (minute > 59) {
         return HAL_ERROR;
@@ -1250,18 +1247,14 @@ HAL_StatusTypeDef Set_RTC_Minute(uint8_t minute)
 
 // Функция для чтения текущих минут
 uint8_t Get_RTC_Minute(void)
-{
-    //RTC_TimeTypeDef sTime;
-    
+{    
     HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
     
     return sTime.Minutes;  // Возвращает минуты (0-59)
 }
 // Функция для установки только секунд
 HAL_StatusTypeDef Set_RTC_Second(uint8_t second)
-{
-    //RTC_TimeTypeDef sTime;
-    
+{   
     // Проверка корректности секунд
     if (second > 59) {
         return HAL_ERROR;
@@ -1285,9 +1278,7 @@ HAL_StatusTypeDef Set_RTC_Second(uint8_t second)
 
 // Функция для чтения текущих секунд
 uint8_t Get_RTC_Second(void)
-{
-    //RTC_TimeTypeDef sTime;
-    
+{  
     HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
     
     return sTime.Seconds;  // Возвращает секунды (0-59)
@@ -1304,13 +1295,7 @@ uint8_t Get_RTC_Second(void)
   * @brief  Полная функция установки времени в RTC из HEX-строки
   */
 HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size)
-{
-    //RTC_TimeTypeDef sTime = {0};
-    //RTC_DateTypeDef sDate = {0};
-    
-    // 1. Преобразование HEX-строки в ASCII
-		//char hex_str_[] = "32 31 3A 35 30 2F 30 34 2E 31 30 2E 32 30 32 37";
-		
+{		
 		  char hex_str_[64]; // Буфер для результирующей строки
 		  int pos = 0;
     
@@ -1354,7 +1339,6 @@ HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size)
     sDate.Year = year - 2000; // Преобразование года в формат RTC (0-99)
     
     // 6. Установка времени и даты в RTC
-    HAL_StatusTypeDef status;
      
     if(HAL_OK != HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN))
 		{
@@ -1365,7 +1349,7 @@ HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size)
     {
 		   return	HAL_ERROR;
 		}
-    
+		
     return HAL_OK;
 }
 
@@ -1439,36 +1423,35 @@ void UpdateDisplayTime(void)
     if (HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
         return ;
     }	
-	   uint8_t hour24 = RTC_GetHour24(&sTime);   // < всегда корректный час 0–23
+	   
+		 int8_t hour =  sTime.Hours;
  	   uint8_t minute = sTime.Minutes;
 		
 		 uint8_t day = sDate.Date;
      uint8_t month = sDate.Month;
      uint16_t year = sDate.Year + 2000; 		
     // Для даты: 25.12.2023 14:30
-   SendTimeToNextion(day, month, year, hour24, minute);
+    SendTimeToNextion(day, month, year, hour, minute);
 }
 
-uint8_t RTC_GetHour24(const RTC_TimeTypeDef *t)
+
+uint8_t Convert12To24(uint8_t hours_12, uint8_t timeFormat)
 {
-    uint8_t hour = t->Hours;
+    // timeFormat: 0 = AM, 1 = PM
 
-    // Если RTC работает в 24h режиме
-    if (hrtc.Init.HourFormat == RTC_HOURFORMAT_24) {
-        return hour;   // Уже нормальные 0–23
+    if (timeFormat == 0)  // AM
+    {
+        if (hours_12 == 12)
+            return 0;     // 12 AM > 00
+        else
+            return hours_12; // 01…11 AM > 01…11
     }
-
-    // Иначе — корректируем 12h режим
-    if (t->TimeFormat == RTC_HOURFORMAT12_PM) {
-        if (hour != 12)
-            hour += 12;      // 1 PM > 13, 11 PM > 23
+    else                 // PM
+    {
+        if (hours_12 == 12)
+            return 12;    // 12 PM > 12
+        else
+            return hours_12 + 12; // 01…11 PM > 13…23
     }
-    else { // AM
-        if (hour == 12)
-            hour = 0;        // 12 AM > 00
-    }
-
-    return hour;
 }
-
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/

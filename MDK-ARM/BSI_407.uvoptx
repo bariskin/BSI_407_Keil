@@ -537,6 +537,11 @@
           <WinNumber>2</WinNumber>
           <ItemText>selectAlert</ItemText>
         </Ww>
+        <Ww>
+          <count>65</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>sTime</ItemText>
+        </Ww>
       </WatchWindow2>
       <MemoryWindow1>
         <Mm>
@@ -600,7 +605,7 @@
 
   <Group>
     <GroupName>Application/MDK-ARM</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

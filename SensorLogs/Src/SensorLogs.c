@@ -25,6 +25,9 @@ extern RTC_HandleTypeDef hrtc;
 extern uint8_t RdyWrittingFlag ;
 
 bool sd_card_present = false;
+
+extern RTC_TimeTypeDef sTime ;
+extern RTC_DateTypeDef sDate;
 /* ------------------------Locale variables----------------------------*/
 FRESULT resFILE;
 /* ------------------------Functions-----------------------------------*/
@@ -35,24 +38,22 @@ void GetLogFilePath(char* path, uint32_t sensor_id, DateTime_t* time) {
 
 void GetServiceFilePath(char* path) {
     RTC_DateTypeDef date;
-    HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+    HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
     
-    sprintf(path, "%02d_%02d_%02d.txt", date.Year, date.Month, date.Date);
+    sprintf(path, "%02d_%02d_%02d.txt", sDate.Year, sDate.Month, sDate.Date);
 }
 
 void GetCurrentTime(DateTime_t* time) {
-    RTC_DateTypeDef date;
-    RTC_TimeTypeDef rtc_time;
+     
+    HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+    HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
     
-    HAL_RTC_GetTime(&hrtc, &rtc_time, RTC_FORMAT_BIN);
-    HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
-    
-    time->year = date.Year + 2000;    // RTC обычно хранит год как 0-99
-    time->month = date.Month;
-    time->day = date.Date;
-    time->hour = rtc_time.Hours;
-    time->minute = rtc_time.Minutes;
-    time->second = rtc_time.Seconds;
+    time->year = sDate.Year + 2000;    // RTC обычно хранит год как 0-99
+    time->month = sDate.Month;
+    time->day = sDate.Date;
+    time->hour = sTime.Hours;
+    time->minute = sTime.Minutes;
+    time->second = sTime.Seconds;
 }
 void ServiceDataCallback(uint32_t sensor_id, uint16_t value, enSensorLog log_type)
  {
@@ -310,30 +311,30 @@ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log
         return FR_NOT_READY;
     }
     /* ВСЕГДА получаем актуальную дату при каждой записи */
-		RTC_TimeTypeDef sTime;
+		sTime;
     RTC_DateTypeDef date;
     HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
     HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
 	
 //    /* ИСПРАВЛЕНИЕ ВРЕМЕНИ 24:00 -> 00:00 */
-//    uint8_t corrected_hours = sTime.Hours;
-//    if (corrected_hours >= 24) {
-//        corrected_hours = 0;
-//        sTime.Hours = 0;
-//			  sTime.TimeFormat = RTC_HOURFORMAT_24;
-//        // Принудительно обновляем время в RTC
-//        HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
-//			  osDelay(2);
-//    }
-//		 /* АВТОМАТИЧЕСКАЯ СМЕНА ДАТЫ В 00:00 */
-//    if (corrected_hours == 0 && last_hour == 23) {
-//        date.Date++;
-//        if (date.Date > 31)date.Date = 1;
-//			
-//			  HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
-//			  osDelay(2);
-//    }
-//    last_hour = corrected_hours;
+    uint8_t corrected_hours = sTime.Hours;
+    if (corrected_hours >= 24) {
+       corrected_hours = 0;
+        sTime.Hours = 0;
+			  sTime.TimeFormat = RTC_HOURFORMAT_24;
+        // Принудительно обновляем время в RTC
+        HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+			  osDelay(2);
+    }
+		 /* АВТОМАТИЧЕСКАЯ СМЕНА ДАТЫ В 00:00 */
+    if (corrected_hours == 0 && last_hour == 23) {
+        date.Date++;
+        if (date.Date > 31)date.Date = 1;
+			
+			  HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
+			  osDelay(2);
+    }
+    last_hour = corrected_hours;
 		
     // Формируем путь с текущей датой
     snprintf(file_path, sizeof(file_path), "%02d_%02d_%02d.txt", 
@@ -347,7 +348,7 @@ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log
         res = f_open(&file, file_path, FA_CREATE_NEW | FA_WRITE);
     }
     
-		uint8_t hour24 = RTC_GetHour24(&sTime);
+		uint8_t hour24 =Get_RTC_Hour();
     
     // Формируем строку лога
     const char* message = get_message(log_type);

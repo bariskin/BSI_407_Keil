@@ -377,10 +377,7 @@ void GetDisplayCmd(uint8_t inputByte) {
 											 	if(sd_card_present)
 												{
 													if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-													}
-													if (xHigherPriorityTaskWoken == pdTRUE) {
-														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-													 }
+													}	
 											  }
 										 }
 										 /* запрос на вывод логов после 10, next/prev
@@ -396,9 +393,6 @@ void GetDisplayCmd(uint8_t inputByte) {
 												{
 													if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
 													}
-													if (xHigherPriorityTaskWoken == pdTRUE) {
-														portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-													 }
 												}
 										 }	  	 
 										else if (arrDisplayRX[0] == DISPLAY_TIME_CMD && data_length >= 15) 

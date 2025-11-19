@@ -206,7 +206,7 @@ typedef enum
 		void SendTimeToNextion(uint8_t day, uint8_t month, uint16_t year, uint8_t hour, uint8_t minute);
 		void UpdateDisplayTime(void);
 		uint8_t findSensorID(uint8_t addrArr[], int size, uint8_t addrValue, uint8_t sensorNumber); 
-		uint8_t RTC_GetHour24(const RTC_TimeTypeDef *t);
+		uint8_t Convert12To24(uint8_t hours_12, uint8_t timeFormat);
  /**
   * @}
   */
