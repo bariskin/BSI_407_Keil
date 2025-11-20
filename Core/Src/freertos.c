@@ -133,6 +133,14 @@ DisplayCommand_t displayCmd;
 /* USER CODE BEGIN Variables */
 extern uint8_t ModBusSlaveDefaultDeviceAddr;
 extern uint8_t ModBusSlaveCurrentDeviceAddr;
+
+osThreadId MasterModbus2TasHandle;
+uint32_t MasterModbus2TasBuffer[ 256 ];
+osStaticThreadDef_t MasterModbus2TasControlBlock;
+
+void MasterModbus2TaskFunction(void const * argument);
+
+
 /* USER CODE END Variables */
 osThreadId SlaveModbusTaskHandle;
 uint32_t defaultTaskBuffer[ 256 ];
@@ -257,6 +265,14 @@ void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
 	
+	  /* definition and creation of MasterModbus2Tas */
+  osThreadStaticDef(MasterModbus2Tas, MasterModbus2TaskFunction, osPriorityAboveNormal, 0, 256, MasterModbus2TasBuffer, &MasterModbus2TasControlBlock);
+  MasterModbus2TasHandle = osThreadCreate(osThread(MasterModbus2Tas), NULL);
+
+	
+	
+	
+	
 	displayCommandQueue = xQueueCreate(20, sizeof(DisplayCommand_t));
 	
 	
@@ -334,7 +350,6 @@ void HoldingHandlerFunction(void const * argument)
      gl_por2 = 0;
      gl_NotConnected = 0;	
 	
-	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
   osDelay(10000);
 	/* Infinite loop */
   for(;;)
@@ -1135,5 +1150,15 @@ void SendToDispTaskFunction(void const * argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+void MasterModbus2TaskFunction(void const * argument)
+{
+  /* USER CODE BEGIN MasterModbusTaskFunction */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(10);
+  }
+  /* USER CODE END MasterModbusTaskFunction */
+}
 
 /* USER CODE END Application */

@@ -37,7 +37,6 @@ void GetLogFilePath(char* path, uint32_t sensor_id, DateTime_t* time) {
 }
 
 void GetServiceFilePath(char* path) {
-    RTC_DateTypeDef date;
     HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
     
     sprintf(path, "%02d_%02d_%02d.txt", sDate.Year, sDate.Month, sDate.Date);
@@ -311,7 +310,6 @@ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log
         return FR_NOT_READY;
     }
     /* ВСЕГДА получаем актуальную дату при каждой записи */
-		sTime;
     RTC_DateTypeDef date;
     HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
     HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);

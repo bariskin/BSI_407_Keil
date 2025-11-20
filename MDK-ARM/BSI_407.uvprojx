@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../FreeModbusSlave/include;../FreeModbusSlave/app;../FreeModbusSlave/port;../FreeModbusSlave/rtu;../ModbusSetting/Inc;../HoldingRegisterSlave/Inc;../FreeModbusMaster/include/mb_m;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../ModBusAddrConverter/Inc;../bsp/Inc;../FreeModbusMaster/user_mb_app;../UARTSlaveSettings/Inc;../FlashDriver/Inc;../DisplayDriver/Inc;../RingBuffer/Inc;../FATFS/Target;../FATFS/App;../Middlewares/Third_Party/FatFs/src;../SdDriver/Inc;..\SensorLogs\Inc</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../FreeModbusSlave/include;../FreeModbusSlave/app;../FreeModbusSlave/port;../FreeModbusSlave/rtu;../ModbusSetting/Inc;../HoldingRegisterSlave/Inc;../FreeModbusMaster/include/mb_m;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../ModBusAddrConverter/Inc;../bsp/Inc;../FreeModbusMaster/user_mb_app;../UARTSlaveSettings/Inc;../FlashDriver/Inc;../DisplayDriver/Inc;../RingBuffer/Inc;../FATFS/Target;../FATFS/App;../Middlewares/Third_Party/FatFs/src;../SdDriver/Inc;..\SensorLogs\Inc;..\FreeModBusMaster2\rtu;..\FreeModBusMaster2\include;..\FreeModBusMaster2\include\mb_m;..\FreeModBusMaster2\port</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2248,6 +2248,16 @@
               <FileName>SensorLogs.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\SensorLogs\Src\SensorLogs.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>FreeModBusMaster2</GroupName>
+          <Files>
+            <File>
+              <FileName>mb_m2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModBusMaster2\mb_m2.c</FilePath>
             </File>
           </Files>
         </Group>

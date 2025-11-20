@@ -318,7 +318,6 @@ void initDeviceData(uint8_t numberOfdevices)
 	   
 void GetDisplayCmd(uint8_t inputByte) {
 	
-	  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     // Если буфер не переполнен
     if (rx_index < ARRAY_RX_SIZE - 1) {
         arrDisplayRX[rx_index++] = inputByte;  // Сохраняем байт в буфер
@@ -756,5 +755,4 @@ uint8_t is_even(int id_value) {
 		  return FIRST_SENSOR;
 		}		
 }
-
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/

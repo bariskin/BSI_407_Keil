@@ -85,6 +85,7 @@
 "bsi_407\ff_gen_drv.o"
 "bsi_407\syscall.o"
 "bsi_407\sensorlogs.o"
+"bsi_407\mb_m2.o"
 --strict --scatter "BSI_407\BSI_407.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers
