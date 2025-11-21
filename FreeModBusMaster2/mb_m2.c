@@ -138,16 +138,16 @@ eMBMaster2Init( eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity
     {
 #if MB_MASTER_RTU_ENABLED > 0
     case MB_RTU:
-        pvMBMasterFrameStartCur = eMBMasterRTUStart;
-        pvMBMasterFrameStopCur = eMBMasterRTUStop;
-        peMBMasterFrameSendCur = eMBMasterRTUSend;
-        peMBMasterFrameReceiveCur = eMBMasterRTUReceive;
+        pvMBMasterFrameStartCur = eMBMaster2RTUStart;
+        pvMBMasterFrameStopCur = eMBMaster2RTUStop;
+        peMBMasterFrameSendCur = eMBMaster2RTUSend;
+        peMBMasterFrameReceiveCur = eMBMaster2RTUReceive;
         pvMBMasterFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBMasterPortClose : NULL;
-        pxMBMasterFrameCBByteReceived = xMBMasterRTUReceiveFSM;
-        pxMBMasterFrameCBTransmitterEmpty = xMBMasterRTUTransmitFSM;
-        pxMBMasterPortCBTimerExpired = xMBMasterRTUTimerExpired;
+        pxMBMasterFrameCBByteReceived = xMBMaster2RTUReceiveFSM;
+        pxMBMasterFrameCBTransmitterEmpty = xMBMaster2RTUTransmitFSM;
+        pxMBMasterPortCBTimerExpired = xMBMaster2RTUTimerExpired;
 
-        eStatus = eMBMasterRTUInit(ucPort, ulBaudRate, eParity);
+        eStatus = eMBMaster2RTUInit(ucPort, ulBaudRate, eParity);
         break;
 #endif
 

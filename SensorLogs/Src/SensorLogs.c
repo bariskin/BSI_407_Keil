@@ -310,9 +310,9 @@ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log
         return FR_NOT_READY;
     }
     /* ВСЕГДА получаем актуальную дату при каждой записи */
-    RTC_DateTypeDef date;
+    //RTC_DateTypeDef date;
     HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
-    HAL_RTC_GetDate(&hrtc, &date, RTC_FORMAT_BIN);
+    HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
 	
 //    /* ИСПРАВЛЕНИЕ ВРЕМЕНИ 24:00 -> 00:00 */
     uint8_t corrected_hours = sTime.Hours;
@@ -326,17 +326,17 @@ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log
     }
 		 /* АВТОМАТИЧЕСКАЯ СМЕНА ДАТЫ В 00:00 */
     if (corrected_hours == 0 && last_hour == 23) {
-        date.Date++;
-        if (date.Date > 31)date.Date = 1;
+        sDate.Date++;
+        if (sDate.Date > 31)sDate.Date = 1;
 			
-			  HAL_RTC_SetDate(&hrtc, &date, RTC_FORMAT_BIN);
+			  HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
 			  osDelay(2);
     }
     last_hour = corrected_hours;
 		
     // Формируем путь с текущей датой
     snprintf(file_path, sizeof(file_path), "%02d_%02d_%02d.txt", 
-             date.Year, date.Month, date.Date);
+             sDate.Year, sDate.Month, sDate.Date);
     
     // Открываем файл текущей даты
     res = f_open(&file, file_path, FA_OPEN_APPEND | FA_WRITE);
@@ -346,24 +346,24 @@ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log
         res = f_open(&file, file_path, FA_CREATE_NEW | FA_WRITE);
     }
     
-		uint8_t hour24 =Get_RTC_Hour();
+		uint8_t hour24 = Get_RTC_Hour();
     
     // Формируем строку лога
     const char* message = get_message(log_type);
-    
+     /*            Для даты: 25.12.23 14:30   */
     if(log_type == SERVICE) {
         sprintf(log_line, "%02d.%02d.%02d %02d:%02d Приборов: %d\r\n",
-			            date.Year,date.Month,date.Date,
+			            sDate.Year,sDate.Month,sDate.Date,
                   hour24, sTime.Minutes, data->value);  // ? Используем time от RTC ?
     }
     else if (log_type == ERROR_485) {
         sprintf(log_line, "%02d.%02d.%02d %02d:%02d %s Канал %d \r\n",
-			         date.Year,date.Month,date.Date,
+			         sDate.Year,sDate.Month,sDate.Date,
                hour24, sTime.Minutes, message, sensor_id); 
     }
     else {
         sprintf(log_line, "%02d.%02d.%02d %02d:%02d %s Канал %d: %d\r\n",
-			          date.Year,date.Month,date.Date,
+			          sDate.Year,sDate.Month,sDate.Date,
                 hour24, sTime.Minutes, message, sensor_id, data->value); 
     }
     

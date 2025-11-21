@@ -38,7 +38,7 @@
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mb.h"
 #include "mb_m.h"
-#include "mbrtu.h"
+#include "mbrtu2.h"
 #include "mbframe.h"
 
 #include "mbcrc.h"
@@ -86,7 +86,7 @@ static volatile eMBMasterTimerMode eMasterCurTimerMode;
 
 /* ----------------------- Start implementation -----------------------------*/
 eMBErrorCode
-eMBMasterRTUInit(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity )
+eMBMaster2RTUInit(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
     ULONG           usTimerT35_50us;
@@ -130,7 +130,7 @@ eMBMasterRTUInit(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity )
 }
 
 void
-eMBMasterRTUStart( void )
+eMBMaster2RTUStart( void )
 {
     ENTER_CRITICAL_SECTION(  );
     /* Initially the receiver is in the state STATE_M_RX_INIT. we start
@@ -146,7 +146,7 @@ eMBMasterRTUStart( void )
 }
 
 void
-eMBMasterRTUStop( void )
+eMBMaster2RTUStop( void )
 {
     ENTER_CRITICAL_SECTION(  );
     vMBMasterPortSerialEnable( FALSE, FALSE );
@@ -155,7 +155,7 @@ eMBMasterRTUStop( void )
 }
 
 eMBErrorCode
-eMBMasterRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLength )
+eMBMaster2RTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLength )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
 
@@ -189,7 +189,7 @@ eMBMasterRTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLengt
 }
 
 eMBErrorCode
-eMBMasterRTUSend( UCHAR ucSlaveAddress, const UCHAR * pucFrame, USHORT usLength )
+eMBMaster2RTUSend( UCHAR ucSlaveAddress, const UCHAR * pucFrame, USHORT usLength )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
     USHORT          usCRC16;
@@ -230,7 +230,7 @@ eMBMasterRTUSend( UCHAR ucSlaveAddress, const UCHAR * pucFrame, USHORT usLength 
 }
 
 BOOL
-xMBMasterRTUReceiveFSM( void )
+xMBMaster2RTUReceiveFSM( void )
 {
     BOOL            xTaskNeedSwitch = FALSE;
     UCHAR           ucByte;
@@ -297,7 +297,7 @@ xMBMasterRTUReceiveFSM( void )
 }
 
 BOOL
-xMBMasterRTUTransmitFSM( void )
+xMBMaster2RTUTransmitFSM( void )
 {
     BOOL            xNeedPoll = FALSE;
 
@@ -348,7 +348,7 @@ xMBMasterRTUTransmitFSM( void )
 }
 
 BOOL
-xMBMasterRTUTimerExpired(void)
+xMBMaster2RTUTimerExpired(void)
 {
     BOOL xNeedPoll = FALSE;
 
@@ -409,37 +409,37 @@ xMBMasterRTUTimerExpired(void)
 }
 
 /* Get Modbus Master send RTU's buffer address pointer.*/
-void vMBMasterGetRTUSndBuf( UCHAR ** pucFrame )
+void vMBMaster2GetRTUSndBuf( UCHAR ** pucFrame )
 {
     *pucFrame = ( UCHAR * ) ucMasterRTUSndBuf;
 }
 
 /* Get Modbus Master send PDU's buffer address pointer.*/
-void vMBMasterGetPDUSndBuf( UCHAR ** pucFrame )
+void vMBMaster2GetPDUSndBuf( UCHAR ** pucFrame )
 {
     *pucFrame = ( UCHAR * ) &ucMasterRTUSndBuf[MB_SER_PDU_PDU_OFF];
 }
 
 /* Set Modbus Master send PDU's buffer length.*/
-void vMBMasterSetPDUSndLength( USHORT SendPDULength )
+void vMBMaster2SetPDUSndLength( USHORT SendPDULength )
 {
     usMasterSendPDULength = SendPDULength;
 }
 
 /* Get Modbus Master send PDU's buffer length.*/
-USHORT usMBMasterGetPDUSndLength( void )
+USHORT usMBMaster2GetPDUSndLength( void )
 {
     return usMasterSendPDULength;
 }
 
 /* Set Modbus Master current timer mode.*/
-void vMBMasterSetCurTimerMode( eMBMasterTimerMode eMBTimerMode )
+void vMBMaster2SetCurTimerMode( eMBMasterTimerMode eMBTimerMode )
 {
     eMasterCurTimerMode = eMBTimerMode;
 }
 
 /* The master request is broadcast? */
-BOOL xMBMasterRequestIsBroadcast( void ){
+BOOL xMBMaster2RequestIsBroadcast( void ){
     return xFrameIsBroadcast;
 }
 #endif

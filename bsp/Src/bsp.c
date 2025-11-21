@@ -1414,24 +1414,40 @@ void SendTimeToNextion(uint8_t day, uint8_t month, uint16_t year, uint8_t hour, 
 
 // Пример использования
 void UpdateDisplayTime(void)
-{ 
-	
+{  
+	 static uint8_t last_hour = 0;
 	 if (HAL_RTC_GetTime(&hrtc, &sTime, RTC_FORMAT_BIN) != HAL_OK) {
         return;
    }
-	   // Сначала читаем текущую дату
+	
     if (HAL_RTC_GetDate(&hrtc, &sDate, RTC_FORMAT_BIN) != HAL_OK) {
         return ;
     }	
-	   
-		 int8_t hour =  sTime.Hours;
- 	   uint8_t minute = sTime.Minutes;
-		
-		 uint8_t day = sDate.Date;
-     uint8_t month = sDate.Month;
-     uint16_t year = sDate.Year + 2000; 		
-    // Для даты: 25.12.2023 14:30
-    SendTimeToNextion(day, month, year, hour, minute);
+		//    /* ИСПРАВЛЕНИЕ ВРЕМЕНИ 24:00 -> 00:00 */
+    uint8_t corrected_hours = sTime.Hours;
+    if (corrected_hours >= 24) {
+        corrected_hours = 0;
+        sTime.Hours = 0;
+			  sTime.TimeFormat = RTC_HOURFORMAT_24;
+        // Принудительно обновляем время в RTC
+        HAL_RTC_SetTime(&hrtc, &sTime, RTC_FORMAT_BIN);
+			  osDelay(2);
+    }
+		 /* АВТОМАТИЧЕСКАЯ СМЕНА ДАТЫ В 00:00 */
+    if (corrected_hours == 0 && last_hour == 23) {
+        sDate.Date++;
+        if (sDate.Date > 31)sDate.Date = 1;
+			
+			  HAL_RTC_SetDate(&hrtc, &sDate, RTC_FORMAT_BIN);
+			  osDelay(2);
+    }
+    last_hour = corrected_hours;
+		 
+		uint8_t hour24 = Get_RTC_Hour();
+		// Для даты: 25.12.2023 14:30
+    uint16_t year = sDate.Year + 2000; 		
+    
+    SendTimeToNextion(sDate.Date, sDate.Month, year, hour24,  sTime.Minutes);
 }
 
 
