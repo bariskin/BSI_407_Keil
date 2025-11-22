@@ -18,8 +18,8 @@
  *
  * File: $Id: user_mb_app_m.c,v 1.60 2013/11/23 11:49:05 Armink $
  */
-#include "user_mb_app_m.h"
-#include "mb_m.h"
+#include "user_mb_app_m2.h"
+#include "mb_m2.h"
 #include "ModBusAddrConverter.h"
 /*-----------------------Master mode use these variables----------------------*/
 #if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
@@ -38,11 +38,11 @@
 //UCHAR    ucMCoilBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_COIL_NCOILS/8];
 //#endif
 //Master mode:InputRegister variables
-USHORT   usMRegInStart                              = M_REG_INPUT_START;
-USHORT   usMRegInBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS];
+USHORT   usMRegInStart2                              = M_REG_INPUT_START;
+USHORT   usMRegInBuf2[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS];
 //Master mode:HoldingRegister variables
-USHORT   usMRegHoldStart                            = M_REG_HOLDING_START;
-USHORT   usMRegHoldBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS];
+USHORT   usMRegHoldStart2                            = M_REG_HOLDING_START;
+USHORT   usMRegHoldBuf2[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS];
 
 /**
  * Modbus master input register callback function.
@@ -53,7 +53,7 @@ USHORT   usMRegHoldBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS];
  *
  * @return result
  */
-eMBErrorCode eMBMasterRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
+eMBErrorCode eMBMaster2RegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
     USHORT          iRegIndex;
@@ -62,10 +62,10 @@ eMBErrorCode eMBMasterRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT
     USHORT          REG_INPUT_NREGS;
     USHORT          usRegInStart;
 
-    pusRegInputBuf = usMRegInBuf[ucMBMasterGetDestAddress() - 1];
+    pusRegInputBuf = usMRegInBuf2[ucMBMasterGetDestAddress() - 1];
     REG_INPUT_START = M_REG_INPUT_START;
     REG_INPUT_NREGS = M_REG_INPUT_NREGS;
-    usRegInStart = usMRegInStart;
+    usRegInStart = usMRegInStart2;
 	
 
 	   uint16_t internValue = convertModBusAddrInput_M(usAddress);
@@ -106,7 +106,7 @@ eMBErrorCode eMBMasterRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT
  *
  * @return result
  */
-eMBErrorCode eMBMasterRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
+eMBErrorCode eMBMaster2RegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
         USHORT usNRegs, eMBRegisterMode eMode)
 {
     eMBErrorCode    eStatus = MB_ENOERR;
@@ -116,10 +116,10 @@ eMBErrorCode eMBMasterRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
     USHORT          REG_HOLDING_NREGS;
     USHORT          usRegHoldStart;
 
-    pusRegHoldingBuf = usMRegHoldBuf[ucMBMasterGetDestAddress() - 1];
+    pusRegHoldingBuf = usMRegHoldBuf2[ucMBMasterGetDestAddress() - 1];
     REG_HOLDING_START = M_REG_HOLDING_START;
     REG_HOLDING_NREGS = M_REG_HOLDING_NREGS;
-    usRegHoldStart = usMRegHoldStart;
+    usRegHoldStart = usMRegHoldStart2;
     /* if mode is read, the master will write the received date to buffer. */
     eMode = MB_REG_WRITE;
 
@@ -177,7 +177,7 @@ eMBErrorCode eMBMasterRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
  *
  * @return result
  */
-eMBErrorCode eMBMasterRegCoilsCB(UCHAR * pucRegBuffer, USHORT usAddress,
+eMBErrorCode eMBMaster2RegCoilsCB(UCHAR * pucRegBuffer, USHORT usAddress,
         USHORT usNCoils, eMBRegisterMode eMode)
 {
 //    eMBErrorCode    eStatus = MB_ENOERR;
@@ -260,7 +260,7 @@ eMBErrorCode eMBMasterRegCoilsCB(UCHAR * pucRegBuffer, USHORT usAddress,
  *
  * @return result
  */
-eMBErrorCode eMBMasterRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
+eMBErrorCode eMBMaster2RegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNDiscrete )
 {
 //    eMBErrorCode    eStatus = MB_ENOERR;
 //    USHORT          iRegIndex , iRegBitIndex , iNReg;

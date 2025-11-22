@@ -28,8 +28,8 @@
  * File: $Id: mb.h,v 1.17 2006/12/07 22:10:34 wolti Exp $
  */
 
-#ifndef _MB_H
-#define _MB_H
+#ifndef _MB_H_M2
+#define _MB_H_M2
 
 #include "port.h"
 

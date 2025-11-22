@@ -87,6 +87,12 @@
 "bsi_407\sensorlogs.o"
 "bsi_407\mb_m2.o"
 "bsi_407\mbrtu_m2.o"
+"bsi_407\porttimer_m2.o"
+"bsi_407\portserial_m2.o"
+"bsi_407\portevent_m2.o"
+"bsi_407\mbfuncinput_m2.o"
+"bsi_407\mbfuncholding_m2.o"
+"bsi_407\user_mb_app_m2.o"
 --strict --scatter "BSI_407\BSI_407.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

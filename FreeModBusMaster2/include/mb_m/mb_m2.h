@@ -28,8 +28,10 @@
  * File: $Id: mb_m.h,v 1.60 2013/09/03 10:20:05 Armink Add Master Functions $
  */
 
-#ifndef _MB_M_H
-#define _MB_M_H
+#ifndef MB_MODBUS_MASTER2_H
+#define MB_MODBUS_MASTER2_H
+
+#include "mb_m.h"
 
 #ifdef __cplusplus
 PR_BEGIN_EXTERN_C
@@ -66,31 +68,31 @@ PR_BEGIN_EXTERN_C
 /*! \ingroup modbus
  * \brief Use the default Modbus Master TCP port (502)
  */
-#define MB_MASTER_TCP_PORT_USE_DEFAULT 0
+#define MB_MASTER2_TCP_PORT_USE_DEFAULT 0
 
 /* ----------------------- Type definitions ---------------------------------*/
 /*! \ingroup modbus
  * \brief Errorcodes used by all function in the Master request.
  */
-typedef enum
-{
-    MB_MRE_NO_ERR,                  /*!< no error. */
-    MB_MRE_NO_REG,                  /*!< illegal register address. */
-    MB_MRE_ILL_ARG,                 /*!< illegal argument. */
-    MB_MRE_REV_DATA,                /*!< receive data error. */
-    MB_MRE_TIMEDOUT,                /*!< timeout error occurred. */
-    MB_MRE_MASTER_BUSY,             /*!< master is busy now. */
-    MB_MRE_EXE_FUN                  /*!< execute function error. */
-} eMBMasterReqErrCode;
+//typedef enum
+//{
+//    MB_MRE_NO_ERR,                  /*!< no error. */
+//    MB_MRE_NO_REG,                  /*!< illegal register address. */
+//    MB_MRE_ILL_ARG,                 /*!< illegal argument. */
+//    MB_MRE_REV_DATA,                /*!< receive data error. */
+//    MB_MRE_TIMEDOUT,                /*!< timeout error occurred. */
+//    MB_MRE_MASTER_BUSY,             /*!< master is busy now. */
+//    MB_MRE_EXE_FUN                  /*!< execute function error. */
+//} eMBMasterReqErrCode;
 /*! \ingroup modbus
  *  \brief TimerMode is Master 3 kind of Timer modes.
  */
-typedef enum
-{
-    MB_TMODE_T35,                   /*!< Master receive frame T3.5 timeout. */
-    MB_TMODE_RESPOND_TIMEOUT,       /*!< Master wait respond for slave. */
-    MB_TMODE_CONVERT_DELAY          /*!< Master sent broadcast ,then delay sometime.*/
-}eMBMasterTimerMode;
+//typedef enum
+//{
+//    MB_TMODE_T35,                   /*!< Master receive frame T3.5 timeout. */
+//    MB_TMODE_RESPOND_TIMEOUT,       /*!< Master wait respond for slave. */
+//    MB_TMODE_CONVERT_DELAY          /*!< Master sent broadcast ,then delay sometime.*/
+//}eMBMasterTimerMode;
 
 /* ----------------------- Function prototypes ------------------------------*/
 /*! \ingroup modbus
@@ -114,7 +116,7 @@ typedef enum
  *   is returned:
  *    - eMBErrorCode::MB_EPORTERR IF the porting layer returned an error.
  */
-eMBErrorCode    eMBMasterInit( eMBMode eMode, UCHAR ucPort,
+eMBErrorCode    eMBMaster2Init( eMBMode eMode, UCHAR ucPort,
                          ULONG ulBaudRate, eMBParity eParity );
 
 /*! \ingroup modbus
@@ -131,7 +133,7 @@ eMBErrorCode    eMBMasterInit( eMBMode eMode, UCHAR ucPort,
  *        slave addresses are in the range 1 - 247.
  *    - eMBErrorCode::MB_EPORTERR IF the porting layer returned an error.
  */
-eMBErrorCode    eMBMasterTCPInit( USHORT usTCPPort );
+eMBErrorCode    eMBMaster2TCPInit( USHORT usTCPPort );
 
 /*! \ingroup modbus
  * \brief Release resources used by the protocol stack.
@@ -147,7 +149,7 @@ eMBErrorCode    eMBMasterTCPInit( USHORT usTCPPort );
  *   If the protocol stack is not in the disabled state it returns
  *   eMBErrorCode::MB_EILLSTATE.
  */
-eMBErrorCode    eMBMasterClose( void );
+eMBErrorCode    eMBMaster2Close( void );
 
 /*! \ingroup modbus
  * \brief Enable the Modbus Master protocol stack.
@@ -159,7 +161,7 @@ eMBErrorCode    eMBMasterClose( void );
  *   eMBErrorCode::MB_ENOERR. If it was not in the disabled state it
  *   return eMBErrorCode::MB_EILLSTATE.
  */
-eMBErrorCode    eMBMasterEnable( void );
+eMBErrorCode    eMBMaster2Enable( void );
 
 /*! \ingroup modbus
  * \brief Disable the Modbus Master protocol stack.
@@ -170,7 +172,7 @@ eMBErrorCode    eMBMasterEnable( void );
  *  eMBErrorCode::MB_ENOERR. If it was not in the enabled state it returns
  *  eMBErrorCode::MB_EILLSTATE.
  */
-eMBErrorCode    eMBMasterDisable( void );
+eMBErrorCode    eMBMaster2Disable( void );
 
 /*! \ingroup modbus
  * \brief Check the Modbus Master protocol stack has established or not.
@@ -182,7 +184,7 @@ eMBErrorCode    eMBMasterDisable( void );
  *  TRUE.  the protocol stack has established
  *  FALSE. the protocol stack hasn't established
  */
-BOOL            eMBMasterIsEstablished( void );
+BOOL            eMBMaster2IsEstablished( void );
 
 /*! \ingroup modbus
  * \brief The main pooling loop of the Modbus Master protocol stack.
@@ -196,7 +198,7 @@ BOOL            eMBMasterIsEstablished( void );
  *   returns eMBErrorCode::MB_EILLSTATE. Otherwise it returns
  *   eMBErrorCode::MB_ENOERR.
  */
-eMBErrorCode    eMBMasterPoll( void );
+eMBErrorCode    eMBMaster2Poll( void );
 
 /*! \ingroup modbus
  * \brief Registers a callback handler for a given function code.
@@ -218,7 +220,7 @@ eMBErrorCode    eMBMasterPoll( void );
  *   case the values in mbconfig.h should be adjusted. If the argument was not
  *   valid it returns eMBErrorCode::MB_EINVAL.
  */
-eMBErrorCode    eMBMasterRegisterCB( UCHAR ucFunctionCode,
+eMBErrorCode    eMBMaster2RegisterCB( UCHAR ucFunctionCode,
                                pxMBFunctionHandler pxHandler );
 
 /* ----------------------- Callback -----------------------------------------*/
@@ -259,7 +261,7 @@ eMBErrorCode    eMBMasterRegisterCB( UCHAR ucFunctionCode,
  *       within the requested address range. In this case a
  *       <b>ILLEGAL DATA ADDRESS</b> is sent as a response.
  */
-eMBErrorCode eMBMasterRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress,
+eMBErrorCode eMBMaster2RegInputCB( UCHAR * pucRegBuffer, USHORT usAddress,
         USHORT usNRegs );
 
 /*! \ingroup modbus_registers
@@ -288,7 +290,7 @@ eMBErrorCode eMBMasterRegInputCB( UCHAR * pucRegBuffer, USHORT usAddress,
  *       within the requested address range. In this case a
  *       <b>ILLEGAL DATA ADDRESS</b> is sent as a response.
  */
-eMBErrorCode eMBMasterRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress,
+eMBErrorCode eMBMaster2RegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress,
         USHORT usNRegs, eMBRegisterMode eMode );
 
 /*! \ingroup modbus_registers
@@ -317,7 +319,7 @@ eMBErrorCode eMBMasterRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress,
  *       within the requested address range. In this case a
  *       <b>ILLEGAL DATA ADDRESS</b> is sent as a response.
  */
-eMBErrorCode eMBMasterRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress,
+eMBErrorCode eMBMaster2RegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress,
         USHORT usNCoils, eMBRegisterMode eMode );
 
 /*! \ingroup modbus_registers
@@ -340,71 +342,71 @@ eMBErrorCode eMBMasterRegCoilsCB( UCHAR * pucRegBuffer, USHORT usAddress,
  *       within the requested address range. In this case a
  *       <b>ILLEGAL DATA ADDRESS</b> is sent as a response.
  */
-eMBErrorCode eMBMasterRegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress,
+eMBErrorCode eMBMaster2RegDiscreteCB( UCHAR * pucRegBuffer, USHORT usAddress,
         USHORT usNDiscrete );
 
 /*! \ingroup modbus
  *\brief These Modbus functions are called for user when Modbus run in Master Mode.
  */
 eMBMasterReqErrCode
-eMBMasterReqReadInputRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRegs, int32_t lTimeOut );
+eMBMaster2ReqReadInputRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRegs, int32_t lTimeOut );
 eMBMasterReqErrCode
-eMBMasterReqWriteHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usRegData, int32_t lTimeOut );
+eMBMaster2ReqWriteHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usRegData, int32_t lTimeOut );
 eMBMasterReqErrCode
-eMBMasterReqWriteMultipleHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr,
+eMBMaster2ReqWriteMultipleHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr,
         USHORT usNRegs, USHORT * pusDataBuffer, int32_t lTimeOut );
 eMBMasterReqErrCode
-eMBMasterReqReadHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRegs, int32_t lTimeOut );
+eMBMaster2ReqReadHoldingRegister( UCHAR ucSndAddr, USHORT usRegAddr, USHORT usNRegs, int32_t lTimeOut );
 eMBMasterReqErrCode
-eMBMasterReqReadWriteMultipleHoldingRegister( UCHAR ucSndAddr,
+eMBMaster2ReqReadWriteMultipleHoldingRegister( UCHAR ucSndAddr,
         USHORT usReadRegAddr, USHORT usNReadRegs, USHORT * pusDataBuffer,
         USHORT usWriteRegAddr, USHORT usNWriteRegs, int32_t lTimeOut );
 eMBMasterReqErrCode
-eMBMasterReqReadCoils( UCHAR ucSndAddr, USHORT usCoilAddr, USHORT usNCoils, int32_t lTimeOut );
+eMBMaster2ReqReadCoils( UCHAR ucSndAddr, USHORT usCoilAddr, USHORT usNCoils, int32_t lTimeOut );
 eMBMasterReqErrCode
-eMBMasterReqWriteCoil( UCHAR ucSndAddr, USHORT usCoilAddr, USHORT usCoilData, int32_t lTimeOut );
+eMBMaster2ReqWriteCoil( UCHAR ucSndAddr, USHORT usCoilAddr, USHORT usCoilData, int32_t lTimeOut );
 eMBMasterReqErrCode
-eMBMasterReqWriteMultipleCoils( UCHAR ucSndAddr,
+eMBMaster2ReqWriteMultipleCoils( UCHAR ucSndAddr,
         USHORT usCoilAddr, USHORT usNCoils, UCHAR * pucDataBuffer, int32_t lTimeOut );
 eMBMasterReqErrCode
-eMBMasterReqReadDiscreteInputs( UCHAR ucSndAddr, USHORT usDiscreteAddr, USHORT usNDiscreteIn, int32_t lTimeOut );
+eMBMaster2ReqReadDiscreteInputs( UCHAR ucSndAddr, USHORT usDiscreteAddr, USHORT usNDiscreteIn, int32_t lTimeOut );
 
 eMBException
-eMBMasterFuncReportSlaveID( UCHAR * pucFrame, USHORT * usLen );
+eMBMaster2FuncReportSlaveID( UCHAR * pucFrame, USHORT * usLen );
 eMBException
-eMBMasterFuncReadInputRegister( UCHAR * pucFrame, USHORT * usLen );
+eMBMaster2FuncReadInputRegister( UCHAR * pucFrame, USHORT * usLen );
 eMBException
-eMBMasterFuncReadHoldingRegister( UCHAR * pucFrame, USHORT * usLen );
+eMBMaster2FuncReadHoldingRegister( UCHAR * pucFrame, USHORT * usLen );
 eMBException
-eMBMasterFuncWriteHoldingRegister( UCHAR * pucFrame, USHORT * usLen );
+eMBMaster2FuncWriteHoldingRegister( UCHAR * pucFrame, USHORT * usLen );
 eMBException
-eMBMasterFuncWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen );
+eMBMaster2FuncWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen );
 eMBException
-eMBMasterFuncReadCoils( UCHAR * pucFrame, USHORT * usLen );
+eMBMaster2FuncReadCoils( UCHAR * pucFrame, USHORT * usLen );
 eMBException
-eMBMasterFuncWriteCoil( UCHAR * pucFrame, USHORT * usLen );
+eMBMaster2FuncWriteCoil( UCHAR * pucFrame, USHORT * usLen );
 eMBException
-eMBMasterFuncWriteMultipleCoils( UCHAR * pucFrame, USHORT * usLen );
+eMBMaster2FuncWriteMultipleCoils( UCHAR * pucFrame, USHORT * usLen );
 eMBException
-eMBMasterFuncReadDiscreteInputs( UCHAR * pucFrame, USHORT * usLen );
+eMBMaster2FuncReadDiscreteInputs( UCHAR * pucFrame, USHORT * usLen );
 eMBException
-eMBMasterFuncReadWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen );
+eMBMaster2FuncReadWriteMultipleHoldingRegister( UCHAR * pucFrame, USHORT * usLen );
 
 /*! \ingroup modbus
  *\brief These functions are interface for Modbus Master
  */
-void vMBMasterGetPDUSndBuf( UCHAR ** pucFrame );
-UCHAR ucMBMasterGetDestAddress( void );
-void vMBMasterSetDestAddress( UCHAR Address );
-BOOL xMBMasterGetCBRunInMasterMode( void );
-void vMBMasterSetCBRunInMasterMode( BOOL IsMasterMode );
-USHORT usMBMasterGetPDUSndLength( void );
-void vMBMasterSetPDUSndLength( USHORT SendPDULength );
-void vMBMasterSetCurTimerMode( eMBMasterTimerMode eMBTimerMode );
-BOOL xMBMasterRequestIsBroadcast( void );
-eMBMasterErrorEventType eMBMasterGetErrorType( void );
-void vMBMasterSetErrorType( eMBMasterErrorEventType errorType );
-eMBMasterReqErrCode eMBMasterWaitRequestFinish( void );
+void vMBMaster2GetPDUSndBuf( UCHAR ** pucFrame );
+UCHAR ucMBMaster2GetDestAddress( void );
+void vMBMaster2SetDestAddress( UCHAR Address );
+BOOL xMBMaster2GetCBRunInMasterMode( void );
+void vMBMaster2SetCBRunInMasterMode( BOOL IsMasterMode );
+USHORT usMBMaster2GetPDUSndLength( void );
+void vMBMaster2SetPDUSndLength( USHORT SendPDULength );
+void vMBMaster2SetCurTimerMode( eMBMasterTimerMode eMBTimerMode );
+BOOL xMBMaster2RequestIsBroadcast( void );
+eMBMasterErrorEventType eMBMaster2GetErrorType( void );
+void vMBMaster2SetErrorType( eMBMasterErrorEventType errorType );
+eMBMasterReqErrCode eMBMaster2WaitRequestFinish( void );
 
 /* ----------------------- Callback -----------------------------------------*/
 

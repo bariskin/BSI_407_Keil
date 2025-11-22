@@ -33,26 +33,26 @@
 #include "string.h"
 
 /* ----------------------- Platform includes --------------------------------*/
-#include "port2.h"
+#include "port.h"
 
 /* ----------------------- Modbus includes ----------------------------------*/
 
 #include "mb.h"
 #include "mb_m2.h"
 #include "mbconfig2.h"
-#include "mbframe2.h"
-#include "mbproto2.h"
+#include "mbframe.h"
+#include "mbproto.h"
 #include "mbfunc2.h"
-
 #include "mbport2.h"
+
 #if MB_MASTER2_RTU_ENABLED == 1
 #include "mbrtu2.h"
 #endif
 
-#if MB_MASTER_RTU_ENABLED > 0
+#if MB_MASTER2_RTU_ENABLED > 0
 
-#ifndef MB_PORT_HAS_CLOSE
-#define MB_PORT_HAS_CLOSE 0
+#ifndef MB_PORT2_HAS_CLOSE
+#define MB_PORT2_HAS_CLOSE 0
 #endif
 
 /* ----------------------- Static variables ---------------------------------*/
@@ -94,25 +94,25 @@ BOOL( *pxMBMaster2FrameCBTransmitFSMCur ) ( void );
 /* An array of Modbus functions handlers which associates Modbus function
  * codes with implementing functions.
  */
-static xMBFunctionHandler xMasterFuncHandlers[MB_FUNC_HANDLERS_MAX] = {
+static xMBFunctionHandler xMaster2FuncHandlers[MB_FUNC_HANDLERS_MAX] = {
 #if MB_FUNC_OTHER_REP_SLAVEID_ENABLED > 0
     //TODO Add Master function define
     {MB_FUNC_OTHER_REPORT_SLAVEID, eMBFuncReportSlaveID},
 #endif
 #if MB_FUNC_READ_INPUT_ENABLED > 0
-    {MB_FUNC_READ_INPUT_REGISTER, eMBMasterFuncReadInputRegister},
+    {MB_FUNC_READ_INPUT_REGISTER, eMBMaster2FuncReadInputRegister},
 #endif
 #if MB_FUNC_READ_HOLDING_ENABLED > 0
-    {MB_FUNC_READ_HOLDING_REGISTER, eMBMasterFuncReadHoldingRegister},
+    {MB_FUNC_READ_HOLDING_REGISTER, eMBMaster2FuncReadHoldingRegister},
 #endif
 #if MB_FUNC_WRITE_MULTIPLE_HOLDING_ENABLED > 0
-    {MB_FUNC_WRITE_MULTIPLE_REGISTERS, eMBMasterFuncWriteMultipleHoldingRegister},
+    {MB_FUNC_WRITE_MULTIPLE_REGISTERS, eMBMaster2FuncWriteMultipleHoldingRegister},
 #endif
 #if MB_FUNC_WRITE_HOLDING_ENABLED > 0
-    {MB_FUNC_WRITE_REGISTER, eMBMasterFuncWriteHoldingRegister},
+    {MB_FUNC_WRITE_REGISTER, eMBMaster2FuncWriteHoldingRegister},
 #endif
 #if MB_FUNC_READWRITE_HOLDING_ENABLED > 0
-    {MB_FUNC_READWRITE_MULTIPLE_REGISTERS, eMBMasterFuncReadWriteMultipleHoldingRegister},
+    {MB_FUNC_READWRITE_MULTIPLE_REGISTERS, eMBMaster2FuncReadWriteMultipleHoldingRegister},
 #endif
 #if MB_FUNC_READ_COILS_ENABLED > 0
     {MB_FUNC_READ_COILS, eMBMasterFuncReadCoils},
@@ -136,16 +136,16 @@ eMBMaster2Init( eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity
 
     switch (eMode)
     {
-#if MB_MASTER_RTU_ENABLED > 0
+#if MB_MASTER2_RTU_ENABLED > 0
     case MB_RTU:
         pvMBMasterFrameStartCur = eMBMaster2RTUStart;
         pvMBMasterFrameStopCur = eMBMaster2RTUStop;
         peMBMasterFrameSendCur = eMBMaster2RTUSend;
         peMBMasterFrameReceiveCur = eMBMaster2RTUReceive;
-        pvMBMasterFrameCloseCur = MB_PORT_HAS_CLOSE ? vMBMasterPortClose : NULL;
-        pxMBMasterFrameCBByteReceived = xMBMaster2RTUReceiveFSM;
-        pxMBMasterFrameCBTransmitterEmpty = xMBMaster2RTUTransmitFSM;
-        pxMBMasterPortCBTimerExpired = xMBMaster2RTUTimerExpired;
+        pvMBMasterFrameCloseCur = MB_PORT2_HAS_CLOSE ? vMBMaster2PortClose : NULL;
+        pxMBMaster2FrameCBByteReceived = xMBMaster2RTUReceiveFSM;
+        pxMBMaster2FrameCBTransmitterEmpty = xMBMaster2RTUTransmitFSM;
+        pxMBMaster2PortCBTimerExpired = xMBMaster2RTUTimerExpired;
 
         eStatus = eMBMaster2RTUInit(ucPort, ulBaudRate, eParity);
         break;
@@ -268,7 +268,7 @@ eMBMaster2Poll( void )
 
     /* Check if there is a event available. If not return control to caller.
      * Otherwise we will handle the event. */
-    if( xMBMasterPortEventGet( &eEvent ) == TRUE )
+    if( xMBMaster2PortEventGet( &eEvent ) == TRUE )
     {
         switch ( eEvent )
         {
@@ -279,14 +279,14 @@ eMBMaster2Poll( void )
         case EV_MASTER_FRAME_RECEIVED:
             eStatus = peMBMasterFrameReceiveCur( &ucRcvAddress, &ucMBFrame, &usLength );
             /* Check if the frame is for us. If not ,send an error process event. */
-            if ( ( eStatus == MB_ENOERR ) && ( ucRcvAddress == ucMBMasterGetDestAddress() ) )
+            if ( ( eStatus == MB_ENOERR ) && ( ucRcvAddress == ucMBMaster2GetDestAddress() ) )
             {
-                ( void ) xMBMasterPortEventPost( EV_MASTER_EXECUTE );
+                ( void ) xMBMaster2PortEventPost( EV_MASTER_EXECUTE );
             }
             else
             {
-                vMBMasterSetErrorType(EV_ERROR_RECEIVE_DATA);
-                ( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
+                vMBMaster2SetErrorType(EV_ERROR_RECEIVE_DATA);
+                ( void ) xMBMaster2PortEventPost( EV_MASTER_ERROR_PROCESS );
             }
             break;
 
@@ -302,65 +302,65 @@ eMBMaster2Poll( void )
                 for (i = 0; i < MB_FUNC_HANDLERS_MAX; i++)
                 {
                     /* No more function handlers registered. Abort. */
-                    if (xMasterFuncHandlers[i].ucFunctionCode == 0) {
+                    if (xMaster2FuncHandlers[i].ucFunctionCode == 0) {
                         break;
                     }
-                    else if (xMasterFuncHandlers[i].ucFunctionCode == ucFunctionCode) {
-                        vMBMasterSetCBRunInMasterMode(TRUE);
+                    else if (xMaster2FuncHandlers[i].ucFunctionCode == ucFunctionCode) {
+                        vMBMaster2SetCBRunInMasterMode(TRUE);
                         /* If master request is broadcast,
                          * the master need execute function for all slave.
                          */
-                        if ( xMBMasterRequestIsBroadcast() ) {
-                            usLength = usMBMasterGetPDUSndLength();
+                        if ( xMBMaster2RequestIsBroadcast() ) {
+                            usLength = usMBMaster2GetPDUSndLength();
                             for(j = 1; j <= MB_MASTER_TOTAL_SLAVE_NUM; j++){
-                                vMBMasterSetDestAddress(j);
-                                eException = xMasterFuncHandlers[i].pxHandler(ucMBFrame, &usLength);
+                                vMBMaster2SetDestAddress(j);
+                                eException = xMaster2FuncHandlers[i].pxHandler(ucMBFrame, &usLength);
                             }
                         }
                         else {
-                            eException = xMasterFuncHandlers[i].pxHandler(ucMBFrame, &usLength);
+                            eException = xMaster2FuncHandlers[i].pxHandler(ucMBFrame, &usLength);
                         }
-                        vMBMasterSetCBRunInMasterMode(FALSE);
+                        vMBMaster2SetCBRunInMasterMode(FALSE);
                         break;
                     }
                 }
             }
             /* If master has exception ,Master will send error process.Otherwise the Master is idle.*/
             if (eException != MB_EX_NONE) {
-                vMBMasterSetErrorType(EV_ERROR_EXECUTE_FUNCTION);
-                ( void ) xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
+                vMBMaster2SetErrorType(EV_ERROR_EXECUTE_FUNCTION);
+                ( void ) xMBMaster2PortEventPost( EV_MASTER_ERROR_PROCESS );
             }
             else {
                 vMBMasterCBRequestScuuess( );
-                vMBMasterRunResRelease( );
+                vMBMaster2RunResRelease( );
             }
             break;
 
         case EV_MASTER_FRAME_SENT:
             /* Master is busy now. */
-            vMBMasterGetPDUSndBuf( &ucMBFrame );
-            eStatus = peMBMasterFrameSendCur( ucMBMasterGetDestAddress(), ucMBFrame, usMBMasterGetPDUSndLength() );
+            vMBMaster2GetPDUSndBuf( &ucMBFrame );
+            eStatus = peMBMasterFrameSendCur( ucMBMaster2GetDestAddress(), ucMBFrame, usMBMaster2GetPDUSndLength() );
             break;
 
         case EV_MASTER_ERROR_PROCESS:
             /* Execute specified error process callback function. */
-            errorType = eMBMasterGetErrorType();
-            vMBMasterGetPDUSndBuf( &ucMBFrame );
+            errorType = eMBMaster2GetErrorType();
+            vMBMaster2GetPDUSndBuf( &ucMBFrame );
             switch (errorType) {
             case EV_ERROR_RESPOND_TIMEOUT:
-                vMBMasterErrorCBRespondTimeout(ucMBMasterGetDestAddress(),
-                        ucMBFrame, usMBMasterGetPDUSndLength());
+                vMBMasterErrorCBRespondTimeout(ucMBMaster2GetDestAddress(),
+                        ucMBFrame, usMBMaster2GetPDUSndLength());
                 break;
             case EV_ERROR_RECEIVE_DATA:
-                vMBMasterErrorCBReceiveData(ucMBMasterGetDestAddress(),
-                        ucMBFrame, usMBMasterGetPDUSndLength());
+                vMBMasterErrorCBReceiveData(ucMBMaster2GetDestAddress(),
+                        ucMBFrame, usMBMaster2GetPDUSndLength());
                 break;
             case EV_ERROR_EXECUTE_FUNCTION:
-                vMBMasterErrorCBExecuteFunction(ucMBMasterGetDestAddress(),
-                        ucMBFrame, usMBMasterGetPDUSndLength());
+                vMBMasterErrorCBExecuteFunction(ucMBMaster2GetDestAddress(),
+                        ucMBFrame, usMBMaster2GetPDUSndLength());
                 break;
             }
-            vMBMasterRunResRelease();
+            vMBMaster2RunResRelease();
             break;
 
         default:

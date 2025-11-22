@@ -6,8 +6,8 @@
   ******************************************************************************
   */
 
-#ifndef MT_PORT_H
-#define MT_PORT_H
+#ifndef MT_PORT_H_M2
+#define MT_PORT_H_M2
 
 
 

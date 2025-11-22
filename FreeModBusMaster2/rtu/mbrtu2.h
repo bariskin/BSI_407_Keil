@@ -30,8 +30,8 @@
  */
 #include "mbconfig.h"
 
-#ifndef _MB_RTU_H
-#define _MB_RTU_H
+#ifndef _MB_RTU_H_MODBUS_MASTER2
+#define _MB_RTU_H_MODBUS_MASTER2
 
 #ifdef __cplusplus
 PR_BEGIN_EXTERN_C
@@ -47,7 +47,7 @@ PR_BEGIN_EXTERN_C
 //BOOL            xMBRTUTimerT15Expired( void );
 //BOOL            xMBRTUTimerT35Expired( void );
 
-#if MB_MASTER_RTU_ENABLED > 0
+#if MB_MASTER2_RTU_ENABLED > 0
 eMBErrorCode    eMBMaster2RTUInit( UCHAR ucPort, ULONG ulBaudRate,eMBParity eParity );
 void            eMBMaster2RTUStart( void );
 void            eMBMaster2RTUStop( void );

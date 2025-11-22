@@ -26,7 +26,7 @@
 
 TIM_HandleTypeDef htim6;
 TIM_HandleTypeDef htim10;
-
+TIM_HandleTypeDef htim11;
 /* TIM6 init function */
 void MX_TIM6_Init(void)
 {
@@ -120,6 +120,12 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
 
   /* USER CODE END TIM10_MspInit 1 */
   }
+	else if(tim_baseHandle->Instance==TIM11)
+  {
+	 __HAL_RCC_TIM11_CLK_ENABLE();
+	  HAL_NVIC_SetPriority( TIM1_TRG_COM_TIM11_IRQn  , 5, 0);
+    HAL_NVIC_EnableIRQ( TIM1_TRG_COM_TIM11_IRQn );
+	}
 }
 
 void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
@@ -156,5 +162,30 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* tim_baseHandle)
 }
 
 /* USER CODE BEGIN 1 */
+void MX_TIM11_Init(void)
+{
+
+  /* USER CODE BEGIN TIM10_Init 0 */
+
+  /* USER CODE END TIM10_Init 0 */
+
+  /* USER CODE BEGIN TIM10_Init 1 */
+
+  /* USER CODE END TIM10_Init 1 */
+  htim11.Instance = TIM10;
+  htim11.Init.Prescaler = 83;
+  htim11.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim11.Init.Period = 49;
+  htim11.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim11.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim11) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM10_Init 2 */
+
+  /* USER CODE END TIM10_Init 2 */
+
+}
 
 /* USER CODE END 1 */

@@ -91,8 +91,8 @@ void Error_Handler(void);
 #define RX_debug_GPIO_Port GPIOC
 #define RDen1_Pin GPIO_PIN_8
 #define RDen1_GPIO_Port GPIOA
-#define UART4_RD_Pin GPIO_PIN_11
-#define UART4_RD_GPIO_Port GPIOA
+#define RDen_Pin GPIO_PIN_11
+#define RDen_GPIO_Port GPIOA
 #define RDen2_Pin GPIO_PIN_12
 #define RDen2_GPIO_Port GPIOA
 

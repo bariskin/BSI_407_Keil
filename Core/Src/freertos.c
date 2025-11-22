@@ -39,6 +39,7 @@
 #include "RingBuffer.h"
 #include "File_Handling.h"
 #include "SensorLogs.h"
+#include "mb_m2.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -911,7 +912,7 @@ void InputHandlerFunction(void const * argument)
 				else
 				{		
 				   // обновление конценатрации, если датчики есть
-		         UpdateNextionDisplayWithChannelData(SensorInfo.count);
+		      UpdateNextionDisplayWithChannelData(SensorInfo.count);
 				}
 		  }
 		
@@ -1156,6 +1157,7 @@ void MasterModbus2TaskFunction(void const * argument)
   /* Infinite loop */
   for(;;)
   {
+		eMBMaster2Poll();
     osDelay(10);
   }
   /* USER CODE END MasterModbusTaskFunction */

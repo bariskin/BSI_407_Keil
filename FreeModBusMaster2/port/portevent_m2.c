@@ -21,8 +21,8 @@
 
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mb.h"
-#include "mb_m.h"
-#include "mbport.h"
+#include "mb_m2.h"
+#include "mbport2.h"
 #include "port.h"
 
 
@@ -39,7 +39,7 @@ static BOOL xEventInQueue;
 /* ----------------------- Start implementation -----------------------------*/
 
 /*----------------------------------------------------------------------------*/
-BOOL xMBMasterPortEventInit(void)
+BOOL xMBMaster2PortEventInit(void)
 {
   xEventInQueue = FALSE;
   return TRUE;
@@ -48,7 +48,7 @@ BOOL xMBMasterPortEventInit(void)
 
 
 /*----------------------------------------------------------------------------*/
-BOOL xMBMasterPortEventPost(eMBMasterEventType eEvent)
+BOOL xMBMaster2PortEventPost(eMBMasterEventType eEvent)
 {
   xEventInQueue = TRUE;
   eQueuedEvent = eEvent;
@@ -58,7 +58,7 @@ BOOL xMBMasterPortEventPost(eMBMasterEventType eEvent)
 
 
 /*----------------------------------------------------------------------------*/
-BOOL xMBMasterPortEventGet(eMBMasterEventType * eEvent)
+BOOL xMBMaster2PortEventGet(eMBMasterEventType * eEvent)
 {
   BOOL xEventHappened = FALSE;
 
@@ -80,7 +80,7 @@ BOOL xMBMasterPortEventGet(eMBMasterEventType * eEvent)
  * Note:The resource is define by OS.If you not use OS this function can be empty.
  *
  */
-void vMBMasterOsResInit(void)
+void vMBMaster2OsResInit(void)
 {
 }
 
@@ -95,7 +95,7 @@ void vMBMasterOsResInit(void)
  *
  * @return resource taked result
  */
-BOOL xMBMasterRunResTake(int32_t lTimeOut)
+BOOL xMBMaster2RunResTake(int32_t lTimeOut)
 {
   return TRUE;
 }
@@ -108,7 +108,7 @@ BOOL xMBMasterRunResTake(int32_t lTimeOut)
  * Note:The resource is define by Operating System.If you not use OS this function can be empty.
  *
  */
-void vMBMasterRunResRelease(void)
+void vMBMaster2RunResRelease(void)
 {
 }
 
@@ -125,42 +125,42 @@ void vMBMasterRunResRelease(void)
  * @param ucPDULength PDU buffer length
  *
  */
-void vMBMasterErrorCBRespondTimeout(UCHAR ucDestAddress, const UCHAR* pucPDUData,
+void vMBMaster2ErrorCBRespondTimeout(UCHAR ucDestAddress, const UCHAR* pucPDUData,
                                     USHORT ucPDULength)
 {
-  xMBMasterPortEventPost(EV_MASTER_ERROR_RESPOND_TIMEOUT);
+  xMBMaster2PortEventPost(EV_MASTER_ERROR_RESPOND_TIMEOUT);
 }
 
 
 
 /*----------------------------------------------------------------------------*/
-void vMBMasterErrorCBReceiveData(UCHAR ucDestAddress, const UCHAR* pucPDUData,
+void vMBMaster2ErrorCBReceiveData(UCHAR ucDestAddress, const UCHAR* pucPDUData,
                                  USHORT ucPDULength)
 {
-  xMBMasterPortEventPost(EV_MASTER_ERROR_RECEIVE_DATA);
+  xMBMaster2PortEventPost(EV_MASTER_ERROR_RECEIVE_DATA);
 }
 
 
 
 /*----------------------------------------------------------------------------*/
-void vMBMasterErrorCBExecuteFunction(UCHAR ucDestAddress, const UCHAR* pucPDUData,
+void vMBMaster2ErrorCBExecuteFunction(UCHAR ucDestAddress, const UCHAR* pucPDUData,
                                      USHORT ucPDULength)
 {
-  xMBMasterPortEventPost(EV_MASTER_ERROR_EXECUTE_FUNCTION);
+  xMBMaster2PortEventPost(EV_MASTER_ERROR_EXECUTE_FUNCTION);
 }
 
 
 
 /*----------------------------------------------------------------------------*/
-void vMBMasterCBRequestScuuess(void)
+void vMBMaster2CBRequestScuuess(void)
 {
-  xMBMasterPortEventPost(EV_MASTER_PROCESS_SUCESS);
+  xMBMaster2PortEventPost(EV_MASTER_PROCESS_SUCESS);
 }
 
 
 
 /*----------------------------------------------------------------------------*/
-eMBMasterReqErrCode eMBMasterWaitRequestFinish(void)
+eMBMasterReqErrCode eMBMaster2WaitRequestFinish(void)
 {
   eMBMasterReqErrCode eErrStatus = MB_MRE_NO_ERR;
 

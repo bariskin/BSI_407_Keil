@@ -25,8 +25,8 @@
 
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mb.h"
-#include "mbport.h"
-#include "mb_m.h"
+#include "mbport2.h"
+#include "mb_m2.h"
 #include "stm32f4xx_hal.h"
 
 /* ----------------------- static functions ---------------------------------*/
@@ -35,40 +35,40 @@
 /* ----------------------- Variables ----------------------------------------*/
 //extern TIM_HandleTypeDef* modbusTimer;
 
-extern TIM_HandleTypeDef htim10;
-uint16_t timerPeriod = 0;
-volatile uint16_t timerCounter = 0;
+extern TIM_HandleTypeDef htim11;
+uint16_t timerPeriod2 = 0;
+volatile uint16_t timerCounter2 = 0;
 
 /* ----------------------- Start implementation -----------------------------*/
 
 /*----------------------------------------------------------------------------*/
-BOOL xMBMasterPortTimersInit(USHORT usTim1Timerout50us)
+BOOL xMBMaster2PortTimersInit(USHORT usTim1Timerout50us)
 {
-  timerPeriod = usTim1Timerout50us;
+  timerPeriod2 = usTim1Timerout50us;
   return TRUE;
 }
 
 /* --------------------------------------------------------------------------*/
-inline void vMBMasterPortTimersT35Enable()
+inline void vMBMaster2PortTimersT35Enable()
 {
-  vMBMasterSetCurTimerMode(MB_TMODE_T35);
-  timerCounter = 0;
-  HAL_TIM_Base_Start_IT(&htim10);
+  vMBMaster2SetCurTimerMode(MB_TMODE_T35);
+  timerCounter2 = 0;
+  HAL_TIM_Base_Start_IT(&htim11);
 }
 /* --------------------------------------------------------------------------*/
-void vMBMasterPortTimersConvertDelayEnable()
+void vMBMaster2PortTimersConvertDelayEnable()
 {
-  vMBMasterSetCurTimerMode(MB_TMODE_CONVERT_DELAY);
+  vMBMaster2SetCurTimerMode(MB_TMODE_CONVERT_DELAY);
 }
 /* --------------------------------------------------------------------------*/
-void vMBMasterPortTimersRespondTimeoutEnable()
+void vMBMaster2PortTimersRespondTimeoutEnable()
 {
-  vMBMasterSetCurTimerMode(MB_TMODE_RESPOND_TIMEOUT);
+  vMBMaster2SetCurTimerMode(MB_TMODE_RESPOND_TIMEOUT);
 }
 /* --------------------------------------------------------------------------*/
-inline void vMBMasterPortTimersDisable()
+inline void vMBMaster2PortTimersDisable()
 {
-  HAL_TIM_Base_Stop_IT(&htim10);
+  HAL_TIM_Base_Stop_IT(&htim11);
 }
 
 /* --------------------------------------------------------------------------*/

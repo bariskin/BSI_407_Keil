@@ -23,54 +23,53 @@
 
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mb.h"
-#include "mbport.h"
+#include "mbport2.h"
 #include "stm32f4xx_hal.h"
 #include "main.h"
 
 /* ----------------------- static functions ---------------------------------*/
-static void prvvUARTTxReadyISR(void);
+static void prvvUARTTxReadyISR2(void);
 //static void prvvUARTRxISR(void);
 
 /* ----------------------- Variables ----------------------------------------*/
 
-extern UART_HandleTypeDef huart2;
-UART_HandleTypeDef* modbusUartMaster = &huart2;
+extern UART_HandleTypeDef huart4;
+UART_HandleTypeDef* modbusUartMaster2 = &huart4;
 static uint8_t txByte = 0x00;
 static volatile uint8_t rxByte = 0x00;
 
-extern UART_HandleTypeDef* modbusUartMaster ;
+extern UART_HandleTypeDef* modbusUartMaster2 ;
 /* ----------------------- User defenitions ---------------------------------*/
-#define RS485_RD_LOW_MASTER	  HAL_GPIO_WritePin(RDen2_GPIO_Port, RDen2_Pin, GPIO_PIN_RESET)
-#define RS485_RD_HIGH_MASTER 	HAL_GPIO_WritePin(RDen2_GPIO_Port, RDen2_Pin, GPIO_PIN_SET)
+#define RS485_RD_LOW_MASTER2	  HAL_GPIO_WritePin(RDen_GPIO_Port, RDen_Pin, GPIO_PIN_RESET)
+#define RS485_RD_HIGH_MASTER2 	HAL_GPIO_WritePin(RDen_GPIO_Port, RDen_Pin, GPIO_PIN_SET)
 /* ----------------------- Start implementation -----------------------------*/
 
 /*----------------------------------------------------------------------------*/
-void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
+void vMBMaster2PortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 {
 	
  if(xRxEnable) 
   {
-		RS485_RD_LOW_MASTER;	
-    HAL_UART_Receive_IT(modbusUartMaster, (uint8_t*)&rxByte, 1);
+		RS485_RD_LOW_MASTER2;	
+    HAL_UART_Receive_IT(modbusUartMaster2, (uint8_t*)&rxByte, 1);
   }
 		
  else
   {
-    HAL_UART_AbortReceive_IT(modbusUartMaster);
+    HAL_UART_AbortReceive_IT(modbusUartMaster2);
   }
  
 	if(xTxEnable)
-  {
-		//RS485_RD_HIGH_MASTER; 
-    if (modbusUartMaster->gState == HAL_UART_STATE_READY)
+  { 
+    if (modbusUartMaster2->gState == HAL_UART_STATE_READY)
     {
-			RS485_RD_HIGH_MASTER; 
-      prvvUARTTxReadyISR();
+			RS485_RD_HIGH_MASTER2; 
+      prvvUARTTxReadyISR2();
     }
 	}
   else
   {
-    HAL_UART_AbortTransmit_IT(modbusUartMaster);
+    HAL_UART_AbortTransmit_IT(modbusUartMaster2);
   }
   
 }
@@ -78,7 +77,7 @@ void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 
 
 /* --------------------------------------------------------------------------*/
-BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits, eMBParity eParity)
+BOOL xMBMaster2PortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits, eMBParity eParity)
 {
   return TRUE;
 }
@@ -86,25 +85,25 @@ BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits, e
 
 
 /* --------------------------------------------------------------------------*/
-BOOL xMBMasterPortSerialPutByte(CHAR ucByte)
+BOOL xMBMaster2PortSerialPutByte(CHAR ucByte)
 {
   txByte = ucByte;
-  HAL_UART_Transmit_IT(modbusUartMaster, &txByte, 1);
+  HAL_UART_Transmit_IT(modbusUartMaster2, &txByte, 1);
   return TRUE;
 }
 
 /* --------------------------------------------------------------------------*/
-BOOL xMBMasterPortSerialGetByte( CHAR * pucByte )
+BOOL xMBMaster2PortSerialGetByte( CHAR * pucByte )
 {
   *pucByte = rxByte;
-  HAL_UART_Receive_IT(modbusUartMaster, (uint8_t*)&rxByte, 1);
+  HAL_UART_Receive_IT(modbusUartMaster2, (uint8_t*)&rxByte, 1);
   return TRUE;
 }
 
 /* --------------------------------------------------------------------------*/
-static void prvvUARTTxReadyISR(void)
+static void prvvUARTTxReadyISR2(void)
 {
-  pxMBMasterFrameCBTransmitterEmpty();
+  pxMBMaster2FrameCBTransmitterEmpty();
 }
 
 /* --------------------------------------------------------------------------*/

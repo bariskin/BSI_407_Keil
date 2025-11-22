@@ -19,8 +19,8 @@
  * File: $Id: port.h ,v 1.60 2013/08/13 15:07:05 Armink add Master Functions $
  */
 
-#ifndef _PORT_H
-#define _PORT_H
+#ifndef _PORT_H_MODBUS_MASTER_H
+#define _PORT_H_MODBUS_MASTER_H
 
 #include "mbconfig.h"
 #include "mt_port2.h"

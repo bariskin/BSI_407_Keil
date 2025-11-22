@@ -44,7 +44,7 @@
 
 /* ----------------------- Start implementation -----------------------------*/
 void
-xMBUtilSetBits( UCHAR * ucByteBuf, USHORT usBitOffset, UCHAR ucNBits,
+xMBUtilSetBits2( UCHAR * ucByteBuf, USHORT usBitOffset, UCHAR ucNBits,
                 UCHAR ucValue )
 {
     USHORT          usWordBuf;
@@ -83,7 +83,7 @@ xMBUtilSetBits( UCHAR * ucByteBuf, USHORT usBitOffset, UCHAR ucNBits,
 }
 
 UCHAR
-xMBUtilGetBits( UCHAR * ucByteBuf, USHORT usBitOffset, UCHAR ucNBits )
+xMBUtilGetBits2( UCHAR * ucByteBuf, USHORT usBitOffset, UCHAR ucNBits )
 {
     USHORT          usWordBuf;
     USHORT          usMask;

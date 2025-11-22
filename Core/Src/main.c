@@ -29,6 +29,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
 #include "ModbusSettings.h"
 #include "UARTSlaveSettings.h"
 #include "mb.h"
@@ -44,6 +45,9 @@
 #include "File_Handling.h"
 #include "SensorLogs.h"
 #include "stdbool.h"
+
+#include "mb_m2.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -71,6 +75,9 @@ extern uint8_t ModBusSlaveDefaultDeviceAddr;
 
 extern uint16_t timerPeriod;
 extern volatile uint16_t timerCounter;
+extern uint16_t timerPeriod2;
+extern volatile uint16_t timerCounter2;
+
 extern uint8_t  numberOfDevices;
 extern bool sd_card_present;
 //**********Variables for ring biffer*******************/
@@ -139,6 +146,7 @@ int main(void)
   MX_TIM10_Init();
   MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
+	MX_TIM11_Init();
 	
 	/* *************** checking SD card ************** */ 
 	
@@ -172,6 +180,17 @@ int main(void)
    {
     // Error handling
    }
+	 
+	/* *************MODBUS MASTER 2 init****************** */
+  vMBMaster2SetDestAddress(ModBusSlaveDefaultDeviceAddr);	 
+	 
+	eStatus = eMBMaster2Init(MB_RTU, 0, 9600, MB_PAR_NONE);
+  eStatus = eMBMaster2Enable();
+  if (eStatus != MB_ENOERR)
+   {
+    // Error handling
+   } 
+	 
 	 
  /* ************  Sensors initialisation ********** */
 	 
@@ -287,6 +306,16 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			 ( void )pxMBMasterPortCBTimerExpired();
     }
   }
+	else if (htim->Instance == htim11.Instance)
+  {
+    timerCounter2++;
+
+    if (timerCounter2 == timerPeriod2)
+    {
+			 ( void )pxMBMaster2PortCBTimerExpired();
+    }
+  }
+	
 
   /* USER CODE END Callback 1 */
 }

@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../FreeModbusSlave/include;../FreeModbusSlave/app;../FreeModbusSlave/port;../FreeModbusSlave/rtu;../ModbusSetting/Inc;../HoldingRegisterSlave/Inc;../FreeModbusMaster/include/mb_m;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../ModBusAddrConverter/Inc;../bsp/Inc;../FreeModbusMaster/user_mb_app;../UARTSlaveSettings/Inc;../FlashDriver/Inc;../DisplayDriver/Inc;../RingBuffer/Inc;../FATFS/Target;../FATFS/App;../Middlewares/Third_Party/FatFs/src;../SdDriver/Inc;..\SensorLogs\Inc;..\FreeModBusMaster2\rtu;..\FreeModBusMaster2\include;..\FreeModBusMaster2\include\mb_m;..\FreeModBusMaster2\port</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../FreeModbusSlave/include;../FreeModbusSlave/app;../FreeModbusSlave/port;../FreeModbusSlave/rtu;../ModbusSetting/Inc;../HoldingRegisterSlave/Inc;../FreeModbusMaster/include/mb_m;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../ModBusAddrConverter/Inc;../bsp/Inc;../FreeModbusMaster/user_mb_app;../UARTSlaveSettings/Inc;../FlashDriver/Inc;../DisplayDriver/Inc;../RingBuffer/Inc;../FATFS/Target;../FATFS/App;../Middlewares/Third_Party/FatFs/src;../SdDriver/Inc;..\SensorLogs\Inc;..\FreeModBusMaster2\rtu;..\FreeModBusMaster2\include;..\FreeModBusMaster2\include\mb_m;..\FreeModBusMaster2\port;..\FreeModBusMaster2\user_mb_app;..\FreeModBusMaster2\include\mb_m</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2263,6 +2263,36 @@
               <FileName>mbrtu_m2.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModBusMaster2\rtu\mbrtu_m2.c</FilePath>
+            </File>
+            <File>
+              <FileName>porttimer_m2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModBusMaster2\port\porttimer_m2.c</FilePath>
+            </File>
+            <File>
+              <FileName>portserial_m2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModBusMaster2\port\portserial_m2.c</FilePath>
+            </File>
+            <File>
+              <FileName>portevent_m2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModBusMaster2\port\portevent_m2.c</FilePath>
+            </File>
+            <File>
+              <FileName>mbfuncinput_m2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModBusMaster2\functions\mbfuncinput_m2.c</FilePath>
+            </File>
+            <File>
+              <FileName>mbfuncholding_m2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModBusMaster2\functions\mbfuncholding_m2.c</FilePath>
+            </File>
+            <File>
+              <FileName>user_mb_app_m2.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModBusMaster2\user_mb_app\user_mb_app_m2.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -37,12 +37,12 @@
 
 /* ----------------------- Modbus includes ----------------------------------*/
 #include "mb.h"
-#include "mb_m.h"
+#include "mb_m2.h"
 #include "mbrtu2.h"
 #include "mbframe.h"
 
 #include "mbcrc.h"
-#include "mbport.h"
+#include "mbport2.h"
 
 #if MB_MASTER_RTU_ENABLED > 0
 /* ----------------------- Defines ------------------------------------------*/
@@ -94,7 +94,7 @@ eMBMaster2RTUInit(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity )
     ENTER_CRITICAL_SECTION(  );
 
     /* Modbus RTU uses 8 Databits. */
-    if( xMBMasterPortSerialInit( ucPort, ulBaudRate, 8, eParity ) != TRUE )
+    if( xMBMaster2PortSerialInit( ucPort, ulBaudRate, 8, eParity ) != TRUE )
     {
         eStatus = MB_EPORTERR;
     }
@@ -119,7 +119,7 @@ eMBMaster2RTUInit(UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity )
              */
             usTimerT35_50us = ( 7UL * 220000UL ) / ( 2UL * ulBaudRate );
         }
-        if( xMBMasterPortTimersInit( ( USHORT ) usTimerT35_50us ) != TRUE )
+        if( xMBMaster2PortTimersInit( ( USHORT ) usTimerT35_50us ) != TRUE )
         {
             eStatus = MB_EPORTERR;
         }
@@ -139,8 +139,8 @@ eMBMaster2RTUStart( void )
      * modbus protocol stack until the bus is free.
      */
     eRcvState = STATE_M_RX_INIT;
-    vMBMasterPortSerialEnable( TRUE, FALSE );
-    vMBMasterPortTimersT35Enable(  );
+    vMBMaster2PortSerialEnable( TRUE, FALSE );
+    vMBMaster2PortTimersT35Enable(  );
 
     EXIT_CRITICAL_SECTION(  );
 }
@@ -149,8 +149,8 @@ void
 eMBMaster2RTUStop( void )
 {
     ENTER_CRITICAL_SECTION(  );
-    vMBMasterPortSerialEnable( FALSE, FALSE );
-    vMBMasterPortTimersDisable(  );
+    vMBMaster2PortSerialEnable( FALSE, FALSE );
+    vMBMaster2PortTimersDisable(  );
     EXIT_CRITICAL_SECTION(  );
 }
 
@@ -219,7 +219,7 @@ eMBMaster2RTUSend( UCHAR ucSlaveAddress, const UCHAR * pucFrame, USHORT usLength
 
         /* Activate the transmitter. */
         eSndState = STATE_M_TX_XMIT;
-        vMBMasterPortSerialEnable( FALSE, TRUE );
+        vMBMaster2PortSerialEnable( FALSE, TRUE );
     }
     else
     {
@@ -238,7 +238,7 @@ xMBMaster2RTUReceiveFSM( void )
     assert_param(( eSndState == STATE_M_TX_IDLE ) || ( eSndState == STATE_M_TX_XFWR ));
 
     /* Always read the character. */
-    ( void )xMBMasterPortSerialGetByte( ( CHAR * ) & ucByte );
+    ( void )xMBMaster2PortSerialGetByte( ( CHAR * ) & ucByte );
 
     switch ( eRcvState )
     {
@@ -246,14 +246,14 @@ xMBMaster2RTUReceiveFSM( void )
          * wait until the frame is finished.
          */
     case STATE_M_RX_INIT:
-        vMBMasterPortTimersT35Enable( );
+        vMBMaster2PortTimersT35Enable( );
         break;
 
         /* In the error state we wait until all characters in the
          * damaged frame are transmitted.
          */
     case STATE_M_RX_ERROR:
-        vMBMasterPortTimersT35Enable( );
+        vMBMaster2PortTimersT35Enable( );
         break;
 
         /* In the idle state we wait for a new character. If a character
@@ -265,7 +265,7 @@ xMBMaster2RTUReceiveFSM( void )
         /* In time of respond timeout,the receiver receive a frame.
          * Disable timer of respond timeout and change the transmiter state to idle.
          */
-        vMBMasterPortTimersDisable( );
+        vMBMaster2PortTimersDisable( );
         eSndState = STATE_M_TX_IDLE;
 
         usMasterRcvBufferPos = 0;
@@ -273,7 +273,7 @@ xMBMaster2RTUReceiveFSM( void )
         eRcvState = STATE_M_RX_RCV;
 
         /* Enable t3.5 timers. */
-        vMBMasterPortTimersT35Enable( );
+        vMBMaster2PortTimersT35Enable( );
         break;
 
         /* We are currently receiving a frame. Reset the timer after
@@ -290,7 +290,7 @@ xMBMaster2RTUReceiveFSM( void )
         {
             eRcvState = STATE_M_RX_ERROR;
         }
-        vMBMasterPortTimersT35Enable();
+        vMBMaster2PortTimersT35Enable();
         break;
     }
     return xTaskNeedSwitch;
@@ -309,14 +309,14 @@ xMBMaster2RTUTransmitFSM( void )
          * idle state.  */
     case STATE_M_TX_IDLE:
         /* enable receiver/disable transmitter. */
-        vMBMasterPortSerialEnable( TRUE, FALSE );
+        vMBMaster2PortSerialEnable( TRUE, FALSE );
         break;
 
     case STATE_M_TX_XMIT:
         /* check if we are finished. */
         if( usMasterSndBufferCount != 0 )
         {
-            xMBMasterPortSerialPutByte( ( CHAR )*pucMasterSndBufferCur );
+            xMBMaster2PortSerialPutByte( ( CHAR )*pucMasterSndBufferCur );
             pucMasterSndBufferCur++;  /* next byte in sendbuffer. */
             usMasterSndBufferCount--;
         }
@@ -325,17 +325,17 @@ xMBMaster2RTUTransmitFSM( void )
             xFrameIsBroadcast = ( ucMasterRTUSndBuf[MB_SER_PDU_ADDR_OFF] == MB_ADDRESS_BROADCAST ) ? TRUE : FALSE;
             /* Disable transmitter. This prevents another transmit buffer
              * empty interrupt. */
-            vMBMasterPortSerialEnable( TRUE, FALSE );
+            vMBMaster2PortSerialEnable( TRUE, FALSE );
             eSndState = STATE_M_TX_XFWR;
             /* If the frame is broadcast ,master will enable timer of convert delay,
              * else master will enable timer of respond timeout. */
             if ( xFrameIsBroadcast == TRUE )
             {
-                vMBMasterPortTimersConvertDelayEnable( );
+                vMBMaster2PortTimersConvertDelayEnable( );
             }
             else
             {
-                vMBMasterPortTimersRespondTimeoutEnable( );
+                vMBMaster2PortTimersRespondTimeoutEnable( );
             }
         }
         break;
@@ -356,19 +356,19 @@ xMBMaster2RTUTimerExpired(void)
     {
         /* Timer t35 expired. Startup phase is finished. */
     case STATE_M_RX_INIT:
-        xNeedPoll = xMBMasterPortEventPost(EV_MASTER_READY);
+        xNeedPoll = xMBMaster2PortEventPost(EV_MASTER_READY);
         break;
 
         /* A frame was received and t35 expired. Notify the listener that
          * a new frame was received. */
     case STATE_M_RX_RCV:
-        xNeedPoll = xMBMasterPortEventPost(EV_MASTER_FRAME_RECEIVED);
+        xNeedPoll = xMBMaster2PortEventPost(EV_MASTER_FRAME_RECEIVED);
         break;
 
         /* An error occured while receiving the frame. */
     case STATE_M_RX_ERROR:
-        vMBMasterSetErrorType(EV_ERROR_RECEIVE_DATA);
-        xNeedPoll = xMBMasterPortEventPost( EV_MASTER_ERROR_PROCESS );
+        vMBMaster2SetErrorType(EV_ERROR_RECEIVE_DATA);
+        xNeedPoll = xMBMaster2PortEventPost( EV_MASTER_ERROR_PROCESS );
         break;
 
         /* Function called in an illegal state. */
@@ -387,8 +387,8 @@ xMBMaster2RTUTimerExpired(void)
          * broadcast.Notify the listener process error.*/
     case STATE_M_TX_XFWR:
         if ( xFrameIsBroadcast == FALSE ) {
-            vMBMasterSetErrorType(EV_ERROR_RESPOND_TIMEOUT);
-            xNeedPoll = xMBMasterPortEventPost(EV_MASTER_ERROR_PROCESS);
+            vMBMaster2SetErrorType(EV_ERROR_RESPOND_TIMEOUT);
+            xNeedPoll = xMBMaster2PortEventPost(EV_MASTER_ERROR_PROCESS);
         }
         break;
         /* Function called in an illegal state. */
@@ -402,7 +402,7 @@ xMBMaster2RTUTimerExpired(void)
     vMBMasterPortTimersDisable( );
     /* If timer mode is convert delay, the master event then turns EV_MASTER_EXECUTE status. */
     if (eMasterCurTimerMode == MB_TMODE_CONVERT_DELAY) {
-        xNeedPoll = xMBMasterPortEventPost( EV_MASTER_EXECUTE );
+        xNeedPoll = xMBMaster2PortEventPost( EV_MASTER_EXECUTE );
     }
 
     return xNeedPoll;

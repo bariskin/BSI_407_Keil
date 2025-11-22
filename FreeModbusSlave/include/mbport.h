@@ -103,6 +103,21 @@ BOOL            xMBMasterRunResTake( int32_t time );
 
 void            vMBMasterRunResRelease( void );
 
+
+/* ------------------------------------------------------------------- */
+BOOL            xMBMaster2PortEventInit( void );
+
+BOOL            xMBMaster2PortEventPost( eMBMasterEventType eEvent );
+
+BOOL            xMBMaster2PortEventGet(  /*@out@ */ eMBMasterEventType * eEvent );
+
+void            vMBMaster2OsResInit( void );
+
+BOOL            xMBMaster2RunResTake( int32_t time );
+
+void            vMBMaster2RunResRelease( void );
+
+
 /* ----------------------- Serial port functions ----------------------------*/
 
 BOOL            xMBPortSerialInit( void *dHUART, ULONG ulBaudRate, void *dHTIM );
@@ -133,6 +148,24 @@ INLINE BOOL     xMBMasterPortSerialPutByte( CHAR ucByte );
 
 INLINE BOOL     xMBMasterPortSerialPutBytes( volatile UCHAR *ucByte, USHORT usSize );
 
+
+/* ------------------------------------------------------------------- */
+
+
+BOOL            xMBMaster2PortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits,eMBParity eParity);
+
+void            vMBMaster2PortClose( void );
+
+void            xMBMaster2PortSerialClose( void );
+
+void            vMBMaster2PortSerialEnable( BOOL xRxEnable, BOOL xTxEnable );
+
+INLINE BOOL     xMBMaster2PortSerialGetByte( CHAR * pucByte );
+
+INLINE BOOL     xMBMaster2PortSerialPutByte( CHAR ucByte );
+
+INLINE BOOL     xMBMaster2PortSerialPutBytes( volatile UCHAR *ucByte, USHORT usSize );
+
 /* ----------------------- Timers functions ---------------------------------*/
 BOOL            xMBPortTimersInit( USHORT usTimeOut50us, void *dHTIM );
 
@@ -153,6 +186,23 @@ INLINE void     vMBMasterPortTimersConvertDelayEnable( void );
 INLINE void     vMBMasterPortTimersRespondTimeoutEnable( void );
 
 INLINE void     vMBMasterPortTimersDisable( void );
+
+
+/* ------------------------------------------------------------------- */
+
+BOOL            xMBMaster2PortTimersInit( USHORT usTimeOut50us );
+
+void            xMBMaster2PortTimersClose( void );
+
+INLINE void     vMBMaster2PortTimersT35Enable( void );
+
+INLINE void     vMBMaster2PortTimersConvertDelayEnable( void );
+
+INLINE void     vMBMaster2PortTimersRespondTimeoutEnable( void );
+
+INLINE void     vMBMaster2PortTimersDisable( void );
+
+
 
 /* ----------------- Callback for the master error process ------------------*/
 void            vMBMasterErrorCBRespondTimeout( UCHAR ucDestAddress, const UCHAR* pucPDUData, USHORT ucPDULength );
@@ -188,6 +238,21 @@ extern          BOOL( *pxMBMasterFrameCBByteReceived ) ( void );
 extern          BOOL( *pxMBMasterFrameCBTransmitterEmpty ) ( void );
 
 extern          BOOL( *pxMBMasterPortCBTimerExpired ) ( void );
+
+
+
+extern          BOOL( *pxMBFrame2CBByteReceived ) ( void );
+
+extern          BOOL( *pxMBFrame2CBTransmitterEmpty ) ( void );
+
+extern          BOOL( *pxMBPort2CBTimerExpired ) ( void );
+
+extern          BOOL( *pxMBMaster2FrameCBByteReceived ) ( void );
+
+extern          BOOL( *pxMBMaster2FrameCBTransmitterEmpty ) ( void );
+
+extern          BOOL( *pxMBMaster2PortCBTimerExpired ) ( void );
+
 
 /* ----------------------- TCP port functions -------------------------------*/
 BOOL            xMBTCPPortInit( USHORT usTCPPort );

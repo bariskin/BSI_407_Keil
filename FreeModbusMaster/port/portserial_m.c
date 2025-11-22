@@ -61,7 +61,7 @@ void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
  
 	if(xTxEnable)
   {
-		//RS485_RD_HIGH_MASTER; 
+		
     if (modbusUartMaster->gState == HAL_UART_STATE_READY)
     {
 			RS485_RD_HIGH_MASTER; 
