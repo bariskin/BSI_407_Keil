@@ -158,7 +158,7 @@ typedef enum
 		CASE_SENSOR_SUBSTANCE_CODE_1_2        =    6,
 		CASE_SENSOR_PRIMARY_VALUE_HIGH        =    7, 
 		CASE_SENSOR_SECONDARY_VALUE_HIGH      =    8,
-		CASE_READ_CURRENT_STATTE              =    9,
+		CASE_READ_CURRENT_STATE              =    9,
 		CASE_WAITNG_CALBRATION_STATE          =    10,
 		CASE_READING_CALBRATION_STATE         =    11,
 		CASE_GET_CALBRATION_STATE             =    12,

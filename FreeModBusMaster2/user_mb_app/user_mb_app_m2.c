@@ -62,7 +62,7 @@ eMBErrorCode eMBMaster2RegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHOR
     USHORT          REG_INPUT_NREGS;
     USHORT          usRegInStart;
 
-    pusRegInputBuf = usMRegInBuf2[ucMBMasterGetDestAddress() - 1];
+    pusRegInputBuf = usMRegInBuf2[ucMBMaster2GetDestAddress() - 1];
     REG_INPUT_START = M_REG_INPUT_START;
     REG_INPUT_NREGS = M_REG_INPUT_NREGS;
     usRegInStart = usMRegInStart2;
@@ -116,7 +116,7 @@ eMBErrorCode eMBMaster2RegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
     USHORT          REG_HOLDING_NREGS;
     USHORT          usRegHoldStart;
 
-    pusRegHoldingBuf = usMRegHoldBuf2[ucMBMasterGetDestAddress() - 1];
+    pusRegHoldingBuf = usMRegHoldBuf2[ucMBMaster2GetDestAddress() - 1];
     REG_HOLDING_START = M_REG_HOLDING_START;
     REG_HOLDING_NREGS = M_REG_HOLDING_NREGS;
     usRegHoldStart = usMRegHoldStart2;

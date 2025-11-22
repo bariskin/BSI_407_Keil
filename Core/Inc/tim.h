@@ -37,14 +37,14 @@ extern TIM_HandleTypeDef htim6;
 extern TIM_HandleTypeDef htim10;
 
 /* USER CODE BEGIN Private defines */
-extern TIM_HandleTypeDef htim11;
+extern TIM_HandleTypeDef htim13;
 /* USER CODE END Private defines */
 
 void MX_TIM6_Init(void);
 void MX_TIM10_Init(void);
 
 /* USER CODE BEGIN Prototypes */
-void MX_TIM11_Init(void);
+void MX_TIM13_Init(void);
 /* USER CODE END Prototypes */
 
 #ifdef __cplusplus

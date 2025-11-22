@@ -7,9 +7,9 @@
 /* ----------------------- Static variables ---------------------------------*/
 UART_HandleTypeDef *slaveUart;
 volatile uint8_t singlechar;
-
-
 extern UART_HandleTypeDef* modbusUartMaster ;
+
+extern UART_HandleTypeDef* modbusUartMaster2 ;
 /* ----------------------- User defenitions ---------------------------------*/
 #define RS485_RD_LOW_SLAVE	  HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_RESET)
 #define RS485_RD_HIGH_SLAVE 	HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_SET)
@@ -79,6 +79,11 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
   {
 		pxMBMasterFrameCBByteReceived();
   }
+	else	if (huart->Instance == modbusUartMaster2->Instance)
+  {
+		pxMBMaster2FrameCBByteReceived();
+  }
+	
 }
 
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
@@ -90,6 +95,11 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 	else if (huart->Instance == modbusUartMaster->Instance)
   {
 		 pxMBMasterFrameCBTransmitterEmpty();
+  }
+	
+	else if (huart->Instance == modbusUartMaster2->Instance)
+  {
+		 pxMBMaster2FrameCBTransmitterEmpty();
   }
 }
 

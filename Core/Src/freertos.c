@@ -140,7 +140,7 @@ uint32_t MasterModbus2TasBuffer[ 256 ];
 osStaticThreadDef_t MasterModbus2TasControlBlock;
 
 void MasterModbus2TaskFunction(void const * argument);
-
+void HoldingHandlerFunction2(void const * argument);
 
 /* USER CODE END Variables */
 osThreadId SlaveModbusTaskHandle;
@@ -166,6 +166,17 @@ uint32_t SendToDispTaskBuffer[ 1600];
 osStaticThreadDef_t SendToDispTaskControlBlock;
 osMutexId myMutex01Handle;
 osStaticMutexDef_t myMutex01ControlBlock;
+
+osThreadId HoldingHandlerHandle2;
+uint32_t HoldingHandlerBuffer2[ 256 ];
+osStaticThreadDef_t HoldingHandlerControlBlock2;
+
+
+osMutexId myMutex02Handle;
+osStaticMutexDef_t myMutex02ControlBlock;
+
+
+
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -217,6 +228,9 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of myMutex01 */
   osMutexStaticDef(myMutex01, &myMutex01ControlBlock);
   myMutex01Handle = osMutexCreate(osMutex(myMutex01));
+	
+	osMutexStaticDef(myMutex02, &myMutex02ControlBlock);
+  myMutex02Handle = osMutexCreate(osMutex(myMutex02));
 
   /* USER CODE BEGIN RTOS_MUTEX */
   /* add mutexes, ... */
@@ -271,7 +285,10 @@ void MX_FREERTOS_Init(void) {
   MasterModbus2TasHandle = osThreadCreate(osThread(MasterModbus2Tas), NULL);
 
 	
-	
+	 /* definition and creation of HoldingHandler */
+  osThreadStaticDef(HoldingHandler2, HoldingHandlerFunction2, osPriorityAboveNormal, 0, 256, HoldingHandlerBuffer2, &HoldingHandlerControlBlock2);
+  HoldingHandlerHandle = osThreadCreate(osThread(HoldingHandler2), NULL);
+
 	
 	
 	displayCommandQueue = xQueueCreate(20, sizeof(DisplayCommand_t));
@@ -337,7 +354,6 @@ void MasterModbusTaskFunction(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_HoldingHandlerFunction */
-DisplayCommand_t displayCmd;
 
 void HoldingHandlerFunction(void const * argument)
 {
@@ -425,15 +441,15 @@ void HoldingHandlerFunction(void const * argument)
 								 requestConcetration2 = true;
 								 eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_SECONDARY_VALUE_HIGH, 3, 200 );
 								
-								 SelectRunFlag = CASE_READ_CURRENT_STATTE;
+								 SelectRunFlag = CASE_READ_CURRENT_STATE;
 								
 								if( ControlCycleFlag)
 								 {
-									 SelectRunFlag = CASE_READ_CURRENT_STATTE; 
+									 SelectRunFlag = CASE_READ_CURRENT_STATE; 
 								 }		
               }
 				    /* ********************************* set next slave addr *************************** */	
-				     else if (SelectRunFlag == CASE_READ_CURRENT_STATTE)
+				     else if (SelectRunFlag == CASE_READ_CURRENT_STATE)
 				      {
 								if(ControlCycleFlag)
 								{
@@ -1155,12 +1171,41 @@ void MasterModbus2TaskFunction(void const * argument)
 {
   /* USER CODE BEGIN MasterModbusTaskFunction */
   /* Infinite loop */
-  for(;;)
+	
+	for(;;)
   {
-		eMBMaster2Poll();
-    osDelay(10);
+		// Пытаемся захватить мьютекс (ждём 100 мс)
+     osStatus status = osMutexWait(myMutex02Handle, 10);
+		 if (status == osOK) {		 
+		     eMBMaster2Poll();
+			  // Освобождаем мьютекс
+       osMutexRelease(myMutex02Handle);
+		 }
+    osDelay(1);
   }
   /* USER CODE END MasterModbusTaskFunction */
 }
+
+void HoldingHandlerFunction2(void const * argument)
+{
+	  osDelay(10000);
+	
+	 for(;;)
+   {
+		 osStatus status = osMutexWait(myMutex02Handle, 10);
+		 if (status == osOK){
+						
+				eMBMaster2ReqReadInputRegister(3, SENSOR_PRIMARY_VALUE_HIGH, 3, 200 );	
+				osMutexRelease(myMutex02Handle);		
+			}
+		 
+		osDelay(TIME_STEP_DEFAULT_150_MS); 	    // 150 ms 	
+	 }
+}	
+
+
+
+
+
 
 /* USER CODE END Application */

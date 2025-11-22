@@ -72,7 +72,7 @@ extern TIM_HandleTypeDef htim2;
 
 /* USER CODE BEGIN EV */
 
-extern TIM_HandleTypeDef htim11;
+extern TIM_HandleTypeDef htim13;
                    // Максимальный размер буфера
 #define PACKET_END_MARKER 0xFFFFF             // Маркер конца пакета (0xFF 0xFF 0xFF)
 
@@ -322,12 +322,12 @@ void USART6_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-void TIM11_IRQHandler(void)
+void TIM8_UP_TIM13_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM2_IRQn 0 */
 
   /* USER CODE END TIM2_IRQn 0 */
-  HAL_TIM_IRQHandler(&htim11);
+  HAL_TIM_IRQHandler(&htim13);
   /* USER CODE BEGIN TIM2_IRQn 1 */
 
   /* USER CODE END TIM2_IRQn 1 */

@@ -73,11 +73,11 @@ static enum
  * mode (RTU or ASCII) the are set to the correct implementations.
  * Using for Modbus Master,Add by Armink 20130813
  */
-static peMBFrameSend peMBMasterFrameSendCur;
-static pvMBFrameStart pvMBMasterFrameStartCur;
-static pvMBFrameStop pvMBMasterFrameStopCur;
-static peMBFrameReceive peMBMasterFrameReceiveCur;
-static pvMBFrameClose pvMBMasterFrameCloseCur;
+static peMBFrameSend peMBMaster2FrameSendCur;
+static pvMBFrameStart pvMBMaster2FrameStartCur;
+static pvMBFrameStop pvMBMaster2FrameStopCur;
+static peMBFrameReceive peMBMaster2FrameReceiveCur;
+static pvMBFrameClose pvMBMaster2FrameCloseCur;
 
 /* Callback functions required by the porting layer. They are called when
  * an external event has happend which includes a timeout or the reception
@@ -138,11 +138,11 @@ eMBMaster2Init( eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity
     {
 #if MB_MASTER2_RTU_ENABLED > 0
     case MB_RTU:
-        pvMBMasterFrameStartCur = eMBMaster2RTUStart;
-        pvMBMasterFrameStopCur = eMBMaster2RTUStop;
-        peMBMasterFrameSendCur = eMBMaster2RTUSend;
-        peMBMasterFrameReceiveCur = eMBMaster2RTUReceive;
-        pvMBMasterFrameCloseCur = MB_PORT2_HAS_CLOSE ? vMBMaster2PortClose : NULL;
+        pvMBMaster2FrameStartCur = eMBMaster2RTUStart;
+        pvMBMaster2FrameStopCur = eMBMaster2RTUStop;
+        peMBMaster2FrameSendCur = eMBMaster2RTUSend;
+        peMBMaster2FrameReceiveCur = eMBMaster2RTUReceive;
+        pvMBMaster2FrameCloseCur = MB_PORT2_HAS_CLOSE ? vMBMaster2PortClose : NULL;
         pxMBMaster2FrameCBByteReceived = xMBMaster2RTUReceiveFSM;
         pxMBMaster2FrameCBTransmitterEmpty = xMBMaster2RTUTransmitFSM;
         pxMBMaster2PortCBTimerExpired = xMBMaster2RTUTimerExpired;
@@ -158,7 +158,7 @@ eMBMaster2Init( eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity
 
     if (eStatus == MB_ENOERR)
     {
-        if (!xMBMasterPortEventInit())
+        if (!xMBMaster2PortEventInit())
         {
             /* port dependent event module initalization failed. */
             eStatus = MB_EPORTERR;
@@ -168,7 +168,7 @@ eMBMaster2Init( eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity
             eMBState = STATE_DISABLED;
         }
         /* initialize the OS resource for modbus master. */
-        vMBMasterOsResInit();
+        vMBMaster2OsResInit();
     }
     return eStatus;
 }
@@ -180,9 +180,9 @@ eMBMaster2Close( void )
 
     if( eMBState == STATE_DISABLED )
     {
-        if( pvMBMasterFrameCloseCur != NULL )
+        if( pvMBMaster2FrameCloseCur != NULL )
         {
-            pvMBMasterFrameCloseCur(  );
+            pvMBMaster2FrameCloseCur(  );
         }
     }
     else
@@ -200,7 +200,7 @@ eMBMaster2Enable( void )
     if( eMBState == STATE_DISABLED )
     {
         /* Activate the protocol stack. */
-        pvMBMasterFrameStartCur(  );
+        pvMBMaster2FrameStartCur(  );
         eMBState = STATE_ENABLED;
     }
     else
@@ -217,7 +217,7 @@ eMBMaster2Disable( void )
 
     if(( eMBState == STATE_ENABLED ) || ( eMBState == STATE_ESTABLISHED))
     {
-        pvMBMasterFrameStopCur(  );
+        pvMBMaster2FrameStopCur(  );
         eMBState = STATE_DISABLED;
         eStatus = MB_ENOERR;
     }
@@ -277,7 +277,7 @@ eMBMaster2Poll( void )
             break;
 
         case EV_MASTER_FRAME_RECEIVED:
-            eStatus = peMBMasterFrameReceiveCur( &ucRcvAddress, &ucMBFrame, &usLength );
+            eStatus = peMBMaster2FrameReceiveCur( &ucRcvAddress, &ucMBFrame, &usLength );
             /* Check if the frame is for us. If not ,send an error process event. */
             if ( ( eStatus == MB_ENOERR ) && ( ucRcvAddress == ucMBMaster2GetDestAddress() ) )
             {
@@ -339,7 +339,7 @@ eMBMaster2Poll( void )
         case EV_MASTER_FRAME_SENT:
             /* Master is busy now. */
             vMBMaster2GetPDUSndBuf( &ucMBFrame );
-            eStatus = peMBMasterFrameSendCur( ucMBMaster2GetDestAddress(), ucMBFrame, usMBMaster2GetPDUSndLength() );
+            eStatus = peMBMaster2FrameSendCur( ucMBMaster2GetDestAddress(), ucMBFrame, usMBMaster2GetPDUSndLength() );
             break;
 
         case EV_MASTER_ERROR_PROCESS:
@@ -348,15 +348,15 @@ eMBMaster2Poll( void )
             vMBMaster2GetPDUSndBuf( &ucMBFrame );
             switch (errorType) {
             case EV_ERROR_RESPOND_TIMEOUT:
-                vMBMasterErrorCBRespondTimeout(ucMBMaster2GetDestAddress(),
+                vMBMaster2ErrorCBRespondTimeout(ucMBMaster2GetDestAddress(),
                         ucMBFrame, usMBMaster2GetPDUSndLength());
                 break;
             case EV_ERROR_RECEIVE_DATA:
-                vMBMasterErrorCBReceiveData(ucMBMaster2GetDestAddress(),
+                vMBMaster2ErrorCBReceiveData(ucMBMaster2GetDestAddress(),
                         ucMBFrame, usMBMaster2GetPDUSndLength());
                 break;
             case EV_ERROR_EXECUTE_FUNCTION:
-                vMBMasterErrorCBExecuteFunction(ucMBMaster2GetDestAddress(),
+                vMBMaster2ErrorCBExecuteFunction(ucMBMaster2GetDestAddress(),
                         ucMBFrame, usMBMaster2GetPDUSndLength());
                 break;
             }

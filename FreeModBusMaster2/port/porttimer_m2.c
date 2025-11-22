@@ -35,7 +35,7 @@
 /* ----------------------- Variables ----------------------------------------*/
 //extern TIM_HandleTypeDef* modbusTimer;
 
-extern TIM_HandleTypeDef htim11;
+extern TIM_HandleTypeDef htim13;
 uint16_t timerPeriod2 = 0;
 volatile uint16_t timerCounter2 = 0;
 
@@ -53,7 +53,7 @@ inline void vMBMaster2PortTimersT35Enable()
 {
   vMBMaster2SetCurTimerMode(MB_TMODE_T35);
   timerCounter2 = 0;
-  HAL_TIM_Base_Start_IT(&htim11);
+  HAL_TIM_Base_Start_IT(&htim13);
 }
 /* --------------------------------------------------------------------------*/
 void vMBMaster2PortTimersConvertDelayEnable()
@@ -68,7 +68,7 @@ void vMBMaster2PortTimersRespondTimeoutEnable()
 /* --------------------------------------------------------------------------*/
 inline void vMBMaster2PortTimersDisable()
 {
-  HAL_TIM_Base_Stop_IT(&htim11);
+  HAL_TIM_Base_Stop_IT(&htim13);
 }
 
 /* --------------------------------------------------------------------------*/

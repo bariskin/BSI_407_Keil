@@ -146,7 +146,8 @@ int main(void)
   MX_TIM10_Init();
   MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
-	MX_TIM11_Init();
+	MX_TIM13_Init();
+	//HAL_TIM_Base_Start_IT(&htim14);
 	
 	/* *************** checking SD card ************** */ 
 	
@@ -181,8 +182,10 @@ int main(void)
     // Error handling
    }
 	 
+	 HAL_Delay(10);
+	 
 	/* *************MODBUS MASTER 2 init****************** */
-  vMBMaster2SetDestAddress(ModBusSlaveDefaultDeviceAddr);	 
+  vMBMaster2SetDestAddress(3);	 
 	 
 	eStatus = eMBMaster2Init(MB_RTU, 0, 9600, MB_PAR_NONE);
   eStatus = eMBMaster2Enable();
@@ -202,7 +205,6 @@ int main(void)
    /* ************* Initializes  RX and TX ring buffers ***** */    
 	 RING_Init(&ring_Rx, ring_buffer_RX, CIRC_BUF_RX_SIZE );         /*! Init RX buffer for UART3: display */
   //RING_Init(&ring_Tx, ring_buffer_TX, CIRC_BUF_TX_SIZE );   
-    
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */
@@ -306,7 +308,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			 ( void )pxMBMasterPortCBTimerExpired();
     }
   }
-	else if (htim->Instance == htim11.Instance)
+	else if (htim->Instance == htim13.Instance)
   {
     timerCounter2++;
 

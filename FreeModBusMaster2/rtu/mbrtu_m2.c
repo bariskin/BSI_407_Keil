@@ -44,13 +44,13 @@
 #include "mbcrc.h"
 #include "mbport2.h"
 
-#if MB_MASTER_RTU_ENABLED > 0
+#if MB_MASTER2_RTU_ENABLED > 0
 /* ----------------------- Defines ------------------------------------------*/
-#define MB_SER_PDU_SIZE_MIN     4       /*!< Minimum size of a Modbus RTU frame. */
-#define MB_SER_PDU_SIZE_MAX     256     /*!< Maximum size of a Modbus RTU frame. */
-#define MB_SER_PDU_SIZE_CRC     2       /*!< Size of CRC field in PDU. */
-#define MB_SER_PDU_ADDR_OFF     0       /*!< Offset of slave address in Ser-PDU. */
-#define MB_SER_PDU_PDU_OFF      1       /*!< Offset of Modbus-PDU in Ser-PDU. */
+#define MB2_SER_PDU_SIZE_MIN     4       /*!< Minimum size of a Modbus RTU frame. */
+#define MB2_SER_PDU_SIZE_MAX     256     /*!< Maximum size of a Modbus RTU frame. */
+#define MB2_SER_PDU_SIZE_CRC     2       /*!< Size of CRC field in PDU. */
+#define MB2_SER_PDU_ADDR_OFF     0       /*!< Offset of slave address in Ser-PDU. */
+#define MB2_SER_PDU_PDU_OFF      1       /*!< Offset of Modbus-PDU in Ser-PDU. */
 
 /* ----------------------- Type definitions ---------------------------------*/
 typedef enum
@@ -59,30 +59,30 @@ typedef enum
     STATE_M_RX_IDLE,              /*!< Receiver is in idle state. */
     STATE_M_RX_RCV,               /*!< Frame is beeing received. */
     STATE_M_RX_ERROR,              /*!< If the frame is invalid. */
-} eMBMasterRcvState;
+} eMBMaster2RcvState;
 
 typedef enum
 {
     STATE_M_TX_IDLE,              /*!< Transmitter is in idle state. */
     STATE_M_TX_XMIT,              /*!< Transmitter is in transfer state. */
     STATE_M_TX_XFWR,              /*!< Transmitter is in transfer finish and wait receive state. */
-} eMBMasterSndState;
+} eMBMaster2SndState;
 
 /* ----------------------- Static variables ---------------------------------*/
-static volatile eMBMasterSndState eSndState;
-static volatile eMBMasterRcvState eRcvState;
+static volatile eMBMaster2SndState eSndState;
+static volatile eMBMaster2RcvState eRcvState;
 
-static volatile UCHAR  ucMasterRTUSndBuf[MB_PDU_SIZE_MAX];
-static volatile UCHAR  ucMasterRTURcvBuf[MB_SER_PDU_SIZE_MAX];
-static volatile USHORT usMasterSendPDULength;
+static volatile UCHAR  ucMaster2RTUSndBuf[MB_PDU_SIZE_MAX];
+static volatile UCHAR  ucMaster2RTURcvBuf[MB2_SER_PDU_SIZE_MAX];
+static volatile USHORT usMaster2SendPDULength;
 
-static volatile UCHAR *pucMasterSndBufferCur;
-static volatile USHORT usMasterSndBufferCount;
+static volatile UCHAR *pucMaster2SndBufferCur;
+static volatile USHORT usMaster2SndBufferCount;
 
-static volatile USHORT usMasterRcvBufferPos;
-static volatile BOOL   xFrameIsBroadcast = FALSE;
+static volatile USHORT usMaster2RcvBufferPos;
+static volatile BOOL   xFrame2IsBroadcast = FALSE;
 
-static volatile eMBMasterTimerMode eMasterCurTimerMode;
+static volatile eMBMasterTimerMode eMaster2CurTimerMode;
 
 /* ----------------------- Start implementation -----------------------------*/
 eMBErrorCode
@@ -160,24 +160,24 @@ eMBMaster2RTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLeng
     eMBErrorCode    eStatus = MB_ENOERR;
 
     ENTER_CRITICAL_SECTION(  );
-    assert_param( usMasterRcvBufferPos < MB_SER_PDU_SIZE_MAX );
+    assert_param( usMaster2RcvBufferPos < MB_SER_PDU_SIZE_MAX );
 
     /* Length and CRC check */
-    if( ( usMasterRcvBufferPos >= MB_SER_PDU_SIZE_MIN )
-        && ( usMBCRC16( ( UCHAR * ) ucMasterRTURcvBuf, usMasterRcvBufferPos ) == 0 ) )
+    if( ( usMaster2RcvBufferPos >= MB2_SER_PDU_SIZE_MIN )
+        && ( usMBCRC16( ( UCHAR * ) ucMaster2RTURcvBuf, usMaster2RcvBufferPos ) == 0 ) )
     {
         /* Save the address field. All frames are passed to the upper layed
          * and the decision if a frame is used is done there.
          */
-        *pucRcvAddress = ucMasterRTURcvBuf[MB_SER_PDU_ADDR_OFF];
+        *pucRcvAddress = ucMaster2RTURcvBuf[MB2_SER_PDU_ADDR_OFF];
 
         /* Total length of Modbus-PDU is Modbus-Serial-Line-PDU minus
          * size of address field and CRC checksum.
          */
-        *pusLength = ( USHORT )( usMasterRcvBufferPos - MB_SER_PDU_PDU_OFF - MB_SER_PDU_SIZE_CRC );
+        *pusLength = ( USHORT )( usMaster2RcvBufferPos - MB2_SER_PDU_PDU_OFF - MB2_SER_PDU_SIZE_CRC );
 
         /* Return the start of the Modbus PDU to the caller. */
-        *pucFrame = ( UCHAR * ) & ucMasterRTURcvBuf[MB_SER_PDU_PDU_OFF];
+        *pucFrame = ( UCHAR * ) & ucMaster2RTURcvBuf[MB2_SER_PDU_PDU_OFF];
     }
     else
     {
@@ -205,17 +205,17 @@ eMBMaster2RTUSend( UCHAR ucSlaveAddress, const UCHAR * pucFrame, USHORT usLength
     if( eRcvState == STATE_M_RX_IDLE )
     {
         /* First byte before the Modbus-PDU is the slave address. */
-        pucMasterSndBufferCur = ( UCHAR * ) pucFrame - 1;
-        usMasterSndBufferCount = 1;
+        pucMaster2SndBufferCur = ( UCHAR * ) pucFrame - 1;
+        usMaster2SndBufferCount = 1;
 
         /* Now copy the Modbus-PDU into the Modbus-Serial-Line-PDU. */
-        pucMasterSndBufferCur[MB_SER_PDU_ADDR_OFF] = ucSlaveAddress;
-        usMasterSndBufferCount += usLength;
+        pucMaster2SndBufferCur[MB2_SER_PDU_ADDR_OFF] = ucSlaveAddress;
+        usMaster2SndBufferCount += usLength;
 
         /* Calculate CRC16 checksum for Modbus-Serial-Line-PDU. */
-        usCRC16 = usMBCRC16( ( UCHAR * ) pucMasterSndBufferCur, usMasterSndBufferCount );
-        ucMasterRTUSndBuf[usMasterSndBufferCount++] = ( UCHAR )( usCRC16 & 0xFF );
-        ucMasterRTUSndBuf[usMasterSndBufferCount++] = ( UCHAR )( usCRC16 >> 8 );
+        usCRC16 = usMBCRC16( ( UCHAR * ) pucMaster2SndBufferCur, usMaster2SndBufferCount );
+        ucMaster2RTUSndBuf[usMaster2SndBufferCount++] = ( UCHAR )( usCRC16 & 0xFF );
+        ucMaster2RTUSndBuf[usMaster2SndBufferCount++] = ( UCHAR )( usCRC16 >> 8 );
 
         /* Activate the transmitter. */
         eSndState = STATE_M_TX_XMIT;
@@ -268,8 +268,8 @@ xMBMaster2RTUReceiveFSM( void )
         vMBMaster2PortTimersDisable( );
         eSndState = STATE_M_TX_IDLE;
 
-        usMasterRcvBufferPos = 0;
-        ucMasterRTURcvBuf[usMasterRcvBufferPos++] = ucByte;
+        usMaster2RcvBufferPos = 0;
+        ucMaster2RTURcvBuf[usMaster2RcvBufferPos++] = ucByte;
         eRcvState = STATE_M_RX_RCV;
 
         /* Enable t3.5 timers. */
@@ -282,9 +282,9 @@ xMBMaster2RTUReceiveFSM( void )
          * ignored.
          */
     case STATE_M_RX_RCV:
-        if( usMasterRcvBufferPos < MB_SER_PDU_SIZE_MAX )
+        if( usMaster2RcvBufferPos < MB2_SER_PDU_SIZE_MAX )
         {
-            ucMasterRTURcvBuf[usMasterRcvBufferPos++] = ucByte;
+            ucMaster2RTURcvBuf[usMaster2RcvBufferPos++] = ucByte;
         }
         else
         {
@@ -314,22 +314,22 @@ xMBMaster2RTUTransmitFSM( void )
 
     case STATE_M_TX_XMIT:
         /* check if we are finished. */
-        if( usMasterSndBufferCount != 0 )
+        if( usMaster2SndBufferCount != 0 )
         {
-            xMBMaster2PortSerialPutByte( ( CHAR )*pucMasterSndBufferCur );
-            pucMasterSndBufferCur++;  /* next byte in sendbuffer. */
-            usMasterSndBufferCount--;
+            xMBMaster2PortSerialPutByte( ( CHAR )*pucMaster2SndBufferCur );
+            pucMaster2SndBufferCur++;  /* next byte in sendbuffer. */
+            usMaster2SndBufferCount--;
         }
         else
         {
-            xFrameIsBroadcast = ( ucMasterRTUSndBuf[MB_SER_PDU_ADDR_OFF] == MB_ADDRESS_BROADCAST ) ? TRUE : FALSE;
+            xFrame2IsBroadcast = ( ucMaster2RTUSndBuf[MB2_SER_PDU_ADDR_OFF] == MB_ADDRESS_BROADCAST ) ? TRUE : FALSE;
             /* Disable transmitter. This prevents another transmit buffer
              * empty interrupt. */
             vMBMaster2PortSerialEnable( TRUE, FALSE );
             eSndState = STATE_M_TX_XFWR;
             /* If the frame is broadcast ,master will enable timer of convert delay,
              * else master will enable timer of respond timeout. */
-            if ( xFrameIsBroadcast == TRUE )
+            if ( xFrame2IsBroadcast == TRUE )
             {
                 vMBMaster2PortTimersConvertDelayEnable( );
             }
@@ -386,7 +386,7 @@ xMBMaster2RTUTimerExpired(void)
          * If the frame is broadcast,The master will idle,and if the frame is not
          * broadcast.Notify the listener process error.*/
     case STATE_M_TX_XFWR:
-        if ( xFrameIsBroadcast == FALSE ) {
+        if ( xFrame2IsBroadcast == FALSE ) {
             vMBMaster2SetErrorType(EV_ERROR_RESPOND_TIMEOUT);
             xNeedPoll = xMBMaster2PortEventPost(EV_MASTER_ERROR_PROCESS);
         }
@@ -401,7 +401,7 @@ xMBMaster2RTUTimerExpired(void)
 
     vMBMasterPortTimersDisable( );
     /* If timer mode is convert delay, the master event then turns EV_MASTER_EXECUTE status. */
-    if (eMasterCurTimerMode == MB_TMODE_CONVERT_DELAY) {
+    if (eMaster2CurTimerMode == MB_TMODE_CONVERT_DELAY) {
         xNeedPoll = xMBMaster2PortEventPost( EV_MASTER_EXECUTE );
     }
 
@@ -411,36 +411,36 @@ xMBMaster2RTUTimerExpired(void)
 /* Get Modbus Master send RTU's buffer address pointer.*/
 void vMBMaster2GetRTUSndBuf( UCHAR ** pucFrame )
 {
-    *pucFrame = ( UCHAR * ) ucMasterRTUSndBuf;
+    *pucFrame = ( UCHAR * ) ucMaster2RTUSndBuf;
 }
 
 /* Get Modbus Master send PDU's buffer address pointer.*/
 void vMBMaster2GetPDUSndBuf( UCHAR ** pucFrame )
 {
-    *pucFrame = ( UCHAR * ) &ucMasterRTUSndBuf[MB_SER_PDU_PDU_OFF];
+    *pucFrame = ( UCHAR * ) &ucMaster2RTUSndBuf[MB2_SER_PDU_PDU_OFF];
 }
 
 /* Set Modbus Master send PDU's buffer length.*/
 void vMBMaster2SetPDUSndLength( USHORT SendPDULength )
 {
-    usMasterSendPDULength = SendPDULength;
+    usMaster2SendPDULength = SendPDULength;
 }
 
 /* Get Modbus Master send PDU's buffer length.*/
 USHORT usMBMaster2GetPDUSndLength( void )
 {
-    return usMasterSendPDULength;
+    return usMaster2SendPDULength;
 }
 
 /* Set Modbus Master current timer mode.*/
 void vMBMaster2SetCurTimerMode( eMBMasterTimerMode eMBTimerMode )
 {
-    eMasterCurTimerMode = eMBTimerMode;
+    eMaster2CurTimerMode = eMBTimerMode;
 }
 
 /* The master request is broadcast? */
 BOOL xMBMaster2RequestIsBroadcast( void ){
-    return xFrameIsBroadcast;
+    return xFrame2IsBroadcast;
 }
 #endif
 

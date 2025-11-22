@@ -38,7 +38,7 @@ UART_HandleTypeDef* modbusUartMaster2 = &huart4;
 static uint8_t txByte = 0x00;
 static volatile uint8_t rxByte = 0x00;
 
-extern UART_HandleTypeDef* modbusUartMaster2 ;
+//extern UART_HandleTypeDef* modbusUartMaster2 ;
 /* ----------------------- User defenitions ---------------------------------*/
 #define RS485_RD_LOW_MASTER2	  HAL_GPIO_WritePin(RDen_GPIO_Port, RDen_Pin, GPIO_PIN_RESET)
 #define RS485_RD_HIGH_MASTER2 	HAL_GPIO_WritePin(RDen_GPIO_Port, RDen_Pin, GPIO_PIN_SET)
