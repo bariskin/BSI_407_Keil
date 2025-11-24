@@ -53,6 +53,8 @@ extern volatile uint8_t startDisplayFlag;
 extern volatile uint8_t packet_ready;   
 extern UART_HandleTypeDef huart3;
 extern RING_buffer_t ring_Rx;   /* RX ring buffer structur */
+
+extern void ModbusMaster2_Enable(bool enable);
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -368,6 +370,8 @@ void HoldingHandlerFunction(void const * argument)
      gl_por2 = 0;
      gl_NotConnected = 0;	
 	
+	ModbusMaster2_Enable(false);	
+	
   osDelay(10000);
 	/* Infinite loop */
   for(;;)
@@ -511,6 +515,8 @@ void HoldingHandlerFunction(void const * argument)
 									   /* получение modbus адреса  первого активного датчика на линии */
 								     ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusAddrs[0];  
                     /* вывести окна активных дачтичиков  и перейти на постоянный опрос */
+											
+											ModbusMaster2_Enable(true);	
 								   }				
 				        }	
 						 }								
@@ -707,8 +713,8 @@ void HoldingHandlerFunction(void const * argument)
 				    SelectRunFlag = CASE_WAITNG_CALBRATION_STATE;
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;	
 						
-					 vTaskResume(MasterModbus2TasHandle); 
-           vTaskResume(HoldingHandlerHandle2); 		
+				
+            ModbusMaster2_Enable(true);					 
 						
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
@@ -749,9 +755,7 @@ void HoldingHandlerFunction(void const * argument)
 				    SelectRunFlag = CASE_WAITNG_CALBRATION_STATE;
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;
 						
-						
-						vTaskResume(MasterModbus2TasHandle); 
-           vTaskResume(HoldingHandlerHandle2); 	
+					  ModbusMaster2_Enable(true);			
 								
 		    }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
@@ -788,11 +792,7 @@ void HoldingHandlerFunction(void const * argument)
 				   
              shouldChangeFlag = 0;
 				     SelectRunFlag = CASE_WRITING_SETTING;
-						 
-					 vTaskResume(MasterModbus2TasHandle); 
-           vTaskResume(HoldingHandlerHandle2); 		 
-						 
-						 
+						 		 
 	      }
           /* ******************  DISPLAY_THRESHOLD_ALARM ************************ */	  
        else if(displayCmd.command == DISPLAY_THRESHOLD_ALARM){
@@ -830,9 +830,6 @@ void HoldingHandlerFunction(void const * argument)
 				    SelectRunFlag = CASE_WRITING_SETTING;
 						
 						
-					 vTaskResume(MasterModbus2TasHandle); 
-           vTaskResume(HoldingHandlerHandle2); 		
-			
         }
 				/* ******************  DISPLAY_THRESHOLD_ADDITIONAL ************************ */	 
 			 else	if(displayCmd.command == DISPLAY_THRESHOLD_ADDITIONAL){
@@ -885,8 +882,7 @@ void HoldingHandlerFunction(void const * argument)
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;
 				 	 /* ******************************************************** */
 				   
-	        vTaskResume(MasterModbus2TasHandle); 
-          vTaskResume(HoldingHandlerHandle2); 		
+	   		    ModbusMaster2_Enable(true);		
         }
       }	
 		}
@@ -1002,8 +998,8 @@ void DisplayTaskFunction(void const * argument)
 		
 		if(Uart_Get_Byte(&ring_Rx, (uint8_t *)&InputByte) == RX_BUF_DONE)
 		{
-		 vTaskSuspend(HoldingHandlerHandle2); 
-		 vTaskSuspend(MasterModbus2TasHandle);
+		/* Отключить таски и все что касается UART4 */
+		ModbusMaster2_Enable(false);
     
 		 GetDisplayCmd(InputByte);
 		}
@@ -1229,6 +1225,13 @@ void HoldingHandlerFunction2(void const * argument)
 		osDelay(TIME_STEP_DEFAULT_150_MS + 50); 	    // 150 ms 	
 	 }
 }	
+
+
+
+
+
+
+
 
 
 /* USER CODE END Application */

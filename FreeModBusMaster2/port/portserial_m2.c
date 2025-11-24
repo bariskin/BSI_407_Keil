@@ -27,16 +27,27 @@
 #include "stm32f4xx_hal.h"
 #include "main.h"
 
+
+
+#include "FreeRTOS.h"
+#include "task.h"
+#include "main.h"
+#include "cmsis_os.h"
+#include "stdbool.h"
 /* ----------------------- static functions ---------------------------------*/
 static void prvvUARTTxReadyISR2(void);
 //static void prvvUARTRxISR(void);
-
+void ModbusMaster2_Enable(bool enable);
 /* ----------------------- Variables ----------------------------------------*/
 
 extern UART_HandleTypeDef huart4;
 UART_HandleTypeDef* modbusUartMaster2 = &huart4;
 static uint8_t txByte = 0x00;
-static volatile uint8_t rxByte = 0x00;
+static volatile uint8_t rxByte2 = 0x00;
+
+extern osThreadId MasterModbus2TasHandle;
+extern osThreadId HoldingHandlerHandle2;
+extern TIM_HandleTypeDef htim13;
 
 //extern UART_HandleTypeDef* modbusUartMaster2 ;
 /* ----------------------- User defenitions ---------------------------------*/
@@ -51,7 +62,7 @@ void vMBMaster2PortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
  if(xRxEnable) 
   {
 		RS485_RD_LOW_MASTER2;	
-    HAL_UART_Receive_IT(modbusUartMaster2, (uint8_t*)&rxByte, 1);
+    HAL_UART_Receive_IT(modbusUartMaster2, (uint8_t*)&rxByte2, 1);
   }
 		
  else
@@ -95,8 +106,8 @@ BOOL xMBMaster2PortSerialPutByte(CHAR ucByte)
 /* --------------------------------------------------------------------------*/
 BOOL xMBMaster2PortSerialGetByte( CHAR * pucByte )
 {
-  *pucByte = rxByte;
-  HAL_UART_Receive_IT(modbusUartMaster2, (uint8_t*)&rxByte, 1);
+  *pucByte = rxByte2;
+  HAL_UART_Receive_IT(modbusUartMaster2, (uint8_t*)&rxByte2, 1);
   return TRUE;
 }
 
@@ -111,5 +122,42 @@ static void prvvUARTTxReadyISR2(void)
 //{
 //  pxMBMasterFrameCBByteReceived();
 //}
+
+void ModbusMaster2_Enable(bool enable)
+{
+    if(enable)
+    {
+        // Включаем UART прерывания
+        __HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE | UART_IT_IDLE);
+        HAL_UART_Receive_IT(&huart4, (uint8_t*)&rxByte2, 1);
+
+        // RS485 готов к приёму
+        RS485_RD_LOW_MASTER2;
+
+        // Старт таймера t3.5
+        //StartT35Timer_Master2();
+        HAL_TIM_Base_Start_IT(&htim13);
+        // Resume оба таска
+        vTaskResume(MasterModbus2TasHandle);
+        vTaskResume(HoldingHandlerHandle2);
+    }
+    else
+    {
+        // Suspend оба таска
+			 vTaskSuspend(HoldingHandlerHandle2); 
+		   vTaskSuspend(MasterModbus2TasHandle);
+
+        // Останавливаем UART полностью
+        HAL_UART_Abort_IT(&huart4);
+        __HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE | UART_IT_IDLE | UART_IT_TXE | UART_IT_TC);
+
+        // RS485 переводим в безопасное состояние
+        RS485_RD_LOW_MASTER2;
+
+        // Останов таймера t3.5
+        //StopT35Timer_Master2();
+			  HAL_TIM_Base_Stop_IT(&htim13);
+    }
+}
 
 /* --------------------------------------------------------------------------*/
