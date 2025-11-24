@@ -27,9 +27,10 @@ extern "C" {
  /* ------------------------External variables -------------------------*/
  
  extern TIM_HandleTypeDef *ModBusSlaveTimer;
- extern uint16_t ModBusSlaveTimeout;
+ extern volatile uint16_t ModBusSlaveTimeout;
  extern volatile uint16_t ModBusSlaveCounter;
  extern uint8_t ModBusDefaultDeviceAddr; 
+ extern uint8_t ModBusMaster2CurrentDeviceAddr;
   /** @addtogroup modbus_settings
   * @{
   */

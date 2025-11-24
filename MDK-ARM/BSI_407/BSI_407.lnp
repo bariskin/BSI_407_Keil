@@ -50,8 +50,6 @@
 "bsi_407\mbcrc.o"
 "bsi_407\mbrtu.o"
 "bsi_407\modbussettings.o"
-"bsi_407\mbfunccoils_m.o"
-"bsi_407\mbfuncdisc_m.o"
 "bsi_407\mbfuncholding_m.o"
 "bsi_407\mbfuncinput_m.o"
 "bsi_407\portevent_m.o"

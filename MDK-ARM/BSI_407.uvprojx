@@ -877,16 +877,6 @@
           <GroupName>FreeModbusMaster</GroupName>
           <Files>
             <File>
-              <FileName>mbfunccoils_m.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeModbusMaster\functions\mbfunccoils_m.c</FilePath>
-            </File>
-            <File>
-              <FileName>mbfuncdisc_m.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeModbusMaster\functions\mbfuncdisc_m.c</FilePath>
-            </File>
-            <File>
               <FileName>mbfuncholding_m.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\FreeModbusMaster\functions\mbfuncholding_m.c</FilePath>

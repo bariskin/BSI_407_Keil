@@ -36,7 +36,7 @@
 //extern TIM_HandleTypeDef* modbusTimer;
 
 extern TIM_HandleTypeDef htim13;
-uint16_t timerPeriod2 = 0;
+volatile uint16_t timerPeriod2 = 0;
 volatile uint16_t timerCounter2 = 0;
 
 /* ----------------------- Start implementation -----------------------------*/

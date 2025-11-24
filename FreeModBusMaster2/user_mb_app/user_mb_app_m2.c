@@ -22,7 +22,7 @@
 #include "mb_m2.h"
 #include "ModBusAddrConverter.h"
 /*-----------------------Master mode use these variables----------------------*/
-#if MB_MASTER_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
+#if MB_MASTER2_RTU_ENABLED > 0 || MB_MASTER_ASCII_ENABLED > 0
 //Master mode:DiscreteInputs variables
 //USHORT   usMDiscInStart                             = M_DISCRETE_INPUT_START;
 //#if      M_DISCRETE_INPUT_NDISCRETES%8
@@ -38,11 +38,11 @@
 //UCHAR    ucMCoilBuf[MB_MASTER_TOTAL_SLAVE_NUM][M_COIL_NCOILS/8];
 //#endif
 //Master mode:InputRegister variables
-USHORT   usMRegInStart2                              = M_REG_INPUT_START;
-USHORT   usMRegInBuf2[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_INPUT_NREGS];
+USHORT   usMRegInStart2                              = M2_REG_INPUT_START;
+USHORT   usMRegInBuf2[MB_MASTER_TOTAL_SLAVE_NUM][M2_REG_INPUT_NREGS];
 //Master mode:HoldingRegister variables
-USHORT   usMRegHoldStart2                            = M_REG_HOLDING_START;
-USHORT   usMRegHoldBuf2[MB_MASTER_TOTAL_SLAVE_NUM][M_REG_HOLDING_NREGS];
+USHORT   usMRegHoldStart2                            = M2_REG_HOLDING_START;
+USHORT   usMRegHoldBuf2[MB_MASTER_TOTAL_SLAVE_NUM][M2_REG_HOLDING_NREGS];
 
 /**
  * Modbus master input register callback function.
@@ -63,12 +63,12 @@ eMBErrorCode eMBMaster2RegInputCB( UCHAR * pucRegBuffer, USHORT usAddress, USHOR
     USHORT          usRegInStart;
 
     pusRegInputBuf = usMRegInBuf2[ucMBMaster2GetDestAddress() - 1];
-    REG_INPUT_START = M_REG_INPUT_START;
-    REG_INPUT_NREGS = M_REG_INPUT_NREGS;
+    REG_INPUT_START = M2_REG_INPUT_START;
+    REG_INPUT_NREGS = M2_REG_INPUT_NREGS;
     usRegInStart = usMRegInStart2;
 	
 
-	   uint16_t internValue = convertModBusAddrInput_M(usAddress);
+	   uint16_t internValue = convertModBusAddrInput_M2(usAddress);
 	   usAddress = internValue;  
 	
     /* it already plus one in modbus function method. */
@@ -117,8 +117,8 @@ eMBErrorCode eMBMaster2RegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress,
     USHORT          usRegHoldStart;
 
     pusRegHoldingBuf = usMRegHoldBuf2[ucMBMaster2GetDestAddress() - 1];
-    REG_HOLDING_START = M_REG_HOLDING_START;
-    REG_HOLDING_NREGS = M_REG_HOLDING_NREGS;
+    REG_HOLDING_START = M2_REG_HOLDING_START;
+    REG_HOLDING_NREGS = M2_REG_HOLDING_NREGS;
     usRegHoldStart = usMRegHoldStart2;
     /* if mode is read, the master will write the received date to buffer. */
     eMode = MB_REG_WRITE;

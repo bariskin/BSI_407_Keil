@@ -69,38 +69,28 @@ BOOL xMBPortSerialGetByte(CHAR * pucByte)
 	return TRUE;
 }
 
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	
-  if(huart->Instance == slaveUart->Instance)
-		{
-		 pxMBFrameCBByteReceived();
-		}
-	else	if (huart->Instance == modbusUartMaster->Instance)
-  {
-		pxMBMasterFrameCBByteReceived();
-  }
-	else	if (huart->Instance == modbusUartMaster2->Instance)
-  {
-		pxMBMaster2FrameCBByteReceived();
-  }
-	
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {	
+    if(huart->Instance == slaveUart->Instance) {
+        pxMBFrameCBByteReceived();
+    }
+    else if (huart->Instance == modbusUartMaster->Instance) {
+        pxMBMasterFrameCBByteReceived();
+    }
+    else if (huart->Instance == modbusUartMaster2->Instance) {
+        pxMBMaster2FrameCBByteReceived();
+    }
 }
 
-void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
-{
-	if(huart->Instance == slaveUart->Instance)
-	{
-		pxMBFrameCBTransmitterEmpty();
-	}
-	else if (huart->Instance == modbusUartMaster->Instance)
-  {
-		 pxMBMasterFrameCBTransmitterEmpty();
-  }
-	
-	else if (huart->Instance == modbusUartMaster2->Instance)
-  {
-		 pxMBMaster2FrameCBTransmitterEmpty();
-  }
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart) {
+    if(huart->Instance == slaveUart->Instance) {
+        pxMBFrameCBTransmitterEmpty();
+    }
+    else if (huart->Instance == modbusUartMaster->Instance) {
+        pxMBMasterFrameCBTransmitterEmpty();
+    }
+    else if (huart->Instance == modbusUartMaster2->Instance) {
+        pxMBMaster2FrameCBTransmitterEmpty();
+    }
 }
 
 #endif

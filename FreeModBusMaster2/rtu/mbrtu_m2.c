@@ -46,11 +46,11 @@
 
 #if MB_MASTER2_RTU_ENABLED > 0
 /* ----------------------- Defines ------------------------------------------*/
-#define MB2_SER_PDU_SIZE_MIN     4       /*!< Minimum size of a Modbus RTU frame. */
-#define MB2_SER_PDU_SIZE_MAX     256     /*!< Maximum size of a Modbus RTU frame. */
-#define MB2_SER_PDU_SIZE_CRC     2       /*!< Size of CRC field in PDU. */
-#define MB2_SER_PDU_ADDR_OFF     0       /*!< Offset of slave address in Ser-PDU. */
-#define MB2_SER_PDU_PDU_OFF      1       /*!< Offset of Modbus-PDU in Ser-PDU. */
+#define MB_SER_PDU_SIZE_MIN     4       /*!< Minimum size of a Modbus RTU frame. */
+#define MB_SER_PDU_SIZE_MAX     256     /*!< Maximum size of a Modbus RTU frame. */
+#define MB_SER_PDU_SIZE_CRC     2       /*!< Size of CRC field in PDU. */
+#define MB_SER_PDU_ADDR_OFF     0       /*!< Offset of slave address in Ser-PDU. */
+#define MB_SER_PDU_PDU_OFF      1       /*!< Offset of Modbus-PDU in Ser-PDU. */
 
 /* ----------------------- Type definitions ---------------------------------*/
 typedef enum
@@ -73,7 +73,7 @@ static volatile eMBMaster2SndState eSndState;
 static volatile eMBMaster2RcvState eRcvState;
 
 static volatile UCHAR  ucMaster2RTUSndBuf[MB_PDU_SIZE_MAX];
-static volatile UCHAR  ucMaster2RTURcvBuf[MB2_SER_PDU_SIZE_MAX];
+static volatile UCHAR  ucMaster2RTURcvBuf[MB_SER_PDU_SIZE_MAX];
 static volatile USHORT usMaster2SendPDULength;
 
 static volatile UCHAR *pucMaster2SndBufferCur;
@@ -163,21 +163,21 @@ eMBMaster2RTUReceive( UCHAR * pucRcvAddress, UCHAR ** pucFrame, USHORT * pusLeng
     assert_param( usMaster2RcvBufferPos < MB_SER_PDU_SIZE_MAX );
 
     /* Length and CRC check */
-    if( ( usMaster2RcvBufferPos >= MB2_SER_PDU_SIZE_MIN )
+    if( ( usMaster2RcvBufferPos >= MB_SER_PDU_SIZE_MIN )
         && ( usMBCRC16( ( UCHAR * ) ucMaster2RTURcvBuf, usMaster2RcvBufferPos ) == 0 ) )
     {
         /* Save the address field. All frames are passed to the upper layed
          * and the decision if a frame is used is done there.
          */
-        *pucRcvAddress = ucMaster2RTURcvBuf[MB2_SER_PDU_ADDR_OFF];
+        *pucRcvAddress = ucMaster2RTURcvBuf[MB_SER_PDU_ADDR_OFF];
 
         /* Total length of Modbus-PDU is Modbus-Serial-Line-PDU minus
          * size of address field and CRC checksum.
          */
-        *pusLength = ( USHORT )( usMaster2RcvBufferPos - MB2_SER_PDU_PDU_OFF - MB2_SER_PDU_SIZE_CRC );
+        *pusLength = ( USHORT )( usMaster2RcvBufferPos - MB_SER_PDU_PDU_OFF - MB_SER_PDU_SIZE_CRC );
 
         /* Return the start of the Modbus PDU to the caller. */
-        *pucFrame = ( UCHAR * ) & ucMaster2RTURcvBuf[MB2_SER_PDU_PDU_OFF];
+        *pucFrame = ( UCHAR * ) & ucMaster2RTURcvBuf[MB_SER_PDU_PDU_OFF];
     }
     else
     {
@@ -209,7 +209,7 @@ eMBMaster2RTUSend( UCHAR ucSlaveAddress, const UCHAR * pucFrame, USHORT usLength
         usMaster2SndBufferCount = 1;
 
         /* Now copy the Modbus-PDU into the Modbus-Serial-Line-PDU. */
-        pucMaster2SndBufferCur[MB2_SER_PDU_ADDR_OFF] = ucSlaveAddress;
+        pucMaster2SndBufferCur[MB_SER_PDU_ADDR_OFF] = ucSlaveAddress;
         usMaster2SndBufferCount += usLength;
 
         /* Calculate CRC16 checksum for Modbus-Serial-Line-PDU. */
@@ -282,7 +282,7 @@ xMBMaster2RTUReceiveFSM( void )
          * ignored.
          */
     case STATE_M_RX_RCV:
-        if( usMaster2RcvBufferPos < MB2_SER_PDU_SIZE_MAX )
+        if( usMaster2RcvBufferPos < MB_SER_PDU_SIZE_MAX )
         {
             ucMaster2RTURcvBuf[usMaster2RcvBufferPos++] = ucByte;
         }
@@ -322,7 +322,7 @@ xMBMaster2RTUTransmitFSM( void )
         }
         else
         {
-            xFrame2IsBroadcast = ( ucMaster2RTUSndBuf[MB2_SER_PDU_ADDR_OFF] == MB_ADDRESS_BROADCAST ) ? TRUE : FALSE;
+            xFrame2IsBroadcast = ( ucMaster2RTUSndBuf[MB_SER_PDU_ADDR_OFF] == MB_ADDRESS_BROADCAST ) ? TRUE : FALSE;
             /* Disable transmitter. This prevents another transmit buffer
              * empty interrupt. */
             vMBMaster2PortSerialEnable( TRUE, FALSE );
@@ -417,7 +417,7 @@ void vMBMaster2GetRTUSndBuf( UCHAR ** pucFrame )
 /* Get Modbus Master send PDU's buffer address pointer.*/
 void vMBMaster2GetPDUSndBuf( UCHAR ** pucFrame )
 {
-    *pucFrame = ( UCHAR * ) &ucMaster2RTUSndBuf[MB2_SER_PDU_PDU_OFF];
+    *pucFrame = ( UCHAR * ) &ucMaster2RTUSndBuf[MB_SER_PDU_PDU_OFF];
 }
 
 /* Set Modbus Master send PDU's buffer length.*/

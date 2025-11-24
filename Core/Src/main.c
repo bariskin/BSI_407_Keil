@@ -69,13 +69,13 @@
 
 /* USER CODE BEGIN PV */
 extern TIM_HandleTypeDef *ModBusSlaveTimer;
-extern uint16_t ModBusSlaveTimeout;
+extern volatile uint16_t ModBusSlaveTimeout;
 extern volatile uint16_t ModBusSlaveCounter;
 extern uint8_t ModBusSlaveDefaultDeviceAddr;
 
-extern uint16_t timerPeriod;
+extern volatile  uint16_t timerPeriod;
 extern volatile uint16_t timerCounter;
-extern uint16_t timerPeriod2;
+extern volatile uint16_t timerPeriod2;
 extern volatile uint16_t timerCounter2;
 
 extern uint8_t  numberOfDevices;
@@ -147,14 +147,12 @@ int main(void)
   MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
 	MX_TIM13_Init();
-	//HAL_TIM_Base_Start_IT(&htim14);
-	
+
 	/* *************** checking SD card ************** */ 
 	
 	sd_card_present = check_sd_card();
   /* *************start display receiving******************** */
   UART_Display_StartReceiving();
-  //initDeviceData(numberOfDevices);
 	/* *************MODBUS SLAVE init******************** */
 	
 	  if (HAL_UART_Init(&huart1) != HAL_OK)  /* restart  UART1 */
@@ -185,7 +183,7 @@ int main(void)
 	 HAL_Delay(10);
 	 
 	/* *************MODBUS MASTER 2 init****************** */
-  vMBMaster2SetDestAddress(3);	 
+  vMBMaster2SetDestAddress(ModBusMaster2CurrentDeviceAddr);	 
 	 
 	eStatus = eMBMaster2Init(MB_RTU, 0, 9600, MB_PAR_NONE);
   eStatus = eMBMaster2Enable();

@@ -82,7 +82,7 @@
 eMBException    prveMBError2Exception( eMBErrorCode eErrorCode );
 
 /* ----------------------- Start implementation -----------------------------*/
-#if MB_MASTER2_RTU_ENABLED > 0
+#if MB_MASTER_RTU_ENABLED > 0
 #if MB_FUNC_WRITE_HOLDING_ENABLED > 0
 
 /**

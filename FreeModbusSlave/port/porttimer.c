@@ -7,7 +7,7 @@
 /* ----------------------- User defenitions ---------------------------------*/
 
 extern	TIM_HandleTypeDef *ModBusSlaveTimer;
-extern	uint16_t ModBusSlaveTimeout;
+extern	volatile uint16_t ModBusSlaveTimeout;
 extern	volatile uint16_t ModBusSlaveCounter;
 
 /* ----------------------- Start implementation -----------------------------*/

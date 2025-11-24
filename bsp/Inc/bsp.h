@@ -30,7 +30,7 @@ extern "C" {
   
 	#define TIME_DEFAULT_1               160
 	#define TIME_STEP_MIN_2              160
-  #define TIME_STEP_DEFAULT_150_MS     50
+  #define TIME_STEP_DEFAULT_150_MS     60
 	
 	#define TIME_DELAY_PACKET            280
 	

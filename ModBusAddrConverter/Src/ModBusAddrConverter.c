@@ -333,6 +333,47 @@ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress)
    return MBReg;
  }
 
+ 
+ uint16_t convertModBusAddrInput_M2(uint16_t MBAddress)
+ {
+   uint16_t MBReg = 0x0000;
+	 
+ switch(MBAddress)
+  {
+	 case SENSOR_PRIMARY_VALUE_HIGH:
+    
+    MBReg = SENSOR_PRIMARY_VALUE_HIGH_INTERN; 
+    break;
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+ case SENSOR_PRIMARY_VALUE_LOW:
+    
+    MBReg = SENSOR_PRIMARY_VALUE_LOW_INTERN;  
+    break;
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
+// case SENSOR_PRIMARY_STATUS:
+    
+//    MBReg = SENSOR_PRIMARY_STATUS_INTERN; 
+//    break;
+ 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
+// case SENSOR_SECONDARY_VALUE_HIGH:
+	 
+	//  MBReg = SENSOR_SECONDARY_VALUE_HIGH_INTERN;
+//		break;
+ 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
+// case SENSOR_SECONDARY_VALUE_LOW:
+//	 
+//	 MBReg = SENSOR_SECONDARY_VALUE_LOW_INTERN;
+//		break;
+// 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
+// case SENSOR_SECONDARY_STATUS:
+//	 
+//	  MBReg = SENSOR_SECONDARY_STATUS_INTERN;
+//		break;
+		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
+	}
+   return MBReg;
+ } 
+ 
  /**
   * @brief  convert modbus address, slave
   * @param  MBAddress: extern modbus register address

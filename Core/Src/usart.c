@@ -141,7 +141,11 @@ void MX_USART3_UART_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN USART3_Init 2 */
-
+  __HAL_UART_DISABLE_IT(&huart3, UART_IT_RXNE);
+ __HAL_UART_DISABLE_IT(&huart3, UART_IT_TXE);
+ __HAL_UART_DISABLE_IT(&huart3, UART_IT_ERR);
+	
+	 huart3.Instance->CR1 |= USART_CR1_RXNEIE;
   /* USER CODE END USART3_Init 2 */
 
 }

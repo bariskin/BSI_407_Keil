@@ -57,9 +57,9 @@
 
 /* ----------------------- Static variables ---------------------------------*/
 
-static UCHAR    ucMBMasterDestAddress;
-static BOOL     xMBRunInMasterMode = FALSE;
-static eMBMasterErrorEventType eMBMasterCurErrorType;
+static UCHAR    ucMBMaster2DestAddress;
+static BOOL     xMBRunInMaster2Mode = FALSE;
+static eMBMasterErrorEventType eMBMaster2CurErrorType;
 
 static enum
 {
@@ -67,7 +67,7 @@ static enum
     STATE_DISABLED,
     STATE_NOT_INITIALIZED,
     STATE_ESTABLISHED,
-} eMBState = STATE_NOT_INITIALIZED;
+} eMBState2 = STATE_NOT_INITIALIZED;
 
 /* Functions pointer which are initialized in eMBInit( ). Depending on the
  * mode (RTU or ASCII) the are set to the correct implementations.
@@ -165,7 +165,7 @@ eMBMaster2Init( eMBMode eMode, UCHAR ucPort, ULONG ulBaudRate, eMBParity eParity
         }
         else
         {
-            eMBState = STATE_DISABLED;
+            eMBState2 = STATE_DISABLED;
         }
         /* initialize the OS resource for modbus master. */
         vMBMaster2OsResInit();
@@ -178,7 +178,7 @@ eMBMaster2Close( void )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
 
-    if( eMBState == STATE_DISABLED )
+    if( eMBState2 == STATE_DISABLED )
     {
         if( pvMBMaster2FrameCloseCur != NULL )
         {
@@ -197,11 +197,12 @@ eMBMaster2Enable( void )
 {
     eMBErrorCode    eStatus = MB_ENOERR;
 
-    if( eMBState == STATE_DISABLED )
+    if( eMBState2 == STATE_DISABLED )
     {
         /* Activate the protocol stack. */
-        pvMBMaster2FrameStartCur(  );
-        eMBState = STATE_ENABLED;
+        //pvMBMaster2FrameStartCur(  );
+			  eMBMaster2RTUStart();
+        eMBState2 = STATE_ENABLED;
     }
     else
     {
@@ -215,13 +216,14 @@ eMBMaster2Disable( void )
 {
     eMBErrorCode    eStatus;
 
-    if(( eMBState == STATE_ENABLED ) || ( eMBState == STATE_ESTABLISHED))
+    if(( eMBState2 == STATE_ENABLED ) || ( eMBState2 == STATE_ESTABLISHED))
     {
-        pvMBMaster2FrameStopCur(  );
-        eMBState = STATE_DISABLED;
+        //pvMBMaster2FrameStopCur(  );
+			  eMBMaster2RTUStop();
+        eMBState2 = STATE_DISABLED;
         eStatus = MB_ENOERR;
     }
-    else if( eMBState == STATE_DISABLED )
+    else if( eMBState2 == STATE_DISABLED )
     {
         eStatus = MB_ENOERR;
     }
@@ -235,7 +237,7 @@ eMBMaster2Disable( void )
 BOOL
 eMBMaster2IsEstablished( void )
 {
-    if(eMBState == STATE_ESTABLISHED)
+    if(eMBState2 == STATE_ESTABLISHED)
     {
         return TRUE;
     }
@@ -261,7 +263,7 @@ eMBMaster2Poll( void )
     eMBMasterErrorEventType errorType;
 
     /* Check if the protocol stack is ready. */
-    if(( eMBState != STATE_ENABLED ) && ( eMBState != STATE_ESTABLISHED))
+    if(( eMBState2 != STATE_ENABLED ) && ( eMBState2 != STATE_ESTABLISHED))
     {
         return MB_EILLSTATE;
     }
@@ -273,7 +275,7 @@ eMBMaster2Poll( void )
         switch ( eEvent )
         {
         case EV_MASTER_READY:
-            eMBState = STATE_ESTABLISHED;
+            eMBState2 = STATE_ESTABLISHED;
             break;
 
         case EV_MASTER_FRAME_RECEIVED:
@@ -374,32 +376,32 @@ eMBMaster2Poll( void )
 /* Get whether the Modbus Master is run in master mode.*/
 BOOL xMBMaster2GetCBRunInMasterMode( void )
 {
-    return xMBRunInMasterMode;
+    return xMBRunInMaster2Mode;
 }
 /* Set whether the Modbus Master is run in master mode.*/
 void vMBMaster2SetCBRunInMasterMode( BOOL IsMasterMode )
 {
-    xMBRunInMasterMode = IsMasterMode;
+    xMBRunInMaster2Mode = IsMasterMode;
 }
 /* Get Modbus Master send destination address. */
 UCHAR ucMBMaster2GetDestAddress( void )
 {
-    return ucMBMasterDestAddress;
+    return ucMBMaster2DestAddress;
 }
 /* Set Modbus Master send destination address. */
 void vMBMaster2SetDestAddress( UCHAR Address )
 {
-    ucMBMasterDestAddress = Address;
+    ucMBMaster2DestAddress = Address;
 }
 /* Get Modbus Master current error event type. */
 eMBMasterErrorEventType eMBMaster2GetErrorType( void )
 {
-    return eMBMasterCurErrorType;
+    return eMBMaster2CurErrorType;
 }
 /* Set Modbus Master current error event type. */
 void vMBMaster2SetErrorType( eMBMasterErrorEventType errorType )
 {
-    eMBMasterCurErrorType = errorType;
+    eMBMaster2CurErrorType = errorType;
 }
 
 

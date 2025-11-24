@@ -13,5 +13,7 @@ void __critical_exit(void)
 {
 	lock_count--;
 	if (lock_count == 0)
+	{
 		__enable_irq();
+	}
 }
