@@ -345,7 +345,7 @@ void MasterModbusTaskFunction(void const * argument)
 			  // Освобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }
-    osDelay(1);
+    osDelay(2);
   }
   /* USER CODE END MasterModbusTaskFunction */
 }
@@ -1205,18 +1205,18 @@ void MasterModbus2TaskFunction(void const * argument)
 			  // Освобождаем мьютекс
        osMutexRelease(myMutex02Handle);
 		 }
-    osDelay(2);
+    osDelay(5);
   }
   /* USER CODE END MasterModbusTaskFunction */
 }
 
 void HoldingHandlerFunction2(void const * argument)
 {
-	  osDelay(12000);
+	  osDelay(15000);
 	
 	 for(;;)
    {
-		 osStatus status = osMutexWait(myMutex02Handle, 10);
+		 osStatus status = osMutexWait(myMutex02Handle, 50);
 		 if (status == osOK){
 						
 				eMBMaster2ReqReadInputRegister(ModBusMaster2CurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH, 3, 200 );	
