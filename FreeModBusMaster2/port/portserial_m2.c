@@ -128,11 +128,11 @@ void ModbusMaster2_Enable(bool enable)
     if(enable)
     {
         // Включаем UART прерывания
-        __HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE | UART_IT_IDLE);
-        HAL_UART_Receive_IT(&huart4, (uint8_t*)&rxByte2, 1);
+        //__HAL_UART_ENABLE_IT(&huart4, UART_IT_RXNE | UART_IT_IDLE);
+       // HAL_UART_Receive_IT(&huart4, (uint8_t*)&rxByte2, 1);
 
         // RS485 готов к приёму
-        RS485_RD_LOW_MASTER2;
+       // RS485_RD_LOW_MASTER2;
 
         // Старт таймера t3.5
         //StartT35Timer_Master2();
@@ -148,11 +148,11 @@ void ModbusMaster2_Enable(bool enable)
 		   vTaskSuspend(MasterModbus2TasHandle);
 
         // Останавливаем UART полностью
-        HAL_UART_Abort_IT(&huart4);
-        __HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE | UART_IT_IDLE | UART_IT_TXE | UART_IT_TC);
+        //HAL_UART_Abort_IT(&huart4);
+       // __HAL_UART_DISABLE_IT(&huart4, UART_IT_RXNE | UART_IT_IDLE | UART_IT_TXE | UART_IT_TC);
 
         // RS485 переводим в безопасное состояние
-        RS485_RD_LOW_MASTER2;
+        //RS485_RD_LOW_MASTER2;
 
         // Останов таймера t3.5
         //StopT35Timer_Master2();

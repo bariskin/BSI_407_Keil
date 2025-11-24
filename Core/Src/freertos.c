@@ -165,7 +165,7 @@ osThreadId DisplayTaskHandle;
 uint32_t DisplayTaskBuffer[ 1080];
 osStaticThreadDef_t DisplayTaskControlBlock;
 osThreadId SendToDispTaskHandle;
-uint32_t SendToDispTaskBuffer[ 1600];
+uint32_t SendToDispTaskBuffer[ 1700];
 osStaticThreadDef_t SendToDispTaskControlBlock;
 osMutexId myMutex01Handle;
 osStaticMutexDef_t myMutex01ControlBlock;
@@ -277,7 +277,7 @@ void MX_FREERTOS_Init(void) {
   DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* definition and creation of SendToDispTask */
-  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityBelowNormal, 0, 1600 , SendToDispTaskBuffer, &SendToDispTaskControlBlock);
+  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityBelowNormal, 0, 1700 , SendToDispTaskBuffer, &SendToDispTaskControlBlock);
   SendToDispTaskHandle = osThreadCreate(osThread(SendToDispTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -369,8 +369,6 @@ void HoldingHandlerFunction(void const * argument)
 	   gl_por1 = 0;
      gl_por2 = 0;
      gl_NotConnected = 0;	
-	
-	ModbusMaster2_Enable(false);	
 	
   osDelay(10000);
 	/* Infinite loop */
@@ -516,7 +514,6 @@ void HoldingHandlerFunction(void const * argument)
 								     ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusAddrs[0];  
                     /* вывести окна активных дачтичиков  и перейти на постоянный опрос */
 											
-											ModbusMaster2_Enable(true);	
 								   }				
 				        }	
 						 }								
@@ -994,12 +991,12 @@ void DisplayTaskFunction(void const * argument)
   /* Infinite loop */
   for(;;)
   {		
-		//ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
 		
 		if(Uart_Get_Byte(&ring_Rx, (uint8_t *)&InputByte) == RX_BUF_DONE)
 		{
 		/* Отключить таски и все что касается UART4 */
-		ModbusMaster2_Enable(false);
+		 ModbusMaster2_Enable(false);
     
 		 GetDisplayCmd(InputByte);
 		}
@@ -1049,6 +1046,8 @@ void SendToDispTaskFunction(void const * argument)
 					 /* постоянно ждем новое сообщение */
 				  if(xQueueReceive(queueSendLogsHandle,&LogMsg,osWaitForever) == pdTRUE){ 
 					
+					 ModbusMaster2_Enable(false);
+						
 					 RdyWrittingFlag = 1;
 					
 				    switch ((uint8_t)LogMsg.logType)
@@ -1179,7 +1178,9 @@ void SendToDispTaskFunction(void const * argument)
 										flagDisplayLogsBusy = 0;
 									  RdyWrittingFlag = 0;
 							   break;
-						 }							
+						 }	
+
+					 ModbusMaster2_Enable(true); 
 	        }
 			  
 				}
@@ -1198,13 +1199,13 @@ void MasterModbus2TaskFunction(void const * argument)
 	for(;;)
   {
 		// Пытаемся захватить мьютекс (ждём 100 мс)
-     osStatus status = osMutexWait(myMutex02Handle, 20);
+     osStatus status = osMutexWait(myMutex02Handle, 10);
 		 if (status == osOK) {		 
 		     eMBMaster2Poll();
 			  // Освобождаем мьютекс
        osMutexRelease(myMutex02Handle);
 		 }
-    osDelay(1);
+    osDelay(2);
   }
   /* USER CODE END MasterModbusTaskFunction */
 }
@@ -1215,7 +1216,7 @@ void HoldingHandlerFunction2(void const * argument)
 	
 	 for(;;)
    {
-		 osStatus status = osMutexWait(myMutex02Handle, 20);
+		 osStatus status = osMutexWait(myMutex02Handle, 10);
 		 if (status == osOK){
 						
 				eMBMaster2ReqReadInputRegister(ModBusMaster2CurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH, 3, 200 );	
