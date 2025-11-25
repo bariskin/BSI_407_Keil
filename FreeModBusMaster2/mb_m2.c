@@ -200,8 +200,7 @@ eMBMaster2Enable( void )
     if( eMBState2 == STATE_DISABLED )
     {
         /* Activate the protocol stack. */
-        //pvMBMaster2FrameStartCur(  );
-			  eMBMaster2RTUStart();
+        pvMBMaster2FrameStartCur(  );
         eMBState2 = STATE_ENABLED;
     }
     else
@@ -218,8 +217,7 @@ eMBMaster2Disable( void )
 
     if(( eMBState2 == STATE_ENABLED ) || ( eMBState2 == STATE_ESTABLISHED))
     {
-        //pvMBMaster2FrameStopCur(  );
-			  eMBMaster2RTUStop();
+        pvMBMaster2FrameStopCur(  );
         eMBState2 = STATE_DISABLED;
         eStatus = MB_ENOERR;
     }

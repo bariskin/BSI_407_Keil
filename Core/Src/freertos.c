@@ -622,7 +622,8 @@ void HoldingHandlerFunction(void const * argument)
      //uint8_t sensorPosition = displayCmd.sensorPOSITION; // FIRST or SECONDARY
 		 
     if(xQueueReceive(displayCommandQueue, &displayCmd, 0) == pdTRUE)
-    {  	                                       
+    {  	               
+      
 			    if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){	 
 						
 						 registersTX[0] = displayCmd.binary32 & 0xFFFF;
@@ -709,10 +710,7 @@ void HoldingHandlerFunction(void const * argument)
 					 /* пройти один цикл опроса состояния калибровки  */
 				    SelectRunFlag = CASE_WAITNG_CALBRATION_STATE;
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;	
-						
-				
-            ModbusMaster2_Enable(true);					 
-						
+								
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
 	  else   if(displayCmd.command == DISPLAY_CALIBRATION_POINT_1){	
@@ -724,7 +722,7 @@ void HoldingHandlerFunction(void const * argument)
 					 sensorLog.logType = CALIBRATION_1;
 			
 						if(sd_card_present)		{						
-							 if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+							  if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
 														}
 						}
 			      /* ******************************************************************* */
@@ -751,9 +749,7 @@ void HoldingHandlerFunction(void const * argument)
 						/* пройти один цикл опроса состояния калибровки  */
 				    SelectRunFlag = CASE_WAITNG_CALBRATION_STATE;
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;
-						
-					  ModbusMaster2_Enable(true);			
-								
+										
 		    }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
 			 else	 if(displayCmd.command == DISPLAY_THRESHOLD_WARNING){
@@ -805,7 +801,7 @@ void HoldingHandlerFunction(void const * argument)
 					  sensorLog.logType = THRESHOLD_ALARM;
 						
 				    if(sd_card_present)		{						
-							if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
+							  if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
 													}
 						
 						}
@@ -877,9 +873,7 @@ void HoldingHandlerFunction(void const * argument)
 						HoldingPollsDone = 0;
 						
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;
-				 	 /* ******************************************************** */
-				   
-	   		    ModbusMaster2_Enable(true);		
+				 	 /* ******************************************************** */	
         }
       }	
 		}
@@ -991,18 +985,14 @@ void DisplayTaskFunction(void const * argument)
   /* Infinite loop */
   for(;;)
   {		
-
-		
 		if(Uart_Get_Byte(&ring_Rx, (uint8_t *)&InputByte) == RX_BUF_DONE)
-		{
-		/* Отключить таски и все что касается UART4 */
-		 ModbusMaster2_Enable(false);
-    
+		{	
 		 GetDisplayCmd(InputByte);
 		}
 		
 		if(packet_ready)
 		{			
+	
 	   HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready);			
     }
     osDelay(10);  // 500 ms
@@ -1045,7 +1035,7 @@ void SendToDispTaskFunction(void const * argument)
 				{
 					 /* постоянно ждем новое сообщение */
 				  if(xQueueReceive(queueSendLogsHandle,&LogMsg,osWaitForever) == pdTRUE){ 
-					
+						
 					 ModbusMaster2_Enable(false);
 						
 					 RdyWrittingFlag = 1;
@@ -1205,7 +1195,7 @@ void MasterModbus2TaskFunction(void const * argument)
 			  // Освобождаем мьютекс
        osMutexRelease(myMutex02Handle);
 		 }
-    osDelay(5);
+    osDelay(4);
   }
   /* USER CODE END MasterModbusTaskFunction */
 }
@@ -1223,7 +1213,7 @@ void HoldingHandlerFunction2(void const * argument)
 				osMutexRelease(myMutex02Handle);		
 			}
 		 
-		osDelay(TIME_STEP_DEFAULT_150_MS + 50); 	    // 150 ms 	
+		osDelay(TIME_STEP_DEFAULT_150_MS + 100); 	    // 150 ms 	
 	 }
 }	
 

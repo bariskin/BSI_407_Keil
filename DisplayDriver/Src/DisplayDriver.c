@@ -718,7 +718,6 @@ void updateProgressBar(int PollIsDone) {
         SendNextionCommand("j1.val=%d", 100);
     }
 }
-
 void setErrorStatus(int errorCode) {
     if (errorCode == 0) {
         // Нет ошибки
@@ -728,7 +727,6 @@ void setErrorStatus(int errorCode) {
         // Ошибка
         SendNextionCommand("errore.val=1");
     }
-		osDelay(5);
 }
 
 // Простая конвертация 4 байт little-endian в число

@@ -27,7 +27,7 @@ extern "C" {
   */   
   
 /* ------------------------ Defines  HOLDING REGISTERS ------------------------------------*/
-#define HOLDING_OFFSET                         (uint16_t)40000
+static const uint16_t HOLDING_OFFSET         =                 (uint16_t)40000;
 
 static const uint16_t  DEVICE_MODEL_CODE           =           (uint16_t)(40400 - HOLDING_OFFSET); //DEVICE_MODEL_CODE
 static const uint16_t  DEVICE_MODEL_CODE_2          =          (uint16_t)(40401 - HOLDING_OFFSET); //DEVICE_MODEL_CODE
