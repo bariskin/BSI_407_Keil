@@ -374,7 +374,7 @@ void HoldingHandlerFunction(void const * argument)
 	/* Infinite loop */
   for(;;)
   {	// Пытаемся захватить мьютекс (ждём 50 мс)
-     osStatus status = osMutexWait(myMutex01Handle, 10);
+     osStatus status = osMutexWait(myMutex01Handle, 50);
 		 if (status == osOK) 
 			  {
 			  
@@ -711,7 +711,7 @@ void HoldingHandlerFunction(void const * argument)
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;	
 						
 				
-            ModbusMaster2_Enable(true);					 
+           // ModbusMaster2_Enable(true);					 
 						
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
@@ -752,7 +752,7 @@ void HoldingHandlerFunction(void const * argument)
 				    SelectRunFlag = CASE_WAITNG_CALBRATION_STATE;
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;
 						
-					  ModbusMaster2_Enable(true);			
+					 // ModbusMaster2_Enable(true);			
 								
 		    }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
@@ -879,7 +879,7 @@ void HoldingHandlerFunction(void const * argument)
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;
 				 	 /* ******************************************************** */
 				   
-	   		    ModbusMaster2_Enable(true);		
+	   		    //ModbusMaster2_Enable(true);		
         }
       }	
 		}
@@ -995,15 +995,14 @@ void DisplayTaskFunction(void const * argument)
 		
 		if(Uart_Get_Byte(&ring_Rx, (uint8_t *)&InputByte) == RX_BUF_DONE)
 		{
-		/* Отключить таски и все что касается UART4 */
-		 ModbusMaster2_Enable(false);
-    
+		/* Отключить таски и все что касается UART4 */  
 		 GetDisplayCmd(InputByte);
 		}
 		
 		if(packet_ready)
 		{			
-	   HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready);			
+			ModbusMaster2_Enable(false);
+	    HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready);			
     }
     osDelay(10);  // 500 ms
   }
@@ -1046,7 +1045,7 @@ void SendToDispTaskFunction(void const * argument)
 					 /* постоянно ждем новое сообщение */
 				  if(xQueueReceive(queueSendLogsHandle,&LogMsg,osWaitForever) == pdTRUE){ 
 					
-					 ModbusMaster2_Enable(false);
+					 //ModbusMaster2_Enable(false);
 						
 					 RdyWrittingFlag = 1;
 					
@@ -1090,91 +1089,91 @@ void SendToDispTaskFunction(void const * argument)
 									break;
 							
 							case REQUEST_LOGS:
-								   osDelay(200);
-									 if(LogMsg.Value == 0x00)
-									 {		 
-											 line_count = GetServiceLinesCount();
-											 flagDisplayLogsBusy = 1;
-											 osDelay(900);
-										    if (line_count <= 10 )
-											  	  {
-												  	 first_line = line_count;
-											 			 last_line = 1;
-											  		}													
-									      else
-												  {
-														first_line = line_count;
-														last_line = line_count - 10;
-													}
-												for(int i = first_line; i >= last_line; i--) // читаем первую 10 строку 
-												 { 
-													 osDelay(5);
-													 FRESULT res = ReadServiceLine((char *)log_string, 64, i);
-													 osDelay(5);
-														if (res == FR_OK)
-														 { /*first_line
-															    вывод в обратном порядке: 
-															      10 строка --> будет 1
-															      1 строка --> будет 10
-															 */
-															 int display_line = first_line - i + 1;
-															 SendNextionCommand("t%d.txt=\"%s\"", display_line,(const char* )log_string);
-														 }
-												 }
-								     }
-									 
-										else if (LogMsg.Value > 0x09) // 10, 20 ,30 ....
-											{	 
-												 line_count = GetServiceLinesCount();
-												 flagDisplayLogsBusy = 1;
-												 osDelay(900);
-												
-												 // Проверяем, что запрошенное количество строк ИМЕННО равно 10, 20, 30 и т.д.
-                          // и что общее количество строк >= запрошенному количеству
-                         if((LogMsg.Value % 10 == 0) && (line_count >= LogMsg.Value))
-                          {
-                             first_line = line_count - LogMsg.Value;
-												
-														 
-														  if (first_line < 0 )
-															 {
-															   first_line = 11;
-															 }	
-															   /*Определяем целевую границу для уменьшения
-                                    Например: для значения 20 целевая граница = 10
-                                   для значения 30 целевая граница = 20
-															 */ 
-                              int target_line = first_line - 10;
-														  if (target_line < 0)
-															 {
-															   target_line = 1;
-															 }
-														  // Проверяем, что текущее количество строк превышает целевую границу
-                               if(line_count > target_line)
-                                  {
-																		  //int display_line = 1; // начинаем с позиции 1
-																		     for(int i = first_line; i >= target_line; i--)
-                                              {
-																						   osDelay(2);
-													                     FRESULT res = ReadServiceLine((char *)log_string, sizeof(log_string), i);
-													                     osDelay(2);
-														                   if (res == FR_OK)
-														                     {
-																									 int display_line = first_line - i + 1;
-															                      SendNextionCommand("t%d.txt=\"%s\"", display_line,(const char* )log_string);
-														                     }
-              
-                                              }
-                                   }
-													  }	
-		                        else
-														{
-														
-														
-														}
+//								   osDelay(200);
+//									 if(LogMsg.Value == 0x00)
+//									 {		 
+//											 line_count = GetServiceLinesCount();
+//											 flagDisplayLogsBusy = 1;
+//											 osDelay(900);
+//										    if (line_count <= 10 )
+//											  	  {
+//												  	 first_line = line_count;
+//											 			 last_line = 1;
+//											  		}													
+//									      else
+//												  {
+//														first_line = line_count;
+//														last_line = line_count - 10;
+//													}
+//												for(int i = first_line; i >= last_line; i--) // читаем первую 10 строку 
+//												 { 
+//													 osDelay(5);
+//													 FRESULT res = ReadServiceLine((char *)log_string, 64, i);
+//													 osDelay(5);
+//														if (res == FR_OK)
+//														 { /*first_line
+//															    вывод в обратном порядке: 
+//															      10 строка --> будет 1
+//															      1 строка --> будет 10
+//															 */
+//															 int display_line = first_line - i + 1;
+//															 SendNextionCommand("t%d.txt=\"%s\"", display_line,(const char* )log_string);
+//														 }
+//												 }
+//								     }
+//									 
+//										else if (LogMsg.Value > 0x09) // 10, 20 ,30 ....
+//											{	 
+//												 line_count = GetServiceLinesCount();
+//												 flagDisplayLogsBusy = 1;
+//												 osDelay(900);
+//												
+//												 // Проверяем, что запрошенное количество строк ИМЕННО равно 10, 20, 30 и т.д.
+//                          // и что общее количество строк >= запрошенному количеству
+//                         if((LogMsg.Value % 10 == 0) && (line_count >= LogMsg.Value))
+//                          {
+//                             first_line = line_count - LogMsg.Value;
+//												
+//														 
+//														  if (first_line < 0 )
+//															 {
+//															   first_line = 11;
+//															 }	
+//															   /*Определяем целевую границу для уменьшения
+//                                    Например: для значения 20 целевая граница = 10
+//                                   для значения 30 целевая граница = 20
+//															 */ 
+//                              int target_line = first_line - 10;
+//														  if (target_line < 0)
+//															 {
+//															   target_line = 1;
+//															 }
+//														  // Проверяем, что текущее количество строк превышает целевую границу
+//                               if(line_count > target_line)
+//                                  {
+//																		  //int display_line = 1; // начинаем с позиции 1
+//																		     for(int i = first_line; i >= target_line; i--)
+//                                              {
+//																						   osDelay(2);
+//													                     FRESULT res = ReadServiceLine((char *)log_string, sizeof(log_string), i);
+//													                     osDelay(2);
+//														                   if (res == FR_OK)
+//														                     {
+//																									 int display_line = first_line - i + 1;
+//															                      SendNextionCommand("t%d.txt=\"%s\"", display_line,(const char* )log_string);
+//														                     }
+//              
+//                                              }
+//                                   }
+//													  }	
+//		                        else
+//														{
+//														
+//														
+//														}
 			
-											}
-										osDelay(250);
+//											}
+//										osDelay(250);
 										flagDisplayLogsBusy = 0;
 									  RdyWrittingFlag = 0;
 							   break;
@@ -1223,7 +1222,7 @@ void HoldingHandlerFunction2(void const * argument)
 				osMutexRelease(myMutex02Handle);		
 			}
 		 
-		osDelay(TIME_STEP_DEFAULT_150_MS + 50); 	    // 150 ms 	
+		osDelay(TIME_STEP_DEFAULT_150_MS + 150); 	    // 150 ms 	
 	 }
 }	
 
