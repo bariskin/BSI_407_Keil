@@ -178,7 +178,8 @@ osStaticThreadDef_t HoldingHandlerControlBlock2;
 osMutexId myMutex02Handle;
 osStaticMutexDef_t myMutex02ControlBlock;
 
-
+osMutexId GlobalHandle;
+osStaticMutexDef_t GlobalHandleControlBlock;
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -623,26 +624,31 @@ void HoldingHandlerFunction(void const * argument)
 		 
     if(xQueueReceive(displayCommandQueue, &displayCmd, 0) == pdTRUE)
     {  	               
-      
 			    if(displayCmd.command ==DISPLAY_SCALE_DIMENSION){	 
 						
 						 registersTX[0] = displayCmd.binary32 & 0xFFFF;
-              //registersTX[1] = displayCmd.binary32 & 0xFFFF;
+   
+						 // ---- Блокируем Modbus2, если требуется ----
+						 osMutexWait(GlobalHandle, osWaitForever);
+						 osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
 						
-					   osMutexRelease(myMutex01Handle);
-             osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
-             osMutexWait(myMutex01Handle, 10);
-				    		 
-						 eMBMasterReqWriteMultipleHoldingRegister(  displayCmd.deviceAddr, 
-						                                            dimensionArray[displayCmd.sensorPOSITION], 
-						                                             1, 
-						                                             (USHORT *)&registersTX[0], 
-						                                             300); 
+             // ---- ВХОД В Modbus1 ----
+              if (osMutexWait(myMutex01Handle, 20) == osOK)
+                    {				    	
+						 eMBMasterReqWriteMultipleHoldingRegister(  
+											displayCmd.deviceAddr, 
+						          dimensionArray[displayCmd.sensorPOSITION], 
+						          1, 
+						          (USHORT *)&registersTX[0], 
+						          300
+											); 
 											
-						osMutexRelease(myMutex01Handle);
-            osDelay(TIME_DELAY_PACKET);
-            osMutexWait(myMutex01Handle, 10);
+										  osMutexRelease(myMutex01Handle);
+									 };   				
 						
+						osDelay(TIME_DELAY_PACKET);
+            osMutexRelease(GlobalHandle);									 
+									 
 						shouldChangeFlag = 0;
 				    SelectRunFlag = CASE_WRITING_SETTING;
 					 }
@@ -653,20 +659,25 @@ void HoldingHandlerFunction(void const * argument)
 				   registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
            registersTX[1] = displayCmd.binary32 & 0xFFFF;
  
-           osMutexRelease(myMutex01Handle);
-           osDelay(TIME_DELAY_PACKET);
-           osMutexWait(myMutex01Handle, 10);
-					 	
-           eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
-				                                            scale_maxArray[displayCmd.sensorPOSITION], 
-				                                            2, 
-				                                            (USHORT *)&registersTX[0], 
-				                                            300); 
-
-           osMutexRelease(myMutex01Handle);
-           osDelay(TIME_DELAY_PACKET);
-           osMutexWait(myMutex01Handle, 10);
-
+				 	 osMutexWait(GlobalHandle, osWaitForever);
+					 osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+				  
+					 if (osMutexWait(myMutex01Handle, 20) == osOK)
+                    {	
+											
+             eMBMasterReqWriteMultipleHoldingRegister(
+				                      displayCmd.deviceAddr,                                          
+				                      scale_maxArray[displayCmd.sensorPOSITION],                                             
+				                      2, 				                                            
+				                      (USHORT *)&registersTX[0], 				                                            																					
+				                      300); 
+											
+	                   osMutexRelease(myMutex01Handle);
+									 };
+         			 
+           osDelay(TIME_DELAY_PACKET);	
+					 osMutexRelease(GlobalHandle);		
+									 
 				   shouldChangeFlag = 0;
 				   SelectRunFlag = CASE_WRITING_SETTING; 
 		    }
@@ -684,33 +695,35 @@ void HoldingHandlerFunction(void const * argument)
 															}
 						}
 					 /* ******************************************************************* */ 
-					registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
-          registersTX[1] = displayCmd.binary32 & 0xFFFF;
+					 registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
+           registersTX[1] = displayCmd.binary32 & 0xFFFF;
 					
-					osMutexRelease(myMutex01Handle);
-          osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
-          osMutexWait(myMutex01Handle, 10);
+					 osMutexWait(GlobalHandle, osWaitForever);		
+					 osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+				  
+					 if (osMutexWait(myMutex01Handle, 20) == osOK)
+                    {		
 					
-          eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
-					                                             calibrationArray[displayCmd.sensorPOSITION], 
-					                                             2, 
-					                                             (USHORT *)&registersTX[0], 
-					                                             300);	 
+              eMBMasterReqWriteMultipleHoldingRegister(
+											displayCmd.deviceAddr, 
+					            calibrationArray[displayCmd.sensorPOSITION], 
+					            2, 
+					            (USHORT *)&registersTX[0], 
+					            300
+											);	
+											
+                  osMutexRelease(myMutex01Handle);
+									 };
+          
+           osDelay(TIME_DELAY_PACKET);	
+					 osMutexRelease(GlobalHandle);												
 
-          osMutexRelease(myMutex01Handle);
-          osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
-          osMutexWait(myMutex01Handle, 10);
-
-			    shouldChangeFlag = 0;
-			    
-					
-				
-			      CmdWriteIsReady = 1;
+			     shouldChangeFlag = 0;
+			     CmdWriteIsReady = 1;
 					
 					 /* пройти один цикл опроса состояния калибровки  */
-				    SelectRunFlag = CASE_WAITNG_CALBRATION_STATE;
-						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;	
-								
+				   SelectRunFlag = CASE_WAITNG_CALBRATION_STATE;
+					 ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;								
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
 	  else   if(displayCmd.command == DISPLAY_CALIBRATION_POINT_1){	
@@ -730,19 +743,25 @@ void HoldingHandlerFunction(void const * argument)
 			      registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;
 			
-			      osMutexRelease(myMutex01Handle);
-            osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
-            osMutexWait(myMutex01Handle, 10);
-							    
-            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
-			                                               calibrationArray2[displayCmd.sensorPOSITION], 
-			                                               2, 
-			                                               (USHORT *)&registersTX[0], 
-			                                               300);
-            osMutexRelease(myMutex01Handle);
-            osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
-            osMutexWait(myMutex01Handle, 10);
-
+						osMutexWait(GlobalHandle, osWaitForever);		
+					  osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+				  
+					   if (osMutexWait(myMutex01Handle, 20) == osOK)
+                    {					    
+               eMBMasterReqWriteMultipleHoldingRegister(
+					                 	displayCmd.deviceAddr,                           
+						                calibrationArray2[displayCmd.sensorPOSITION], 
+			                      2, 
+			                      (USHORT *)&registersTX[0], 
+			                      300
+						          );
+																	
+                     osMutexRelease(myMutex01Handle);
+									 };
+										
+            osDelay(TIME_DELAY_PACKET);	
+					  osMutexRelease(GlobalHandle);		
+						
 			      shouldChangeFlag = 0;
 			      CmdWriteIsReady = 1;   
 						
@@ -769,23 +788,28 @@ void HoldingHandlerFunction(void const * argument)
              registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
              registersTX[1] = displayCmd.binary32 & 0xFFFF;
 				 
-				 
-				     osMutexRelease(myMutex01Handle);
-             osDelay(TIME_DELAY_PACKET);
-             osMutexWait(myMutex01Handle, 10);
-				 
-             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr, 
-				                                              warningArray[displayCmd.sensorPOSITION], 
-				                                              2, 
-				                                              (USHORT *)&registersTX[0], 
-				                                              300);
-				     osMutexRelease(myMutex01Handle);
-             osDelay(TIME_DELAY_PACKET);
-             osMutexWait(myMutex01Handle, 10);
-				   
-             shouldChangeFlag = 0;
-				     SelectRunFlag = CASE_WRITING_SETTING;
-						 		 
+						 osMutexWait(GlobalHandle, osWaitForever);		
+					   osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+				  
+					   if (osMutexWait(myMutex01Handle, 20) == osOK)
+                    {	
+						
+             eMBMasterReqWriteMultipleHoldingRegister(
+						                  displayCmd.deviceAddr, 
+				                      warningArray[displayCmd.sensorPOSITION], 
+				                      2, 
+				                      (USHORT *)&registersTX[0], 
+				                      300
+											);
+											
+						          osMutexRelease(myMutex01Handle);
+									 };
+										
+            osDelay(TIME_DELAY_PACKET);	
+					  osMutexRelease(GlobalHandle);
+						
+            shouldChangeFlag = 0;
+				    SelectRunFlag = CASE_WRITING_SETTING;		 		 
 	      }
           /* ******************  DISPLAY_THRESHOLD_ALARM ************************ */	  
        else if(displayCmd.command == DISPLAY_THRESHOLD_ALARM){
@@ -808,17 +832,25 @@ void HoldingHandlerFunction(void const * argument)
 				     /* ******************************************************************* */
             registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;	
-				 
-            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,
-				                                             alarmArray[displayCmd.sensorPOSITION], 
-				                                             2, 
-				                                             (USHORT *)&registersTX[0], 
-			                                               300);	
-            osMutexRelease(myMutex01Handle);
-            osDelay(TIME_DELAY_PACKET);
-            osMutexWait(myMutex01Handle, 10);
+						
+						 osMutexWait(GlobalHandle, osWaitForever);		
+					   osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+				  
+					   if (osMutexWait(myMutex01Handle, 20) == osOK)
+                    {	
+              eMBMasterReqWriteMultipleHoldingRegister(
+						                   displayCmd.deviceAddr,
+				                       alarmArray[displayCmd.sensorPOSITION], 
+				                       2, 
+				                       (USHORT *)&registersTX[0], 
+			                         300
+						            );
+						      osMutexRelease(myMutex01Handle);
+							 };
+										
+            osDelay(TIME_DELAY_PACKET);	
+					  osMutexRelease(GlobalHandle);
 
-				 
 				    shouldChangeFlag = 0;
 				    SelectRunFlag = CASE_WRITING_SETTING;
 						
@@ -841,19 +873,25 @@ void HoldingHandlerFunction(void const * argument)
 				    registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;	
 				 
-				    osMutexRelease(myMutex01Handle);
-            osDelay(TIME_DELAY_PACKET);
-            osMutexWait(myMutex01Handle, 10);
-				 
-            eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,
-				                                             additionalArray[displayCmd.sensorPOSITION], 
-				                                             2, 
-				                                             (USHORT *)&registersTX[0], 
-				                                             300); 
-				    osMutexRelease(myMutex01Handle);
-            osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
-            osMutexWait(myMutex01Handle, 10);
-				 
+		
+         		 osMutexWait(GlobalHandle, osWaitForever);		
+					   osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+				  
+					   if (osMutexWait(myMutex01Handle, 20) == osOK)
+                    {	
+                eMBMasterReqWriteMultipleHoldingRegister(
+						                   displayCmd.deviceAddr,
+				                       additionalArray[displayCmd.sensorPOSITION], 
+				                       2, 
+				                       (USHORT *)&registersTX[0], 
+				                       300
+						           );
+									   osMutexRelease(myMutex01Handle);
+									 };
+										
+            osDelay(TIME_DELAY_PACKET);	
+					  osMutexRelease(GlobalHandle);				
+							
 				    shouldChangeFlag = 0;
 				    CmdWriteIsReady = 1;
 				   /* Для вычичитки записанных данных  пройти один цикл опроса */
@@ -985,6 +1023,10 @@ void DisplayTaskFunction(void const * argument)
   /* Infinite loop */
   for(;;)
   {		
+		
+	 osStatus stGlobal = osMutexWait(GlobalHandle, 50);
+   if (stGlobal == osOK) {
+		
 		if(Uart_Get_Byte(&ring_Rx, (uint8_t *)&InputByte) == RX_BUF_DONE)
 		{	
 		 GetDisplayCmd(InputByte);
@@ -992,11 +1034,14 @@ void DisplayTaskFunction(void const * argument)
 		
 		if(packet_ready)
 		{			
-	
 	   HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready);			
     }
+		 
+		 osMutexRelease(GlobalHandle);
+  	} 
     osDelay(10);  // 500 ms
   }
+	
   /* USER CODE END DisplayTaskFunction */
 }
 
@@ -1035,9 +1080,7 @@ void SendToDispTaskFunction(void const * argument)
 				{
 					 /* постоянно ждем новое сообщение */
 				  if(xQueueReceive(queueSendLogsHandle,&LogMsg,osWaitForever) == pdTRUE){ 
-						
-					 ModbusMaster2_Enable(false);
-						
+											
 					 RdyWrittingFlag = 1;
 					
 				    switch ((uint8_t)LogMsg.logType)
@@ -1169,8 +1212,7 @@ void SendToDispTaskFunction(void const * argument)
 									  RdyWrittingFlag = 0;
 							   break;
 						 }	
-
-					 ModbusMaster2_Enable(true); 
+	//				 ModbusMaster2_Enable(true); 
 	        }
 			  
 				}
@@ -1188,14 +1230,18 @@ void MasterModbus2TaskFunction(void const * argument)
 	
 	for(;;)
   {
-		// Пытаемся захватить мьютекс (ждём 100 мс)
+	 osStatus stGlobal = osMutexWait(GlobalHandle, 50);
+   if (stGlobal == osOK) {
      osStatus status = osMutexWait(myMutex02Handle, 10);
 		 if (status == osOK) {		 
 		     eMBMaster2Poll();
 			  // Освобождаем мьютекс
        osMutexRelease(myMutex02Handle);
 		 }
+		 osMutexRelease(GlobalHandle);
+	  }
     osDelay(4);
+
   }
   /* USER CODE END MasterModbusTaskFunction */
 }
@@ -1206,23 +1252,19 @@ void HoldingHandlerFunction2(void const * argument)
 	
 	 for(;;)
    {
-		 osStatus status = osMutexWait(myMutex02Handle, 50);
-		 if (status == osOK){
-						
-				eMBMaster2ReqReadInputRegister(ModBusMaster2CurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH, 3, 200 );	
-				osMutexRelease(myMutex02Handle);		
-			}
+		  osStatus stGlobal = osMutexWait(GlobalHandle, 50);
+        if (stGlobal == osOK) {
 		 
+		    osStatus status = osMutexWait(myMutex02Handle, 50);
+		      if (status == osOK){
+						
+				  eMBMaster2ReqReadInputRegister(ModBusMaster2CurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH, 3, 200 );	
+				  osMutexRelease(myMutex02Handle);		
+			  }
+			osMutexRelease(GlobalHandle);	
+			}
 		osDelay(TIME_STEP_DEFAULT_150_MS + 100); 	    // 150 ms 	
 	 }
 }	
-
-
-
-
-
-
-
-
 
 /* USER CODE END Application */
