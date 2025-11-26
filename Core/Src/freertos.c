@@ -150,10 +150,10 @@ osThreadId SlaveModbusTaskHandle;
 uint32_t defaultTaskBuffer[ 256 ];
 osStaticThreadDef_t defaultTaskControlBlock;
 osThreadId MasterModbusTasHandle;
-uint32_t MasterModbusTasBuffer[ 256 ];
+uint32_t MasterModbusTasBuffer[ 356 ];
 osStaticThreadDef_t MasterModbusTasControlBlock;
 osThreadId HoldingHandlerHandle;
-uint32_t HoldingHandlerBuffer[ 1224 ];
+uint32_t HoldingHandlerBuffer[ 1424 ];
 osStaticThreadDef_t HoldingHandlerControlBlock;
 osThreadId InputHandlerHandle;
 uint32_t InputHandlerBuffer[ 512 ];
@@ -165,7 +165,7 @@ osThreadId DisplayTaskHandle;
 uint32_t DisplayTaskBuffer[ 1080];
 osStaticThreadDef_t DisplayTaskControlBlock;
 osThreadId SendToDispTaskHandle;
-uint32_t SendToDispTaskBuffer[ 1700];
+uint32_t SendToDispTaskBuffer[ 1600];
 osStaticThreadDef_t SendToDispTaskControlBlock;
 osMutexId myMutex01Handle;
 osStaticMutexDef_t myMutex01ControlBlock;
@@ -216,6 +216,9 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackTy
   *pulIdleTaskStackSize = configMINIMAL_STACK_SIZE;
   /* place for user code */
 }
+
+
+UBaseType_t freeStack;
 /* USER CODE END GET_IDLE_TASK_MEMORY */
 
 /**
@@ -257,11 +260,11 @@ void MX_FREERTOS_Init(void) {
   SlaveModbusTaskHandle = osThreadCreate(osThread(SlaveModbusTask), NULL);
 
   /* definition and creation of MasterModbusTas */
-  osThreadStaticDef(MasterModbusTas, MasterModbusTaskFunction, osPriorityAboveNormal, 0, 256, MasterModbusTasBuffer, &MasterModbusTasControlBlock);
+  osThreadStaticDef(MasterModbusTas, MasterModbusTaskFunction, osPriorityAboveNormal, 0, 356, MasterModbusTasBuffer, &MasterModbusTasControlBlock);
   MasterModbusTasHandle = osThreadCreate(osThread(MasterModbusTas), NULL);
 
   /* definition and creation of HoldingHandler */
-  osThreadStaticDef(HoldingHandler, HoldingHandlerFunction, osPriorityAboveNormal, 0, 1224, HoldingHandlerBuffer, &HoldingHandlerControlBlock);
+  osThreadStaticDef(HoldingHandler, HoldingHandlerFunction, osPriorityAboveNormal, 0, 1424, HoldingHandlerBuffer, &HoldingHandlerControlBlock);
   HoldingHandlerHandle = osThreadCreate(osThread(HoldingHandler), NULL);
 
   /* definition and creation of InputHandler */
@@ -277,7 +280,7 @@ void MX_FREERTOS_Init(void) {
   DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* definition and creation of SendToDispTask */
-  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityBelowNormal, 0, 1700 , SendToDispTaskBuffer, &SendToDispTaskControlBlock);
+  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityBelowNormal, 0, 1600 , SendToDispTaskBuffer, &SendToDispTaskControlBlock);
   SendToDispTaskHandle = osThreadCreate(osThread(SendToDispTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
@@ -338,6 +341,7 @@ void MasterModbusTaskFunction(void const * argument)
   /* Infinite loop */
   for(;;)
   {
+		//freeStack = uxTaskGetStackHighWaterMark(MasterModbusTasHandle);
 		// Пытаемся захватить мьютекс (ждём 100 мс)
      osStatus status = osMutexWait(myMutex01Handle, 10);
 		 if (status == osOK) {		 
@@ -374,7 +378,7 @@ void HoldingHandlerFunction(void const * argument)
 	/* Infinite loop */
   for(;;)
   {	// Пытаемся захватить мьютекс (ждём 50 мс)
-     osStatus status = osMutexWait(myMutex01Handle, 50);
+     osStatus status = osMutexWait(myMutex01Handle, 100);
 		 if (status == osOK) 
 			  {
 			  
@@ -540,7 +544,16 @@ void HoldingHandlerFunction(void const * argument)
 					   }
 				  	else if (SelectRunFlag == CASE_READING_CALBRATION_STATE)
 					   { 
+							  osMutexRelease(myMutex01Handle);
+                osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+                osMutexWait(myMutex01Handle, 10);
+							 
  					      eMBMasterReqReadHoldingRegister( ModBusSlaveCurrentDeviceAddr, CALIBRATION_PROCESS_STATUS, 1, 300 );
+							 
+							  osMutexRelease(myMutex01Handle);
+                osDelay(TIME_DELAY_BEFORE_AFTER_CMD);
+                osMutexWait(myMutex01Handle, 10);
+							 
 							 
 							  SelectRunFlag = CASE_GET_CALBRATION_STATE;
 					   } 
@@ -567,6 +580,7 @@ void HoldingHandlerFunction(void const * argument)
 									
 									if(!CmdIsReady && !flagDisplayLogsBusy){ 
 										 requestConcetration1 = true;
+
 					           eMBMasterReqReadInputRegister( ModBusSlaveCurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH, 3, 200 );
 									 }
 									else {
@@ -709,10 +723,7 @@ void HoldingHandlerFunction(void const * argument)
 					 /* пройти один цикл опроса состояния калибровки  */
 				    SelectRunFlag = CASE_WAITNG_CALBRATION_STATE;
 						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;	
-						
-				
-           // ModbusMaster2_Enable(true);					 
-						
+								
 	     }
         /* ******************  DISPLAY_CALIBRATION_POINT_1 *************************** */	  
 	  else   if(displayCmd.command == DISPLAY_CALIBRATION_POINT_1){	
@@ -750,10 +761,7 @@ void HoldingHandlerFunction(void const * argument)
 						
 						/* пройти один цикл опроса состояния калибровки  */
 				    SelectRunFlag = CASE_WAITNG_CALBRATION_STATE;
-						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;
-						
-					 // ModbusMaster2_Enable(true);			
-								
+						ModBusSlaveCurrentDeviceAddr = displayCmd.deviceAddr;					
 		    }  
          /* ******************  DISPLAY_THRESHOLD_WARNING************************ */	 
 			 else	 if(displayCmd.command == DISPLAY_THRESHOLD_WARNING){
@@ -794,9 +802,7 @@ void HoldingHandlerFunction(void const * argument)
           /* ******************  DISPLAY_THRESHOLD_ALARM ************************ */	  
        else if(displayCmd.command == DISPLAY_THRESHOLD_ALARM){
 				 
-				    osMutexRelease(myMutex01Handle);
-            osDelay(TIME_DELAY_PACKET);
-            osMutexWait(myMutex01Handle, 10);
+				 
 				  
 				    /* ******************************************************************* */
 				    sensorLog.sensorID = displayCmd.channelID;
@@ -812,6 +818,12 @@ void HoldingHandlerFunction(void const * argument)
 				     /* ******************************************************************* */
             registersTX[0] = (displayCmd.binary32 >> 16) & 0xFFFF;
             registersTX[1] = displayCmd.binary32 & 0xFFFF;	
+						
+						
+						osMutexRelease(myMutex01Handle);
+            osDelay(TIME_DELAY_PACKET);
+            osMutexWait(myMutex01Handle, 10);
+						
 				 
             eMBMasterReqWriteMultipleHoldingRegister(displayCmd.deviceAddr,
 				                                             alarmArray[displayCmd.sensorPOSITION], 
@@ -824,9 +836,7 @@ void HoldingHandlerFunction(void const * argument)
 
 				 
 				    shouldChangeFlag = 0;
-				    SelectRunFlag = CASE_WRITING_SETTING;
-						
-						
+				    SelectRunFlag = CASE_WRITING_SETTING;			
         }
 				/* ******************  DISPLAY_THRESHOLD_ADDITIONAL ************************ */	 
 			 else	if(displayCmd.command == DISPLAY_THRESHOLD_ADDITIONAL){
@@ -997,11 +1007,13 @@ void DisplayTaskFunction(void const * argument)
 		{
 		/* Отключить таски и все что касается UART4 */  
 		 GetDisplayCmd(InputByte);
+		
 		}
 		
 		if(packet_ready)
-		{			
+		{			 
 			ModbusMaster2_Enable(false);
+		
 	    HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready);			
     }
     osDelay(10);  // 500 ms
@@ -1055,36 +1067,44 @@ void SendToDispTaskFunction(void const * argument)
 								ServiceDataCallback(LogMsg.sensorID, LogMsg.Value,SERVICE);
 								break;
 							case CALIBRATION_0:
+								
+							    ModbusMaster2_Enable(false); 
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, CALIBRATION_0);
 								break;
 							case CALIBRATION_1:
+							  	ModbusMaster2_Enable(false); 
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,CALIBRATION_1);
 								break;
 							case ERROR_485:
+								   ModbusMaster2_Enable(false); 
+							
 							  	HAL_GPIO_WritePin(RY_GPIO_Port, RY3_Pin, GPIO_PIN_SET);
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,ERROR_485);
 								break;
 							case THRESHOLD_WARNING:
-								
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,THRESHOLD_WARNING);
 									break;
 	            case THRESHOLD_ALARM:
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, THRESHOLD_ALARM);
 									break;
 	            case THRESHOLD_ADDITIONAL:
+							
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, THRESHOLD_ADDITIONAL);
 									break;	
 							case OVER_THRESHOLD_WARNING:
+								  ModbusMaster2_Enable(false); 
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_WARNING);	
 									break;
 	            case OVER_THRESHOLD_ALARM:
+								  ModbusMaster2_Enable(false); 
 							    ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_ALARM);
 									break;
 	            case OVER_THRESHOLD_ADDITIONAL:
-								
+									ModbusMaster2_Enable(false); 
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, OVER_THRESHOLD_ADDITIONAL);
 									break;
 							 case NORMAL_LEVEL:
+								  ModbusMaster2_Enable(false); 
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, NORMAL_LEVEL);
 									break;
 							
