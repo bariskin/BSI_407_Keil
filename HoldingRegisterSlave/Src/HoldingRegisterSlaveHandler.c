@@ -25,7 +25,7 @@ extern volatile ModBusAddr_t  ModBusAddrDefault;
 extern volatile TimeStepReadingSensores_t TimeStep;
 extern volatile TimeStepReadingSensores_t TimeStepDefault;
 
-//extern osThreadId InputHandlerHandle;
+
 extern osThreadId SlaveEventTaskHandle;
 /* ------------------------Global variables----------------------------*/
 volatile uint32_t  MB_BaudRateValue = 0x00000000;

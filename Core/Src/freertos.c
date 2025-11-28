@@ -323,7 +323,7 @@ void SlaveModbusTaskFunction(void const * argument)
   for(;;)
   {
 		eMBPoll();
-    osDelay(2);
+    osDelay(10);
   }
   /* USER CODE END SlaveModbusTaskFunction */
 }
@@ -1109,12 +1109,17 @@ void SendToDispTaskFunction(void const * argument)
 									break;
 							
 							case REQUEST_LOGS:
-								   osDelay(200);
+								
+							     vTaskSuspend(InputHandlerHandle);
+							     vTaskSuspend(SlaveModbusTaskHandle);
+							
+								   ModbusMaster2_Enable(false); 
+								   osDelay(5);
 									 if(LogMsg.Value == 0x00)
 									 {		 
 											 line_count = GetServiceLinesCount();
 											 flagDisplayLogsBusy = 1;
-											 osDelay(900);
+											 osDelay(5);
 										    if (line_count <= 10 )
 											  	  {
 												  	 first_line = line_count;
@@ -1146,7 +1151,7 @@ void SendToDispTaskFunction(void const * argument)
 											{	 
 												 line_count = GetServiceLinesCount();
 												 flagDisplayLogsBusy = 1;
-												 osDelay(900);
+												 osDelay(10);
 												
 												 // Проверяем, что запрошенное количество строк ИМЕННО равно 10, 20, 30 и т.д.
                           // и что общее количество строк >= запрошенному количеству
@@ -1182,24 +1187,20 @@ void SendToDispTaskFunction(void const * argument)
 																									 int display_line = first_line - i + 1;
 															                      SendNextionCommand("t%d.txt=\"%s\"", display_line,(const char* )log_string);
 														                     }
-              
                                               }
-                                   }
-													  }	
-		                        else
-														{
-														
-														
-														}
-			
+                                     }
+													    }	
 											}
-										osDelay(250);
+										osDelay(10);
 										flagDisplayLogsBusy = 0;
 									  RdyWrittingFlag = 0;
+										vTaskResume(InputHandlerHandle);	
+										vTaskResume(SlaveModbusTaskHandle);	
 							   break;
 						 }	
 
 					 ModbusMaster2_Enable(true); 
+						 
 	        }
 			  
 				}
