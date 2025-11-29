@@ -41,7 +41,7 @@ void ModbusMaster2_Enable(bool enable);
 /* ----------------------- Variables ----------------------------------------*/
 
 extern UART_HandleTypeDef huart4;
-UART_HandleTypeDef* modbusUartMaster2 = &huart4;
+UART_HandleTypeDef* modbusUartMaster2 = &huart4;  // MASTER1
 static uint8_t txByte = 0x00;
 static volatile uint8_t rxByte2 = 0x00;
 

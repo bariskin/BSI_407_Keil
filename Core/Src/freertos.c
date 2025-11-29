@@ -150,7 +150,7 @@ osThreadId SlaveModbusTaskHandle;
 uint32_t defaultTaskBuffer[ 256 ];
 osStaticThreadDef_t defaultTaskControlBlock;
 osThreadId MasterModbusTasHandle;
-uint32_t MasterModbusTasBuffer[ 356 ];
+uint32_t MasterModbusTasBuffer[ 512 ];
 osStaticThreadDef_t MasterModbusTasControlBlock;
 osThreadId HoldingHandlerHandle;
 uint32_t HoldingHandlerBuffer[ 1424 ];
@@ -260,7 +260,7 @@ void MX_FREERTOS_Init(void) {
   SlaveModbusTaskHandle = osThreadCreate(osThread(SlaveModbusTask), NULL);
 
   /* definition and creation of MasterModbusTas */
-  osThreadStaticDef(MasterModbusTas, MasterModbusTaskFunction, osPriorityAboveNormal, 0, 356, MasterModbusTasBuffer, &MasterModbusTasControlBlock);
+  osThreadStaticDef(MasterModbusTas, MasterModbusTaskFunction, osPriorityAboveNormal, 0, 512, MasterModbusTasBuffer, &MasterModbusTasControlBlock);
   MasterModbusTasHandle = osThreadCreate(osThread(MasterModbusTas), NULL);
 
   /* definition and creation of HoldingHandler */
@@ -349,6 +349,7 @@ void MasterModbusTaskFunction(void const * argument)
 			  // Освобождаем мьютекс
        osMutexRelease(myMutex01Handle);
 		 }
+		taskYIELD();
     osDelay(10);
   }
   /* USER CODE END MasterModbusTaskFunction */
@@ -912,14 +913,17 @@ void HoldingHandlerFunction(void const * argument)
 					CmdWriteIsReady = 0;
 					osDelay(1);
 				 }
-			} 
+			}
+			
 		  else if(HoldingPollsDone == 3) 
-		   { 
+		   {  
+				   taskYIELD();
 	  			osDelay(TIME_STEP_DEFAULT_150_MS); 	    // 150 ms 
 		   } 
 		  else
 		   {
-		   osDelay(TIME_DEFAULT_1);            // для первых трех опросов всех датчкиков
+				  taskYIELD();
+		      osDelay(TIME_DEFAULT_1);            // для первых трех опросов всех датчкиков
 		   }
 		/* *************************************** */
 					 		 
@@ -963,6 +967,7 @@ void InputHandlerFunction(void const * argument)
 			 timeCounter = 0;
    		 UpdateDisplayTime();
 		 }
+		taskYIELD();
     osDelay(50);
   }
   /* USER CODE END InputHandlerFunction */
@@ -982,6 +987,7 @@ void SlaveEventFunction(void const * argument)
   for(;;)
   {
     ModBusSlaveEventHoldingRegHandler();
+		taskYIELD();
     osDelay(4);
   }
   /* USER CODE END SlaveEventFunction */
@@ -1016,7 +1022,8 @@ void DisplayTaskFunction(void const * argument)
 		
 	    HandleDisplayCommands((uint8_t *)&displayResponse, (uint8_t *)&arrDisplayRX[0], (uint8_t *)&packet_ready);			
     }
-    osDelay(10);  // 500 ms
+		taskYIELD();
+    osDelay(12);  // 500 ms
   }
   /* USER CODE END DisplayTaskFunction */
 }
@@ -1088,8 +1095,7 @@ void SendToDispTaskFunction(void const * argument)
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, THRESHOLD_ALARM);
 									break;
 	            case THRESHOLD_ADDITIONAL:
-							
-									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, THRESHOLD_ADDITIONAL);
+									 ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, THRESHOLD_ADDITIONAL);
 									break;	
 							case OVER_THRESHOLD_WARNING:
 								  ModbusMaster2_Enable(false); 
@@ -1112,7 +1118,7 @@ void SendToDispTaskFunction(void const * argument)
 								
 							     vTaskSuspend(InputHandlerHandle);
 							     vTaskSuspend(SlaveModbusTaskHandle);
-							
+							     vTaskSuspend(HoldingHandlerHandle);
 								   ModbusMaster2_Enable(false); 
 								   osDelay(5);
 									 if(LogMsg.Value == 0x00)
@@ -1195,7 +1201,8 @@ void SendToDispTaskFunction(void const * argument)
 										flagDisplayLogsBusy = 0;
 									  RdyWrittingFlag = 0;
 										vTaskResume(InputHandlerHandle);	
-										vTaskResume(SlaveModbusTaskHandle);	
+										vTaskResume(SlaveModbusTaskHandle);
+                    vTaskResume(HoldingHandlerHandle);											
 							   break;
 						 }	
 
@@ -1204,6 +1211,7 @@ void SendToDispTaskFunction(void const * argument)
 	        }
 			  
 				}
+		 taskYIELD();
 		 osDelay(50);
   }
   /* USER CODE END SendToDispTaskFunction */
@@ -1225,6 +1233,7 @@ void MasterModbus2TaskFunction(void const * argument)
 			  // Освобождаем мьютекс
        osMutexRelease(myMutex02Handle);
 		 }
+		taskYIELD();
     osDelay(5);
   }
   /* USER CODE END MasterModbusTaskFunction */
@@ -1242,7 +1251,7 @@ void HoldingHandlerFunction2(void const * argument)
 				eMBMaster2ReqReadInputRegister(ModBusMaster2CurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH, 3, 200 );	
 				osMutexRelease(myMutex02Handle);		
 			}
-		 
+		taskYIELD();
 		osDelay(TIME_STEP_DEFAULT_150_MS + 150); 	    // 150 ms 	
 	 }
 }	

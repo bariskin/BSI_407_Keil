@@ -34,7 +34,7 @@ static void prvvUARTTxReadyISR(void);
 /* ----------------------- Variables ----------------------------------------*/
 
 extern UART_HandleTypeDef huart2;
-UART_HandleTypeDef* modbusUartMaster = &huart2;
+UART_HandleTypeDef* modbusUartMaster = &huart2; // MASTER1
 static uint8_t txByte = 0x00;
 static volatile uint8_t rxByte = 0x00;
 

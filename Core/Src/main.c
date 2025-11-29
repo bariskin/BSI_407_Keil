@@ -139,7 +139,7 @@ int main(void)
   MX_UART4_Init();
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
-  MX_USART6_UART_Init();
+  //MX_USART6_UART_Init();
   //MX_I2C2_Init();
   MX_TIM6_Init();
   MX_USART1_UART_Init();
@@ -166,7 +166,7 @@ int main(void)
 	setModBusSlaveSetting();
   setTimeStepReadingSensores();					
 	
-	eMBErrorCode   eStatus = eMBInit( MB_RTU, MB_AddresseValue, &huart1, MB_BaudRateValue, &htim6 );
+	eMBErrorCode   eStatus = eMBInit( MB_RTU, MB_AddresseValue, &huart1, MB_BaudRateValue, &htim6 ); //ModbusSlave
 	eMBEnable( );
 
   /* *************MODBUS MASTER init****************** */
