@@ -78,6 +78,33 @@ extern  bool sd_card_present;
  } flash_struct;
  char time_input_string[16] = {0};
  char log_input_string[4]= {0}; 
+ 
+ 
+ typedef enum 
+ {
+    IDX_RELAY_CMD_POROG_1,
+    IDX_RELAY_CMD_POROG_2,
+    IDX_RELAY_CMD_POROG_3,
+	  IDX_RELAY_CMD_ERROR 
+ } eIDX_Relay_cmd;
+   
+volatile  uint16_t relayModuleCmdArry[] = {0x0000, 0x0000,0x0000,0x0000};
+volatile  uint8_t  relayModuleCmdArryRaw[] = {0x00, 0x00,0x00,0x00};
+ 
+// Функция для разбора 5 байт в 4 short значения
+void parseRelayBytes(const uint8_t *data, uint16_t *relayModuleCmd) {
+    // short1: первый байт + старшие 2 бита второго байта
+    relayModuleCmd[IDX_RELAY_CMD_POROG_1] = ((uint16_t)data[0] << 2) | ((data[1] & 0xC0) >> 6);
+
+    // short2: младшие 6 бит второго + старшие 4 бита третьего байта
+    relayModuleCmd[IDX_RELAY_CMD_POROG_2] = ((uint16_t)(data[1] & 0x3F) << 4) | ((data[2] & 0xF0) >> 4);
+
+    // short3: младшие 4 бита третьего + старшие 6 бит четвертого байта
+    relayModuleCmd[IDX_RELAY_CMD_POROG_3] = ((uint16_t)(data[2] & 0x0F) << 6) | ((data[3] & 0xFC) >> 2);
+
+    // short4: младшие 2 бита четвертого + весь пятый байт
+    relayModuleCmd[IDX_RELAY_CMD_ERROR] = ((uint16_t)(data[3] & 0x03) << 8) | data[4];
+}
 /* ------------------------Functions-----------------------------------*/
  void Init_qDev(void){
 	 flash_struct.dev_quan = 10;
@@ -515,6 +542,13 @@ void GetDisplayCmd(uint8_t inputByte) {
 									   memcpy(&binary32, &updateThresholdAdditional, sizeof(float)); 
 										 writeParams.SensorAlarm2 = (uint32_t)updateThresholdAdditional;
 									 }
+									
+							  	else if (arrDisplayRX[0] == DISPAY_MODULE_RELE_CMD)
+							    	{  
+											 memcpy((void *)relayModuleCmdArryRaw,(void *)&arrDisplayRX[5],  5); //сохраняем входной массиы данных по реле 
+								     
+											 displayResponse = DISPAY_MODULE_RELE_CMD ; 		
+								    }									
 									  
 									 else if (significant_bytes_count > 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_SUBSTANCE_CODE )
 									{
@@ -592,7 +626,12 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
             // Обработка команды 0x35
             processed_without_channel = 1;
             break;
-            
+				
+				 case DISPAY_MODULE_RELE_CMD:
+					 
+				  memset((void *)relayModuleCmdArry, 0x00, 10);
+          parseRelayBytes( (const uint8_t *)&relayModuleCmdArryRaw, (uint16_t *)&relayModuleCmdArry);
+				  processed_without_channel = 1;
         default:
             // Эти команды требуют channelID
             processed_without_channel = 0;

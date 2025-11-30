@@ -67,7 +67,8 @@ typedef enum {
 	  DISPLAY_THRESHOLD_ADDITIONAL     = 0x07, 
     DISPLAY_TIME_CMD                 = 0xA2,  
     DISPLAY_LOGS_CMD                 = 0x70, // команда с дисплея на запрос вывода логов
-	  DISPLAY_NEXT_LOGS_CMD            = 0xA4 // next/prev logs
+	  DISPLAY_NEXT_LOGS_CMD            = 0xA4, // next/prev logs
+	   DISPAY_MODULE_RELE_CMD          = 0x60
 } DisplayResponseCmd;
 	
 typedef enum 
@@ -86,6 +87,7 @@ typedef struct {
 	  uint32_t channelID;
 	  uint8_t  sensorPOSITION; // FIRST,SECOND
 } DisplayCommand_t;
+
  /* ------------------------External variables -------------------------*/
   
 
@@ -107,6 +109,7 @@ typedef struct {
    uint32_t bytes_to_uint32(const unsigned char bytes[4]) ;
    uint8_t get_modbus_address(int device_id, int count); 
    uint8_t is_even(int id_value);
+	 void parseRelayBytes(const uint8_t *data, uint16_t *relayModuleCmd);
 		/**
   * @}
   */
