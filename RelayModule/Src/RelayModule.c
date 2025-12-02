@@ -8,7 +8,7 @@
 */       
 /* ------------------------Includes ----------------------------------*/
 #include "RelayModule.h"
-
+#include "DisplayDriver.h"
 /* ------------------------External variables -------------------------*/
 
 /* ------------------------Global variables----------------------------*/
@@ -132,6 +132,52 @@ void relay_test_callback(uint8_t module_id,
    //        module_id, relay_id, cmd_text);
 }
 
+
+
+
+
+// Применение команд к реле
+void applyRelayCommandsFromDisplay(RelayModule *module, const uint8_t data[5], RelayAction callback) {
+    if (!module || !callback) return;
+
+    uint16_t relayModuleCmdArry[4];
+    parseRelayBytes(data, relayModuleCmdArry);
+
+    // Пробегаем по реле и каналам
+    for (int relay_idx = 0; relay_idx < RELAY_COUNT; relay_idx++) {
+        Relay *relay = &module->relays[relay_idx];
+
+        for (int ch = 0; ch < CHANNEL_COUNT; ch++) {
+            RelayReaction *reaction = &relay->reactions[ch];
+
+            // Проходим по событиям на канале
+            for (int ev = 0; ev < EVENTS_PER_CHANNEL; ev++) {
+                // Используем бит события из соответствующего short
+                uint16_t mask;
+                if (relay_idx < 4) mask = relayModuleCmdArry[relay_idx]; // 4 short = 4 реле
+                else mask = 0; // если реле больше 4, пока отключаем
+
+                uint8_t enabled = (mask >> ev) & 0x01;
+
+                // Устанавливаем реакцию
+                reaction->active_events[ev] = enabled;
+
+                // Если событие включено, вызываем callback с командой
+                if (enabled) {
+                    RelayCommand cmd = module->channels[ch].events[ev].action;
+                    if (cmd != RELAY_CMD_NONE) {
+                        callback(module->module_id, relay->relay_id, cmd);
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
 //// events_mask — битовая маска событий (бит 0 = EVENT_1, бит 1 = EVENT_2 и т.д.)
 //void relay_set_reactions_bulk(RelayModule *module,
 //                              uint8_t relay_id,
@@ -196,6 +242,11 @@ int main(void)
     printf("=== ALL MODULES TESTED ===\n");
     return 0;
 }
+
+
+
+
+
 
 
  *************************************************
