@@ -68,6 +68,7 @@ extern SensorLogEvent_t sensorLog;
 extern  bool sd_card_present;
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
+ static uint8_t baudRate = 0x00;
  
  struct
  {
@@ -392,11 +393,15 @@ void GetDisplayCmd(uint8_t inputByte) {
                 // ќбновл€ем displayResponse на основе полученных данных
                 if (significant_bytes_count > 0) {
                     // ќбработка специальных случаев
-                    if (arrDisplayRX[0] == DISPLAY_BAUD_RATE_CMD && data_length >= 2) {
-                        if (arrDisplayRX[1] >= 0x01 && arrDisplayRX[1] <= 0x06) {
+                    if (arrDisplayRX[0] == DISPLAY_BAUD_RATE_CMD && data_length >= 2) 
+											{
+                        if (arrDisplayRX[1] >= 0x01 && arrDisplayRX[1] <= 0x06) 
+													{
+													  baudRate =  arrDisplayRX[1];
+													
                             displayResponse = DISPLAY_BAUD_RATE_CMD;
-                        }
-                    }
+                          }
+                      }
 										/* запрос на вывод логов со строки 0x00 */
 										else if (arrDisplayRX[0] == DISPLAY_LOGS_CMD )
 										 {
@@ -609,8 +614,11 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 				 processed_without_channel = 1;
         break;    
         case DISPLAY_BAUD_RATE_CMD: // —мена скорости UART
-            if (arrDisplayRX[1] >= 1 && arrDisplayRX[1] <= 6) {
-                MB_BaudRateValue = getBaudrate(arrDisplayRX[1]);
+            if (baudRate>= 1 && baudRate <= 6) {
+                MB_BaudRateValue = getBaudrate(baudRate);
+							
+							  baudRate = 0x00;
+							
                 xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_1, eSetValueWithOverwrite);
                 osDelay(1);
             }
@@ -629,9 +637,9 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 				
 				 case DISPAY_MODULE_RELE_CMD:
 					 
-				  memset((void *)relayModuleCmdArry, 0x00, 10);
-          parseRelayBytes( (const uint8_t *)&relayModuleCmdArryRaw, (uint16_t *)&relayModuleCmdArry);
-				  processed_without_channel = 1;
+				    memset((void *)relayModuleCmdArry, 0x00, 10);
+            parseRelayBytes( (const uint8_t *)&relayModuleCmdArryRaw, (uint16_t *)&relayModuleCmdArry);
+				    processed_without_channel = 1;
         default:
             // Ёти команды требуют channelID
             processed_without_channel = 0;
