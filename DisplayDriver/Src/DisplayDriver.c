@@ -19,6 +19,7 @@
 #include "HoldingRegisterSlaveHandler.h"
 #include "bsp.h"
 #include "SensorLogs.h"
+#include "RelayModule.h"
 /* ------------------------External variables -------------------------*/
 extern UART_HandleTypeDef huart3;
 extern osThreadId SlaveEventTaskHandle;
@@ -56,7 +57,7 @@ extern   uint32_t binary32;
  float   updateScaleMax            = 0.00;
  uint8_t  dimensionCode            = 0x00;
  
- DisplayCommand_t cmd;
+ extern  DisplayCommand_t cmd;
  extern  QueueHandle_t displayCommandQueue;
  extern  volatile uint8_t CmdIsReady;
  
@@ -66,6 +67,9 @@ extern  SensorCurrentState_t	readParams  ;
 extern  osMessageQId queueSendLogsHandle;
 extern SensorLogEvent_t sensorLog;
 extern  bool sd_card_present;
+ 
+extern  QueueHandle_t relaysCommandQueue; 
+extern  RelaysEvent_t relayEvent;
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  static uint8_t baudRate = 0x00;
@@ -90,21 +94,24 @@ extern  bool sd_card_present;
  } eIDX_Relay_cmd;
    
 volatile  uint16_t relayModuleCmdArry[] = {0x0000, 0x0000,0x0000,0x0000};
-volatile  uint8_t  relayModuleCmdArryRaw[] = {0x00, 0x00,0x00,0x00};
+volatile  uint8_t  relayModuleCmdArryRaw[] = {0x00, 0x00,0x00,0x00, 0x00};
  
-// Функция для разбора 5 байт в 4 short значения
 void parseRelayBytes(const uint8_t *data, uint16_t *relayModuleCmd) {
-    // short1: первый байт + старшие 2 бита второго байта
-    relayModuleCmd[IDX_RELAY_CMD_POROG_1] = ((uint16_t)data[0] << 2) | ((data[1] & 0xC0) >> 6);
-
-    // short2: младшие 6 бит второго + старшие 4 бита третьего байта
-    relayModuleCmd[IDX_RELAY_CMD_POROG_2] = ((uint16_t)(data[1] & 0x3F) << 4) | ((data[2] & 0xF0) >> 4);
-
-    // short3: младшие 4 бита третьего + старшие 6 бит четвертого байта
-    relayModuleCmd[IDX_RELAY_CMD_POROG_3] = ((uint16_t)(data[2] & 0x0F) << 6) | ((data[3] & 0xFC) >> 2);
-
-    // short4: младшие 2 бита четвертого + весь пятый байт
-    relayModuleCmd[IDX_RELAY_CMD_ERROR] = ((uint16_t)(data[3] & 0x03) << 8) | data[4];
+    // Значение 1: data[0] целиком + data[1] биты 0-1
+    relayModuleCmd[IDX_RELAY_CMD_POROG_1] = 
+        (uint16_t)(data[0] | ((data[1] & 0x03) << 8));
+    
+    // Значение 2: data[1] биты 2-7 (6 бит) + data[2] биты 0-3 (4 бита)
+    relayModuleCmd[IDX_RELAY_CMD_POROG_2] = 
+        (uint16_t)(((data[1] >> 2) & 0x3F) | ((data[2] & 0x0F) << 6));
+    
+    // Значение 3: data[2] биты 4-7 (4 бита) + data[3] биты 0-5 (6 бит)
+    relayModuleCmd[IDX_RELAY_CMD_POROG_3] = 
+        (uint16_t)(((data[2] >> 4) & 0x0F) | ((data[3] & 0x3F) << 4));
+    
+    // Значение 4: data[3] биты 6-7 (2 бита) + data[4] целиком (8 бит)
+    relayModuleCmd[IDX_RELAY_CMD_ERROR] = 
+        (uint16_t)(((data[3] >> 6) & 0x03) | (data[4] << 2));
 }
 /* ------------------------Functions-----------------------------------*/
  void Init_qDev(void){
@@ -550,8 +557,13 @@ void GetDisplayCmd(uint8_t inputByte) {
 									
 							  	else if (arrDisplayRX[0] == DISPAY_MODULE_RELE_CMD)
 							    	{  
+											
+											relayEvent.module_id = arrDisplayRX[1];
+				              relayEvent.relays_id = arrDisplayRX[2];
+				              relayEvent.channel_id = arrDisplayRX[3];
+											
 											 memcpy((void *)relayModuleCmdArryRaw,(void *)&arrDisplayRX[5],  5); //сохраняем входной массиы данных по реле 
-								     
+								       
 											 displayResponse = DISPAY_MODULE_RELE_CMD ; 		
 								    }									
 									  
@@ -638,7 +650,17 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 				 case DISPAY_MODULE_RELE_CMD:
 					 
 				    memset((void *)relayModuleCmdArry, 0x00, 10);
+				    //memset((void *)&relayEvent, 0x00, sizeof(RelaysEvent_t));
+				    /* set structure for module --> rele --> */
             parseRelayBytes( (const uint8_t *)&relayModuleCmdArryRaw, (uint16_t *)&relayModuleCmdArry);
+//				    //relayEvent.module_id =
+//				    //relayEvent.relays_id =
+//				    //relayEvent.channel_id =
+				    relayEvent.warning = relayModuleCmdArry[IDX_RELAY_CMD_POROG_1];
+				    relayEvent.alarm_1 = relayModuleCmdArry[IDX_RELAY_CMD_POROG_2];
+				    relayEvent.alarm_2 = relayModuleCmdArry[IDX_RELAY_CMD_POROG_3];
+				    relayEvent.error =   relayModuleCmdArry[IDX_RELAY_CMD_ERROR];
+				 
 				    processed_without_channel = 1;
         default:
             // Эти команды требуют channelID

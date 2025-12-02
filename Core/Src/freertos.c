@@ -41,6 +41,7 @@
 #include "SensorLogs.h"
 #include "mb_m2.h"
 #include "ModbusSettings.h"
+#include "RelayModule.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -90,25 +91,47 @@ eCase SelectRunFlag = CASE_DEVICE_MODEL_CODE;
 uint8_t ControlCycleFlag = 0; 
 uint8_t ControlCycleFlag2 = 0;  
  
-extern bool sd_card_present; 
+ extern bool sd_card_present; 
+ 
+ volatile uint8_t CmdIsReady      = 0;
+ volatile uint8_t CmdWriteIsReady = 0;
+ volatile uint8_t PauseTaskCounter= 0;
+ 
  
   /* √лобальна€ очередь дл€ команд */
 QueueHandle_t displayCommandQueue = NULL;
-
-volatile uint8_t CmdIsReady = 0;
-volatile uint8_t CmdWriteIsReady = 0;
-volatile uint8_t PauseTaskCounter = 0;
  
+DisplayCommand_t cmd =
+   {
+	   .command     = 0x00,
+     .deviceAddr  = 0x00,
+     .binary32    = 0x00,
+	   .channelID   = 0x00,
+	   .sensorPOSITION   = 0x00
+	 };
+
   /* √лобальна€ очередь дл€ логов */
  
-osMessageQId queueSendLogsHandle;
-QueueHandle_t SD_CardMsgQueue = NULL;
- 
+osMessageQId queueSendLogsHandle = NULL;
+
 SensorLogEvent_t sensorLog = {
 	 .logType = SENSOR_LOG_TYPE_ERROR,
    .sensorID = 0,
    .deviceAddr = 0,
    .Value = 0
+}; 
+
+ /* √лобальна€ очередь событий дл€ модлуей реле */
+QueueHandle_t relaysCommandQueue = NULL;
+
+ RelaysEvent_t relayEvent = {
+	 .module_id  = 0,
+   .relays_id  = 0,
+   .channel_id = 0, 
+	 .warning    = 0,
+	 .alarm_1    = 0,
+   .alarm_2    = 0,
+   .error      = 0
 }; 
 
  union {
@@ -295,16 +318,15 @@ void MX_FREERTOS_Init(void) {
   osThreadStaticDef(HoldingHandler2, HoldingHandlerFunction2, osPriorityBelowNormal, 0, 512, HoldingHandlerBuffer2, &HoldingHandlerControlBlock2);
   HoldingHandlerHandle2 = osThreadCreate(osThread(HoldingHandler2), NULL);
 
-	
-	
 	displayCommandQueue = xQueueCreate(20, sizeof(DisplayCommand_t));
 	
-	
   /* очередь дл€ работы с логами */
-	osMessageQDef(queueSenEvent, 24, SensorLogEvent_t);
+	osMessageQDef(queueSenEvent, 20, SensorLogEvent_t);
   queueSendLogsHandle = osMessageCreate(osMessageQ(queueSenEvent), NULL);
 	
-	
+	 /* очередь дл€ работы с реле */
+	relaysCommandQueue = xQueueCreate(4, sizeof(relayEvent));
+
   /* USER CODE END RTOS_THREADS */
 
 }
