@@ -164,17 +164,25 @@ int main(void)
 				
 	setModBusSlaveAddr();
 	setModBusSlaveSetting();
-  setTimeStepReadingSensores();					
-	
+  setTimeStepReadingSensores();		
+
+  HAL_UART_RegisterCallback(&huart1, HAL_UART_RX_COMPLETE_CB_ID, Slave_RxCplt);
+  HAL_UART_RegisterCallback(&huart1, HAL_UART_TX_COMPLETE_CB_ID, Slave_TxCplt);
+				
+
 	eMBErrorCode   eStatus = eMBInit( MB_RTU, MB_AddresseValue, &huart1, MB_BaudRateValue, &htim6 ); //ModbusSlave
 	eMBEnable( );
 
   /* *************MODBUS MASTER init****************** */
 
   vMBMasterSetDestAddress(ModBusSlaveDefaultDeviceAddr);
+				
+	HAL_UART_RegisterCallback(&huart2, HAL_UART_RX_COMPLETE_CB_ID, Master1_RxCplt);
+  HAL_UART_RegisterCallback(&huart2, HAL_UART_TX_COMPLETE_CB_ID, Master1_TxCplt);			
  
-  eStatus = eMBMasterInit(MB_RTU, 0, 9600, MB_PAR_NONE);
+  eStatus = eMBMasterInit(MB_RTU, 0, 9600, MB_PAR_NONE);		
   eStatus = eMBMasterEnable();
+				
   if (eStatus != MB_ENOERR)
    {
     // Error handling
@@ -185,8 +193,13 @@ int main(void)
 	/* *************MODBUS MASTER 2 init****************** */
   vMBMaster2SetDestAddress(ModBusMaster2CurrentDeviceAddr);	 
 	 
+	HAL_UART_RegisterCallback(&huart4, HAL_UART_RX_COMPLETE_CB_ID, Master2_RxCplt);
+  HAL_UART_RegisterCallback(&huart4, HAL_UART_TX_COMPLETE_CB_ID, Master2_TxCplt);
+	  
+	 
 	eStatus = eMBMaster2Init(MB_RTU, 0, 9600, MB_PAR_NONE);
   eStatus = eMBMaster2Enable();
+	 
   if (eStatus != MB_ENOERR)
    {
     // Error handling

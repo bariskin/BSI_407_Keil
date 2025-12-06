@@ -265,6 +265,19 @@ BOOL            xMBTCPPortGetRequest( UCHAR **ppucMBTCPFrame, USHORT * usTCPLeng
 
 BOOL            xMBTCPPortSendResponse( const UCHAR *pucMBTCPFrame, USHORT usTCPLength );
 
+
+/* ----------------------- callback USART and UART functions -------------------------------*/
+void Slave_RxCplt(UART_HandleTypeDef *huart);
+void Slave_TxCplt(UART_HandleTypeDef *huart);
+
+void Master1_RxCplt(UART_HandleTypeDef *huart);
+void Master1_TxCplt(UART_HandleTypeDef *huart);
+
+void Master2_RxCplt(UART_HandleTypeDef *huart);
+void Master2_TxCplt(UART_HandleTypeDef *huart);
+
+
+
 #ifdef __cplusplus
 PR_END_EXTERN_C
 #endif

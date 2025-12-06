@@ -1101,14 +1101,21 @@ void SendToDispTaskFunction(void const * argument)
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value, CALIBRATION_0);
 								break;
 							case CALIBRATION_1:
-							  	ModbusMaster2_Enable(false); 
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,CALIBRATION_1);
 								break;
 							case ERROR_485:
-								   ModbusMaster2_Enable(false); 
-							
+								
+								  vTaskSuspend(InputHandlerHandle);
+							    vTaskSuspend(SlaveModbusTaskHandle);
+							    vTaskSuspend(HoldingHandlerHandle);
+							     
 							  	HAL_GPIO_WritePin(RY_GPIO_Port, RY3_Pin, GPIO_PIN_SET);
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,ERROR_485);
+							
+							    vTaskResume(InputHandlerHandle);	
+									vTaskResume(SlaveModbusTaskHandle);
+                  vTaskResume(HoldingHandlerHandle);	
+							
 								break;
 							case THRESHOLD_WARNING:
 									ServiceDataCallback(LogMsg.sensorID,LogMsg.Value,THRESHOLD_WARNING);
@@ -1256,29 +1263,47 @@ void MasterModbus2TaskFunction(void const * argument)
        osMutexRelease(myMutex02Handle);
 		 }
 		taskYIELD();
-    osDelay(5);
+    osDelay(10);
   }
   /* USER CODE END MasterModbusTaskFunction */
 }
 
 void HoldingHandlerFunction2(void const * argument)
 {
-	  osDelay(15000);
+	  osDelay(20000);
 	
 	 for(;;)
    {
 		 osStatus status = osMutexWait(myMutex02Handle, 50);
 		 if (status == osOK){
 						
-				eMBMaster2ReqReadInputRegister(ModBusMaster2CurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH, 3, 200 );	
+				eMBMaster2ReqReadInputRegister(ModBusMaster2CurrentDeviceAddr, SENSOR_PRIMARY_VALUE_HIGH_2, 1, 300 );	
 				osMutexRelease(myMutex02Handle);		
 			}
 		taskYIELD();
-		osDelay(TIME_STEP_DEFAULT_150_MS + 150); 	    // 150 ms 	
+		osDelay(TIME_STEP_DEFAULT_150_MS + 180); 	    // 150 ms 	
 	 }
 }	
 
-
+void ModbusMaster2_Enable(bool enable)
+{
+	
+	 if(enable)
+    {
+      //vTaskResume(MasterModbus2TasHandle);
+      //vTaskResume(HoldingHandlerHandle2);
+			
+			//eMBMaster2Enable();
+    }
+    else
+    {
+			
+			//eMBMaster2Disable();
+			//vTaskSuspend(HoldingHandlerHandle2); 
+		  //vTaskSuspend(MasterModbus2TasHandle);
+   }
+	
+}
 
 
 

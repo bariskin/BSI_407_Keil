@@ -56,7 +56,7 @@ void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 		
  else
   {
-    HAL_UART_AbortReceive_IT(modbusUartMaster);
+    //HAL_UART_AbortReceive_IT(modbusUartMaster);
   }
  
 	if(xTxEnable)
@@ -70,20 +70,15 @@ void vMBMasterPortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 	}
   else
   {
-    HAL_UART_AbortTransmit_IT(modbusUartMaster);
+    //HAL_UART_AbortTransmit_IT(modbusUartMaster);
   }
   
 }
-
-
-
 /* --------------------------------------------------------------------------*/
 BOOL xMBMasterPortSerialInit(UCHAR ucPORT, ULONG ulBaudRate, UCHAR ucDataBits, eMBParity eParity)
 {
   return TRUE;
 }
-
-
 
 /* --------------------------------------------------------------------------*/
 BOOL xMBMasterPortSerialPutByte(CHAR ucByte)
@@ -97,7 +92,7 @@ BOOL xMBMasterPortSerialPutByte(CHAR ucByte)
 BOOL xMBMasterPortSerialGetByte( CHAR * pucByte )
 {
   *pucByte = rxByte;
-  HAL_UART_Receive_IT(modbusUartMaster, (uint8_t*)&rxByte, 1);
+  //HAL_UART_Receive_IT(modbusUartMaster, (uint8_t*)&rxByte, 1);
   return TRUE;
 }
 
@@ -107,10 +102,15 @@ static void prvvUARTTxReadyISR(void)
   pxMBMasterFrameCBTransmitterEmpty();
 }
 
-/* --------------------------------------------------------------------------*/
-//static void prvvUARTRxISR(void)
-//{
-//  pxMBMasterFrameCBByteReceived();
-//}
 
+void Master1_RxCplt(UART_HandleTypeDef *huart)
+{
+    pxMBMasterFrameCBByteReceived();
+    HAL_UART_Receive_IT(modbusUartMaster, (uint8_t *)&rxByte, 1);
+}
+
+void Master1_TxCplt(UART_HandleTypeDef *huart)
+{
+    pxMBMasterFrameCBTransmitterEmpty();
+}
 /* --------------------------------------------------------------------------*/

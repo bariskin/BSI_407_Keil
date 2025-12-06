@@ -35,7 +35,7 @@
 #define M2_REG_INPUT_START             0
 #define M2_REG_INPUT_NREGS             10
 #define M2_REG_HOLDING_START           0
-#define M2_REG_HOLDING_NREGS           40
+#define M2_REG_HOLDING_NREGS           20
 /* master mode: holding register's all address */
 //#define          M_HD_RESERVE                     0
 /* master mode: input register's all address */
