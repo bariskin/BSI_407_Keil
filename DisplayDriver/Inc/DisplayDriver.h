@@ -23,7 +23,7 @@ extern "C" {
   * @}
   */
  /* ------------------------Defines ----------------------------------*/
-  #define ARRAY_TX_SIZE		100
+  #define ARRAY_TX_SIZE		58
   #define ARRAY_RX_SIZE		32
 	#define START_INIT_BYTE	0x10
 	
@@ -87,6 +87,11 @@ typedef struct {
 	  uint32_t channelID;
 	  uint8_t  sensorPOSITION; // FIRST,SECOND
 } DisplayCommand_t;
+
+// Структура лога для 
+typedef struct {
+	  uint8_t messsage[ARRAY_TX_SIZE + 3];
+} DisplayMsg_t;
 
  /* ------------------------External variables -------------------------*/
   

@@ -32,11 +32,11 @@
 #define PR_BEGIN_EXTERN_C           extern "C" {
 #define PR_END_EXTERN_C             }
 
-//extern void EnterCriticalSection();
-//extern void ExitCriticalSection();
+extern void EnterCriticalSection();
+extern void ExitCriticalSection();
 
-#define ENTER_CRITICAL_SECTION()    EnterCriticalSection()
-#define EXIT_CRITICAL_SECTION()     ExitCriticalSection()
+#define ENTER_CRITICAL_SECTION()     __disable_irq()
+#define EXIT_CRITICAL_SECTION()      __enable_irq()
 
 typedef uint8_t BOOL;
 

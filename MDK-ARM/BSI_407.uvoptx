@@ -152,41 +152,25 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>142</LineNumber>
+          <LineNumber>59</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134259120</Address>
+          <Address>134271966</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\FreeModbusMaster\rtu\mbrtu_m.c</Filename>
+          <Filename>..\FreeModbusMaster\port\portserial_m.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\BSI_407\../FreeModbusMaster/rtu/mbrtu_m.c\142</Expression>
+          <Expression>\\BSI_407\../FreeModbusMaster/port/portserial_m.c\59</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>152</LineNumber>
-          <EnabledFlag>0</EnabledFlag>
-          <Address>134259150</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\FreeModbusMaster\rtu\mbrtu_m.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\BSI_407\../FreeModbusMaster/rtu/mbrtu_m.c\152</Expression>
-        </Bp>
-        <Bp>
-          <Number>2</Number>
-          <Type>0</Type>
           <LineNumber>222</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134259090</Address>
+          <Address>134259378</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -198,11 +182,11 @@
           <Expression>\\BSI_407\../FreeModbusMaster/rtu/mbrtu_m.c\222</Expression>
         </Bp>
         <Bp>
-          <Number>3</Number>
+          <Number>2</Number>
           <Type>0</Type>
           <LineNumber>312</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134273884</Address>
+          <Address>134274248</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -214,11 +198,11 @@
           <Expression>\\BSI_407\../FreeModbusMaster/rtu/mbrtu_m.c\312</Expression>
         </Bp>
         <Bp>
-          <Number>4</Number>
+          <Number>3</Number>
           <Type>0</Type>
           <LineNumber>328</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134273930</Address>
+          <Address>134274294</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -228,22 +212,6 @@
           <Filename>..\FreeModbusMaster\rtu\mbrtu_m.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\BSI_407\../FreeModbusMaster/rtu/mbrtu_m.c\328</Expression>
-        </Bp>
-        <Bp>
-          <Number>5</Number>
-          <Type>0</Type>
-          <LineNumber>59</LineNumber>
-          <EnabledFlag>0</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\FreeModbusMaster\port\portserial_m.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -332,167 +300,72 @@
         <Ww>
           <count>4</count>
           <WinNumber>2</WinNumber>
-          <ItemText>updateCalibrationValue</ItemText>
+          <ItemText>channelID</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>2</WinNumber>
-          <ItemText>channelID</ItemText>
+          <ItemText>ring_buffer_RX</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ring_buffer_RX</ItemText>
+          <ItemText>ModbusSensoraddr</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ModbusSensoraddr</ItemText>
+          <ItemText>ModBusSlaveCurrentDeviceAddr</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>2</WinNumber>
-          <ItemText>ModBusSlaveCurrentDeviceAddr</ItemText>
+          <ItemText>usMRegInBuf2</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>2</WinNumber>
-          <ItemText>writeParams</ItemText>
+          <ItemText>SelectRunFlag</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>2</WinNumber>
-          <ItemText>readParams</ItemText>
+          <ItemText>relayModuleCmdArry</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>2</WinNumber>
-          <ItemText>SensorStateArray</ItemText>
+          <ItemText>arrDisplayRX[0]</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>2</WinNumber>
-          <ItemText>calibrationProcesStatus</ItemText>
+          <ItemText>arrDisplayRX</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>2</WinNumber>
-          <ItemText>checkParamsValue</ItemText>
+          <ItemText>relayModuleCmdArryRaw</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>2</WinNumber>
-          <ItemText>fresult</ItemText>
+          <ItemText>relayModuleCmdArry</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>2</WinNumber>
-          <ItemText>in_file_counter</ItemText>
+          <ItemText>SelectRunFlag</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
           <WinNumber>2</WinNumber>
-          <ItemText>sensorLog</ItemText>
+          <ItemText>CmdIsReady</ItemText>
         </Ww>
         <Ww>
           <count>17</count>
           <WinNumber>2</WinNumber>
-          <ItemText>arrDisplayRX</ItemText>
-        </Ww>
-        <Ww>
-          <count>18</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>RdyWrittingFlag</ItemText>
-        </Ww>
-        <Ww>
-          <count>19</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>SelectRunFlag</ItemText>
-        </Ww>
-        <Ww>
-          <count>20</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>hrtc</ItemText>
-        </Ww>
-        <Ww>
-          <count>21</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>sTime.Hours</ItemText>
-        </Ww>
-        <Ww>
-          <count>22</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>sTime</ItemText>
-        </Ww>
-        <Ww>
-          <count>23</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>usMRegInBuf2</ItemText>
-        </Ww>
-        <Ww>
-          <count>24</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>SelectRunFlag</ItemText>
-        </Ww>
-        <Ww>
-          <count>25</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>ring_Rx</ItemText>
-        </Ww>
-        <Ww>
-          <count>26</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>ring_buffer_RX[512],0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>27</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>ring_buffer_RX[512]</ItemText>
-        </Ww>
-        <Ww>
-          <count>28</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>ring_buffer_RX</ItemText>
-        </Ww>
-        <Ww>
-          <count>29</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>arrDisplayRX[0]</ItemText>
-        </Ww>
-        <Ww>
-          <count>30</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>freeStack</ItemText>
-        </Ww>
-        <Ww>
-          <count>31</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>relayModuleCmdArry</ItemText>
-        </Ww>
-        <Ww>
-          <count>32</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>arrDisplayRX[0]</ItemText>
-        </Ww>
-        <Ww>
-          <count>33</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>arrDisplayRX</ItemText>
-        </Ww>
-        <Ww>
-          <count>34</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>relayModuleCmdArryRaw</ItemText>
-        </Ww>
-        <Ww>
-          <count>35</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>relayEvent</ItemText>
-        </Ww>
-        <Ww>
-          <count>36</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>relayModuleCmdArry</ItemText>
+          <ItemText>freeWords</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>

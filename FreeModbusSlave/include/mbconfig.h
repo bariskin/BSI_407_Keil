@@ -128,4 +128,9 @@ PR_BEGIN_EXTERN_C
 #define MB_MASTER_TOTAL_SLAVE_NUM               (NUMBER_SLAVE_DEVICES)
 #endif
 
+#if MB_MASTER2_RTU_ENABLED > 0
+#define     MB_MASTER2_TOTAL_SLAVE_NUM         ( NUMBER_SLAVE2_DEVICES)
+
+#endif
+
 #endif

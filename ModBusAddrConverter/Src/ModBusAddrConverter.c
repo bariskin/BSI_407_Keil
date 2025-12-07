@@ -355,20 +355,20 @@ uint16_t convertModBusAddrHolding_M(uint16_t MBAddress)
     MBReg = SENSOR_PRIMARY_STATUS_INTERN_2; 
     break;
  	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
-// case SENSOR_SECONDARY_VALUE_HIGH:
+ case SENSOR_SECONDARY_VALUE_HIGH_2:
 	 
-	//  MBReg = SENSOR_SECONDARY_VALUE_HIGH_INTERN;
-//		break;
+	  MBReg = SENSOR_SECONDARY_VALUE_HIGH_INTERN_2;
+		break;
  	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
-// case SENSOR_SECONDARY_VALUE_LOW:
-//	 
-//	 MBReg = SENSOR_SECONDARY_VALUE_LOW_INTERN;
-//		break;
+ case SENSOR_SECONDARY_VALUE_LOW_2:
+	 
+	 MBReg = SENSOR_SECONDARY_VALUE_LOW_INTERN_2;
+		break;
 // 	/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/ 
-// case SENSOR_SECONDARY_STATUS:
-//	 
-//	  MBReg = SENSOR_SECONDARY_STATUS_INTERN;
-//		break;
+ case SENSOR_SECONDARY_STATUS_2:
+	 
+	  MBReg = SENSOR_SECONDARY_STATUS_INTERN_2;
+		break;
 		/* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 	}
    return MBReg;

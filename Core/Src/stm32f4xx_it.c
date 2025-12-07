@@ -35,6 +35,8 @@
 /* USER CODE BEGIN TD */
 extern volatile uint8_t startDisplayFlag;
 extern volatile uint8_t RxUartByte3;
+
+volatile uint8_t tx_usart3_busy = 0;
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/
@@ -254,7 +256,6 @@ void USART3_IRQHandler(void) {
 	
     uint32_t sr = huart3.Instance->SR;
     uint32_t cr1 = huart3.Instance->CR1;
-    //BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     /* ----- RX ----- */
     if (sr & USART_SR_RXNE)
     {
@@ -264,9 +265,6 @@ void USART3_IRQHandler(void) {
         RING_Put(byte, &ring_Rx);
         is_active_rx_uart_buffer = 0;
 			 
-			
-       //vTaskNotifyGiveFromISR(DisplayTaskHandle, &xHigherPriorityTaskWoken);
-      // portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
     }
 
     /* ----- TX ----- */
@@ -277,7 +275,9 @@ void USART3_IRQHandler(void) {
             huart3.Instance->DR = tx_buffer[tx_index++];
         }
         else
-        {
+        {	  
+					  tx_usart3_busy = 0;
+					  huart3.Instance->CR1  |= USART_CR1_RXNEIE; // прием включить
             huart3.Instance->CR1 &= ~USART_CR1_TXEIE;
         }
     }

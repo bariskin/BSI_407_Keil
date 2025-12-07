@@ -302,7 +302,7 @@ FRESULT WriteServiceLog(uint32_t sensor_id, ServiceData_t* data, enSensorLog log
     char file_path[64];
     FIL file;
     UINT bytes_written;
-    char log_line[128];
+    char log_line[100];
     FRESULT res;
     static uint8_t last_hour = 0;
     // Проверка монтирования SD карты

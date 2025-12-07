@@ -43,7 +43,7 @@ void MX_TIM6_Init(void)
   htim6.Instance = TIM6;
   htim6.Init.Prescaler = 83;
   htim6.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim6.Init.Period = 139;
+  htim6.Init.Period = 79;
   htim6.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim6) != HAL_OK)
   {
@@ -71,10 +71,10 @@ void MX_TIM10_Init(void)     // timer for MasterModbus1
   /* USER CODE BEGIN TIM10_Init 1 */
 
   /* USER CODE END TIM10_Init 1 */
-  htim10.Instance = TIM10;
+  htim10.Instance = TIM10;                                        // timer for MasterModbus1
   htim10.Init.Prescaler = 83;
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim10.Init.Period = 89;
+  htim10.Init.Period = 69;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
@@ -114,7 +114,7 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* tim_baseHandle)
     __HAL_RCC_TIM10_CLK_ENABLE();
 
     /* TIM10 interrupt Init */
-    HAL_NVIC_SetPriority(TIM1_UP_TIM10_IRQn, 5, 0); 
+    HAL_NVIC_SetPriority(TIM1_UP_TIM10_IRQn, 6, 0); 
     HAL_NVIC_EnableIRQ(TIM1_UP_TIM10_IRQn);
   /* USER CODE BEGIN TIM10_MspInit 1 */
 

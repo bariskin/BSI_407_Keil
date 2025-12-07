@@ -42,9 +42,9 @@ volatile uint16_t timerCounter2 = 0;
 /* ----------------------- Start implementation -----------------------------*/
 
 /*----------------------------------------------------------------------------*/
-BOOL xMBMaster2PortTimersInit(USHORT usTim1Timerout50us)
+BOOL xMBMaster2PortTimersInit(USHORT usTimeOut50us)
 {
-  timerPeriod2 = usTim1Timerout50us;
+  timerPeriod2 = usTimeOut50us;
   return TRUE;
 }
 

@@ -30,7 +30,6 @@
 /* ----------------------- static functions ---------------------------------*/
 static void prvvUARTTxReadyISR2(void);
 //static void prvvUARTRxISR(void);
-void ModbusMaster2_Enable(bool enable);
 /* ----------------------- Variables ----------------------------------------*/
 
 extern UART_HandleTypeDef huart4;
@@ -57,7 +56,7 @@ void vMBMaster2PortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
   }	
  else
   {
-    //HAL_UART_AbortReceive_IT(modbusUartMaster2);
+    HAL_UART_AbortReceive_IT(modbusUartMaster2);
   }
  
 	if(xTxEnable)
@@ -70,7 +69,7 @@ void vMBMaster2PortSerialEnable(BOOL xRxEnable, BOOL xTxEnable)
 	}
   else
   {
-    //HAL_UART_AbortTransmit_IT(modbusUartMaster2);
+    HAL_UART_AbortTransmit_IT(modbusUartMaster2);
   }
   
 }

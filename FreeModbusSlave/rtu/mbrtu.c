@@ -69,9 +69,6 @@ typedef enum
 static volatile eMBSndState eSndState;
 static volatile eMBRcvState eRcvState;
 
-static volatile eMBSndState eSndState2;
-static volatile eMBRcvState eRcvState2;
-
 volatile UCHAR  ucRTUBuf[MB_SER_PDU_SIZE_MAX];
 
 static volatile UCHAR *pucSndBufferCur;

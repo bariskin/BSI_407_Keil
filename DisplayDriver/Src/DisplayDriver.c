@@ -25,6 +25,8 @@ extern UART_HandleTypeDef huart3;
 extern osThreadId SlaveEventTaskHandle;
 extern osThreadId SendToDispTaskHandle;
 extern osThreadId SlaveModbusTaskHandle;
+
+extern uint8_t tx_usart3_busy;
 /* ------------------------Global variables----------------------------*/
  char arrDisplayTX[ARRAY_TX_SIZE] = {0};
  volatile uint8_t arrDisplayRX[ARRAY_RX_SIZE] = {0};
@@ -155,9 +157,16 @@ void parseRelayBytes(const uint8_t *data, uint16_t *relayModuleCmd) {
     tx_index = 0;
     
     // Включаем прерывание передачи
+		
+		while (tx_usart3_busy == 1)
+		{
+		  osDelay(1);
+		}
+		tx_usart3_busy = 1;
+		huart3.Instance->CR1 &= ~USART_CR1_RXNEIE;// прием выключить
     huart3.Instance->CR1 |= USART_CR1_TXEIE;
-    
-    osDelay(50); // Задержка между командами
+    	
+    osDelay(45); // Задержка между командами
 }
 
  void InitNextionDisplayWithDeviceData(uint8_t numberOfdevices){
