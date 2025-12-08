@@ -187,7 +187,7 @@ osThreadId DisplayTaskHandle;
 uint32_t DisplayTaskBuffer[ 256];
 osStaticThreadDef_t DisplayTaskControlBlock;
 osThreadId SendToDispTaskHandle;
-uint32_t SendToDispTaskBuffer[ 1700];
+uint32_t SendToDispTaskBuffer[ 1650];
 osStaticThreadDef_t SendToDispTaskControlBlock;
 osMutexId myMutex01Handle;
 osStaticMutexDef_t myMutex01ControlBlock;
@@ -302,7 +302,7 @@ void MX_FREERTOS_Init(void) {
   DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* definition and creation of SendToDispTask */
-  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityLow, 0, 1700 , SendToDispTaskBuffer, &SendToDispTaskControlBlock);
+  osThreadStaticDef(SendToDispTask, SendToDispTaskFunction, osPriorityLow, 0, 1650 , SendToDispTaskBuffer, &SendToDispTaskControlBlock);
   SendToDispTaskHandle = osThreadCreate(osThread(SendToDispTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
