@@ -204,6 +204,10 @@ volatile uint8_t   second  = 0x00;
   {
 		uint16_t OutputValue = 0x0000;
 		
+		 // Обработка регистров 1-12
+    if (MBregIdx <= HOLDING_REGISTER_SLAVE_IDX_12)
+    {
+		
 		switch(MBregIdx)
       { 		
      		/* ************ baud rate************* */			
@@ -267,84 +271,129 @@ volatile uint8_t   second  = 0x00;
 		 case HOLDING_REGISTER_SLAVE_IDX_12: 
 			 
 		 break;
+	   }
+	 }
 		 
+//		 case 		 HOLDING_REGISTER_SLAVE_IDX_13 : 
+//			  
+//		     /* первая часть float значения  */
+//		    OutputValue = (uint16_t)SensorStateArray[0].Concentration;
+//			 break;
+//		 case 		 HOLDING_REGISTER_SLAVE_IDX_14 :
+//		    /* вторая  часть float значения  */
+//		
+//		    //OutputValue = 
+//			  break;
+//		 /*       Код вещества в ascii (10 байт) */
+//		 
+//		 case 	   HOLDING_REGISTER_SLAVE_IDX_15 :
+//			  OutputValue = SensorStateArray[0].SensorSubstanceCode[0];
+//		  break;
+//		 case 	   HOLDING_REGISTER_SLAVE_IDX_16 :
+//			  OutputValue = SensorStateArray[0].SensorSubstanceCode[1];
+//		  break;
+//		 case 	   HOLDING_REGISTER_SLAVE_IDX_17 :
+//			  OutputValue =  SensorStateArray[0].SensorSubstanceCode[2];
+//			  break;
+//		 case 	   HOLDING_REGISTER_SLAVE_IDX_18 :
+//			 OutputValue =  SensorStateArray[0].SensorSubstanceCode[3];
+//			  break;
+//		 case 	   HOLDING_REGISTER_SLAVE_IDX_19 :
+//			  OutputValue =  SensorStateArray[0].SensorSubstanceCode[4];
+//			  break;
+//		 case      HOLDING_REGISTER_SLAVE_IDX_20  :
+//			  OutputValue =  SensorStateArray[0].SensorSubstanceCode[5];
+//			  break;
+//		 case 		 HOLDING_REGISTER_SLAVE_IDX_21 :
+//			  OutputValue =  SensorStateArray[0].SensorSubstanceCode[6];
+//			  break;
+//		 case   	 HOLDING_REGISTER_SLAVE_IDX_22 :
+//			OutputValue =  SensorStateArray[0].SensorSubstanceCode[7];
+//			  break;
+//		 case 	   HOLDING_REGISTER_SLAVE_IDX_23 :
+//			 OutputValue =  SensorStateArray[0].SensorSubstanceCode[8];
+//			  break;
+//		 case 	   HOLDING_REGISTER_SLAVE_IDX_24 :
+//			  OutputValue = SensorStateArray[0].SensorSubstanceCode[9];
+//			  break;
 		 
-		 case 		 HOLDING_REGISTER_SLAVE_IDX_13 : 
-			  
-		     /* первая часть float значения  */
-		    OutputValue = (uint16_t)SensorStateArray[0].Concentration;
-			 break;
-		 case 		 HOLDING_REGISTER_SLAVE_IDX_14 :
-		    /* вторая  часть float значения  */
+//		 /* Размерность вещества в ascii (10 байт) */
+//		 case 	   HOLDING_REGISTER_SLAVE_IDX_25 :
+//			   OutputValue = SensorStateArray[0].SensorScaleDimension[0];
+//			  break;
+//		 case 	   HOLDING_REGISTER_SLAVE_IDX_26 :
+//			   OutputValue = SensorStateArray[0].SensorScaleDimension[1];
+//			  break;
+//		 case 	   HOLDING_REGISTER_SLAVE_IDX_27 :
+//			   OutputValue = SensorStateArray[0].SensorScaleDimension[2];
+//			  break;
+//		 case   	 HOLDING_REGISTER_SLAVE_IDX_28 :
+//		     OutputValue = SensorStateArray[0].SensorScaleDimension[3];
+//			  break;
+//		 case 	   HOLDING_REGISTER_SLAVE_IDX_29 :
+//			   OutputValue = SensorStateArray[0].SensorScaleDimension[4];
+//			  break;
+//		 case 	   HOLDING_REGISTER_SLAVE_IDX_30 :
+//			   OutputValue = SensorStateArray[0].SensorScaleDimension[5];
+//		    break;
+//		 case 	HOLDING_REGISTER_SLAVE_IDX_31 :
+//			   OutputValue = SensorStateArray[0].SensorScaleDimension[6];
+//		    break;
+//		 case HOLDING_REGISTER_SLAVE_IDX_32 :
+//			   OutputValue = SensorStateArray[0].SensorScaleDimension[7];
+//		    break;
+//		 case HOLDING_REGISTER_SLAVE_IDX_33 :
+//			   OutputValue = SensorStateArray[0].SensorScaleDimension[8];
+//		    break;
+//		 case  HOLDING_REGISTER_SLAVE_IDX_34 :
+//			   OutputValue = SensorStateArray[0].SensorScaleDimension[9];
+//		 break;
 		
-		    //OutputValue = 
-			  break;
-		 /*       Код вещества в ascii (10 байт) */
+		   /* ============ FLOAT ЗНАЧЕНИЯ ДЛЯ 46 КАНАЛОВ ============ */
+      // Регистры 13-14: Float значение первого датчика
+    else if (MBregIdx == HOLDING_REGISTER_SLAVE_IDX_13 || 
+             MBregIdx == HOLDING_REGISTER_SLAVE_IDX_14)
+     {
+        uint16_t offset = MBregIdx - HOLDING_REGISTER_SLAVE_IDX_13;
+        uint8_t sensor_idx = offset / 2;      
+        uint8_t float_part = offset % 2;       
+    
+        if (sensor_idx < TOTAL_CHANNEL)
+          {
+           float concentration = SensorStateArray[sensor_idx].Concentration;
+           uint16_t *float_ptr = (uint16_t*)&concentration;
+           return float_ptr[float_part];
+          }
+     }
+		   
+		    // Массив из  TOTAL_CHANNEL каналов: SubstanceCode (10 байт на датчик)
+    else if (MBregIdx >= SUBSTANCE_START && 
+             MBregIdx < SUBSTANCE_START + TOTAL_CHANNEL * 10)
+     {
+        uint16_t offset = MBregIdx - SUBSTANCE_START;
+        uint8_t sensor_idx = offset / 10;
+        uint8_t byte_idx = offset % 10;
+        
+        if (sensor_idx < TOTAL_CHANNEL)
+        {
+            return SensorStateArray[sensor_idx].SensorSubstanceCode[byte_idx];
+        }
+     }
+		
+     // Массив из TOTAL_CHANNEL каналов: ScaleDimension (10 байт на датчик)
+    else if (MBregIdx >= SCALE_START && 
+             MBregIdx < SCALE_START + TOTAL_CHANNEL * 10)
+    {
+        uint16_t offset = MBregIdx - SCALE_START;
+        uint8_t sensor_idx = offset / 10;
+        uint8_t byte_idx = offset % 10;
+        
+        if (sensor_idx < TOTAL_CHANNEL)
+        {
+            return SensorStateArray[sensor_idx].SensorScaleDimension[byte_idx];
+        }
+    }		 
 		 
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_15 :
-			  OutputValue = SensorStateArray[0].SensorSubstanceCode[0];
-		  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_16 :
-			  OutputValue = SensorStateArray[0].SensorSubstanceCode[1];
-		  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_17 :
-			  OutputValue =  SensorStateArray[0].SensorSubstanceCode[2];
-			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_18 :
-			 OutputValue =  SensorStateArray[0].SensorSubstanceCode[3];
-			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_19 :
-			  OutputValue =  SensorStateArray[0].SensorSubstanceCode[4];
-			  break;
-		 case      HOLDING_REGISTER_SLAVE_IDX_20  :
-			  OutputValue =  SensorStateArray[0].SensorSubstanceCode[5];
-			  break;
-		 case 		 HOLDING_REGISTER_SLAVE_IDX_21 :
-			  OutputValue =  SensorStateArray[0].SensorSubstanceCode[6];
-			  break;
-		 case   	 HOLDING_REGISTER_SLAVE_IDX_22 :
-			OutputValue =  SensorStateArray[0].SensorSubstanceCode[7];
-			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_23 :
-			 OutputValue =  SensorStateArray[0].SensorSubstanceCode[8];
-			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_24 :
-			  OutputValue = SensorStateArray[0].SensorSubstanceCode[9];
-			  break;
-		 
-		 /* Размерность вещества в ascii (10 байт) */
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_25 :
-			   OutputValue = SensorStateArray[0].SensorScaleDimension[0];
-			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_26 :
-			   OutputValue = SensorStateArray[0].SensorScaleDimension[1];
-			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_27 :
-			   OutputValue = SensorStateArray[0].SensorScaleDimension[2];
-			  break;
-		 case   	 HOLDING_REGISTER_SLAVE_IDX_28 :
-		     OutputValue = SensorStateArray[0].SensorScaleDimension[3];
-			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_29 :
-			   OutputValue = SensorStateArray[0].SensorScaleDimension[4];
-			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_30 :
-			   OutputValue = SensorStateArray[0].SensorScaleDimension[5];
-		    break;
-		 case 	HOLDING_REGISTER_SLAVE_IDX_31 :
-			   OutputValue = SensorStateArray[0].SensorScaleDimension[6];
-		    break;
-		 case HOLDING_REGISTER_SLAVE_IDX_32 :
-			   OutputValue = SensorStateArray[0].SensorScaleDimension[7];
-		    break;
-		 case HOLDING_REGISTER_SLAVE_IDX_33 :
-			   OutputValue = SensorStateArray[0].SensorScaleDimension[8];
-		    break;
-		 case  HOLDING_REGISTER_SLAVE_IDX_34 :
-			   OutputValue = SensorStateArray[0].SensorScaleDimension[9];
-		 break;
-		}	
-				
      osDelay(1);			
 		return	OutputValue;
 	}

@@ -39,30 +39,33 @@ extern "C" {
  #define HOLDING_REGISTER_SLAVE_IDX_14  (uint16_t)0x000D 
  #define HOLDING_REGISTER_SLAVE_IDX_15  (uint16_t)0x000E
  #define HOLDING_REGISTER_SLAVE_IDX_16  (uint16_t)0x000F 
- #define HOLDING_REGISTER_SLAVE_IDX_17  (uint16_t)0x0011
- #define HOLDING_REGISTER_SLAVE_IDX_18  (uint16_t)0x0012 
- #define HOLDING_REGISTER_SLAVE_IDX_19  (uint16_t)0x0013 
- #define HOLDING_REGISTER_SLAVE_IDX_20  (uint16_t)0x0014  
- #define HOLDING_REGISTER_SLAVE_IDX_21  (uint16_t)0x0015 
- #define HOLDING_REGISTER_SLAVE_IDX_22  (uint16_t)0x0016 
- #define HOLDING_REGISTER_SLAVE_IDX_23  (uint16_t)0x0017 
- #define HOLDING_REGISTER_SLAVE_IDX_24  (uint16_t)0x0018 
- #define HOLDING_REGISTER_SLAVE_IDX_25  (uint16_t)0x0019 
- #define HOLDING_REGISTER_SLAVE_IDX_26  (uint16_t)0x001A 
- #define HOLDING_REGISTER_SLAVE_IDX_27  (uint16_t)0x001B 
- #define HOLDING_REGISTER_SLAVE_IDX_28  (uint16_t)0x001C 
- #define HOLDING_REGISTER_SLAVE_IDX_29  (uint16_t)0x001D  
- #define HOLDING_REGISTER_SLAVE_IDX_30  (uint16_t)0x001E
- #define HOLDING_REGISTER_SLAVE_IDX_31  (uint16_t)0x001F
- #define HOLDING_REGISTER_SLAVE_IDX_32  (uint16_t)0x0020
- #define HOLDING_REGISTER_SLAVE_IDX_33  (uint16_t)0x0021
- #define HOLDING_REGISTER_SLAVE_IDX_34  (uint16_t)0x0022
- #define HOLDING_REGISTER_SLAVE_IDX_35  (uint16_t)0x0023 
+ #define HOLDING_REGISTER_SLAVE_IDX_17  (uint16_t)0x0010
+ #define HOLDING_REGISTER_SLAVE_IDX_18  (uint16_t)0x0011 
+ #define HOLDING_REGISTER_SLAVE_IDX_19  (uint16_t)0x0012 
+ #define HOLDING_REGISTER_SLAVE_IDX_20  (uint16_t)0x0013  
+ #define HOLDING_REGISTER_SLAVE_IDX_21  (uint16_t)0x0014 
+ #define HOLDING_REGISTER_SLAVE_IDX_22  (uint16_t)0x0015 
+ #define HOLDING_REGISTER_SLAVE_IDX_23  (uint16_t)0x0016 
+ #define HOLDING_REGISTER_SLAVE_IDX_24  (uint16_t)0x0017 
+ #define HOLDING_REGISTER_SLAVE_IDX_25  (uint16_t)0x0018 
+ #define HOLDING_REGISTER_SLAVE_IDX_26  (uint16_t)0x0019 
+ #define HOLDING_REGISTER_SLAVE_IDX_27  (uint16_t)0x001A 
+ #define HOLDING_REGISTER_SLAVE_IDX_28  (uint16_t)0x001B 
+ #define HOLDING_REGISTER_SLAVE_IDX_29  (uint16_t)0x001C  
+ #define HOLDING_REGISTER_SLAVE_IDX_30  (uint16_t)0x001D
+ #define HOLDING_REGISTER_SLAVE_IDX_31  (uint16_t)0x001E
+ #define HOLDING_REGISTER_SLAVE_IDX_32  (uint16_t)0x001F
+ #define HOLDING_REGISTER_SLAVE_IDX_33  (uint16_t)0x0020
+ #define HOLDING_REGISTER_SLAVE_IDX_34  (uint16_t)0x0021
+ #define HOLDING_REGISTER_SLAVE_IDX_35  (uint16_t)0x0022 
  
  
  
- 
- 
+  // Макросы для вычисления адресов обработчка для slave modbus
+ #define TOTAL_CHANNEL    (NUMBER_SLAVE_DEVICES * 2) 
+ #define FLOAT_START HOLDING_REGISTER_SLAVE_IDX_13
+ #define SUBSTANCE_START HOLDING_REGISTER_SLAVE_IDX_15
+ #define SCALE_START (SUBSTANCE_START + TOTAL_CHANNEL * 10)
  
  /* ------------------------External variables -------------------------*/
  extern volatile  uint32_t  MB_BaudRateValue;
@@ -70,12 +73,12 @@ extern "C" {
  extern volatile  uint32_t  MB_StopBitsValue;
  extern volatile  uint32_t  MB_AddresseValue;
  extern volatile  uint16_t  timeStep;
- extern volatile uint16_t   year;
- extern volatile uint8_t   month;
- extern volatile uint8_t   day;
- extern volatile uint8_t   hour;
- extern volatile uint8_t   minute;
- extern volatile uint8_t   second;
+ extern volatile  uint16_t   year;
+ extern volatile  uint8_t   month;
+ extern volatile  uint8_t   day;
+ extern volatile  uint8_t   hour;
+ extern volatile  uint8_t   minute;
+ extern volatile  uint8_t   second;
  
  
  

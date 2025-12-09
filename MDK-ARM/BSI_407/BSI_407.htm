@@ -3,7 +3,7 @@
 <title>Static Call Graph - [BSI_407\BSI_407.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image BSI_407\BSI_407.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Tue Dec 09 11:47:58 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Tue Dec 09 14:01:01 2025
 <BR><P>
 <H3>Maximum Stack Usage =       4872 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1625,8 +1625,8 @@ Global Symbols
 <P><STRONG><a name="[137]"></a>Get_RTC_Hour</STRONG> (Thumb, 26 bytes, Stack size 8 bytes, bsp.o(i.Get_RTC_Hour))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = Get_RTC_Hour &rArr; HAL_RTC_GetTime
 </UL>
-<BR>[Calls]<UL><LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RTC_GetTime
-<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Convert12To24
+<BR>[Calls]<UL><LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Convert12To24
+<LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RTC_GetTime
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WriteParamToModbusSlaveStack
 <LI><a href="#[1a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingRegisterFromModbusSlaveStack
@@ -2496,9 +2496,9 @@ Global Symbols
 <LI>Call Chain = RTC_SetFromHexString &rArr; __0sscanf &rArr; __vfscanf_char &rArr; __vfscanf &rArr; _scanf_real &rArr; _scanf_really_real &rArr; _fp_value &rArr; _btod_etento &rArr; _btod_emul &rArr; _e2e
 </UL>
 <BR>[Calls]<UL><LI><a href="#[11a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
+<LI><a href="#[1c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hex_to_ascii_minimal
 <LI><a href="#[15f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RTC_SetTime
 <LI><a href="#[15d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RTC_SetDate
-<LI><a href="#[1c9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;hex_to_ascii_minimal
 <LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__0sscanf
 <LI><a href="#[ce]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2sprintf
 </UL>
@@ -3014,9 +3014,9 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 192 + Unknown Stack Size
 <LI>Call Chain = UpdateDisplayTime &rArr; SendTimeToNextion &rArr; SendNextionCommand &rArr; vsnprintf &rArr; _printf_char_common &rArr; __printf
 </UL>
-<BR>[Calls]<UL><LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RTC_GetTime
+<BR>[Calls]<UL><LI><a href="#[1de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SendTimeToNextion
+<LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RTC_GetTime
 <LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RTC_GetDate
-<LI><a href="#[1de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SendTimeToNextion
 </UL>
 <BR>[Called By]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;InputHandlerFunction
 </UL>
@@ -3039,8 +3039,8 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f407xx.o(RESET)
 </UL>
-<P><STRONG><a name="[1ea]"></a>WriteParamToModbusSlaveStack</STRONG> (Thumb, 260 bytes, Stack size 8 bytes, holdingregisterslavehandler.o(i.WriteParamToModbusSlaveStack))
-<BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = WriteParamToModbusSlaveStack &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
+<P><STRONG><a name="[1ea]"></a>WriteParamToModbusSlaveStack</STRONG> (Thumb, 254 bytes, Stack size 16 bytes, holdingregisterslavehandler.o(i.WriteParamToModbusSlaveStack))
+<BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = WriteParamToModbusSlaveStack &rArr; osDelay &rArr; vTaskDelay &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[13d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Get_RTC_Year
 <LI><a href="#[13c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Get_RTC_Second
@@ -3930,10 +3930,10 @@ Global Symbols
 <P><STRONG><a name="[279]"></a>pvPortMalloc</STRONG> (Thumb, 216 bytes, Stack size 24 bytes, heap_4.o(i.pvPortMalloc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 80<LI>Call Chain = pvPortMalloc &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[27d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
-<LI><a href="#[27a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspendAll
-<LI><a href="#[27c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInsertBlockIntoFreeList
+<BR>[Calls]<UL><LI><a href="#[27c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInsertBlockIntoFreeList
 <LI><a href="#[27b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvHeapInit
+<LI><a href="#[27d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<LI><a href="#[27a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspendAll
 </UL>
 <BR>[Called By]<UL><LI><a href="#[1b0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericCreate
 <LI><a href="#[261]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCreate
@@ -4284,9 +4284,9 @@ Global Symbols
 <P><STRONG><a name="[26e]"></a>vPortFree</STRONG> (Thumb, 94 bytes, Stack size 16 bytes, heap_4.o(i.vPortFree))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = vPortFree &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[27d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
+<BR>[Calls]<UL><LI><a href="#[27c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInsertBlockIntoFreeList
+<LI><a href="#[27d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
 <LI><a href="#[27a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vTaskSuspendAll
-<LI><a href="#[27c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvInsertBlockIntoFreeList
 </UL>
 <BR>[Called By]<UL><LI><a href="#[261]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskCreate
 <LI><a href="#[26d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvDeleteTCB
@@ -4718,8 +4718,8 @@ Global Symbols
 <LI><a href="#[264]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vListInsertEnd
 <LI><a href="#[263]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;uxListRemove
 </UL>
-<BR>[Called By]<UL><LI><a href="#[27d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
-<LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Handler
+<BR>[Called By]<UL><LI><a href="#[18]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SysTick_Handler
+<LI><a href="#[27d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskResumeAll
 </UL>
 
 <P><STRONG><a name="[1bf]"></a>xTaskNotifyWait</STRONG> (Thumb, 130 bytes, Stack size 24 bytes, tasks.o(i.xTaskNotifyWait))

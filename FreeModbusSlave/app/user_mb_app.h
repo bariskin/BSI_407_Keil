@@ -20,7 +20,6 @@
 
 
 
-
 /* salve mode: holding register's all address */
 #define          S_HD_RESERVE                     0
 #define          S_HD_CPU_USAGE_MAJOR             1
