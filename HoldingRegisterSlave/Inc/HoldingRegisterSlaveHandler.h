@@ -34,6 +34,36 @@ extern "C" {
  #define HOLDING_REGISTER_SLAVE_IDX_9   (uint16_t)0x0008  // часы
  #define HOLDING_REGISTER_SLAVE_IDX_10  (uint16_t)0x0009  // минуты
  #define HOLDING_REGISTER_SLAVE_IDX_11  (uint16_t)0x000A  // секунды
+ #define HOLDING_REGISTER_SLAVE_IDX_12  (uint16_t)0x000B 
+ #define HOLDING_REGISTER_SLAVE_IDX_13  (uint16_t)0x000C 
+ #define HOLDING_REGISTER_SLAVE_IDX_14  (uint16_t)0x000D 
+ #define HOLDING_REGISTER_SLAVE_IDX_15  (uint16_t)0x000E
+ #define HOLDING_REGISTER_SLAVE_IDX_16  (uint16_t)0x000F 
+ #define HOLDING_REGISTER_SLAVE_IDX_17  (uint16_t)0x0011
+ #define HOLDING_REGISTER_SLAVE_IDX_18  (uint16_t)0x0012 
+ #define HOLDING_REGISTER_SLAVE_IDX_19  (uint16_t)0x0013 
+ #define HOLDING_REGISTER_SLAVE_IDX_20  (uint16_t)0x0014  
+ #define HOLDING_REGISTER_SLAVE_IDX_21  (uint16_t)0x0015 
+ #define HOLDING_REGISTER_SLAVE_IDX_22  (uint16_t)0x0016 
+ #define HOLDING_REGISTER_SLAVE_IDX_23  (uint16_t)0x0017 
+ #define HOLDING_REGISTER_SLAVE_IDX_24  (uint16_t)0x0018 
+ #define HOLDING_REGISTER_SLAVE_IDX_25  (uint16_t)0x0019 
+ #define HOLDING_REGISTER_SLAVE_IDX_26  (uint16_t)0x001A 
+ #define HOLDING_REGISTER_SLAVE_IDX_27  (uint16_t)0x001B 
+ #define HOLDING_REGISTER_SLAVE_IDX_28  (uint16_t)0x001C 
+ #define HOLDING_REGISTER_SLAVE_IDX_29  (uint16_t)0x001D  
+ #define HOLDING_REGISTER_SLAVE_IDX_30  (uint16_t)0x001E
+ #define HOLDING_REGISTER_SLAVE_IDX_31  (uint16_t)0x001F
+ #define HOLDING_REGISTER_SLAVE_IDX_32  (uint16_t)0x0020
+ #define HOLDING_REGISTER_SLAVE_IDX_33  (uint16_t)0x0021
+ #define HOLDING_REGISTER_SLAVE_IDX_34  (uint16_t)0x0022
+ #define HOLDING_REGISTER_SLAVE_IDX_35  (uint16_t)0x0023 
+ 
+ 
+ 
+ 
+ 
+ 
  /* ------------------------External variables -------------------------*/
  extern volatile  uint32_t  MB_BaudRateValue;
  extern volatile  uint32_t  MB_ParityValue;
