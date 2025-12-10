@@ -39,8 +39,8 @@ USHORT   usSRegInBuf[S_REG_INPUT_NREGS]               ;
 //USHORT   usSRegHoldBuf[S_REG_HOLDING_NREGS]           ;
 
  // Два массива для хранения регистров
-uint16_t holdingRegsPart1[MAX_MODBUS_SLAVE_REGS_PART];  // Адреса 1-100
-uint16_t holdingRegsPart2[TOTAL_HOLDING_SLAVE_REGS - MAX_MODBUS_SLAVE_REGS_PART]; // Адреса 140 - 100
+uint16_t holdingRegsPart1[S_REG_HOLDING_NREGS];  // Адреса 1-100
+//uint16_t holdingRegsPart2[TOTAL_HOLDING_SLAVE_REGS - MAX_MODBUS_SLAVE_REGS_PART]; // Адреса 140 - 100
 
 #endif
 /*------------------------Slave user code----------------------*/
@@ -98,79 +98,152 @@ eMBErrorCode eMBRegInputCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNReg
 #endif
 }
 
-/**
- * Modbus slave holding register callback function.
- *
- * @param pucRegBuffer holding register buffer
- * @param usAddress holding register address
- * @param usNRegs holding register number
- * @param eMode read or write
- *
- * @return result
- */
-eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode)
-{
-#if TOTAL_HOLDING_SLAVE_REGS > 0
-	
-    eMBErrorCode    eStatus = MB_ENOERR;
- 
-    /* it already plus one in modbus function method. */
-    usAddress--;
-	
-	  // Проверка границ запрашиваемых регистров
-    if ((usAddress + usNRegs) > TOTAL_HOLDING_SLAVE_REGS) {
-        return MB_ENOREG;
-    }
-        switch (eMode)
-        {
-        /* read current register values from the protocol stack. */
-        case MB_REG_READ:
-               for (USHORT i = 0; i < usNRegs; i++) {
-                uint16_t regValue;
-                USHORT currentAddr = usAddress + i;
-                
-                // Выбираем нужный массив в зависимости от адреса
-                if (currentAddr < MAX_MODBUS_SLAVE_REGS_PART) {
-                     //regValue = holdingRegsPart1[currentAddr];
-									   regValue = WriteParamToModbusSlaveStack(currentAddr);
-									
-                } else {
-                    //regValue = holdingRegsPart2[currentAddr - MAX_MODBUS_SLAVE_REGS_PART];
-									  regValue = WriteParamToModbusSlaveStack(currentAddr - MAX_MODBUS_SLAVE_REGS_PART);
-                }
-                
-                // Записываем в буфер в формате big-endian
-                *pucRegBuffer++ = (UCHAR)(regValue >> 8);
-                *pucRegBuffer++ = (UCHAR)(regValue & 0xFF);
-            }
-            break;
+///**
+// * Modbus slave holding register callback function.
+// *
+// * @param pucRegBuffer holding register buffer
+// * @param usAddress holding register address
+// * @param usNRegs holding register number
+// * @param eMode read or write
+// *
+// * @return result
+// */
+//eMBErrorCode eMBRegHoldingCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs, eMBRegisterMode eMode)
+//{
+//#if TOTAL_HOLDING_SLAVE_REGS > 0
+//	
+//    eMBErrorCode    eStatus = MB_ENOERR;
+// 
+//    /* it already plus one in modbus function method. */
+//    usAddress--;
+//	
+//	  // Проверка границ запрашиваемых регистров
+//    if ((usAddress + usNRegs) > TOTAL_HOLDING_SLAVE_REGS) {
+//        return MB_ENOREG;
+//    }
+//        switch (eMode)
+//        {
+//        /* read current register values from the protocol stack. */
+//        case MB_REG_READ:
+//               for (USHORT i = 0; i < usNRegs; i++) {
+//                uint16_t regValue;
+//                USHORT currentAddr = usAddress + i;
+//                
+//                // Выбираем нужный массив в зависимости от адреса
+//                if (currentAddr < MAX_MODBUS_SLAVE_REGS_PART) {
+//                    
+//									   regValue = WriteParamToModbusSlaveStack(currentAddr);
+//									   holdingRegsPart1[currentAddr] = regValue  ;
+//                } else {
+//                    //regValue = holdingRegsPart2[currentAddr - MAX_MODBUS_SLAVE_REGS_PART];
+//									  //regValue = WriteParamToModbusSlaveStack(currentAddr - MAX_MODBUS_SLAVE_REGS_PART);
+//                }
+//                
+//                // Записываем в буфер в формате big-endian
+//                *pucRegBuffer++ = (UCHAR)(regValue >> 8);
+//                *pucRegBuffer++ = (UCHAR)(regValue & 0xFF);
+//            }
+//            break;
 
-        /* write current register values with new values from the protocol stack. */
-        case MB_REG_WRITE:
-              for (USHORT i = 0; i < usNRegs; i++) {
-                USHORT currentAddr = usAddress + i;
-                uint16_t regValue = *pucRegBuffer++ << 8;
-                regValue |= *pucRegBuffer++;
+//        /* write current register values with new values from the protocol stack. */
+//        case MB_REG_WRITE:
+//              for (USHORT i = 0; i < usNRegs; i++) {
+//                USHORT currentAddr = usAddress + i;
+//                uint16_t regValue = *pucRegBuffer++ << 8;
+//                regValue |= *pucRegBuffer++;
+//                
+//                // Выбираем нужный массив в зависимости от адреса
+//                if (currentAddr < MAX_MODBUS_SLAVE_REGS_PART) {
+//									
+//                    holdingRegsPart1[currentAddr] = regValue;
+//									
+//									  HoldingRegisterFromModbusSlaveStack(currentAddr, holdingRegsPart1[currentAddr]); // для выполения внутренней функциональности 
+//									
+//                } else {
+//                    //holdingRegsPart2[currentAddr - MAX_MODBUS_SLAVE_REGS_PART] = regValue;
+//                }			
+//            }
+//            break;
+//        }
+
+//    return eStatus;
+//#else
+//	return MB_ENOREG;
+//#endif
+//}
+
+
+
+
+eMBErrorCode
+eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs,
+                 eMBRegisterMode eMode )
+{
+    eMBErrorCode    eStatus = MB_ENOERR;
+    int             iRegIndex;
+    uint16_t MBValue = 0x0000;
+    /* Проверка корректности адреса и количества регистров */
+    if( ( usAddress >= S_REG_HOLDING_START ) &&
+        ( usAddress + usNRegs <= S_REG_HOLDING_START + S_REG_HOLDING_NREGS ) )
+    {
+        /* Вычисление индекса в массиве регистров */
+        iRegIndex = ( int )( usAddress - S_REG_HOLDING_START  - 2);
+         
+        switch ( eMode )
+        {
+            /* Чтение регистров */
+            case MB_REG_READ:
+                while( usNRegs > 0 )
+                {
+									   MBValue  = WriteParamToModbusSlaveStack(iRegIndex);
+									   
+									   *pucRegBuffer++ = ( unsigned char )( MBValue>> 8 );
+                     *pucRegBuffer++ = ( unsigned char )( MBValue & 0xFF );
+									
+                    //*pucRegBuffer++ = ( UCHAR )( holdingRegsPart1[iRegIndex] >> 8 );
+                    //*pucRegBuffer++ = ( UCHAR )( holdingRegsPart1[iRegIndex] & 0xFF );
+                    iRegIndex++;
+                    usNRegs--;
+                }
+                break;
+
+            /* Запись регистров */
+            case MB_REG_WRITE:
+                while( usNRegs > 0 )
+                {
+                    holdingRegsPart1[iRegIndex] = *pucRegBuffer++ << 8;
+                    holdingRegsPart1[iRegIndex] |= *pucRegBuffer++;
+									
+									  
+									  HoldingRegisterFromModbusSlaveStack(iRegIndex, holdingRegsPart1[iRegIndex]);
+									
+									
+                    iRegIndex++;
+                    usNRegs--;
+                }
+                break;
                 
-                // Выбираем нужный массив в зависимости от адреса
-                if (currentAddr < MAX_MODBUS_SLAVE_REGS_PART) {
-									
-                    holdingRegsPart1[currentAddr] = regValue;
-									
-									  HoldingRegisterFromModbusSlaveStack(currentAddr, holdingRegsPart1[currentAddr]); // для выполения внутренней функциональности 
-									
-                } else {
-                    holdingRegsPart2[currentAddr - MAX_MODBUS_SLAVE_REGS_PART] = regValue;
-                }			
-            }
-            break;
+            default:
+                /* Некорректный режим */
+                eStatus = MB_EINVAL;
+                break;
         }
+    }
+    else
+    {
+        /* Адрес вне допустимого диапазона */
+        eStatus = MB_ENOREG;
+    }
 
     return eStatus;
-#else
-	return MB_ENOREG;
-#endif
 }
+
+
+
+
+
+
+
 
 /**
  * Modbus slave coils callback function.

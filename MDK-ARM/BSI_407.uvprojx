@@ -636,6 +636,11 @@
               <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c</FilePath>
             </File>
             <File>
+              <FileName>mb.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\FreeModbusSlave\mb.c</FilePath>
+            </File>
+            <File>
               <FileName>stm32f4xx_hal_rtc_ex.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c</FilePath>
@@ -732,9 +737,9 @@
           <GroupName>FreeModbusSlave</GroupName>
           <Files>
             <File>
-              <FileName>mb.c</FileName>
+              <FileName>mbfunccoils.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\FreeModbusSlave\mb.c</FilePath>
+              <FilePath>..\FreeModbusSlave\functions\mbfunccoils.c</FilePath>
             </File>
             <File>
               <FileName>user_mb_app.c</FileName>
@@ -745,11 +750,6 @@
               <FileName>user_mb_app.h</FileName>
               <FileType>5</FileType>
               <FilePath>..\FreeModbusSlave\app\user_mb_app.h</FilePath>
-            </File>
-            <File>
-              <FileName>mbfunccoils.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\FreeModbusSlave\functions\mbfunccoils.c</FilePath>
             </File>
             <File>
               <FileName>mbfuncdiag.c</FileName>

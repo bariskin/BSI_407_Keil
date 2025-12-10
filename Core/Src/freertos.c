@@ -227,7 +227,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of SlaveModbusTask */
-  osThreadStaticDef(SlaveModbusTask, SlaveModbusTaskFunction, osPriorityBelowNormal, 0, 256, defaultTaskBuffer, &defaultTaskControlBlock);
+  osThreadStaticDef(SlaveModbusTask, SlaveModbusTaskFunction, osPriorityNormal, 0, 256, defaultTaskBuffer, &defaultTaskControlBlock);
   SlaveModbusTaskHandle = osThreadCreate(osThread(SlaveModbusTask), NULL);
 
   /* definition and creation of MasterModbusTas */

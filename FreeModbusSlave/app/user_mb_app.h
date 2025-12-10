@@ -12,12 +12,13 @@
 #define S_REG_INPUT_NREGS             50
 
 #define S_REG_HOLDING_START           0
-//#define S_REG_HOLDING_NREGS           180
+#define S_REG_HOLDING_NREGS           100
 
 #define MAX_MODBUS_SLAVE_REGS_PART    100  // ћаксимальное количество регистров в одной части
 #define TOTAL_HOLDING_SLAVE_REGS      140  // ќбщее количество регистров
 
-
+//#define REG_HOLDING_START_SLAVE     0x0000  /* Ќачальный адрес регистров хранени€ */
+//#define REG_HOLDING_NREGS_SLAVE     100     /*  оличество регистров хранени€ */
 
 
 /* salve mode: holding register's all address */
