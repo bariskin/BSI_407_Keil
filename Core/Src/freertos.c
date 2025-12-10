@@ -359,7 +359,7 @@ void HoldingHandlerFunction(void const * argument)
      gl_por2 = 0;
      gl_NotConnected = 0;	
 	
-  osDelay(10000);
+     osDelay(10000);
 	/* Infinite loop */
   for(;;)
   {	// ѕытаемс€ захватить мьютекс (ждЄм 50 мс)

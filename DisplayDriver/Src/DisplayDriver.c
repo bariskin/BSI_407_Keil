@@ -88,15 +88,21 @@ extern  RelaysEvent_t relayEvent;
  
  
  typedef enum 
- {
-    IDX_RELAY_CMD_POROG_1,
-    IDX_RELAY_CMD_POROG_2,
-    IDX_RELAY_CMD_POROG_3,
-	  IDX_RELAY_CMD_ERROR 
+ {  
+	 //
+	  IDX_MODULE_RELE       = 0x00,
+	  IDX_RELE              = 0x01,
+	  IDX_CHANNEL           = 0x02,  
+	 
+    IDX_RELAY_CMD_POROG_1 = 0x00,
+    IDX_RELAY_CMD_POROG_2 = 0x01,
+    IDX_RELAY_CMD_POROG_3 = 0x02,
+	  IDX_RELAY_CMD_ERROR   = 0x03
  } eIDX_Relay_cmd;
    
-volatile  uint16_t relayModuleCmdArry[] = {0x0000, 0x0000,0x0000,0x0000};
-volatile  uint8_t  relayModuleCmdArryRaw[] = {0x00, 0x00,0x00,0x00, 0x00};
+volatile  uint16_t relayModuleCmdArray[]     = {0x0000, 0x0000,0x0000,0x0000};
+volatile  uint8_t  relayModuleCmdArrayHead[] = {0x00, 0x00,0x00};
+volatile  uint8_t  relayModuleCmdArrayRaw[]  = {0x00, 0x00,0x00,0x00, 0x00};
  
 void parseRelayBytes(const uint8_t *data, uint16_t *relayModuleCmd) {
     // Значение 1: data[0] целиком + data[1] биты 0-1
@@ -566,12 +572,14 @@ void GetDisplayCmd(uint8_t inputByte) {
 									
 							  	else if (arrDisplayRX[0] == DISPAY_MODULE_RELE_CMD)
 							    	{  
+							
+											//relayEvent.module_id = arrDisplayRX[1];
+				              //relayEvent.relays_id = arrDisplayRX[2];
+				              //relayEvent.channel_id = arrDisplayRX[3];
 											
-											relayEvent.module_id = arrDisplayRX[1];
-				              relayEvent.relays_id = arrDisplayRX[2];
-				              relayEvent.channel_id = arrDisplayRX[3];
-											
-											 memcpy((void *)relayModuleCmdArryRaw,(void *)&arrDisplayRX[5],  5); //сохраняем входной массиы данных по реле 
+											 memcpy((void *)relayModuleCmdArrayHead,(void *)&arrDisplayRX[1],  3);
+											 
+											 memcpy((void *)relayModuleCmdArrayRaw,(void *)&arrDisplayRX[5],  5); //сохраняем входной массиы данных по реле 
 								       
 											 displayResponse = DISPAY_MODULE_RELE_CMD ; 		
 								    }									
@@ -658,17 +666,18 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 				
 				 case DISPAY_MODULE_RELE_CMD:
 					 
-				    memset((void *)relayModuleCmdArry, 0x00, 10);
+				    memset((void *)relayModuleCmdArray, 0x00, 10);
 				    //memset((void *)&relayEvent, 0x00, sizeof(RelaysEvent_t));
 				    /* set structure for module --> rele --> */
-            parseRelayBytes( (const uint8_t *)&relayModuleCmdArryRaw, (uint16_t *)&relayModuleCmdArry);
-//				    //relayEvent.module_id =
-//				    //relayEvent.relays_id =
-//				    //relayEvent.channel_id =
-				    relayEvent.warning = relayModuleCmdArry[IDX_RELAY_CMD_POROG_1];
-				    relayEvent.alarm_1 = relayModuleCmdArry[IDX_RELAY_CMD_POROG_2];
-				    relayEvent.alarm_2 = relayModuleCmdArry[IDX_RELAY_CMD_POROG_3];
-				    relayEvent.error =   relayModuleCmdArry[IDX_RELAY_CMD_ERROR];
+				    relayEvent.module_id  = relayModuleCmdArrayHead[IDX_MODULE_RELE];
+				    relayEvent.relays_id  = relayModuleCmdArrayHead[IDX_RELE];
+				    relayEvent.channel_id =  relayModuleCmdArrayHead[IDX_CHANNEL];
+				 
+				    parseRelayBytes( (const uint8_t *)&relayModuleCmdArrayRaw, (uint16_t *)&relayModuleCmdArray);
+				    relayEvent.warning = relayModuleCmdArray[IDX_RELAY_CMD_POROG_1];
+				    relayEvent.alarm_1 = relayModuleCmdArray[IDX_RELAY_CMD_POROG_2];
+				    relayEvent.alarm_2 = relayModuleCmdArray[IDX_RELAY_CMD_POROG_3];
+				    relayEvent.error =   relayModuleCmdArray[IDX_RELAY_CMD_ERROR];
 				 
 				    processed_without_channel = 1;
         default:
