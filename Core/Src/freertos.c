@@ -142,6 +142,10 @@ volatile uint8_t RdyWrittingFlag = 0;
 float currentConcentration = 0.00;
 
 volatile uint8_t  flagDisplayLogsBusy = 0;
+ 
+ 
+static uint16_t Modbus_CRC16(uint8_t *buf, uint8_t len);
+static void Send_Modbus_Command_DMA(uint8_t slave_addr, uint8_t data);
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -157,6 +161,8 @@ DisplayCommand_t displayCmd;
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
+ 
+void MasterModbus2TaskFunction(void const * argument); 
 extern uint8_t ModBusSlaveDefaultDeviceAddr;
 extern uint8_t ModBusSlaveCurrentDeviceAddr;
 /* USER CODE END Variables */
@@ -176,13 +182,19 @@ osThreadId SlaveEventTaskHandle;
 uint32_t SlaveEventTaskBuffer[ 512];
 osStaticThreadDef_t SlaveEventTaskControlBlock;
 osThreadId DisplayTaskHandle;
-uint32_t DisplayTaskBuffer[ 1080];
+uint32_t DisplayTaskBuffer[ 512];
 osStaticThreadDef_t DisplayTaskControlBlock;
 osThreadId SendToDispTaskHandle;
 uint32_t SendToDispTaskBuffer[ 1600];
 osStaticThreadDef_t SendToDispTaskControlBlock;
 osMutexId myMutex01Handle;
 osStaticMutexDef_t myMutex01ControlBlock;
+
+
+osThreadId MasterModbus2TasHandle;
+uint32_t MasterModbus2TasBuffer[ 128 ];
+osStaticThreadDef_t MasterModbus2TasControlBlock;
+
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -273,7 +285,7 @@ void MX_FREERTOS_Init(void) {
   SlaveEventTaskHandle = osThreadCreate(osThread(SlaveEventTask), NULL);
 
   /* definition and creation of DisplayTask */
-  osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 1080, DisplayTaskBuffer, &DisplayTaskControlBlock);
+  osThreadStaticDef(DisplayTask, DisplayTaskFunction, osPriorityBelowNormal, 0, 512, DisplayTaskBuffer, &DisplayTaskControlBlock);
   DisplayTaskHandle = osThreadCreate(osThread(DisplayTask), NULL);
 
   /* definition and creation of SendToDispTask */
@@ -282,6 +294,11 @@ void MX_FREERTOS_Init(void) {
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
+	
+		  /* definition and creation of MasterModbus2Tas */
+  osThreadStaticDef(MasterModbus2Tas, MasterModbus2TaskFunction, osPriorityBelowNormal, 0, 128, MasterModbus2TasBuffer, &MasterModbus2TasControlBlock);
+  MasterModbus2TasHandle = osThreadCreate(osThread(MasterModbus2Tas), NULL);
+	
 	
 	displayCommandQueue = xQueueCreate(20, sizeof(DisplayCommand_t));
 	
@@ -310,7 +327,7 @@ void SlaveModbusTaskFunction(void const * argument)
   for(;;)
   {
 		eMBPoll();
-    osDelay(2);
+    osDelay(5);
   }
   /* USER CODE END SlaveModbusTaskFunction */
 }
@@ -1160,4 +1177,69 @@ void SendToDispTaskFunction(void const * argument)
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 
+
+void Send_Modbus_Command_DMA(uint8_t slave_addr , uint8_t data)
+
+ {
+    static uint8_t tx[8];     // ДОЛЖЕН быть static, чтобы буфер не исчез до завершения DMA!
+    uint16_t crc;
+
+    // --- Формируем Modbus RTU пакет ---
+    tx[0] = slave_addr;   // Адрес устройства
+    tx[1] = 0x06;         // Write Single Register
+    tx[2] = 0x00;         // Адрес регистра Hi
+    tx[3] = 0x0A;         // Адрес регистра Lo
+    tx[4] = data;         // Значение Hivoid Send_Modbus_Command_DMA(uint8_t slave_addr)
+    tx[5] = data;         // Значение Lo
+
+    crc = Modbus_CRC16(tx, 6); // CRC по первым 6 байтам
+    tx[6] = crc & 0xFF;        // CRC Lo
+    tx[7] = (crc >> 8) & 0xFF; // CRC Hi
+
+    // --- Отправка по DMA ---
+    HAL_UART_Transmit_DMA(&huart4, tx, 8);
+ }
+uint16_t Modbus_CRC16(uint8_t *buf, uint8_t len)
+{
+    uint16_t crc = 0xFFFF;
+
+    for (uint8_t pos = 0; pos < len; pos++)
+    {
+        crc ^= buf[pos];
+
+        for (uint8_t i = 0; i < 8; i++)
+        {
+            if (crc & 1)
+            {
+                crc >>= 1;
+                crc ^= 0xA001;
+            }
+            else
+            {
+                crc >>= 1;
+            }
+        }
+    }
+    return crc;
+}
+
+
+void MasterModbus2TaskFunction(void const * argument)
+{
+  /* USER CODE BEGIN MasterModbusTaskFunction */
+  /* Infinite loop */
+	uint8_t txt[] = "UART4 DMA send OK\r\n";
+	for(;;)
+  {
+		// HAL_UART_Transmit_DMA(&huart4, txt, sizeof(txt)-1);
+
+    Send_Modbus_Command_DMA(0x01 , 0xff);
+		
+    osDelay(2000);
+		Send_Modbus_Command_DMA(0x01 , 0x00);
+		
+    osDelay(2000);
+  }
+  /* USER CODE END MasterModbusTaskFunction */
+}
 /* USER CODE END Application */

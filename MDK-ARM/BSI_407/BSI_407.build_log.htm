@@ -27,16 +27,16 @@ Project File Date:  12/10/2025
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'BSI_407'
-compiling DisplayDriver.c...
+compiling freertos.c...
 ../RelayModule/Inc/RelayModule.h(116): warning:  #1295-D: Deprecated declaration init_modules - give arg types
    void init_modules();
 ../RelayModule/Inc/RelayModule.h(165): warning:  #1-D: last line of file ends without a newline
   #endif  /* _RELEAY_MODULE_H */
-..\DisplayDriver\Src\DisplayDriver.c(847): warning:  #1-D: last line of file ends without a newline
-  /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
-..\DisplayDriver\Src\DisplayDriver.c: 3 warnings, 0 errors
+../Core/Src/freertos.c(1231): warning:  #177-D: variable "txt"  was declared but never referenced
+  	uint8_t txt[] = "UART4 DMA send OK\r\n";
+../Core/Src/freertos.c: 3 warnings, 0 errors
 linking...
-Program Size: Code=57728 RO-data=2104 RW-data=860 ZI-data=64676  
+Program Size: Code=59252 RO-data=2160 RW-data=872 ZI-data=63096  
 FromELF: creating hex file...
 "BSI_407\BSI_407.axf" - 0 Error(s), 3 Warning(s).
 

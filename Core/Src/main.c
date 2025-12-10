@@ -59,7 +59,7 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+void MX_DMA_Init(void);
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -130,6 +130,7 @@ int main(void)
   MX_GPIO_Init();
   MX_RTC_Init();
   MX_SDIO_SD_Init();
+	MX_DMA_Init();  
   MX_UART4_Init();
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
@@ -253,6 +254,14 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+void MX_DMA_Init(void)
+{
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  // Настройка прерываний DMA для Stream4
+  HAL_NVIC_SetPriority(DMA1_Stream4_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream4_IRQn);
+}
 
 /* USER CODE END 4 */
 

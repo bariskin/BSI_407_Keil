@@ -90,6 +90,8 @@ volatile uint8_t displayStartedFlag = 0;
  
  extern RING_buffer_t ring_Rx;   /* RX ring buffer structur */
  extern uint8_t is_active_rx_uart_buffer; 
+ 
+ extern DMA_HandleTypeDef hdma_uart4_tx;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -331,5 +333,8 @@ void USART6_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
-
+void DMA1_Stream4_IRQHandler(void)
+{
+    HAL_DMA_IRQHandler(&hdma_uart4_tx);
+}
 /* USER CODE END 1 */
