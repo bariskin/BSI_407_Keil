@@ -39,6 +39,7 @@
 #include "RingBuffer.h"
 #include "File_Handling.h"
 #include "SensorLogs.h"
+#include "RelayModule.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -88,13 +89,24 @@ uint8_t ControlCycleFlag2 = 0;
  
 extern bool sd_card_present; 
  
-  /* Глобальная очередь для команд */
-QueueHandle_t displayCommandQueue = NULL;
-
+ 
 volatile uint8_t CmdIsReady = 0;
 volatile uint8_t CmdWriteIsReady = 0;
 volatile uint8_t PauseTaskCounter = 0;
  
+ 
+   /* Глобальная очередь для команд */
+QueueHandle_t displayCommandQueue = NULL;
+ 
+ DisplayCommand_t cmd =
+   {
+	   .command     = 0x00,
+     .deviceAddr  = 0x00,
+     .binary32    = 0x00,
+	   .channelID   = 0x00,
+	   .sensorPOSITION   = 0x00
+	 };
+
   /* Глобальная очередь для логов */
  
 osMessageQId queueSendLogsHandle;
@@ -106,6 +118,20 @@ SensorLogEvent_t sensorLog = {
    .deviceAddr = 0,
    .Value = 0
 }; 
+
+ /* Глобальная очередь событий для модлуей реле */
+QueueHandle_t relaysCommandQueue = NULL;
+
+ RelaysEvent_t relayEvent = {
+	 .module_id  = 0,
+   .relays_id  = 0,
+   .channel_id = 0, 
+	 .warning    = 0,
+	 .alarm_1    = 0,
+   .alarm_2    = 0,
+   .error      = 0
+}; 
+
 
  union {
      uint32_t i;
@@ -264,7 +290,8 @@ void MX_FREERTOS_Init(void) {
 	osMessageQDef(queueSenEvent, 24, SensorLogEvent_t);
   queueSendLogsHandle = osMessageCreate(osMessageQ(queueSenEvent), NULL);
 	
-	
+		 /* очередь для работы с реле */
+	relaysCommandQueue = xQueueCreate(4, sizeof(relayEvent));
   /* USER CODE END RTOS_THREADS */
 
 }
@@ -320,8 +347,6 @@ void MasterModbusTaskFunction(void const * argument)
 * @retval None
 */
 /* USER CODE END Header_HoldingHandlerFunction */
-DisplayCommand_t displayCmd;
-
 void HoldingHandlerFunction(void const * argument)
 {
   /* USER CODE BEGIN HoldingHandlerFunction */
@@ -334,7 +359,6 @@ void HoldingHandlerFunction(void const * argument)
      gl_por2 = 0;
      gl_NotConnected = 0;	
 	
-	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
   osDelay(10000);
 	/* Infinite loop */
   for(;;)

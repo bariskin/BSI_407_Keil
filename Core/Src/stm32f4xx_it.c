@@ -34,6 +34,9 @@
 /* USER CODE BEGIN TD */
 extern volatile uint8_t startDisplayFlag;
 extern volatile uint8_t RxUartByte3;
+
+
+volatile uint8_t tx_usart3_busy = 0;
 /* USER CODE END TD */
 
 /* Private define ------------------------------------------------------------*/
@@ -248,33 +251,41 @@ void USART2_IRQHandler(void)
   */
 
 void USART3_IRQHandler(void) {
-    // Проверяем флаг прерывания по приёму данных (RXNE)
-    if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_RXNE)) {
-			
-        uint8_t byte = (uint8_t)(huart3.Instance->DR & 0xFF);  // Читаем принятый байт
-			  
-			  /* получение очередного байта и загрузка его в кольцевой буффер */ 
-			   is_active_rx_uart_buffer = 1;
-			   //taskENTER_CRITICAL();
-			   RING_Put(byte,&ring_Rx);
-		     //taskEXIT_CRITICAL();  
-			   is_active_rx_uart_buffer = 0; 		
+ uint32_t sr = huart3.Instance->SR;
+    uint32_t cr1 = huart3.Instance->CR1;
+    /* ----- RX ----- */
+    if (sr & USART_SR_RXNE)
+    {
+        uint8_t byte = (uint8_t)(huart3.Instance->DR);
+
+        is_active_rx_uart_buffer = 1;
+        RING_Put(byte, &ring_Rx);
+        is_active_rx_uart_buffer = 0;
+			 
     }
 
-		   // Обработка передачи
-    if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_TXE) && 
-        (huart3.Instance->CR1 & USART_CR1_TXEIE)) {
-        if (tx_index < tx_size) {
+    /* ----- TX ----- */
+    if ((sr & USART_SR_TXE) && (cr1 & USART_CR1_TXEIE))
+    {
+        if (tx_index < tx_size)
+        {
             huart3.Instance->DR = tx_buffer[tx_index++];
-        } else {
-            // Все данные переданы - выключаем прерывание передачи
+        }
+        else
+        {	  
+					  tx_usart3_busy = 0;
+					  huart3.Instance->CR1  |= USART_CR1_RXNEIE; // прием включить
             huart3.Instance->CR1 &= ~USART_CR1_TXEIE;
         }
-    }	
-    // Обработка ошибок UART (опционально)
-    if (__HAL_UART_GET_FLAG(&huart3, UART_FLAG_ORE | UART_FLAG_FE | UART_FLAG_NE)) {
-        __HAL_UART_CLEAR_FLAG(&huart3, UART_FLAG_ORE | UART_FLAG_FE | UART_FLAG_NE);
     }
+
+    /* ----- Ошибки ----- */
+    if (sr & (USART_SR_ORE | USART_SR_FE | USART_SR_NE))
+    {
+      
+    }
+
+    /* ? НЕТ HAL_UART_IRQHandler() */
 }
 
 /**

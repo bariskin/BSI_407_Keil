@@ -19,11 +19,14 @@
 #include "HoldingRegisterSlaveHandler.h"
 #include "bsp.h"
 #include "SensorLogs.h"
+#include "RelayModule.h"
 /* ------------------------External variables -------------------------*/
 extern UART_HandleTypeDef huart3;
 extern osThreadId SlaveEventTaskHandle;
 extern osThreadId SendToDispTaskHandle;
 extern osThreadId SlaveModbusTaskHandle;
+
+extern uint8_t tx_usart3_busy;
 /* ------------------------Global variables----------------------------*/
  char arrDisplayTX[ARRAY_TX_SIZE] = {0};
  volatile uint8_t arrDisplayRX[ARRAY_RX_SIZE] = {0};
@@ -56,7 +59,7 @@ extern   uint32_t binary32;
  float   updateScaleMax            = 0.00;
  uint8_t  dimensionCode            = 0x00;
  
- DisplayCommand_t cmd;
+ extern  DisplayCommand_t cmd;
  extern  QueueHandle_t displayCommandQueue;
  extern  volatile uint8_t CmdIsReady;
  
@@ -66,8 +69,12 @@ extern  SensorCurrentState_t	readParams  ;
 extern  osMessageQId queueSendLogsHandle;
 extern SensorLogEvent_t sensorLog;
 extern  bool sd_card_present;
+ 
+extern  QueueHandle_t relaysCommandQueue; 
+extern  RelaysEvent_t relayEvent;
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
+ static uint8_t baudRate = 0x00;
  
  struct
  {
@@ -78,6 +85,36 @@ extern  bool sd_card_present;
  } flash_struct;
  char time_input_string[16] = {0};
  char log_input_string[4]= {0}; 
+ 
+ 
+ typedef enum 
+ {
+    IDX_RELAY_CMD_POROG_1,
+    IDX_RELAY_CMD_POROG_2,
+    IDX_RELAY_CMD_POROG_3,
+	  IDX_RELAY_CMD_ERROR 
+ } eIDX_Relay_cmd;
+   
+volatile  uint16_t relayModuleCmdArry[] = {0x0000, 0x0000,0x0000,0x0000};
+volatile  uint8_t  relayModuleCmdArryRaw[] = {0x00, 0x00,0x00,0x00, 0x00};
+ 
+void parseRelayBytes(const uint8_t *data, uint16_t *relayModuleCmd) {
+    // Значение 1: data[0] целиком + data[1] биты 0-1
+    relayModuleCmd[IDX_RELAY_CMD_POROG_1] = 
+        (uint16_t)(data[0] | ((data[1] & 0x03) << 8));
+    
+    // Значение 2: data[1] биты 2-7 (6 бит) + data[2] биты 0-3 (4 бита)
+    relayModuleCmd[IDX_RELAY_CMD_POROG_2] = 
+        (uint16_t)(((data[1] >> 2) & 0x3F) | ((data[2] & 0x0F) << 6));
+    
+    // Значение 3: data[2] биты 4-7 (4 бита) + data[3] биты 0-5 (6 бит)
+    relayModuleCmd[IDX_RELAY_CMD_POROG_3] = 
+        (uint16_t)(((data[2] >> 4) & 0x0F) | ((data[3] & 0x3F) << 4));
+    
+    // Значение 4: data[3] биты 6-7 (2 бита) + data[4] целиком (8 бит)
+    relayModuleCmd[IDX_RELAY_CMD_ERROR] = 
+        (uint16_t)(((data[3] >> 6) & 0x03) | (data[4] << 2));
+}
 /* ------------------------Functions-----------------------------------*/
  void Init_qDev(void){
 	 flash_struct.dev_quan = 10;
@@ -120,9 +157,16 @@ extern  bool sd_card_present;
     tx_index = 0;
     
     // Включаем прерывание передачи
+		
+		while (tx_usart3_busy == 1)
+		{
+		  osDelay(1);
+		}
+		tx_usart3_busy = 1;
+		huart3.Instance->CR1 &= ~USART_CR1_RXNEIE;// прием выключить
     huart3.Instance->CR1 |= USART_CR1_TXEIE;
-    
-    osDelay(50); // Задержка между командами
+    	
+    osDelay(45); // Задержка между командами
 }
 
  void InitNextionDisplayWithDeviceData(uint8_t numberOfdevices){
@@ -195,6 +239,8 @@ extern  bool sd_card_present;
 	  for(char* p = por3_str; *p; p++) if(*p == '.') *p = ',';
 		
 	 	 SendNextionCommand("page%d.ch%d.txt=\"Канал %d\"", page, pos, nextChannel); 
+		
+		
 	   SendNextionCommand("page%d.val%d.txt=\"%s\"", page, pos, value_str);
 		 SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].SensorGas);
 	   SendNextionCommand("page%d.ran%d.txt=\"%s\"", page, pos, scale_max_str);
@@ -318,7 +364,6 @@ void initDeviceData(uint8_t numberOfdevices)
 	   
 void GetDisplayCmd(uint8_t inputByte) {
 	
-	  BaseType_t xHigherPriorityTaskWoken = pdFALSE;
     // Если буфер не переполнен
     if (rx_index < ARRAY_RX_SIZE - 1) {
         arrDisplayRX[rx_index++] = inputByte;  // Сохраняем байт в буфер
@@ -364,11 +409,15 @@ void GetDisplayCmd(uint8_t inputByte) {
                 // Обновляем displayResponse на основе полученных данных
                 if (significant_bytes_count > 0) {
                     // Обработка специальных случаев
-                    if (arrDisplayRX[0] == DISPLAY_BAUD_RATE_CMD && data_length >= 2) {
-                        if (arrDisplayRX[1] >= 0x01 && arrDisplayRX[1] <= 0x06) {
+                    if (arrDisplayRX[0] == DISPLAY_BAUD_RATE_CMD && data_length >= 2) 
+											{
+                        if (arrDisplayRX[1] >= 0x01 && arrDisplayRX[1] <= 0x06) 
+													{
+													  baudRate =  arrDisplayRX[1];
+													
                             displayResponse = DISPLAY_BAUD_RATE_CMD;
-                        }
-                    }
+                          }
+                      }
 										/* запрос на вывод логов со строки 0x00 */
 										else if (arrDisplayRX[0] == DISPLAY_LOGS_CMD )
 										 {
@@ -514,6 +563,18 @@ void GetDisplayCmd(uint8_t inputByte) {
 									   memcpy(&binary32, &updateThresholdAdditional, sizeof(float)); 
 										 writeParams.SensorAlarm2 = (uint32_t)updateThresholdAdditional;
 									 }
+									
+							  	else if (arrDisplayRX[0] == DISPAY_MODULE_RELE_CMD)
+							    	{  
+											
+											relayEvent.module_id = arrDisplayRX[1];
+				              relayEvent.relays_id = arrDisplayRX[2];
+				              relayEvent.channel_id = arrDisplayRX[3];
+											
+											 memcpy((void *)relayModuleCmdArryRaw,(void *)&arrDisplayRX[5],  5); //сохраняем входной массиы данных по реле 
+								       
+											 displayResponse = DISPAY_MODULE_RELE_CMD ; 		
+								    }									
 									  
 									 else if (significant_bytes_count > 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_SUBSTANCE_CODE )
 									{
@@ -574,8 +635,11 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 				 processed_without_channel = 1;
         break;    
         case DISPLAY_BAUD_RATE_CMD: // Смена скорости UART
-            if (arrDisplayRX[1] >= 1 && arrDisplayRX[1] <= 6) {
-                MB_BaudRateValue = getBaudrate(arrDisplayRX[1]);
+            if (baudRate>= 1 && baudRate <= 6) {
+                MB_BaudRateValue = getBaudrate(baudRate);
+							
+							  baudRate = 0x00;
+							
                 xTaskNotify(SlaveEventTaskHandle, HOLDING_REGISTER_SLAVE_IDX_1, eSetValueWithOverwrite);
                 osDelay(1);
             }
@@ -591,7 +655,22 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
             // Обработка команды 0x35
             processed_without_channel = 1;
             break;
-            
+				
+				 case DISPAY_MODULE_RELE_CMD:
+					 
+				    memset((void *)relayModuleCmdArry, 0x00, 10);
+				    //memset((void *)&relayEvent, 0x00, sizeof(RelaysEvent_t));
+				    /* set structure for module --> rele --> */
+            parseRelayBytes( (const uint8_t *)&relayModuleCmdArryRaw, (uint16_t *)&relayModuleCmdArry);
+//				    //relayEvent.module_id =
+//				    //relayEvent.relays_id =
+//				    //relayEvent.channel_id =
+				    relayEvent.warning = relayModuleCmdArry[IDX_RELAY_CMD_POROG_1];
+				    relayEvent.alarm_1 = relayModuleCmdArry[IDX_RELAY_CMD_POROG_2];
+				    relayEvent.alarm_2 = relayModuleCmdArry[IDX_RELAY_CMD_POROG_3];
+				    relayEvent.error =   relayModuleCmdArry[IDX_RELAY_CMD_ERROR];
+				 
+				    processed_without_channel = 1;
         default:
             // Эти команды требуют channelID
             processed_without_channel = 0;
@@ -756,5 +835,4 @@ uint8_t is_even(int id_value) {
 		  return FIRST_SENSOR;
 		}		
 }
-
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/

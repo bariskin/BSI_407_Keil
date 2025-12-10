@@ -44,6 +44,7 @@
 #include "File_Handling.h"
 #include "SensorLogs.h"
 #include "stdbool.h"
+#include "RelayModule.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/

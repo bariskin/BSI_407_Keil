@@ -31,7 +31,7 @@ extern "C" {
 
 #define DEVICE_MODEL_CODE                      (uint16_t)(40400 - HOLDING_OFFSET) //DEVICE_MODEL_CODE
 #define DEVICE_MODEL_CODE_2                    (uint16_t)(40401 - HOLDING_OFFSET) //DEVICE_MODEL_CODE
-#define CHANNEL_COUNT                          (uint16_t)(40405 - HOLDING_OFFSET)	//Channel count
+//#define CHANNEL_COUNT                          (uint16_t)(40405 - HOLDING_OFFSET)	//Channel count
 
 /*-------------------------------------  PRIMARY SENSOR   -------------------------------   */
 #define SENSOR_SCALE_MIN_HIGH                  (uint16_t)(41000 - HOLDING_OFFSET)	//Sensor Scale Min High
