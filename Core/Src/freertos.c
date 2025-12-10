@@ -1232,14 +1232,20 @@ void MasterModbus2TaskFunction(void const * argument)
 	for(;;)
   {
 		// HAL_UART_Transmit_DMA(&huart4, txt, sizeof(txt)-1);
-
+    RS485_RD_HIGH_MASTER2; 
     Send_Modbus_Command_DMA(0x01 , 0xff);
 		
     osDelay(2000);
+		RS485_RD_HIGH_MASTER2; 
 		Send_Modbus_Command_DMA(0x01 , 0x00);
 		
     osDelay(2000);
   }
   /* USER CODE END MasterModbusTaskFunction */
 }
+
+
+
+
+
 /* USER CODE END Application */

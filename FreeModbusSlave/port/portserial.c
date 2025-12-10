@@ -91,6 +91,14 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
   {
 		 pxMBMasterFrameCBTransmitterEmpty();
   }
+	
+	else  if (huart->Instance == UART4)
+    {
+        // Выключаем передачу RS485 > включаем приём
+          RS485_RD_LOW_MASTER2; 
+    }	
 }
+
+
 
 #endif
