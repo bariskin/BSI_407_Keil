@@ -2255,9 +2255,9 @@
           <GroupName>ReleyModule</GroupName>
           <Files>
             <File>
-              <FileName>RelayModule.c</FileName>
+              <FileName>RelaySystem.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\RelayModule\Src\RelayModule.c</FilePath>
+              <FilePath>..\RelayModule\Src\RelaySystem.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -44,7 +44,8 @@
 #include "File_Handling.h"
 #include "SensorLogs.h"
 #include "stdbool.h"
-#include "RelayModule.h"
+//#include "RelayModule.h"
+#include "RelaySystem.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -186,6 +187,37 @@ int main(void)
 	 RING_Init(&ring_Rx, ring_buffer_RX, CIRC_BUF_RX_SIZE );         /*! Init RX buffer for UART3: display */
   //RING_Init(&ring_Tx, ring_buffer_TX, CIRC_BUF_TX_SIZE );   
     
+	 
+	 
+	 init_system(23); // 23 канала
+	 
+ 
+  // Модуль 1, реле 1, EVENT_POROG_2, каналы 10..17
+   for (int ch = 10; ch <= 17; ch++) {
+    set_reaction(1, 1, EVENT_POROG_2, ch, 1);
+    set_reaction(1, 1, EVENT_POROG_NORMAL, ch, 1);
+		set_reaction(4, 1, EVENT_POROG_2, ch, 1); 
+		set_reaction(4, 1, EVENT_POROG_NORMAL, ch, 1);
+  }
+	 
+	 for (int ch = 4; ch <= 23; ch++) {
+    set_reaction(2, 1, EVENT_POROG_2, ch, 1);
+    set_reaction(2, 1, EVENT_POROG_NORMAL, ch, 1);
+		set_reaction(4, 1, EVENT_POROG_2, ch, 1); 
+		set_reaction(4, 1, EVENT_POROG_NORMAL, ch, 1);
+   }
+	 
+	for (int ch = 1; ch <= 3; ch++) {
+    set_reaction(3, 1, EVENT_POROG_2, ch, 1);
+    set_reaction(3, 1, EVENT_POROG_NORMAL, ch, 1);
+		set_reaction(4, 1, EVENT_POROG_NORMAL, ch, 1);
+  }
+	
+	 
+	 // Настройка команды для события
+   set_event_command(EVENT_POROG_2, RELAY_CMD_ON);
+   set_event_command(EVENT_POROG_NORMAL, RELAY_CMD_OFF);
+	 
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in cmsis_os2.c) */

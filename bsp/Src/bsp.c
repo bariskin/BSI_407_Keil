@@ -23,8 +23,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "DisplayDriver.h"
+#include "RelaySystem.h"
 /* ------------------------External variables -------------------------*/
-extern uint16_t holdingRegsPart1[MAX_MODBUS_SLAVE_REGS_PART];  // Адреса 1-120
+extern uint16_t holdingRegsPart1[S_REG_HOLDING_NREGS];  // Адреса 1-120
 extern UART_HandleTypeDef huart1;
 extern uint8_t ModBusSlaveDefaultDeviceAddr;
 extern uint8_t is_active_rx_uart_buffer; 
@@ -38,6 +39,8 @@ extern volatile  bool requestConcetration2;
 
 extern uint8_t ControlCycleFlag; 
 extern uint8_t ControlCycleFlag2; 
+
+extern QueueHandle_t eventRelayQueue;
 /* ------------------------Global variables----------------------------*/
 uint16_t calibrationProcesStatus = 0x00;
 
@@ -355,6 +358,7 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 	  uint8_t sensorID = 0;
 	  uint8_t sensorID2 = 0;
 	  float result;        // Результат
+		EventMessage_t msg;
 	
     // Validate slave address
     if (slaveaddr < 1 || slaveaddr > MB_MASTER_TOTAL_SLAVE_NUM) {
@@ -478,7 +482,14 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
                             sensor->WasConnected_2 = false;
 													}
 												}	
-	      sensor->WasConnected_2 = false; // отключен
+				 sensor->WasConnected_2 = false; // отключен
+												
+//			 //Отправки событйи в очередь для отпработки релейного модуля 							
+//				msg.channel_id = sensorID2;					
+//				msg.event_id	 = EVENT_ERROR_485;					
+//				if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+//						
+//													} 
 			}
 		 /* *********** проверка наличния датчика на линии конец ************ */
 			
@@ -492,13 +503,12 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 					if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
 													
 				   	}
-					 }	
+					 }		 
 			    // Устанавливаем флаги для всех порогов (так как Alarm2 включает и нижние уровни)
         thresholdStates[sensorID].alarm2_triggered = true;
         thresholdStates[sensorID].alarm_triggered = true;
         thresholdStates[sensorID].warning_triggered = true;				
-			 }				
-							
+			 }								
 		 }
 		 else if(sensor->Concentration >   sensor->SensorAlarm)  // средний второй  порог 
 		 {		 
@@ -515,6 +525,14 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 						 if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
 														}
 													}
+					 
+					 	 //Отправки событйи в очередь для отпработки релейного модуля 							
+				msg.channel_id = sensorID;					
+				msg.event_id	 = EVENT_POROG_2;					
+				if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+						
+													} 
+				
          thresholdStates[sensorID].alarm_triggered = true;
          thresholdStates[sensorID].warning_triggered = true;
         // Сбрасываем более высокий порог, так как мы на уровне Alarm
@@ -535,7 +553,8 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 					   if(sd_card_present)		{	
 							if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
 													   	}
-													}	 
+													}	
+						 								
 			     thresholdStates[sensorID].warning_triggered = true;
            // Сбрасываем более высокие пороги
            thresholdStates[sensorID].alarm_triggered = false;
@@ -574,6 +593,13 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 									if(sd_card_present) {
 											xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY);
 									}
+									
+								  //Отправки событйи в очередь для отпработки релейного модуля 							
+			          	msg.channel_id = sensorID;					
+				          msg.event_id	 = EVENT_POROG_NORMAL;					
+				          if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+						 
+								            	}
 									
 									// Сброс всех флагов для этого датчика
 									thresholdStates[sensorID].warning_triggered = false;
@@ -617,7 +643,14 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 						 if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
 														
 						   }
-						}		 
+						}		
+		 	 //Отправки событйи в очередь для отпработки релейного модуля 							
+				msg.channel_id = sensorID2;					
+				msg.event_id	 = EVENT_POROG_2;					
+				if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+						
+													} 
+						
          thresholdStates[sensorID].alarm_triggered2 = true;
          thresholdStates[sensorID].warning_triggered2 = true;
         // Сбрасываем более высокий порог, так как мы на уровне Alarm
@@ -668,8 +701,15 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 										if(sd_card_present) {	
 											if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
 											
-										 }									
-									  }
+										   }									
+									    }
+										
+									//Отправки событйи в очередь для отпработки релейного модуля 							
+			          	msg.channel_id = sensorID2;					
+				          msg.event_id	 = EVENT_POROG_NORMAL;					
+				          if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+						 
+								            	}
 										thresholdStates[sensorID].warning_triggered2 = false;
 										thresholdStates[sensorID].alarm_triggered2 = false;
 										thresholdStates[sensorID].alarm2_triggered2 = false;

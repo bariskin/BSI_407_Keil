@@ -39,7 +39,7 @@
 #include "RingBuffer.h"
 #include "File_Handling.h"
 #include "SensorLogs.h"
-#include "RelayModule.h"
+#include "RelaySystem.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -119,18 +119,23 @@ SensorLogEvent_t sensorLog = {
    .Value = 0
 }; 
 
- /* √лобальна€ очередь событий дл€ модлуей реле */
-QueueHandle_t relaysCommandQueue = NULL;
+  /* √лобальна€ очередь дл€ отработки реле */
+QueueHandle_t eventRelayQueue = NULL;
 
- RelaysEvent_t relayEvent = {
-	 .module_id  = 0,
-   .relays_id  = 0,
-   .channel_id = 0, 
-	 .warning    = 0,
-	 .alarm_1    = 0,
-   .alarm_2    = 0,
-   .error      = 0
-}; 
+
+
+ /* √лобальна€ очередь событий дл€ модлуей реле */
+//QueueHandle_t relaysCommandQueue = NULL;
+
+// RelaysEvent_t relayEvent = {
+//	 .module_id  = 0,
+//   .relays_id  = 0,
+//   .channel_id = 0, 
+//	 .warning    = 0,
+//	 .alarm_1    = 0,
+//   .alarm_2    = 0,
+//   .error      = 0
+//}; 
 
 
  union {
@@ -233,6 +238,23 @@ void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackTy
 }
 /* USER CODE END GET_IDLE_TASK_MEMORY */
 
+
+void relay_callback(uint8_t module_id,
+                    uint8_t relay_id,
+                    RelayCommand cmd)
+{
+	  RS485_RD_HIGH_MASTER2;
+	
+    if (cmd == RELAY_CMD_ON)
+		  {
+				Send_Modbus_Command_DMA(module_id, 0xFF);
+			}   
+    else	 
+		  {
+				 Send_Modbus_Command_DMA(module_id, 0x00);
+			}      
+}
+
 /**
   * @brief  FreeRTOS initialization
   * @param  None
@@ -308,9 +330,12 @@ void MX_FREERTOS_Init(void) {
   queueSendLogsHandle = osMessageCreate(osMessageQ(queueSenEvent), NULL);
 	
 		 /* очередь дл€ работы с реле */
-	relaysCommandQueue = xQueueCreate(4, sizeof(relayEvent));
+	//relaysCommandQueue = xQueueCreate(4, sizeof(relayEvent));
   /* USER CODE END RTOS_THREADS */
-
+	
+	
+	  /* √лобальна€ очередь дл€ отработки событий реле */
+	eventRelayQueue = xQueueCreate(10, sizeof(EventMessage_t));
 }
 
 /* USER CODE BEGIN Header_SlaveModbusTaskFunction */
@@ -1228,19 +1253,24 @@ void MasterModbus2TaskFunction(void const * argument)
 {
   /* USER CODE BEGIN MasterModbusTaskFunction */
   /* Infinite loop */
-	uint8_t txt[] = "UART4 DMA send OK\r\n";
+
+	EventMessage_t msg;
+	
 	for(;;)
   {
-		// HAL_UART_Transmit_DMA(&huart4, txt, sizeof(txt)-1);
-    RS485_RD_HIGH_MASTER2; 
-    Send_Modbus_Command_DMA(0x02 , 0xff);
-		
-    osDelay(2000);
-		RS485_RD_HIGH_MASTER2; 
-		Send_Modbus_Command_DMA(0x02 , 0x00);
-		
-    osDelay(2000);
-  }
+
+		if(xQueueReceive(eventRelayQueue,&msg,osWaitForever) == pdTRUE){
+		 
+			// ѕриходит событие (event=1, channel=17)
+			if(msg.event_id == EVENT_POROG_2){
+        process_event(msg.event_id, msg.channel_id,relay_callback);
+	    }
+		  else	if(msg.event_id == EVENT_POROG_NORMAL){
+        process_event(msg.event_id, msg.channel_id,relay_callback);
+			}
+	   }
+   }
+	 
   /* USER CODE END MasterModbusTaskFunction */
 }
 

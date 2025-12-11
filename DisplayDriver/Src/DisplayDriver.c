@@ -19,7 +19,6 @@
 #include "HoldingRegisterSlaveHandler.h"
 #include "bsp.h"
 #include "SensorLogs.h"
-#include "RelayModule.h"
 /* ------------------------External variables -------------------------*/
 extern UART_HandleTypeDef huart3;
 extern osThreadId SlaveEventTaskHandle;
@@ -70,8 +69,8 @@ extern  osMessageQId queueSendLogsHandle;
 extern SensorLogEvent_t sensorLog;
 extern  bool sd_card_present;
  
-extern  QueueHandle_t relaysCommandQueue; 
-extern  RelaysEvent_t relayEvent;
+//extern  QueueHandle_t relaysCommandQueue; 
+//extern  RelaysEvent_t relayEvent;
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  static uint8_t baudRate = 0x00;
@@ -669,15 +668,15 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 				    memset((void *)relayModuleCmdArray, 0x00, 10);
 				    //memset((void *)&relayEvent, 0x00, sizeof(RelaysEvent_t));
 				    /* set structure for module --> rele --> */
-				    relayEvent.module_id  = relayModuleCmdArrayHead[IDX_MODULE_RELE];
-				    relayEvent.relays_id  = relayModuleCmdArrayHead[IDX_RELE];
-				    relayEvent.channel_id =  relayModuleCmdArrayHead[IDX_CHANNEL];
+				   // relayEvent.module_id  = relayModuleCmdArrayHead[IDX_MODULE_RELE];
+				  //  relayEvent.relays_id  = relayModuleCmdArrayHead[IDX_RELE];
+				  //  relayEvent.channel_id =  relayModuleCmdArrayHead[IDX_CHANNEL];
 				 
-				    parseRelayBytes( (const uint8_t *)&relayModuleCmdArrayRaw, (uint16_t *)&relayModuleCmdArray);
-				    relayEvent.warning = relayModuleCmdArray[IDX_RELAY_CMD_POROG_1];
-				    relayEvent.alarm_1 = relayModuleCmdArray[IDX_RELAY_CMD_POROG_2];
-				    relayEvent.alarm_2 = relayModuleCmdArray[IDX_RELAY_CMD_POROG_3];
-				    relayEvent.error =   relayModuleCmdArray[IDX_RELAY_CMD_ERROR];
+				   // parseRelayBytes( (const uint8_t *)&relayModuleCmdArrayRaw, (uint16_t *)&relayModuleCmdArray);
+				   // relayEvent.warning = relayModuleCmdArray[IDX_RELAY_CMD_POROG_1];
+				    //relayEvent.alarm_1 = relayModuleCmdArray[IDX_RELAY_CMD_POROG_2];
+				    //relayEvent.alarm_2 = relayModuleCmdArray[IDX_RELAY_CMD_POROG_3];
+				    //relayEvent.error =   relayModuleCmdArray[IDX_RELAY_CMD_ERROR];
 				 
 				    processed_without_channel = 1;
         default:
