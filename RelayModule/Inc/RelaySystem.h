@@ -5,7 +5,7 @@
 
 #define MODULE_COUNT        6       // Можно увеличивать (8, 16, 32…)
 #define RELAY_PER_MODULE    4
-#define EVENT_COUNT         4
+#define EVENT_COUNT         5
 #define MAX_CHANNELS        32     // Можно ставить 512 или 1024
 
 

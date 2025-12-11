@@ -582,6 +582,14 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 									if (gl_por1 > 0) {
 											--gl_por1;
 											thresholdStates[sensorID].warning_triggered = false;
+										
+											 //Отправки событйи в очередь для отпработки релейного модуля, отключение реле 							
+			          	msg.channel_id = sensorID;					
+				          msg.event_id	 = EVENT_POROG_NORMAL;					
+				          if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+						 
+								            	}		
+										
 									}                         
 									if (gl_por1 == 0) {
 											HAL_GPIO_WritePin(RY_GPIO_Port, RY1_Pin, GPIO_PIN_RESET); 
@@ -704,6 +712,13 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 											
 										   }									
 									    }
+										
+											 //Отправки событйи в очередь для отпработки релейного модуля, отключение реле 							
+			            	msg.channel_id = sensorID2;					
+				            msg.event_id	 = EVENT_POROG_NORMAL;					
+				            if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+						 
+								            	}			
 										thresholdStates[sensorID].warning_triggered2 = false;
 										thresholdStates[sensorID].alarm_triggered2 = false;
 										thresholdStates[sensorID].alarm2_triggered2 = false;
