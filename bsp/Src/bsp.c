@@ -483,13 +483,6 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 													}
 												}	
 				 sensor->WasConnected_2 = false; // отключен
-												
-//			 //Отправки событйи в очередь для отпработки релейного модуля 							
-//				msg.channel_id = sensorID2;					
-//				msg.event_id	 = EVENT_ERROR_485;					
-//				if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
-//						
-//													} 
 			}
 		 /* *********** проверка наличния датчика на линии конец ************ */
 			
@@ -526,10 +519,10 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 														}
 													}
 					 
-					 	 //Отправки событйи в очередь для отпработки релейного модуля 							
-				msg.channel_id = sensorID;					
-				msg.event_id	 = EVENT_POROG_2;					
-				if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+			             //Отправки событий в очередь для отпработки релейного модуля, включение реле 						
+				            msg.channel_id = sensorID;					
+				            msg.event_id	 = EVENT_POROG_2;					
+			            	if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
 						
 													} 
 				
@@ -554,12 +547,7 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 							if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
 													   	}
 													}	
-						 	//Отправки событйи в очередь для отпработки релейного модуля 							
-			        msg.channel_id = sensorID;					
-				      msg.event_id	 = EVENT_POROG_NORMAL;					
-				      if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
-						 
-								            	}								
+												
 			     thresholdStates[sensorID].warning_triggered = true;
            // Сбрасываем более высокие пороги
            thresholdStates[sensorID].alarm_triggered = false;
@@ -572,6 +560,14 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 								if(thresholdStates[sensorID].alarm_triggered) {
 										if (gl_por2 > 0) {
 												--gl_por2;
+											
+													 	//Отправки событйи в очередь для отпработки релейного модуля, отключение реле 							
+			                     msg.channel_id = sensorID;					
+				                   msg.event_id	 = EVENT_POROG_NORMAL;					
+				                   if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+						 
+								            	}	
+												 
 												thresholdStates[sensorID].alarm_triggered = false;
 										}                         
 										if (gl_por2 == 0) {
@@ -598,13 +594,6 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 									if(sd_card_present) {
 											xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY);
 									}
-									
-								  //Отправки событйи в очередь для отпработки релейного модуля 							
-			          	msg.channel_id = sensorID;					
-				          msg.event_id	 = EVENT_POROG_NORMAL;					
-				          if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
-						 
-								            	}
 									
 									// Сброс всех флагов для этого датчика
 									thresholdStates[sensorID].warning_triggered = false;
@@ -675,15 +664,9 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 			    
 					 if(sd_card_present) {	
 							if (xQueueSend(queueSendLogsHandle, &sensorLog, portMAX_DELAY) != pdPASS) {
-							
-					  }									
+					      }									
 					 }		
-        //Отправки событйи в очередь для отпработки релейного модуля 							
-			  	msg.channel_id = sensorID2;					
-				  msg.event_id	 = EVENT_POROG_NORMAL;					
-				   if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
-						
-													}
+       
 			     thresholdStates[sensorID].warning_triggered2 = true;
            // Сбрасываем более высокие пороги
            thresholdStates[sensorID].alarm_triggered2 = false;
@@ -696,6 +679,13 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 										if (gl_por2 > 0) --gl_por2;
 										if (gl_por2 == 0) HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_RESET);
 										thresholdStates[sensorID].alarm_triggered2 = false;
+									
+									 //Отправки событйи в очередь для отпработки релейного модуля, отключение реле 							
+			          	msg.channel_id = sensorID2;					
+				          msg.event_id	 = EVENT_POROG_NORMAL;					
+				          if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+						 
+								            	}			
 								}
 						}
 
@@ -714,21 +704,6 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 											
 										   }									
 									    }
-										
-									//Отправки событий в очередь для отпработки релейного модуля 							
-			          	msg.channel_id = sensorID2;					
-				          msg.event_id	 = EVENT_POROG_NORMAL;					
-				          if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
-						 
-								            	}
-									
-										  //Отправки событйи в очередь для отпработки релейного модуля 							
-			          	msg.channel_id = sensorID2;					
-				          msg.event_id	 = EVENT_POROG_NORMAL;					
-				          if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
-						 
-								            	}						
-									
 										thresholdStates[sensorID].warning_triggered2 = false;
 										thresholdStates[sensorID].alarm_triggered2 = false;
 										thresholdStates[sensorID].alarm2_triggered2 = false;

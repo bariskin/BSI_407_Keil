@@ -193,6 +193,7 @@ int main(void)
 	 
  
   // Модуль 1, реле 1, EVENT_POROG_2, каналы 10..17
+	  // ID Modbus 1, 4
    for (int ch = 19; ch <= 34; ch++) {
     set_reaction(1, 1, EVENT_POROG_2, ch, 1);
     set_reaction(1, 1, EVENT_POROG_NORMAL, ch, 1);
@@ -200,7 +201,7 @@ int main(void)
 		set_reaction(4, 1, EVENT_POROG_2, ch, 1); 
 		set_reaction(4, 1, EVENT_POROG_NORMAL, ch, 1);
   }
-	 
+	  // ID Modbus 2, 4
 	 for (int ch = 7; ch <= 18; ch++) {
     set_reaction(2, 1, EVENT_POROG_2, ch, 1);
     set_reaction(2, 1, EVENT_POROG_NORMAL, ch, 1);
@@ -208,6 +209,7 @@ int main(void)
 		set_reaction(4, 1, EVENT_POROG_2, ch, 1); 
 		set_reaction(4, 1, EVENT_POROG_NORMAL, ch, 1);
    }
+	  // ID Modbus 2, 4
 	 for (int ch = 35; ch <= 46; ch++) {
     set_reaction(2, 1, EVENT_POROG_2, ch, 1);
     set_reaction(2, 1, EVENT_POROG_NORMAL, ch, 1);
@@ -215,15 +217,12 @@ int main(void)
 		set_reaction(4, 1, EVENT_POROG_2, ch, 1); 
 		set_reaction(4, 1, EVENT_POROG_NORMAL, ch, 1);
    }
-	 
-	 
-	 
-	 
+	  // ID Modbus 3, 4
 	for (int ch = 1; ch <= 6; ch++) {
     set_reaction(3, 1, EVENT_POROG_2, ch, 1);
     set_reaction(3, 1, EVENT_POROG_NORMAL, ch, 1);
 		
-		
+		set_reaction(4, 1, EVENT_POROG_2, ch, 1); 
 		set_reaction(4, 1, EVENT_POROG_NORMAL, ch, 1);
   }
 	
