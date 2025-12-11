@@ -193,23 +193,37 @@ int main(void)
 	 
  
   // Модуль 1, реле 1, EVENT_POROG_2, каналы 10..17
-   for (int ch = 10; ch <= 17; ch++) {
+   for (int ch = 19; ch <= 34; ch++) {
     set_reaction(1, 1, EVENT_POROG_2, ch, 1);
     set_reaction(1, 1, EVENT_POROG_NORMAL, ch, 1);
+		 
 		set_reaction(4, 1, EVENT_POROG_2, ch, 1); 
 		set_reaction(4, 1, EVENT_POROG_NORMAL, ch, 1);
   }
 	 
-	 for (int ch = 4; ch <= 23; ch++) {
+	 for (int ch = 7; ch <= 18; ch++) {
     set_reaction(2, 1, EVENT_POROG_2, ch, 1);
     set_reaction(2, 1, EVENT_POROG_NORMAL, ch, 1);
+		 
+		set_reaction(4, 1, EVENT_POROG_2, ch, 1); 
+		set_reaction(4, 1, EVENT_POROG_NORMAL, ch, 1);
+   }
+	 for (int ch = 35; ch <= 46; ch++) {
+    set_reaction(2, 1, EVENT_POROG_2, ch, 1);
+    set_reaction(2, 1, EVENT_POROG_NORMAL, ch, 1);
+		 
 		set_reaction(4, 1, EVENT_POROG_2, ch, 1); 
 		set_reaction(4, 1, EVENT_POROG_NORMAL, ch, 1);
    }
 	 
-	for (int ch = 1; ch <= 3; ch++) {
+	 
+	 
+	 
+	for (int ch = 1; ch <= 6; ch++) {
     set_reaction(3, 1, EVENT_POROG_2, ch, 1);
     set_reaction(3, 1, EVENT_POROG_NORMAL, ch, 1);
+		
+		
 		set_reaction(4, 1, EVENT_POROG_NORMAL, ch, 1);
   }
 	
