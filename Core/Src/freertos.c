@@ -1268,6 +1268,14 @@ void MasterModbus2TaskFunction(void const * argument)
 		  else	if(msg.event_id == EVENT_POROG_NORMAL){
         process_event(msg.event_id, msg.channel_id,relay_callback);
 			}
+			else	if(msg.event_id == EVENT_MODULE4_ON){
+        process_event(msg.event_id, msg.channel_id,relay_callback);
+			}
+			else	if(msg.event_id == EVENT_MODULE4_OFF){
+       process_event(msg.event_id, msg.channel_id,relay_callback);
+			}
+			
+			
 	   }
    }
 	 

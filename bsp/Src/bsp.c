@@ -519,12 +519,19 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 														}
 													}
 					 
-			             //Отправки событий в очередь для отпработки релейного модуля, включение реле 						
-				            msg.channel_id = sensorID;					
-				            msg.event_id	 = EVENT_POROG_2;					
-			            	if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
-						
-													} 
+				 //Отправки событий в очередь для отпработки релейного модуля, включение реле 						
+					msg.channel_id = sensorID;					
+					msg.event_id	 = EVENT_POROG_2;					
+					if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+	
+								} 
+					// второе событие для модуля 4, он включается при сработке любого канала
+					msg.channel_id = sensorID;					
+					msg.event_id	 = EVENT_MODULE4_ON;					
+					if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+	
+								} 
+							
 				
          thresholdStates[sensorID].alarm_triggered = true;
          thresholdStates[sensorID].warning_triggered = true;
@@ -571,6 +578,12 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 												thresholdStates[sensorID].alarm_triggered = false;
 										}                         
 										if (gl_por2 == 0) {
+											 // событие для отключения редейного модуля 4 
+											  msg.channel_id = sensorID;					
+				                msg.event_id	 = EVENT_MODULE4_OFF;					
+				                if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+												    }
+								            	
 												HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_RESET); 
 										}
 								}
@@ -646,12 +659,19 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 														
 						   }
 						}		
-		 	 //Отправки событйи в очередь для отпработки релейного модуля 							
-				msg.channel_id = sensorID2;					
-				msg.event_id	 = EVENT_POROG_2;					
-				if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
-						
-													} 
+		 				 //Отправки событий в очередь для отпработки релейного модуля, включение реле 						
+					msg.channel_id = sensorID2;					
+					msg.event_id	 = EVENT_POROG_2;					
+					if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+	
+								} 
+					// второе событие для модуля 4, он включается при сработке любого канала
+					msg.channel_id = sensorID2;					
+					msg.event_id	 = EVENT_MODULE4_ON;					
+					if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+	
+								} 
+							 
 						
          thresholdStates[sensorID].alarm_triggered2 = true;
          thresholdStates[sensorID].warning_triggered2 = true;
@@ -684,8 +704,19 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 			/* ************************************************************************* */	 
             if(sensor->Concentration_2 <= sensor->SensorAlarm_2) {
 								if(thresholdStates[sensorID].alarm_triggered2) {
-										if (gl_por2 > 0) --gl_por2;
-										if (gl_por2 == 0) HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_RESET);
+										if (gl_por2 > 0){ 
+											--gl_por2;
+										}
+										if (gl_por2 == 0){ 
+											
+												msg.channel_id = sensorID2;					
+				                msg.event_id	 = EVENT_MODULE4_OFF;					
+				                if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
+						 
+								            	}	
+											
+											  HAL_GPIO_WritePin(RY_GPIO_Port, RY2_Pin, GPIO_PIN_RESET);
+										}
 										thresholdStates[sensorID].alarm_triggered2 = false;
 									
 									 //Отправки событйи в очередь для отпработки релейного модуля, отключение реле 							

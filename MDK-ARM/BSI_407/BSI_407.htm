@@ -3,7 +3,7 @@
 <title>Static Call Graph - [BSI_407\BSI_407.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image BSI_407\BSI_407.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Dec 12 07:59:31 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060960: Last Updated: Fri Dec 12 08:40:40 2025
 <BR><P>
 <H3>Maximum Stack Usage =       4872 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -2468,7 +2468,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[ca]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[92]"></a>MasterModbus2TaskFunction</STRONG> (Thumb, 46 bytes, Stack size 8 bytes, freertos.o(i.MasterModbus2TaskFunction))
+<P><STRONG><a name="[92]"></a>MasterModbus2TaskFunction</STRONG> (Thumb, 54 bytes, Stack size 8 bytes, freertos.o(i.MasterModbus2TaskFunction))
 <BR><BR>[Stack]<UL><LI>Max Depth = 120<LI>Call Chain = MasterModbus2TaskFunction &rArr; xQueueReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1ae]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
@@ -3875,7 +3875,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[11f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HandleDisplayCommands
 </UL>
 
-<P><STRONG><a name="[ca]"></a>main</STRONG> (Thumb, 464 bytes, Stack size 8 bytes, main.o(i.main))
+<P><STRONG><a name="[ca]"></a>main</STRONG> (Thumb, 480 bytes, Stack size 8 bytes, main.o(i.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 432<LI>Call Chain = main &rArr; MX_FREERTOS_Init &rArr; osThreadCreate &rArr; xTaskCreate &rArr; pvPortMalloc &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[23c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vMBMasterSetDestAddress
@@ -4055,7 +4055,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HoldingHandlerFunction
 </UL>
 
-<P><STRONG><a name="[1ac]"></a>readCurrentSensorValue</STRONG> (Thumb, 1614 bytes, Stack size 48 bytes, bsp.o(i.readCurrentSensorValue))
+<P><STRONG><a name="[1ac]"></a>readCurrentSensorValue</STRONG> (Thumb, 1704 bytes, Stack size 48 bytes, bsp.o(i.readCurrentSensorValue))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = readCurrentSensorValue &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[19a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_WritePin
