@@ -78,6 +78,8 @@ extern float  updateCalibrationValue;
 extern  SensorCurrentState_t	writeParams;	 
 extern  SensorCurrentState_t	readParams ;
 
+volatile uint8_t tx_uart4_busy = 0;
+
  uint16_t registersTX[4] = {0};
  uint32_t binary32 = 0;
  uint8_t ModbusSensoraddr = 0;
@@ -335,7 +337,7 @@ void MX_FREERTOS_Init(void) {
 	
 	
 	  /* Глобальная очередь для отработки событий реле */
-	eventRelayQueue = xQueueCreate(10, sizeof(EventMessage_t));
+	eventRelayQueue = xQueueCreate(16, sizeof(EventMessage_t));
 }
 
 /* USER CODE BEGIN Header_SlaveModbusTaskFunction */
@@ -1221,6 +1223,13 @@ void Send_Modbus_Command_DMA(uint8_t slave_addr , uint8_t data)
     tx[6] = crc & 0xFF;        // CRC Lo
     tx[7] = (crc >> 8) & 0xFF; // CRC Hi
 
+	  while(tx_uart4_busy == 1)
+		{
+		  osDelay(1);
+		}
+	 
+	  tx_uart4_busy = 1;
+	 
     // --- Отправка по DMA ---
     HAL_UART_Transmit_DMA(&huart4, tx, 8);
  }
@@ -1274,8 +1283,7 @@ void MasterModbus2TaskFunction(void const * argument)
 			else	if(msg.event_id == EVENT_MODULE4_OFF){
        process_event(msg.event_id, msg.channel_id,relay_callback);
 			}
-			
-			
+				
 	   }
    }
 	 

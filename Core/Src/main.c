@@ -189,7 +189,7 @@ int main(void)
     
 	 
 	 
-	 init_system(23); // 23 канала
+	 init_system(46); // 46 канала
 	 
  
   // Модуль 1, реле 1, EVENT_POROG_2, каналы 10..17
@@ -230,6 +230,7 @@ int main(void)
 	 // Настройка команды для события
    set_event_command(EVENT_POROG_2, RELAY_CMD_ON);
    set_event_command(EVENT_POROG_NORMAL, RELAY_CMD_OFF);
+	
 	 set_event_command(EVENT_MODULE4_ON, RELAY_CMD_ON);
    set_event_command(EVENT_MODULE4_OFF, RELAY_CMD_OFF);
 	 

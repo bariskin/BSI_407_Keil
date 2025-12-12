@@ -10,6 +10,8 @@ volatile uint8_t singlechar;
 
 
 extern UART_HandleTypeDef* modbusUartMaster ;
+
+extern volatile uint8_t tx_uart4_busy;
 /* ----------------------- User defenitions ---------------------------------*/
 #define RS485_RD_LOW_SLAVE	  HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_RESET)
 #define RS485_RD_HIGH_SLAVE 	HAL_GPIO_WritePin(RDen1_GPIO_Port, RDen1_Pin, GPIO_PIN_SET)
@@ -95,6 +97,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 	else  if (huart->Instance == UART4)
     {
         // Выключаем передачу RS485 > включаем приём
+			    tx_uart4_busy = 0;
           RS485_RD_LOW_MASTER2; 
     }	
 }

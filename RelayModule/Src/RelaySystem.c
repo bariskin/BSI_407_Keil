@@ -9,7 +9,8 @@ static RelayCommand event_cmd[EVENT_COUNT] = {
     RELAY_CMD_ON,
     RELAY_CMD_ON,
     RELAY_CMD_ON,
-    RELAY_CMD_ON
+    RELAY_CMD_ON,
+	  RELAY_CMD_ON
 };
 
 void set_event_command(EventType event_id, RelayCommand cmd) {
