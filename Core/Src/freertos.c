@@ -1285,6 +1285,8 @@ void MasterModbus2TaskFunction(void const * argument)
 			}
 				
 	   }
+		
+		 osDelay(50);
    }
 	 
   /* USER CODE END MasterModbusTaskFunction */

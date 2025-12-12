@@ -192,40 +192,33 @@ int main(void)
 	 init_system(46); // 46 канала
 	 
  
-  // Модуль 1, реле 1, EVENT_POROG_2, каналы 10..17
+  // Модуль 1, реле 1, EVENT_POROG_2, каналы 19..34
 	  // ID Modbus 1, 4
    for (int ch = 19; ch <= 34; ch++) {
     set_reaction(1, 1, EVENT_POROG_2, ch, 1);
     set_reaction(1, 1, EVENT_POROG_NORMAL, ch, 1);
-		 
-		set_reaction(4, 1, EVENT_MODULE4_ON, ch, 1); 
-		set_reaction(4, 1, EVENT_MODULE4_OFF, ch, 1);
   }
-	  // ID Modbus 2, 4
+	  // ID Modbus 2, 4, каналы 7..18
 	 for (int ch = 7; ch <= 18; ch++) {
     set_reaction(2, 1, EVENT_POROG_2, ch, 1);
     set_reaction(2, 1, EVENT_POROG_NORMAL, ch, 1);
-		 
-		set_reaction(4, 1, EVENT_MODULE4_ON, ch, 1); 
-		set_reaction(4, 1, EVENT_MODULE4_OFF, ch, 1);
    }
-	  // ID Modbus 2, 4
+	  // ID Modbus 2, 4 , каналы 35..46
 	 for (int ch = 35; ch <= 46; ch++) {
     set_reaction(2, 1, EVENT_POROG_2, ch, 1);
     set_reaction(2, 1, EVENT_POROG_NORMAL, ch, 1);
-		 
-		set_reaction(4, 1, EVENT_MODULE4_ON, ch, 1); 
-		set_reaction(4, 1, EVENT_MODULE4_OFF, ch, 1);
    }
-	  // ID Modbus 3, 4
+	  // ID Modbus 3, 4 , каналы 1..6
 	for (int ch = 1; ch <= 6; ch++) {
     set_reaction(3, 1, EVENT_POROG_2, ch, 1);
     set_reaction(3, 1, EVENT_POROG_NORMAL, ch, 1);
 		
-		set_reaction(4, 1, EVENT_MODULE4_ON, ch, 1); 
-		set_reaction(4, 1, EVENT_MODULE4_OFF, ch, 1);
+
   }
-	
+	for (int ch = 1; ch <= 46; ch++) {
+			set_reaction(4, 1, EVENT_MODULE4_ON, ch, 1); 
+		  set_reaction(4, 1, EVENT_MODULE4_OFF, ch, 1);
+	}
 	 
 	 // Настройка команды для события
    set_event_command(EVENT_POROG_2, RELAY_CMD_ON);

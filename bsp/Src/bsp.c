@@ -525,6 +525,7 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 					if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
 	
 								} 
+					osDelay(2);
 					// второе событие для модуля 4, он включается при сработке любого канала
 					msg.channel_id = sensorID;					
 					msg.event_id	 = EVENT_MODULE4_ON;					
@@ -665,6 +666,7 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 					if (xQueueSend(eventRelayQueue, &msg, portMAX_DELAY) != pdPASS) {
 	
 								} 
+					osDelay(2);
 					// второе событие для модуля 4, он включается при сработке любого канала
 					msg.channel_id = sensorID2;					
 					msg.event_id	 = EVENT_MODULE4_ON;					
