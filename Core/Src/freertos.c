@@ -1214,7 +1214,7 @@ void Send_Modbus_Command_DMA(uint8_t slave_addr , uint8_t data)
     tx[1] = 0x06;         // Write Single Register
     tx[2] = 0x00;         // Адрес регистра Hi
     tx[3] = 0x0A;         // Адрес регистра Lo
-    tx[4] = data;         // Значение Hivoid Send_Modbus_Command_DMA(uint8_t slave_addr)
+    tx[4] = data;         // Значение Hi void Send_Modbus_Command_DMA(uint8_t slave_addr)
     tx[5] = data;         // Значение Lo
 
     crc = Modbus_CRC16(tx, 6); // CRC по первым 6 байтам
