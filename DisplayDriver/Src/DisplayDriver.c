@@ -85,11 +85,19 @@ extern  bool sd_card_present;
  char time_input_string[16] = {0};
  char log_input_string[4]= {0}; 
  
- 
+ RelaysEvent_t relayEvent  = {
+  .module_id  = 0x0000,  
+ 	.relays_id  = 0x0000,
+	.channel_id = 0x0000, 
+	.warning    = 0x0000,  
+	.alarm_1    = 0x0000,
+  .alarm_2    = 0x0000,
+  .error      = 0x0000
+};
  typedef enum 
  {  
 	 //
-	  IDX_MODULE_RELE       = 0x00,
+	  IDX_MODULE_RELE       = 0x00, 
 	  IDX_RELE              = 0x01,
 	  IDX_CHANNEL           = 0x02,  
 	 
@@ -666,18 +674,19 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 				 case DISPAY_MODULE_RELE_CMD:
 					 
 				    memset((void *)relayModuleCmdArray, 0x00, 10);
-				    //memset((void *)&relayEvent, 0x00, sizeof(RelaysEvent_t));
+		  		  // конвертация  5 байтов в четыре short значения для   
+   		  		parseRelayBytes( (const uint8_t *)&relayModuleCmdArrayRaw, (uint16_t *)&relayModuleCmdArray);
+				 
+				    memset((void *)&relayEvent, 0x00, sizeof(RelaysEvent_t));
 				    /* set structure for module --> rele --> */
-				   // relayEvent.module_id  = relayModuleCmdArrayHead[IDX_MODULE_RELE];
-				  //  relayEvent.relays_id  = relayModuleCmdArrayHead[IDX_RELE];
-				  //  relayEvent.channel_id =  relayModuleCmdArrayHead[IDX_CHANNEL];
-				 
-				   // parseRelayBytes( (const uint8_t *)&relayModuleCmdArrayRaw, (uint16_t *)&relayModuleCmdArray);
-				   // relayEvent.warning = relayModuleCmdArray[IDX_RELAY_CMD_POROG_1];
-				    //relayEvent.alarm_1 = relayModuleCmdArray[IDX_RELAY_CMD_POROG_2];
-				    //relayEvent.alarm_2 = relayModuleCmdArray[IDX_RELAY_CMD_POROG_3];
-				    //relayEvent.error =   relayModuleCmdArray[IDX_RELAY_CMD_ERROR];
-				 
+				    relayEvent.module_id  = relayModuleCmdArrayHead[IDX_MODULE_RELE];
+				    relayEvent.relays_id  = relayModuleCmdArrayHead[IDX_RELE];
+				    relayEvent.channel_id =  relayModuleCmdArrayHead[IDX_CHANNEL];
+			
+				    relayEvent.warning = relayModuleCmdArray[IDX_RELAY_CMD_POROG_1];
+				    relayEvent.alarm_1 = relayModuleCmdArray[IDX_RELAY_CMD_POROG_2];
+				    relayEvent.alarm_2 = relayModuleCmdArray[IDX_RELAY_CMD_POROG_3];
+				    relayEvent.error =   relayModuleCmdArray[IDX_RELAY_CMD_ERROR];
 				    processed_without_channel = 1;
         default:
             // Эти команды требуют channelID

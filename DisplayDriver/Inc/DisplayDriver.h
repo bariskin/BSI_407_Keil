@@ -27,6 +27,11 @@ extern "C" {
   #define ARRAY_RX_SIZE		32
 	#define START_INIT_BYTE	0x10
 	
+	#define FLASH_MODULES_SECTOR   FLASH_SECTOR_11
+  #define FLASH_MODULES_ADDRESS  0x080E0000
+  #define MODULES_FLASH_MAGIC   0xDEADBEEF
+	
+	
 		typedef struct
 	  {
 			uint8_t channelIndex;
@@ -92,6 +97,18 @@ typedef struct {
 typedef struct {
 	  uint8_t messsage[ARRAY_TX_SIZE + 3];
 } DisplayMsg_t;
+
+
+// Структура  события от реле 
+typedef struct {
+	uint16_t module_id;  
+	uint16_t relays_id;
+	uint16_t channel_id;  // первый канал блока из 10
+	uint16_t warning;     // только 10 младших бит
+	uint16_t alarm_1;     // только 10 младших бит
+	uint16_t alarm_2;     // только 10 младших бит
+	uint16_t error;       // только 10 младших бит
+} RelaysEvent_t;
 
  /* ------------------------External variables -------------------------*/
   

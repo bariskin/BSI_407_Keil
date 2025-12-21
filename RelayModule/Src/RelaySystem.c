@@ -1,7 +1,17 @@
+#include "stm32f4xx_hal.h"
 #include "RelaySystem.h"
+#include <string.h>
+#include "DisplayDriver.h"
+
+uint16_t TOTAL_CHANNELS = 0;
 
 RelayModule modules[MODULE_COUNT];
-uint16_t TOTAL_CHANNELS = 0;
+volatile uint8_t config_dirty = 0;
+
+typedef struct {
+    uint32_t magic;
+    RelayModule modules[MODULE_COUNT];
+} RelayModulesFlash;
 
 // Таблица команд для 4 типов событий
 // По умолчанию: ON, OFF, ON, OFF
@@ -95,4 +105,76 @@ void process_event(EventType event_id,
     }
 }
 
+
+
+void relay_modules_flash_save(void)
+{
+    RelayModulesFlash data;
+
+    data.magic = MODULES_FLASH_MAGIC;
+    memcpy(data.modules, modules, sizeof(modules));
+
+    HAL_FLASH_Unlock();
+
+    FLASH_EraseInitTypeDef erase;
+    uint32_t error;
+
+    erase.TypeErase    = FLASH_TYPEERASE_SECTORS;
+    erase.Sector       = FLASH_MODULES_SECTOR;
+    erase.NbSectors    = 1;
+    erase.VoltageRange = FLASH_VOLTAGE_RANGE_3;
+
+    HAL_FLASHEx_Erase(&erase, &error);
+
+    uint32_t addr = FLASH_MODULES_ADDRESS;
+    uint32_t *p = (uint32_t *)&data;
+    uint32_t words = (sizeof(RelayModulesFlash) + 3) / 4;
+
+    for (uint32_t i = 0; i < words; i++) {
+        HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, addr, p[i]);
+        addr += 4;
+    }
+
+    HAL_FLASH_Lock();
+}
+
+
+void relay_modules_flash_load(void)
+{
+    RelayModulesFlash *data =
+        (RelayModulesFlash *)FLASH_MODULES_ADDRESS;
+
+    if (data->magic != MODULES_FLASH_MAGIC)
+        return; // данных нет
+
+    memcpy(modules, data->modules, sizeof(modules));
+}
+
+void apply_relay_event_block_bits(RelaysEvent_t *cmd)
+{
+    if (!cmd) return;
+
+    uint16_t ch_start = cmd->channel_id;
+
+    for (uint8_t i = 0; i < CHANNEL_BLOCK_SIZE; i++) {
+        uint16_t ch = ch_start + i;
+        if (ch > TOTAL_CHANNELS) break;
+
+        if (cmd->warning & (1 << i))
+            set_reaction(cmd->module_id, cmd->relays_id,
+                         EVENT_POROG_2, ch, 1);
+
+        if (cmd->alarm_1 & (1 << i))
+            set_reaction(cmd->module_id, cmd->relays_id,
+                         EVENT_POROG_NORMAL, ch, 1);
+
+        if (cmd->alarm_2 & (1 << i))
+            set_reaction(cmd->module_id, cmd->relays_id,
+                         EVENT_MODULE4_ON, ch, 1);
+
+        if (cmd->error & (1 << i))
+            set_reaction(cmd->module_id, cmd->relays_id,
+                         EVENT_MODULE4_OFF, ch, 1);
+    }
+}
 

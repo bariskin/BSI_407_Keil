@@ -1272,16 +1272,16 @@ void MasterModbus2TaskFunction(void const * argument)
 		 
 			// Приходит событие (event=1, channel=17)
 			if(msg.event_id == EVENT_POROG_2){
-        process_event(msg.event_id, msg.channel_id,relay_callback);
+        process_event((EventType)msg.event_id, msg.channel_id,relay_callback);
 	    }
 		  else	if(msg.event_id == EVENT_POROG_NORMAL){
-        process_event(msg.event_id, msg.channel_id,relay_callback);
+        process_event((EventType)msg.event_id, msg.channel_id,relay_callback);
 			}
 			else	if(msg.event_id == EVENT_MODULE4_ON){
-        process_event(msg.event_id, msg.channel_id,relay_callback);
+        process_event((EventType)msg.event_id, msg.channel_id,relay_callback);
 			}
 			else	if(msg.event_id == EVENT_MODULE4_OFF){
-       process_event(msg.event_id, msg.channel_id,relay_callback);
+       process_event((EventType)msg.event_id, msg.channel_id,relay_callback);
 			}
 				
 	   }

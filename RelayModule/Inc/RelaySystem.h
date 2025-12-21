@@ -9,6 +9,12 @@
 #define MAX_CHANNELS        48     // Можно ставить 512 или 1024
 
 
+#define FLASH_MODULES_SECTOR   FLASH_SECTOR_11
+#define FLASH_MODULES_ADDRESS  0x080E0000
+#define MODULES_FLASH_MAGIC    0xDEADBEEF
+
+#define CHANNEL_BLOCK_SIZE   10
+
 typedef struct {
     uint8_t event_id;
     uint16_t channel_id;
