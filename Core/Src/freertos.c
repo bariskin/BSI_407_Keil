@@ -124,20 +124,8 @@ SensorLogEvent_t sensorLog = {
   /* Глобальная очередь для отработки реле */
 QueueHandle_t eventRelayQueue = NULL;
 
-
-
- /* Глобальная очередь событий для модлуей реле */
-//QueueHandle_t relaysCommandQueue = NULL;
-
-// RelaysEvent_t relayEvent = {
-//	 .module_id  = 0,
-//   .relays_id  = 0,
-//   .channel_id = 0, 
-//	 .warning    = 0,
-//	 .alarm_1    = 0,
-//   .alarm_2    = 0,
-//   .error      = 0
-//}; 
+  /* Глобальная очередь для настроек модулей реле  */
+QueueHandle_t eventSettingRelayQueue = NULL;
 
 
  union {
@@ -152,7 +140,7 @@ volatile uint8_t  flagDisplayLogsBusy = 0;
  
  
 static uint16_t Modbus_CRC16(uint8_t *buf, uint8_t len);
-static void Send_Modbus_Command_DMA(uint8_t slave_addr, uint8_t data);
+static void Send_Modbus_Command_DMA(uint8_t slave_addr , uint8_t relay_id, uint8_t cmd);
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -170,6 +158,7 @@ DisplayCommand_t displayCmd;
 /* USER CODE BEGIN Variables */
  
 void MasterModbus2TaskFunction(void const * argument); 
+void ReleySettingTaskFunction (void const * argument); 
 extern uint8_t ModBusSlaveDefaultDeviceAddr;
 extern uint8_t ModBusSlaveCurrentDeviceAddr;
 /* USER CODE END Variables */
@@ -201,6 +190,10 @@ osStaticMutexDef_t myMutex01ControlBlock;
 osThreadId MasterModbus2TasHandle;
 uint32_t MasterModbus2TasBuffer[ 128 ];
 osStaticThreadDef_t MasterModbus2TasControlBlock;
+
+osThreadId ReleySettingHandle;
+uint32_t ReleySettingTaskBuffer[ 256 ];
+osStaticThreadDef_t ReleySettingControlBlock;
 
 
 /* Private function prototypes -----------------------------------------------*/
@@ -249,11 +242,13 @@ void relay_callback(uint8_t module_id,
 	
     if (cmd == RELAY_CMD_ON)
 		  {
-				Send_Modbus_Command_DMA(module_id, 0xFF);
+				//Send_Modbus_Command_DMA(module_id, 0xFF);
+				Send_Modbus_Command_DMA(module_id, relay_id, RELAY_CMD_ON);
 			}   
     else	 
 		  {
-				 Send_Modbus_Command_DMA(module_id, 0x00);
+				 //Send_Modbus_Command_DMA(module_id, 0x00);
+				Send_Modbus_Command_DMA(module_id, relay_id, RELAY_CMD_OFF);
 			}      
 }
 
@@ -301,7 +296,7 @@ void MX_FREERTOS_Init(void) {
   HoldingHandlerHandle = osThreadCreate(osThread(HoldingHandler), NULL);
 
   /* definition and creation of InputHandler */
-  osThreadStaticDef(InputHandler, InputHandlerFunction, osPriorityBelowNormal, 0, 512, InputHandlerBuffer, &InputHandlerControlBlock);
+  osThreadStaticDef(InputHandler, InputHandlerFunction, osPriorityBelowNormal, 0, 256, InputHandlerBuffer, &InputHandlerControlBlock);
   InputHandlerHandle = osThreadCreate(osThread(InputHandler), NULL);
 
   /* definition and creation of SlaveEventTask */
@@ -323,6 +318,11 @@ void MX_FREERTOS_Init(void) {
   osThreadStaticDef(MasterModbus2Tas, MasterModbus2TaskFunction, osPriorityBelowNormal, 0, 128, MasterModbus2TasBuffer, &MasterModbus2TasControlBlock);
   MasterModbus2TasHandle = osThreadCreate(osThread(MasterModbus2Tas), NULL);
 	
+		  /* definition and creation of MasterModbus2Tas */
+  osThreadStaticDef(ReleySettingTask, ReleySettingTaskFunction, osPriorityNormal, 0, 256, ReleySettingTaskBuffer, &ReleySettingControlBlock);
+  MasterModbus2TasHandle = osThreadCreate(osThread(ReleySettingTask), NULL);
+	
+
 	
 	displayCommandQueue = xQueueCreate(20, sizeof(DisplayCommand_t));
 	
@@ -331,13 +331,12 @@ void MX_FREERTOS_Init(void) {
 	osMessageQDef(queueSenEvent, 24, SensorLogEvent_t);
   queueSendLogsHandle = osMessageCreate(osMessageQ(queueSenEvent), NULL);
 	
-		 /* очередь для работы с реле */
-	//relaysCommandQueue = xQueueCreate(4, sizeof(relayEvent));
-  /* USER CODE END RTOS_THREADS */
-	
-	
 	  /* Глобальная очередь для отработки событий реле */
-	eventRelayQueue = xQueueCreate(16, sizeof(EventMessage_t));
+	eventRelayQueue = xQueueCreate(16, sizeof(EventMessage_t));	
+	 /* Глобальная очередь для отработки настроек  реле */
+	eventSettingRelayQueue = xQueueCreate(4, sizeof(RelaysEvent_t));
+	
+	  /* USER CODE END RTOS_THREADS */
 }
 
 /* USER CODE BEGIN Header_SlaveModbusTaskFunction */
@@ -1205,7 +1204,7 @@ void SendToDispTaskFunction(void const * argument)
 /* USER CODE BEGIN Application */
 
 
-void Send_Modbus_Command_DMA(uint8_t slave_addr , uint8_t data)
+void Send_Modbus_Command_DMA(uint8_t slave_addr , uint8_t relay_id, uint8_t cmd)
 
  {
     static uint8_t tx[8];     // ДОЛЖЕН быть static, чтобы буфер не исчез до завершения DMA!
@@ -1216,8 +1215,8 @@ void Send_Modbus_Command_DMA(uint8_t slave_addr , uint8_t data)
     tx[1] = 0x06;         // Write Single Register
     tx[2] = 0x00;         // Адрес регистра Hi
     tx[3] = 0x0A;         // Адрес регистра Lo
-    tx[4] = data;         // Значение Hi void Send_Modbus_Command_DMA(uint8_t slave_addr)
-    tx[5] = data;         // Значение Lo
+    tx[4] = relay_id;     // ID реле  
+    tx[5] = cmd;          // команда ON/OFF
 
     crc = Modbus_CRC16(tx, 6); // CRC по первым 6 байтам
     tx[6] = crc & 0xFF;        // CRC Lo
@@ -1257,6 +1256,24 @@ uint16_t Modbus_CRC16(uint8_t *buf, uint8_t len)
     return crc;
 }
 
+void ReleySettingTaskFunction(void const * argument)
+ {
+	 RelaysEvent_t msg;
+     /* Infinite loop */
+  for(;;)
+  {
+     if(xQueueReceive(eventSettingRelayQueue,&msg,osWaitForever) == pdTRUE){
+			 
+			 /* применить новую настройку  для модулей реле */
+			 apply_relay_event_block_bits((RelaysEvent_t *)&msg);
+			 
+			 /* сохранить на флэш новую настройку */
+			 //relay_modules_flash_save();
+		
+		 }
+   osDelay(5);
+	}
+ }
 
 void MasterModbus2TaskFunction(void const * argument)
 {
@@ -1271,16 +1288,16 @@ void MasterModbus2TaskFunction(void const * argument)
 		if(xQueueReceive(eventRelayQueue,&msg,osWaitForever) == pdTRUE){
 		 
 			// Приходит событие (event=1, channel=17)
-			if(msg.event_id == EVENT_POROG_2){
+			if(msg.event_id == EVENT_POROG_1){
         process_event((EventType)msg.event_id, msg.channel_id,relay_callback);
 	    }
-		  else	if(msg.event_id == EVENT_POROG_NORMAL){
+		  else	if(msg.event_id == EVENT_POROG_2){
         process_event((EventType)msg.event_id, msg.channel_id,relay_callback);
 			}
-			else	if(msg.event_id == EVENT_MODULE4_ON){
+			else	if(msg.event_id == EVENT_POROG_3){
         process_event((EventType)msg.event_id, msg.channel_id,relay_callback);
 			}
-			else	if(msg.event_id == EVENT_MODULE4_OFF){
+			else	if(msg.event_id == EVENT_POROG_NORMAL){
        process_event((EventType)msg.event_id, msg.channel_id,relay_callback);
 			}
 				
@@ -1291,9 +1308,6 @@ void MasterModbus2TaskFunction(void const * argument)
 	 
   /* USER CODE END MasterModbusTaskFunction */
 }
-
-
-
 
 
 /* USER CODE END Application */

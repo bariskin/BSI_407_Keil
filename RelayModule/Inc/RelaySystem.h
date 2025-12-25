@@ -2,18 +2,17 @@
 #define RELAY_SYSTEM_H
 
 #include <stdint.h>
+#include "DisplayDriver.h"
+
 
 #define MODULE_COUNT        4      // Можно увеличивать (8, 16, 32…)
-#define RELAY_PER_MODULE    4
-#define EVENT_COUNT         5
-#define MAX_CHANNELS        48     // Можно ставить 512 или 1024
+#define RELAY_PER_MODULE    4      // количество реле на один модуль
+#define EVENT_COUNT         4
+#define MAX_CHANNELS        48    
 
 
-#define FLASH_MODULES_SECTOR   FLASH_SECTOR_11
-#define FLASH_MODULES_ADDRESS  0x080E0000
-#define MODULES_FLASH_MAGIC    0xDEADBEEF
-
-#define CHANNEL_BLOCK_SIZE   10
+#define MODULES_FLASH_MAGIC    0xDEADBEEF // магическое слова в памяти, оно определяет наличение настроек для модулей релей
+#define CHANNEL_BLOCK_SIZE     10         // Размер информации с дисплея для 10 каналов 
 
 typedef struct {
     uint8_t event_id;
@@ -28,13 +27,36 @@ typedef enum {
 // ------------------------------------------------------------------
 // Типы событий
 // ------------------------------------------------------------------
+//typedef enum {
+//    EVENT_MODULE4_ON = 1, // для релейного модуля 4, ON
+//    EVENT_POROG_2,        // средний второй  порог 
+//    EVENT_MODULE4_OFF,    // для релейного модуля 4, OFF
+//    EVENT_ERROR_485,
+//	  EVENT_POROG_NORMAL
+//} EventType;
+
+
 typedef enum {
-    EVENT_MODULE4_ON = 1, // для релейного модуля 4, ON
-    EVENT_POROG_2,        // средний второй  порог 
-    EVENT_MODULE4_OFF,    // для релейного модуля 4, OFF
-    EVENT_ERROR_485,
+    EVENT_POROG_1 = 1, 
+    EVENT_POROG_2,        
+    EVENT_POROG_3,
+	  EVENT_ERROR_485,
 	  EVENT_POROG_NORMAL
 } EventType;
+
+
+typedef struct {
+    uint16_t event_id;
+    uint16_t mask;  // какие каналы активны
+} RelayEventMask_t;
+
+typedef struct {
+    uint16_t module_id;
+    uint16_t relays_id;
+    uint16_t channel_id;  // первый канал блока
+    uint8_t  event_count;
+    RelayEventMask_t events[];
+} RelaysEventBlock_t;
 
 // Callback тип: (module_id, relay_id, cmd)
 typedef void (*RelayAction)(uint8_t, uint8_t, RelayCommand);
@@ -74,5 +96,7 @@ void process_event(EventType event_id,
 // Установка таблицы команд для 4 событий
 void set_event_command(EventType event_id, RelayCommand cmd);
 // Callback тип: (module_id, relay_id, cmd)
-
+void relay_modules_flash_load(void);
+void apply_relay_event_block_bits(RelaysEvent_t *cmd);
+void relay_modules_flash_save(void);
 #endif // RELAY_SYSTEM_H

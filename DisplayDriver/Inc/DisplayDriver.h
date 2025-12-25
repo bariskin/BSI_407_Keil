@@ -15,6 +15,8 @@ extern "C" {
   
  /* ------------------------Includes ----------------------------------*/
  #include "stm32f4xx_hal.h"
+ #include "FlashDriver.h"
+ 
   /** @defgroup display_driver
   * @{
   */
@@ -27,8 +29,7 @@ extern "C" {
   #define ARRAY_RX_SIZE		32
 	#define START_INIT_BYTE	0x10
 	
-	#define FLASH_MODULES_SECTOR   FLASH_SECTOR_11
-  #define FLASH_MODULES_ADDRESS  0x080E0000
+
   #define MODULES_FLASH_MAGIC   0xDEADBEEF
 	
 	
@@ -73,7 +74,7 @@ typedef enum {
     DISPLAY_TIME_CMD                 = 0xA2,  
     DISPLAY_LOGS_CMD                 = 0x70, // команда с дисплея на запрос вывода логов
 	  DISPLAY_NEXT_LOGS_CMD            = 0xA4, // next/prev logs
-	   DISPAY_MODULE_RELE_CMD          = 0x60
+	  DISPAY_MODULE_RELE_CMD           = 0x60
 } DisplayResponseCmd;
 	
 typedef enum 
@@ -132,6 +133,7 @@ typedef struct {
    uint8_t get_modbus_address(int device_id, int count); 
    uint8_t is_even(int id_value);
 	 void parseRelayBytes(const uint8_t *data, uint16_t *relayModuleCmd);
+
 		/**
   * @}
   */

@@ -43,9 +43,10 @@ extern "C" {
 
 #define FLASH_TIME_STEP_READING   FLASH_ADDR_SECTOR_8	 // setting the time step for reading the sensor
 #define FLASH_SLAVE_MODBUS_ID  	  FLASH_ADDR_SECTOR_9  // modbus addresse
-#define FLASH_SETTING_UART     	  FLASH_ADDR_SECTOR_10 // baud_rate, parity, stop bits
-		
-		
+#define FLASH_SETTING_UART     	  FLASH_ADDR_SECTOR_10 // baud_rate, parity, stop bits/
+	/* ------------------- for RelaySystem -------------------------     */
+#define FLASH_MODULES_SECTOR   FLASH_SECTOR_11         
+#define FLASH_MODULES_ADDRESS  FLASH_ADDR_SECTOR_11
  /* ------------------------External variables -------------------------*/
   
 

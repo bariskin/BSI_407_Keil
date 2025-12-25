@@ -20,7 +20,6 @@ static RelayCommand event_cmd[EVENT_COUNT] = {
     RELAY_CMD_ON,
     RELAY_CMD_ON,
     RELAY_CMD_ON,
-	  RELAY_CMD_ON
 };
 
 void set_event_command(EventType event_id, RelayCommand cmd) {
@@ -160,21 +159,49 @@ void apply_relay_event_block_bits(RelaysEvent_t *cmd)
         uint16_t ch = ch_start + i;
         if (ch > TOTAL_CHANNELS) break;
 
-        if (cmd->warning & (1 << i))
-            set_reaction(cmd->module_id, cmd->relays_id,
-                         EVENT_POROG_2, ch, 1);
+        set_reaction(cmd->module_id, cmd->relays_id,
+                     EVENT_POROG_1, ch,
+                     (cmd->warning & (1 << i)) ? 1 : 0);
 
-        if (cmd->alarm_1 & (1 << i))
-            set_reaction(cmd->module_id, cmd->relays_id,
-                         EVENT_POROG_NORMAL, ch, 1);
+        set_reaction(cmd->module_id, cmd->relays_id,
+                     EVENT_POROG_2, ch,
+                     (cmd->alarm_1 & (1 << i)) ? 1 : 0);
 
-        if (cmd->alarm_2 & (1 << i))
-            set_reaction(cmd->module_id, cmd->relays_id,
-                         EVENT_MODULE4_ON, ch, 1);
+        set_reaction(cmd->module_id, cmd->relays_id,
+                     EVENT_POROG_3, ch,
+                     (cmd->alarm_2 & (1 << i)) ? 1 : 0);
 
-        if (cmd->error & (1 << i))
-            set_reaction(cmd->module_id, cmd->relays_id,
-                         EVENT_MODULE4_OFF, ch, 1);
+        set_reaction(cmd->module_id, cmd->relays_id,
+                     EVENT_ERROR_485, ch,
+                     (cmd->error & (1 << i)) ? 1 : 0);
     }
 }
+
+
+
+// Предполагается, что EventType и set_reaction определены ранее
+// CHANNEL_BLOCK_SIZE и TOTAL_CHANNELS тоже должны быть определены
+
+//void apply_relay_event_block_bits(RelaysEventBlock_t *cmd)
+//{
+//    if (!cmd) return; // защита от NULL
+
+//    for (uint8_t e = 0; e < cmd->event_count; e++) {
+//        EventType event = cmd->events[e].event_id;
+//        uint16_t mask   = cmd->events[e].mask;
+
+//        for (uint8_t i = 0; i < CHANNEL_BLOCK_SIZE; i++) {
+//            // если бит i не установлен, пропускаем канал
+//            if (!(mask & (1 << i))) continue;
+
+//            uint16_t ch = cmd->channel_id + i;
+
+//            // проверка на переполнение TOTAL_CHANNELS
+//            if (ch > TOTAL_CHANNELS) break;
+
+//            // записываем реакцию в матрицу
+//            set_reaction(cmd->module_id, cmd->relays_id, event, ch, 1);
+//        }
+//    }
+//}
 

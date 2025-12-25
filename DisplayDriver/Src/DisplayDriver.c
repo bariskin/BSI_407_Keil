@@ -26,6 +26,8 @@ extern osThreadId SendToDispTaskHandle;
 extern osThreadId SlaveModbusTaskHandle;
 
 extern uint8_t tx_usart3_busy;
+
+uint8_t SaveDisplayRX[10];
 /* ------------------------Global variables----------------------------*/
  char arrDisplayTX[ARRAY_TX_SIZE] = {0};
  volatile uint8_t arrDisplayRX[ARRAY_RX_SIZE] = {0};
@@ -69,8 +71,8 @@ extern  osMessageQId queueSendLogsHandle;
 extern SensorLogEvent_t sensorLog;
 extern  bool sd_card_present;
  
-//extern  QueueHandle_t relaysCommandQueue; 
-//extern  RelaysEvent_t relayEvent;
+extern QueueHandle_t eventSettingRelayQueue; 
+ 
 /* ------------------------Locale variables----------------------------*/
  paramDev_t device[NUMBER_SLAVE_DEVICES]  = {0};
  static uint8_t baudRate = 0x00;
@@ -377,21 +379,29 @@ void initDeviceData(uint8_t numberOfdevices)
 	   
 void GetDisplayCmd(uint8_t inputByte) {
 	
+	  static bool ff_allowed = false;
+	   /* Определяем команду */
+       //if (rx_index == 0) {
+	       if(!ff_allowed) 
+           ff_allowed = (arrDisplayRX[0] == DISPAY_MODULE_RELE_CMD);
+       //  }
+	
     // Если буфер не переполнен
     if (rx_index < ARRAY_RX_SIZE - 1) {
         arrDisplayRX[rx_index++] = inputByte;  // Сохраняем байт в буфер
-
+     
+			
         // Проверяем, является ли текущий байт маркером конца (0xFF)
-        if (inputByte == 0xFF) {
+        if (inputByte == 0xFF && !ff_allowed) {
             end_marker_counter++;  // Увеличиваем счётчик подряд идущих 0xFF
         } else {
             end_marker_counter = 0; // Сброс, если байт не 0xFF
             
-            // Сохраняем значимые байты (не 0xFF)
-            if (significant_bytes_count < MAX_SIGNIFICANT_BYTES) {
-                significant_bytes[significant_bytes_count++] = inputByte;
-            }
-            
+            /* значимые байты */
+             if (significant_bytes_count < MAX_SIGNIFICANT_BYTES) {
+              significant_bytes[significant_bytes_count++] = inputByte;
+						 }
+           
             // Обработка значимых байтов
             switch(significant_bytes_count) {
                 case 1:
@@ -409,16 +419,20 @@ void GetDisplayCmd(uint8_t inputByte) {
                         displayResponse = 0xBB; // Количество устройств
                     }
                     break;
+										
+								case 0x10: //  для данной команды DISPAY_MODULE_RELE_CMD
+									    end_marker_counter = 3;
+                      rx_index = 0x10;
+       								break;
+										
             }
         }
-
         // Обнаружение конца сообщения (3 подряд 0xFF)
         if (end_marker_counter >= 3) {
             // Убедимся, что у нас достаточно данных в буфере
             if (rx_index >= 3) {
                 // Обрезаем маркер конца - оставляем только значимые данные
-                uint16_t data_length = rx_index - 3;
-                
+                uint16_t   data_length = rx_index - 3;
                 // Обновляем displayResponse на основе полученных данных
                 if (significant_bytes_count > 0) {
                     // Обработка специальных случаев
@@ -431,6 +445,13 @@ void GetDisplayCmd(uint8_t inputByte) {
                             displayResponse = DISPLAY_BAUD_RATE_CMD;
                           }
                       }
+										else if (arrDisplayRX[0] == DISPAY_MODULE_RELE_CMD && arrDisplayRX[4] == 0x02 )
+							    	{  
+											 memcpy((void *)relayModuleCmdArrayHead,(void *)&arrDisplayRX[1],  3);		
+											 memcpy((void *)relayModuleCmdArrayRaw,(void *)&arrDisplayRX[5],  5); //сохраняем входной массив данных для реле 
+											 displayResponse = DISPAY_MODULE_RELE_CMD ; 		
+								    }		
+											
 										/* запрос на вывод логов со строки 0x00 */
 										else if (arrDisplayRX[0] == DISPLAY_LOGS_CMD )
 										 {
@@ -514,7 +535,7 @@ void GetDisplayCmd(uint8_t inputByte) {
 										 
                     }
                     /* Scale Dimension */
-                   else if (significant_bytes_count > 3 && arrDisplayRX[1] == 0x01 && arrDisplayRX[2] == DISPLAY_SCALE_DIMENSION) {
+                   else if (significant_bytes_count > 3 && arrDisplayRX[1] == 0x01 && arrDisplayRX[2] == DISPLAY_SCALE_DIMENSION &&arrDisplayRX[0] != DISPAY_MODULE_RELE_CMD) {
                         displayResponse = DISPLAY_SCALE_DIMENSION;
                         channelID = arrDisplayRX[0];
                         value_bytes_count = data_length - 3;
@@ -577,26 +598,7 @@ void GetDisplayCmd(uint8_t inputByte) {
 										 writeParams.SensorAlarm2 = (uint32_t)updateThresholdAdditional;
 									 }
 									
-							  	else if (arrDisplayRX[0] == DISPAY_MODULE_RELE_CMD)
-							    	{  
-							
-											//relayEvent.module_id = arrDisplayRX[1];
-				              //relayEvent.relays_id = arrDisplayRX[2];
-				              //relayEvent.channel_id = arrDisplayRX[3];
-											
-											 memcpy((void *)relayModuleCmdArrayHead,(void *)&arrDisplayRX[1],  3);
-											 
-											 memcpy((void *)relayModuleCmdArrayRaw,(void *)&arrDisplayRX[5],  5); //сохраняем входной массиы данных по реле 
-								       
-											 displayResponse = DISPAY_MODULE_RELE_CMD ; 		
-								    }									
-									  
-									 else if (significant_bytes_count > 3 && arrDisplayRX[1] == (uint8_t)0x01 && arrDisplayRX[2] == DISPLAY_SUBSTANCE_CODE )
-									{
-										 //displayResponse = DISPLAY_SUBSTANCE_CODE ; 				
-										/*1. channel ID: arrDisplayRX[0]*/	
-										 //channelID = arrDisplayRX[0];			
-									}			
+							  								
                 }
                 
                 packet_ready = 1;  // Флаг готовности пакета
@@ -607,6 +609,7 @@ void GetDisplayCmd(uint8_t inputByte) {
             end_marker_counter = 0;
             significant_bytes_count = 0;
             memset((void *)arrDisplayRX, 0, ARRAY_RX_SIZE); // Очищаем буфер
+						ff_allowed = false;
         }
     } else {
         // Переполнение буфера — сбрасываем
@@ -614,6 +617,7 @@ void GetDisplayCmd(uint8_t inputByte) {
         end_marker_counter = 0;
         significant_bytes_count = 0;
         memset((void *)arrDisplayRX, 0, ARRAY_RX_SIZE);
+			  ff_allowed = false;
     }
 }
 
@@ -687,6 +691,12 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
 				    relayEvent.alarm_1 = relayModuleCmdArray[IDX_RELAY_CMD_POROG_2];
 				    relayEvent.alarm_2 = relayModuleCmdArray[IDX_RELAY_CMD_POROG_3];
 				    relayEvent.error =   relayModuleCmdArray[IDX_RELAY_CMD_ERROR];
+				 
+				     if( xQueueSend(eventSettingRelayQueue, &relayEvent, portMAX_DELAY)==pdPASS){ 
+                    } else {  
+                    }
+				 
+				 
 				    processed_without_channel = 1;
         default:
             // Эти команды требуют channelID

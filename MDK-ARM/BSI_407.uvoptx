@@ -153,8 +153,8 @@
           <Number>0</Number>
           <Type>0</Type>
           <LineNumber>592</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134246006</Address>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>134246118</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -169,8 +169,8 @@
           <Number>1</Number>
           <Type>0</Type>
           <LineNumber>591</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134246000</Address>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>134246112</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -185,8 +185,8 @@
           <Number>2</Number>
           <Type>0</Type>
           <LineNumber>580</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134245988</Address>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>134246100</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -258,6 +258,51 @@
           <count>11</count>
           <WinNumber>1</WinNumber>
           <ItemText>RdyWrittingFlag</ItemText>
+        </Ww>
+        <Ww>
+          <count>12</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>modules</ItemText>
+        </Ww>
+        <Ww>
+          <count>13</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>relayModuleCmdArrayRaw</ItemText>
+        </Ww>
+        <Ww>
+          <count>14</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>relayModuleCmdArrayRaw</ItemText>
+        </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>arrDisplayRX[5]</ItemText>
+        </Ww>
+        <Ww>
+          <count>16</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>arrDisplayRX</ItemText>
+        </Ww>
+        <Ww>
+          <count>17</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>SaveDisplayRX</ItemText>
+        </Ww>
+        <Ww>
+          <count>18</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>end_marker_counter</ItemText>
+        </Ww>
+        <Ww>
+          <count>19</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>rx_index</ItemText>
+        </Ww>
+        <Ww>
+          <count>20</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>significant_bytes_count</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -812,7 +857,7 @@
 
   <Group>
     <GroupName>Drivers/STM32F4xx_HAL_Driver</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
