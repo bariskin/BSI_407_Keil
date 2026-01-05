@@ -421,8 +421,11 @@ void GetDisplayCmd(uint8_t inputByte) {
                     break;
 										
 								case 0x10: //  для данной команды DISPAY_MODULE_RELE_CMD
+                   if	(arrDisplayRX[0] != DISPLAY_TIME_CMD)								
+								    {   
 									    end_marker_counter = 3;
                       rx_index = 0x10;
+									  }
        								break;
 										
             }
@@ -452,7 +455,7 @@ void GetDisplayCmd(uint8_t inputByte) {
 											 displayResponse = DISPAY_MODULE_RELE_CMD ; 		
 								    }		
 											
-										else if (arrDisplayRX[0] == DISPLAY_TIME_CMD) 
+										else if (arrDisplayRX[0] == DISPLAY_TIME_CMD && data_length >= 15) 
 										{	 
 										     displayResponse = DISPLAY_TIME_CMD;
 											

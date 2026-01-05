@@ -154,7 +154,7 @@
           <Type>0</Type>
           <LineNumber>592</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134246098</Address>
+          <Address>134246110</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -170,7 +170,7 @@
           <Type>0</Type>
           <LineNumber>591</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134246092</Address>
+          <Address>134246104</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -186,7 +186,7 @@
           <Type>0</Type>
           <LineNumber>580</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134246080</Address>
+          <Address>134246092</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -200,9 +200,9 @@
         <Bp>
           <Number>3</Number>
           <Type>0</Type>
-          <LineNumber>450</LineNumber>
+          <LineNumber>464</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134231796</Address>
+          <Address>134231808</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -211,71 +211,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\DisplayDriver\Src\DisplayDriver.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\BSI_407\../DisplayDriver/Src/DisplayDriver.c\450</Expression>
-        </Bp>
-        <Bp>
-          <Number>4</Number>
-          <Type>0</Type>
-          <LineNumber>1377</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134246722</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\bsp\Src\bsp.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\BSI_407\../bsp/Src/bsp.c\1377</Expression>
-        </Bp>
-        <Bp>
-          <Number>5</Number>
-          <Type>0</Type>
-          <LineNumber>487</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134231900</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\DisplayDriver\Src\DisplayDriver.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\BSI_407\../DisplayDriver/Src/DisplayDriver.c\487</Expression>
-        </Bp>
-        <Bp>
-          <Number>6</Number>
-          <Type>0</Type>
-          <LineNumber>499</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\DisplayDriver\Src\DisplayDriver.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
-        </Bp>
-        <Bp>
-          <Number>7</Number>
-          <Type>0</Type>
-          <LineNumber>614</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>0</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>0</BreakIfRCount>
-          <Filename>..\DisplayDriver\Src\DisplayDriver.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\BSI_407\../DisplayDriver/Src/DisplayDriver.c\464</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -589,20 +525,10 @@
         <Ww>
           <count>40</count>
           <WinNumber>2</WinNumber>
-          <ItemText>SensorStateArray</ItemText>
-        </Ww>
-        <Ww>
-          <count>41</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>relayEvent</ItemText>
-        </Ww>
-        <Ww>
-          <count>42</count>
-          <WinNumber>2</WinNumber>
           <ItemText>ascii_buffer</ItemText>
         </Ww>
         <Ww>
-          <count>43</count>
+          <count>41</count>
           <WinNumber>2</WinNumber>
           <ItemText>arrDisplayRX[1]</ItemText>
         </Ww>
