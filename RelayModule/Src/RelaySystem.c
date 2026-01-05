@@ -2,7 +2,7 @@
 #include "RelaySystem.h"
 #include <string.h>
 #include "DisplayDriver.h"
-
+#include "cmsis_os.h"
 uint16_t TOTAL_CHANNELS = 0;
 
 RelayModule modules[MODULE_COUNT];
@@ -109,12 +109,19 @@ void process_event(EventType event_id,
 void relay_modules_flash_save(void)
 {
     RelayModulesFlash data;
+    uint32_t primask;  // Для сохранения состояния прерываний
 
     data.magic = MODULES_FLASH_MAGIC;
     memcpy(data.modules, modules, sizeof(modules));
 
+    /* 1. ОТКЛЮЧАЕМ ПРЕРЫВАНИЯ на время работы с Flash */
+    primask = __get_PRIMASK();
+    __disable_irq();
+    
+    /* 2. Разблокируем Flash */
     HAL_FLASH_Unlock();
 
+    /* 3. Стираем сектор */
     FLASH_EraseInitTypeDef erase;
     uint32_t error;
 
@@ -123,18 +130,36 @@ void relay_modules_flash_save(void)
     erase.NbSectors    = 1;
     erase.VoltageRange = FLASH_VOLTAGE_RANGE_3;
 
+    /* Важно: проверяем что Flash не занят */
+    while(__HAL_FLASH_GET_FLAG(FLASH_FLAG_BSY)) {
+        /* Ждем освобождения */
+    }
+    
     HAL_FLASHEx_Erase(&erase, &error);
 
+    /* 4. Записываем данные - БЕЗ ЗАДЕРЖЕК! */
     uint32_t addr = FLASH_MODULES_ADDRESS;
     uint32_t *p = (uint32_t *)&data;
     uint32_t words = (sizeof(RelayModulesFlash) + 3) / 4;
 
     for (uint32_t i = 0; i < words; i++) {
+        /* Ждем готовности Flash перед каждой записью */
+        while(__HAL_FLASH_GET_FLAG(FLASH_FLAG_BSY)) {
+            /* Короткая программная задержка */
+            for(volatile int j = 0; j < 10; j++);
+        }
+        
         HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, addr, p[i]);
         addr += 4;
+        
+        /* НЕ ИСПОЛЬЗОВАТЬ osDelay() здесь! */
     }
 
+    /* 5. Блокируем Flash */
     HAL_FLASH_Lock();
+    
+    /* 6. ВОССТАНАВЛИВАЕМ ПРЕРЫВАНИЯ */
+    __set_PRIMASK(primask);
 }
 
 

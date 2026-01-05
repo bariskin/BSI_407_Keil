@@ -148,7 +148,6 @@ int main(void)
 	sd_card_present = check_sd_card();
   /* *************start display receiving******************** */
   UART_Display_StartReceiving();
-  //initDeviceData(numberOfDevices);
 	/* *************MODBUS SLAVE init******************** */
 	
 	  if (HAL_UART_Init(&huart1) != HAL_OK)  /* restart  UART1 */
@@ -189,8 +188,8 @@ int main(void)
     
 	 
 	 
-	 init_system(46);            // 46 канала
-	 relay_modules_flash_load(); // загрузка информации дл€ релейных модулей
+	 //init_system(46);            // 46 канала
+	 //relay_modules_flash_load(); // загрузка информации дл€ релейных модулей
  
 //  // ћодуль 1, реле 1, EVENT_POROG_2, каналы 19..34
 //	  // ID Modbus 1, 4

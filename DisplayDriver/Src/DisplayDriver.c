@@ -452,6 +452,18 @@ void GetDisplayCmd(uint8_t inputByte) {
 											 displayResponse = DISPAY_MODULE_RELE_CMD ; 		
 								    }		
 											
+										else if (arrDisplayRX[0] == DISPLAY_TIME_CMD) 
+										{	 
+										     displayResponse = DISPLAY_TIME_CMD;
+											
+											/* извлечь врем€ и дату из строки и установить */
+						
+												memcpy(time_input_string, (void *)&arrDisplayRX[1], 16);
+									
+										  	RTC_SetFromHexString((char *)&time_input_string,16);
+										}
+										
+										
 										/* запрос на вывод логов со строки 0x00 */
 										else if (arrDisplayRX[0] == DISPLAY_LOGS_CMD )
 										 {
@@ -478,16 +490,7 @@ void GetDisplayCmd(uint8_t inputByte) {
 													}
 												}
 										 }	  	 
-										else if (arrDisplayRX[0] == DISPLAY_TIME_CMD && data_length >= 15) 
-										{	 
-										     displayResponse = DISPLAY_TIME_CMD;
-											
-											/* извлечь врем€ и дату из строки и установить */
-											  osDelay(1);
-												memcpy(time_input_string, (void *)&arrDisplayRX[1], 16);
-											  osDelay(1);
-										  	RTC_SetFromHexString((char *)&time_input_string,16);
-										}
+									
 										else if (significant_bytes_count == 3 && arrDisplayRX[1] == 0x01 && arrDisplayRX[2] == 0xFE) 
 										{
 											   // ‘»Ћ№“–ј÷»я: отбрасываем команду сброс

@@ -27,15 +27,6 @@ typedef enum {
 // ------------------------------------------------------------------
 // Типы событий
 // ------------------------------------------------------------------
-//typedef enum {
-//    EVENT_MODULE4_ON = 1, // для релейного модуля 4, ON
-//    EVENT_POROG_2,        // средний второй  порог 
-//    EVENT_MODULE4_OFF,    // для релейного модуля 4, OFF
-//    EVENT_ERROR_485,
-//	  EVENT_POROG_NORMAL
-//} EventType;
-
-
 typedef enum {
     EVENT_POROG_1 = 1, 
     EVENT_POROG_2,        

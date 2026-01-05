@@ -1353,7 +1353,7 @@ HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size)
        for (int i = 0; i < size; i++) {
         // Преобразуем каждый байт в два HEX символа
         pos += sprintf(&hex_str_[pos], "%02X", hex_str[i]);
-        osDelay(1);;
+        //osDelay(1);;
         // Добавляем пробел (кроме последнего элемента)
         if (i < size - 1) {
             hex_str_[pos++] = ' ';
@@ -1365,7 +1365,7 @@ HAL_StatusTypeDef RTC_SetFromHexString(char* hex_str, uint8_t size)
     if (hex_to_ascii_minimal(hex_str_, ascii_buffer) != HAL_OK) {
         return HAL_ERROR;
     }
-		 osDelay(1);
+		 //osDelay(1);
     // 2. Парсинг ASCII строки формата "HH:MM/DD.MM.YYYY"
     int hours, minutes, day, month, year;
     if (sscanf(ascii_buffer, "%02d:%02d/%02d.%02d.%04d", 
