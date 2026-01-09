@@ -144,11 +144,11 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 	   /* EEPROM self-test ДО FreeRTOS */
-  if (AT24_SelfTest() != HAL_OK)
-  {
+ // if (AT24_SelfTest() != HAL_OK)
+ // {
         /* Ошибка EEPROM */
-      HAL_GPIO_TogglePin(GPIOA, LED1_Pin);
-  }
+ //     HAL_GPIO_TogglePin(GPIOA, LED1_Pin);
+ // }
  
  
 	/* *************** checking SD card ************** */ 

@@ -105,75 +105,6 @@ void process_event(EventType event_id,
 }
 
 
-
-void relay_modules_flash_save(void)
-{
-    RelayModulesFlash data;
-    uint32_t primask;  // Для сохранения состояния прерываний
-
-    data.magic = MODULES_FLASH_MAGIC;
-    memcpy(data.modules, modules, sizeof(modules));
-
-    /* 1. ОТКЛЮЧАЕМ ПРЕРЫВАНИЯ на время работы с Flash */
-    primask = __get_PRIMASK();
-    __disable_irq();
-    
-    /* 2. Разблокируем Flash */
-    HAL_FLASH_Unlock();
-
-    /* 3. Стираем сектор */
-    FLASH_EraseInitTypeDef erase;
-    uint32_t error;
-
-    erase.TypeErase    = FLASH_TYPEERASE_SECTORS;
-    erase.Sector       = FLASH_MODULES_SECTOR;
-    erase.NbSectors    = 1;
-    erase.VoltageRange = FLASH_VOLTAGE_RANGE_3;
-
-    /* Важно: проверяем что Flash не занят */
-    while(__HAL_FLASH_GET_FLAG(FLASH_FLAG_BSY)) {
-        /* Ждем освобождения */
-    }
-    
-    HAL_FLASHEx_Erase(&erase, &error);
-
-    /* 4. Записываем данные - БЕЗ ЗАДЕРЖЕК! */
-    uint32_t addr = FLASH_MODULES_ADDRESS;
-    uint32_t *p = (uint32_t *)&data;
-    uint32_t words = (sizeof(RelayModulesFlash) + 3) / 4;
-
-    for (uint32_t i = 0; i < words; i++) {
-        /* Ждем готовности Flash перед каждой записью */
-        while(__HAL_FLASH_GET_FLAG(FLASH_FLAG_BSY)) {
-            /* Короткая программная задержка */
-            for(volatile int j = 0; j < 10; j++);
-        }
-        
-        HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, addr, p[i]);
-        addr += 4;
-        
-        /* НЕ ИСПОЛЬЗОВАТЬ osDelay() здесь! */
-    }
-
-    /* 5. Блокируем Flash */
-    HAL_FLASH_Lock();
-    
-    /* 6. ВОССТАНАВЛИВАЕМ ПРЕРЫВАНИЯ */
-    __set_PRIMASK(primask);
-}
-
-
-void relay_modules_flash_load(void)
-{
-    RelayModulesFlash *data =
-        (RelayModulesFlash *)FLASH_MODULES_ADDRESS;
-
-    if (data->magic != MODULES_FLASH_MAGIC)
-        return; // данных нет
-
-    memcpy(modules, data->modules, sizeof(modules));
-}
-
 void apply_relay_event_block_bits(RelaysEvent_t *cmd)
 {
     if (!cmd) return;
@@ -201,32 +132,3 @@ void apply_relay_event_block_bits(RelaysEvent_t *cmd)
                      (cmd->error & (1 << i)) ? 1 : 0);
     }
 }
-
-
-
-// Предполагается, что EventType и set_reaction определены ранее
-// CHANNEL_BLOCK_SIZE и TOTAL_CHANNELS тоже должны быть определены
-
-//void apply_relay_event_block_bits(RelaysEventBlock_t *cmd)
-//{
-//    if (!cmd) return; // защита от NULL
-
-//    for (uint8_t e = 0; e < cmd->event_count; e++) {
-//        EventType event = cmd->events[e].event_id;
-//        uint16_t mask   = cmd->events[e].mask;
-
-//        for (uint8_t i = 0; i < CHANNEL_BLOCK_SIZE; i++) {
-//            // если бит i не установлен, пропускаем канал
-//            if (!(mask & (1 << i))) continue;
-
-//            uint16_t ch = cmd->channel_id + i;
-
-//            // проверка на переполнение TOTAL_CHANNELS
-//            if (ch > TOTAL_CHANNELS) break;
-
-//            // записываем реакцию в матрицу
-//            set_reaction(cmd->module_id, cmd->relays_id, event, ch, 1);
-//        }
-//    }
-//}
-

@@ -37,8 +37,8 @@ HAL_StatusTypeDef AT24_Write(uint16_t memAddr, uint8_t *data, uint16_t size)
             return status;
 
         /* Задержка на внутренний цикл записи EEPROM */
-       // vTaskDelay(pdMS_TO_TICKS(AT24_WRITE_DELAY_MS));
-        HAL_Delay(AT24_WRITE_DELAY_MS);
+        vTaskDelay(pdMS_TO_TICKS(AT24_WRITE_DELAY_MS));
+       // HAL_Delay(AT24_WRITE_DELAY_MS);
         /* ACK polling с таймаутом */
         uint32_t start = HAL_GetTick();
         while (HAL_I2C_IsDeviceReady(&hi2c2, AT24_I2C_ADDR, 1, 10) != HAL_OK)

@@ -87,7 +87,5 @@ void process_event(EventType event_id,
 // Установка таблицы команд для 4 событий
 void set_event_command(EventType event_id, RelayCommand cmd);
 // Callback тип: (module_id, relay_id, cmd)
-void relay_modules_flash_load(void);
 void apply_relay_event_block_bits(RelaysEvent_t *cmd);
-void relay_modules_flash_save(void);
 #endif // RELAY_SYSTEM_H
