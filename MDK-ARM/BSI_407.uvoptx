@@ -154,7 +154,7 @@
           <Type>0</Type>
           <LineNumber>592</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134246110</Address>
+          <Address>134249190</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -170,7 +170,7 @@
           <Type>0</Type>
           <LineNumber>591</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134246104</Address>
+          <Address>134249184</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -186,7 +186,7 @@
           <Type>0</Type>
           <LineNumber>580</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134246092</Address>
+          <Address>134249172</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -202,7 +202,7 @@
           <Type>0</Type>
           <LineNumber>464</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134231808</Address>
+          <Address>134232092</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -212,6 +212,22 @@
           <Filename>..\DisplayDriver\Src\DisplayDriver.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression>\\BSI_407\../DisplayDriver/Src/DisplayDriver.c\464</Expression>
+        </Bp>
+        <Bp>
+          <Number>4</Number>
+          <Type>0</Type>
+          <LineNumber>150</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134267702</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>../Core/Src/main.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\BSI_407\../Core/Src/main.c\150</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -615,7 +631,7 @@
 
   <Group>
     <GroupName>Application/User/Core</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -743,7 +759,7 @@
 
   <Group>
     <GroupName>Drivers/STM32F4xx_HAL_Driver</GroupName>
-    <tvExp>1</tvExp>
+    <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -1916,6 +1932,26 @@
       <bDave2>0</bDave2>
       <PathWithFileName>..\RelayModule\Src\RelaySystem.c</PathWithFileName>
       <FilenameWithoutPath>RelaySystem.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+  </Group>
+
+  <Group>
+    <GroupName>AT24CM01Deirver</GroupName>
+    <tvExp>1</tvExp>
+    <tvExpOptDlg>0</tvExpOptDlg>
+    <cbSel>0</cbSel>
+    <RteFlg>0</RteFlg>
+    <File>
+      <GroupNumber>20</GroupNumber>
+      <FileNumber>99</FileNumber>
+      <FileType>1</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\AT24CM01_Driver\Src\at24cm01.c</PathWithFileName>
+      <FilenameWithoutPath>at24cm01.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

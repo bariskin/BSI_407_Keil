@@ -44,8 +44,8 @@
 #include "File_Handling.h"
 #include "SensorLogs.h"
 #include "stdbool.h"
-//#include "RelayModule.h"
 #include "RelaySystem.h"
+#include "at24cm01.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,7 +97,7 @@ void MX_FREERTOS_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+uint8_t addrI2C;
 /* USER CODE END 0 */
 
 /**
@@ -136,13 +136,21 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
-  //MX_I2C2_Init();
+  MX_I2C2_Init();
   MX_TIM6_Init();
   MX_USART1_UART_Init();
   MX_TIM10_Init();
   MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
-	
+
+	   /* EEPROM self-test ƒŒ FreeRTOS */
+  if (AT24_SelfTest() != HAL_OK)
+  {
+        /* Œ¯Ë·Í‡ EEPROM */
+      HAL_GPIO_TogglePin(GPIOA, LED1_Pin);
+  }
+ 
+ 
 	/* *************** checking SD card ************** */ 
 	
 	sd_card_present = check_sd_card();

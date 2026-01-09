@@ -339,7 +339,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F407xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../FreeModbusSlave/include;../FreeModbusSlave/app;../FreeModbusSlave/port;../FreeModbusSlave/rtu;../ModbusSetting/Inc;../HoldingRegisterSlave/Inc;../FreeModbusMaster/include/mb_m;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../ModBusAddrConverter/Inc;../bsp/Inc;../FreeModbusMaster/user_mb_app;../UARTSlaveSettings/Inc;../FlashDriver/Inc;../DisplayDriver/Inc;../RingBuffer/Inc;../FATFS/Target;../FATFS/App;../Middlewares/Third_Party/FatFs/src;../SdDriver/Inc;../SensorLogs/Inc;../RelayModule/Inc</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;../FreeModbusSlave/include;../FreeModbusSlave/app;../FreeModbusSlave/port;../FreeModbusSlave/rtu;../ModbusSetting/Inc;../HoldingRegisterSlave/Inc;../FreeModbusMaster/include/mb_m;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../ModBusAddrConverter/Inc;../bsp/Inc;../FreeModbusMaster/user_mb_app;../UARTSlaveSettings/Inc;../FlashDriver/Inc;../DisplayDriver/Inc;../RingBuffer/Inc;../FATFS/Target;../FATFS/App;../Middlewares/Third_Party/FatFs/src;../SdDriver/Inc;../SensorLogs/Inc;../RelayModule/Inc;../AT24CM01_Driver/Inc</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -2258,6 +2258,16 @@
               <FileName>RelaySystem.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\RelayModule\Src\RelaySystem.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>AT24CM01Deirver</GroupName>
+          <Files>
+            <File>
+              <FileName>at24cm01.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\AT24CM01_Driver\Src\at24cm01.c</FilePath>
             </File>
           </Files>
         </Group>
