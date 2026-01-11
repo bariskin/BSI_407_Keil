@@ -1,17 +1,16 @@
-#include "stm32f4xx_hal.h"
-#include "RelaySystem.h"
+
 #include <string.h>
+#include <stdint.h>
+#include "stm32f4xx_hal.h"
 #include "DisplayDriver.h"
+#include "RelaySystem.h"
 #include "cmsis_os.h"
+#include "at24cm01.h"
+
+volatile uint8_t config_dirty = 0;
 uint16_t TOTAL_CHANNELS = 0;
 
 RelayModule modules[MODULE_COUNT];
-volatile uint8_t config_dirty = 0;
-
-typedef struct {
-    uint32_t magic;
-    RelayModule modules[MODULE_COUNT];
-} RelayModulesFlash;
 
 // Таблица команд для 4 типов событий
 // По умолчанию: ON, OFF, ON, OFF
@@ -132,3 +131,121 @@ void apply_relay_event_block_bits(RelaysEvent_t *cmd)
                      (cmd->error & (1 << i)) ? 1 : 0);
     }
 }
+
+
+// CRC32 простая
+uint32_t crc32_simple(const uint8_t *data, uint32_t len)
+{
+    uint32_t crc = 0xFFFFFFFF;
+    for (uint32_t i = 0; i < len; i++) {
+        crc ^= data[i];
+        for (uint8_t b = 0; b < 8; b++)
+            crc = (crc & 1) ? (crc >> 1) ^ 0xEDB88320 : (crc >> 1);
+    }
+    return ~crc;
+}
+RelaysEvent_t events[128];
+
+void relay_modules_flash_save(void)
+{
+    //RelaysEvent_t events[128];
+    uint16_t count = 0;
+
+    for (uint8_t m = 0; m < MODULE_COUNT; m++) {
+        for (uint8_t r = 0; r < RELAY_PER_MODULE; r++) {
+
+            for (uint16_t ch = 0; ch < TOTAL_CHANNELS; ch += CHANNEL_BLOCK_SIZE) {
+
+                if (count >= 128) break;
+
+                uint16_t w = 0, a1 = 0, a2 = 0, e = 0;
+
+                for (uint8_t i = 0; i < CHANNEL_BLOCK_SIZE; i++) {
+                    uint16_t idx = ch + i;
+                    if (idx >= TOTAL_CHANNELS) break;
+
+                    if (modules[m].relays[r].reactions.reaction[EVENT_POROG_1 - 1][idx])
+                        w |= (1 << i);
+                    if (modules[m].relays[r].reactions.reaction[EVENT_POROG_2 - 1][idx])
+                        a1 |= (1 << i);
+                     if (modules[m].relays[r].reactions.reaction[EVENT_POROG_3 - 1][idx])
+                        a2 |= (1 << i);
+                    if (modules[m].relays[r].reactions.reaction[EVENT_ERROR_485 -1][idx])
+                        e |= (1 << i);
+                }
+
+                if (w || a1 || a2 || e) {
+                    events[count++] = (RelaysEvent_t){
+                        .module_id  = m,
+                        .relays_id  = r,
+                        .channel_id = ch,
+                        .warning    = w,
+                        .alarm_1    = a1,
+                        .alarm_2    = a2,
+                        .error      = e
+                    };
+                }
+            }
+        }
+    }
+
+    RelaysStorageHeader_t hdr;
+    hdr.magic   = MODULES_FLASH_MAGIC;
+    hdr.version = 1;
+    hdr.count   = count;
+    hdr.crc     = crc32_simple((uint8_t*)events, count * sizeof(RelaysEvent_t));
+
+    AT24_Write(TEST_ADDR, (uint8_t*)&hdr, sizeof(hdr));
+    if (count > 0)
+        AT24_Write(sizeof(hdr), (uint8_t*)events, count * sizeof(RelaysEvent_t));
+}
+
+
+
+void relay_modules_flash_load(void)
+{
+    RelaysStorageHeader_t hdr;
+	
+     //memset(events, 0, sizeof(events));
+    // Чтение заголовка EEPROM
+   // if (AT24_Read(TEST_ADDR, (uint8_t*)&hdr, sizeof(hdr)) != HAL_OK) {
+        // EEPROM недоступна, инициализируем RAM по умолчанию
+   //     init_system(TOTAL_CHANNELS);
+  //      relay_modules_flash_save();
+//        return;
+  // }
+
+    // Проверка заголовка
+  //  if (hdr.magic != MODULES_FLASH_MAGIC || hdr.version != 1 || hdr.count > 128) {
+        // Заголовок некорректен, инициализация RAM по умолчанию
+    //    init_system(TOTAL_CHANNELS);
+   //     relay_modules_flash_save();
+   //     return;
+//    }
+
+    // Чтение массива событий
+   
+    uint32_t dataSize = hdr.count * sizeof(RelaysEvent_t);
+
+    if (AT24_Read(sizeof(hdr), (uint8_t*)events, dataSize) != HAL_OK) {
+        // EEPROM недоступна, инициализация RAM по умолчанию
+        init_system(TOTAL_CHANNELS);
+        relay_modules_flash_save();
+        return;
+    }
+
+//    // Проверка CRC
+//    if (crc32_simple((uint8_t*)events, dataSize) != hdr.crc) {
+//        // Данные повреждены, инициализация RAM по умолчанию
+//        init_system(TOTAL_CHANNELS);
+//        relay_modules_flash_save();
+//        return;
+//    }
+
+    // ✅ Применяем события к RAM, не затирая лишний раз
+    for (uint16_t i = 0; i < hdr.count; i++) {
+        apply_relay_event_block_bits(&events[i]);
+    }
+
+}
+

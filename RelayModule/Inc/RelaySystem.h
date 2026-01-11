@@ -3,12 +3,11 @@
 
 #include <stdint.h>
 #include "DisplayDriver.h"
-
-
+#include "at24cm01.h" 
 #define MODULE_COUNT        4      // Можно увеличивать (8, 16, 32…)
 #define RELAY_PER_MODULE    4      // количество реле на один модуль
 #define EVENT_COUNT         4
-#define MAX_CHANNELS        48    
+#define MAX_CHANNELS        48  
 
 
 #define MODULES_FLASH_MAGIC    0xDEADBEEF // магическое слова в памяти, оно определяет наличение настроек для модулей релей
@@ -36,18 +35,11 @@ typedef enum {
 } EventType;
 
 
-typedef struct {
-    uint16_t event_id;
-    uint16_t mask;  // какие каналы активны
-} RelayEventMask_t;
+//typedef struct {
+//    uint16_t event_id;
+//    uint16_t mask;  // какие каналы активны
+//} RelayEventMask_t;
 
-typedef struct {
-    uint16_t module_id;
-    uint16_t relays_id;
-    uint16_t channel_id;  // первый канал блока
-    uint8_t  event_count;
-    RelayEventMask_t events[];
-} RelaysEventBlock_t;
 
 // Callback тип: (module_id, relay_id, cmd)
 typedef void (*RelayAction)(uint8_t, uint8_t, RelayCommand);
@@ -65,6 +57,14 @@ typedef struct {
     uint8_t module_id;
     Relay relays[RELAY_PER_MODULE];
 } RelayModule;
+
+typedef struct {
+    uint32_t magic;
+    uint16_t version;
+    uint16_t count;
+    uint32_t crc;
+} RelaysStorageHeader_t;
+
 
 extern RelayModule modules[MODULE_COUNT];
 extern uint16_t TOTAL_CHANNELS;
@@ -88,4 +88,7 @@ void process_event(EventType event_id,
 void set_event_command(EventType event_id, RelayCommand cmd);
 // Callback тип: (module_id, relay_id, cmd)
 void apply_relay_event_block_bits(RelaysEvent_t *cmd);
+uint32_t crc32_simple(const uint8_t *data, uint32_t len);
+void relay_modules_flash_load(void);
+void relay_modules_flash_save(void);
 #endif // RELAY_SYSTEM_H

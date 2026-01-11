@@ -1,6 +1,6 @@
 /**
 ******************************************************************************
-* @file       at24cm01.h
+* @file      at24cm01.h
 * @author    OnWert
 * @version   
 * @brief     This file contains defines and all the functions prototypes for the at24cm01.c
@@ -43,7 +43,8 @@ extern "C" {
 	HAL_StatusTypeDef AT24_SelfTest(void);
   HAL_StatusTypeDef AT24_Write(uint16_t memAddr, uint8_t *data, uint16_t size);
   HAL_StatusTypeDef AT24_Read (uint16_t memAddr, uint8_t *data, uint16_t size);
-
+  HAL_StatusTypeDef Modules_SaveToEEPROM(void);
+	HAL_StatusTypeDef Modules_LoadFromEEPROM(void);
   /**
   * @}
   */

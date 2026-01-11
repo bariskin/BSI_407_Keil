@@ -98,6 +98,7 @@ void MX_FREERTOS_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 uint8_t addrI2C;
+volatile uint8_t test1, test2;
 /* USER CODE END 0 */
 
 /**
@@ -193,12 +194,33 @@ int main(void)
    /* ************* Initializes  RX and TX ring buffers ***** */    
 	 RING_Init(&ring_Rx, ring_buffer_RX, CIRC_BUF_RX_SIZE );         /*! Init RX buffer for UART3: display */
   //RING_Init(&ring_Tx, ring_buffer_TX, CIRC_BUF_TX_SIZE );   
-    
+   
+    // 1 Инициализация RAM
+    init_system(MAX_CHANNELS); // 46 каналов
 	 
+	  test1 = modules[0].relays[0].reactions.reaction[EVENT_POROG_1-1][0]; // 1
+    test2 = modules[3].relays[0].reactions.reaction[EVENT_POROG_2-1][1]; // 1
+
+    //  Настройка нескольких реакций вручную
+    set_reaction(1, 1, EVENT_POROG_1, 1, 1); // Модуль1, Реле1, Канал1
+    set_reaction(4, 1, EVENT_POROG_2, 2, 1); // Модуль1, Реле1, Канал2
+		
+		test1 = modules[0].relays[0].reactions.reaction[EVENT_POROG_1-1][0]; // 1
+    test2 = modules[3].relays[0].reactions.reaction[EVENT_POROG_2-1][1]; // 1
 	 
-	 //init_system(46);            // 46 канала
-	 //relay_modules_flash_load(); // загрузка информации для релейных модулей
- 
+	  Modules_SaveToEEPROM();
+	 
+	  init_system(MAX_CHANNELS); // 46 каналов
+	 
+    test1 = modules[0].relays[0].reactions.reaction[EVENT_POROG_1-1][0]; // 1
+    test2 = modules[3].relays[0].reactions.reaction[EVENT_POROG_2-1][1]; // 1
+	 
+	 	Modules_LoadFromEEPROM();
+
+    test1 = modules[0].relays[0].reactions.reaction[EVENT_POROG_1-1][0]; // 1
+    test2 = modules[3].relays[0].reactions.reaction[EVENT_POROG_2-1][1]; // 1
+    // 3?? Сохраняем в EEPROM
+
 //  // Модуль 1, реле 1, EVENT_POROG_2, каналы 19..34
 //	  // ID Modbus 1, 4
 //   for (int ch = 19; ch <= 34; ch++) {
