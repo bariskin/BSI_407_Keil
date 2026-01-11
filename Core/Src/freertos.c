@@ -192,7 +192,7 @@ uint32_t MasterModbus2TasBuffer[ 128 ];
 osStaticThreadDef_t MasterModbus2TasControlBlock;
 
 osThreadId ReleySettingHandle;
-uint32_t ReleySettingTaskBuffer[ 256 ];
+uint32_t ReleySettingTaskBuffer[ 1024 ];
 osStaticThreadDef_t ReleySettingControlBlock;
 
 
@@ -319,7 +319,7 @@ void MX_FREERTOS_Init(void) {
   MasterModbus2TasHandle = osThreadCreate(osThread(MasterModbus2Tas), NULL);
 	
 		  /* definition and creation of MasterModbus2Tas */
-  osThreadStaticDef(ReleySettingTask, ReleySettingTaskFunction, osPriorityNormal, 0, 256, ReleySettingTaskBuffer, &ReleySettingControlBlock);
+  osThreadStaticDef(ReleySettingTask, ReleySettingTaskFunction, osPriorityNormal, 0, 1024, ReleySettingTaskBuffer, &ReleySettingControlBlock);
   MasterModbus2TasHandle = osThreadCreate(osThread(ReleySettingTask), NULL);
 	
 
@@ -1268,8 +1268,7 @@ void ReleySettingTaskFunction(void const * argument)
 			 apply_relay_event_block_bits((RelaysEvent_t *)&msg);
 			 
 			 /* сохранить на флэш новую настройку */
-			 //relay_modules_flash_save();
-		
+		   Modules_SaveToEEPROM();
 		 }
    osDelay(5);
 	}

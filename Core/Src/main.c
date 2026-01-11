@@ -143,17 +143,7 @@ int main(void)
   MX_TIM10_Init();
   MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
-
-	   /* EEPROM self-test ДО FreeRTOS */
- // if (AT24_SelfTest() != HAL_OK)
- // {
-        /* Ошибка EEPROM */
- //     HAL_GPIO_TogglePin(GPIOA, LED1_Pin);
- // }
- 
- 
 	/* *************** checking SD card ************** */ 
-	
 	sd_card_present = check_sd_card();
   /* *************start display receiving******************** */
   UART_Display_StartReceiving();
@@ -182,73 +172,19 @@ int main(void)
   if (eStatus != MB_ENOERR)
    {
     // Error handling
-   }
-	 
+   }	 
  /* ************  Sensors initialisation ********** */
 	 
 	 /* установка количества слайв устройств */ 
 	 setNumberDevices(&NumberSlaveDevices, NUMBER_SLAVE_DEVICES);
 	 
-	 /* инициализация струкутур для храения информации со слайв устройств  */
-	
    /* ************* Initializes  RX and TX ring buffers ***** */    
 	 RING_Init(&ring_Rx, ring_buffer_RX, CIRC_BUF_RX_SIZE );         /*! Init RX buffer for UART3: display */
-  //RING_Init(&ring_Tx, ring_buffer_TX, CIRC_BUF_TX_SIZE );   
-   
-    // 1 Инициализация RAM
-    init_system(MAX_CHANNELS); // 46 каналов
-	 
-	  test1 = modules[0].relays[0].reactions.reaction[EVENT_POROG_1-1][0]; // 1
-    test2 = modules[3].relays[0].reactions.reaction[EVENT_POROG_2-1][1]; // 1
+      
+   // initialization extern eeprom for relay settings
+   init_system(MAX_CHANNELS); // 48 каналов
+	 Modules_LoadFromEEPROM();
 
-    //  Настройка нескольких реакций вручную
-    set_reaction(1, 1, EVENT_POROG_1, 1, 1); // Модуль1, Реле1, Канал1
-    set_reaction(4, 1, EVENT_POROG_2, 2, 1); // Модуль1, Реле1, Канал2
-		
-		test1 = modules[0].relays[0].reactions.reaction[EVENT_POROG_1-1][0]; // 1
-    test2 = modules[3].relays[0].reactions.reaction[EVENT_POROG_2-1][1]; // 1
-	 
-	  Modules_SaveToEEPROM();
-	 
-	  init_system(MAX_CHANNELS); // 46 каналов
-	 
-    test1 = modules[0].relays[0].reactions.reaction[EVENT_POROG_1-1][0]; // 1
-    test2 = modules[3].relays[0].reactions.reaction[EVENT_POROG_2-1][1]; // 1
-	 
-	 	Modules_LoadFromEEPROM();
-
-    test1 = modules[0].relays[0].reactions.reaction[EVENT_POROG_1-1][0]; // 1
-    test2 = modules[3].relays[0].reactions.reaction[EVENT_POROG_2-1][1]; // 1
-    // 3?? Сохраняем в EEPROM
-
-//  // Модуль 1, реле 1, EVENT_POROG_2, каналы 19..34
-//	  // ID Modbus 1, 4
-//   for (int ch = 19; ch <= 34; ch++) {
-//    set_reaction(1, 1, EVENT_POROG_2, ch, 1);
-//    set_reaction(1, 1, EVENT_POROG_NORMAL, ch, 1);
-//  }
-//	  // ID Modbus 2, 4, каналы 7..18
-//	 for (int ch = 7; ch <= 18; ch++) {
-//    set_reaction(2, 1, EVENT_POROG_2, ch, 1);
-//    set_reaction(2, 1, EVENT_POROG_NORMAL, ch, 1);
-//   }
-//	  // ID Modbus 2, 4 , каналы 35..46
-//	 for (int ch = 35; ch <= 46; ch++) {
-//    set_reaction(2, 1, EVENT_POROG_2, ch, 1);
-//    set_reaction(2, 1, EVENT_POROG_NORMAL, ch, 1);
-//   }
-//	  // ID Modbus 3, 4 , каналы 1..6
-//	for (int ch = 1; ch <= 6; ch++) {
-//    set_reaction(3, 1, EVENT_POROG_2, ch, 1);
-//    set_reaction(3, 1, EVENT_POROG_NORMAL, ch, 1);
-//		
-
-//  }
-//	for (int ch = 1; ch <= 46; ch++) {
-//			set_reaction(4, 1, EVENT_MODULE4_ON, ch, 1); 
-//		  set_reaction(4, 1, EVENT_MODULE4_OFF, ch, 1);
-//	}
-//	 
 	 // Настройка команды для события
 	 set_event_command(EVENT_POROG_1, RELAY_CMD_ON);
 	 set_event_command(EVENT_POROG_2, RELAY_CMD_ON);

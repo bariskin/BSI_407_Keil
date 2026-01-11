@@ -10,7 +10,7 @@
 volatile uint8_t config_dirty = 0;
 uint16_t TOTAL_CHANNELS = 0;
 
-RelayModule modules[MODULE_COUNT];
+RelayModule modules[RELAY_MODULE_COUNT];
 
 // Таблица команд для 4 типов событий
 // По умолчанию: ON, OFF, ON, OFF
@@ -36,7 +36,7 @@ void init_system(uint16_t total_channels)
 
     TOTAL_CHANNELS = total_channels;
 
-    for (uint8_t m = 0; m < MODULE_COUNT; m++) {
+    for (uint8_t m = 0; m < RELAY_MODULE_COUNT; m++) {
 
         modules[m].module_id = m + 1;
 
@@ -63,7 +63,7 @@ void set_reaction(uint8_t module_id,
                   uint16_t channel_id,
                   uint8_t enable)
 {
-    if (module_id < 1 || module_id > MODULE_COUNT) return;
+    if (module_id < 1 || module_id > RELAY_MODULE_COUNT) return;
     if (relay_id < 1 || relay_id > RELAY_PER_MODULE) return;
     if (event_id < 1 || event_id > EVENT_COUNT) return;
     if (channel_id < 1 || channel_id > TOTAL_CHANNELS) return;
@@ -87,7 +87,7 @@ void process_event(EventType event_id,
 
     RelayCommand cmd = event_cmd[event_id - 1];
 
-    for (uint8_t m = 0; m < MODULE_COUNT; m++) {
+    for (uint8_t m = 0; m < RELAY_MODULE_COUNT; m++) {
         for (uint8_t r = 0; r < RELAY_PER_MODULE; r++) {
 
             if (modules[m].relays[r]
@@ -151,7 +151,7 @@ void relay_modules_flash_save(void)
     //RelaysEvent_t events[128];
     uint16_t count = 0;
 
-    for (uint8_t m = 0; m < MODULE_COUNT; m++) {
+    for (uint8_t m = 0; m < RELAY_MODULE_COUNT; m++) {
         for (uint8_t r = 0; r < RELAY_PER_MODULE; r++) {
 
             for (uint16_t ch = 0; ch < TOTAL_CHANNELS; ch += CHANNEL_BLOCK_SIZE) {
@@ -195,7 +195,7 @@ void relay_modules_flash_save(void)
     hdr.count   = count;
     hdr.crc     = crc32_simple((uint8_t*)events, count * sizeof(RelaysEvent_t));
 
-    AT24_Write(TEST_ADDR, (uint8_t*)&hdr, sizeof(hdr));
+    AT24_Write(EXTERN_EEPROM_ADDR, (uint8_t*)&hdr, sizeof(hdr));
     if (count > 0)
         AT24_Write(sizeof(hdr), (uint8_t*)events, count * sizeof(RelaysEvent_t));
 }

@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "DisplayDriver.h"
 #include "at24cm01.h" 
-#define MODULE_COUNT        4      // Можно увеличивать (8, 16, 32…)
+#define RELAY_MODULE_COUNT  4      // Можно увеличивать (8, 16, 32…)
 #define RELAY_PER_MODULE    4      // количество реле на один модуль
 #define EVENT_COUNT         4
 #define MAX_CHANNELS        48  
@@ -66,7 +66,7 @@ typedef struct {
 } RelaysStorageHeader_t;
 
 
-extern RelayModule modules[MODULE_COUNT];
+extern RelayModule modules[RELAY_MODULE_COUNT];
 extern uint16_t TOTAL_CHANNELS;
 
 // ИНИЦИАЛИЗАЦИЯ
