@@ -38,7 +38,7 @@ typedef enum {
 typedef void (*RelayAction)(uint8_t, uint8_t, RelayCommand);
 
 typedef struct {
-    uint8_t reaction[EVENT_COUNT - 1][MAX_CHANNELS];
+    uint8_t reaction[EVENT_COUNT][MAX_CHANNELS];
 } RelayReaction;
 
 typedef struct {
