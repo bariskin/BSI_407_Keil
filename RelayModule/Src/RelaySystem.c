@@ -78,6 +78,7 @@ void set_reaction(uint8_t module_id,
 // ----------------------------------------------------------
 // PROCESS EVENT
 // ----------------------------------------------------------
+
 void process_event(EventType event_id,
                    uint16_t channel_id,
                    RelayAction callback)
@@ -86,24 +87,30 @@ void process_event(EventType event_id,
     if (event_id < 1 || event_id > EVENT_COUNT) return;
     if (channel_id < 1 || channel_id > TOTAL_CHANNELS) return;
 
-    RelayCommand cmd = event_cmd[event_id - 1];
-
     for (uint8_t m = 0; m < RELAY_MODULE_COUNT; m++) {
         for (uint8_t r = 0; r < RELAY_PER_MODULE; r++) {
-
-            if (event_id == EVENT_POROG_NORMAL ||modules[m].relays[r]
-                .reactions.reaction[event_id-1][channel_id-1])
-            {
-                callback(
-                    modules[m].module_id,
-                    modules[m].relays[r].relay_id,
-                    cmd
-                );
+            
+            if (event_id == EVENT_POROG_NORMAL) {
+                // Ищем реле, привязанное к этому каналу
+                // Проверяем пороговые события (1-3)
+                if (modules[m].relays[r].reactions.reaction[EVENT_POROG_1-1][channel_id-1] ||
+                    modules[m].relays[r].reactions.reaction[EVENT_POROG_2-1][channel_id-1] ||
+                    modules[m].relays[r].reactions.reaction[EVENT_POROG_3-1][channel_id-1]) {
+                    
+                    // Нашли реле для этого канала - выключаем
+                    callback(modules[m].module_id, modules[m].relays[r].relay_id, RELAY_CMD_OFF);
+                }
+            }
+            else {
+                // Обычное событие
+                RelayCommand cmd = event_cmd[event_id - 1];
+                if (modules[m].relays[r].reactions.reaction[event_id-1][channel_id-1]) {
+                    callback(modules[m].module_id, modules[m].relays[r].relay_id, cmd);
+                }
             }
         }
     }
 }
-
 
 void apply_relay_event_block_bits(RelaysEvent_t *cmd)
 {
