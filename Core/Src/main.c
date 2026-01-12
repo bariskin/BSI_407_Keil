@@ -182,7 +182,7 @@ int main(void)
 	 RING_Init(&ring_Rx, ring_buffer_RX, CIRC_BUF_RX_SIZE );         /*! Init RX buffer for UART3: display */
       
    // initialization extern eeprom for relay settings
-   init_system(MAX_CHANNELS); // 48 каналов
+   init_system(MAX_CHANNELS); // 40 каналов
 	 Modules_LoadFromEEPROM();
 
 	 // Настройка команды для события
