@@ -868,4 +868,4 @@ uint8_t is_even(int id_value) {
 		  return FIRST_SENSOR;
 		}		
 }
-/************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
+ /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
