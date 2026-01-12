@@ -77,7 +77,7 @@ void set_reaction(uint8_t module_id,
                   uint8_t enable)
 {
     // EVENT_POROG_NORMAL is a service event, reactions are not configurable
-    if (event_id == EVENT_POROG_NORMAL) return;
+    //if (event_id == EVENT_POROG_NORMAL) return;
     
     // Validate input parameters
     if (module_id < 1 || module_id > RELAY_MODULE_COUNT) return;
@@ -109,29 +109,31 @@ void process_event(EventType event_id,
     if (!callback) return;
     if (event_id < 1 || event_id > EVENT_COUNT) return;
     if (channel_id < 1 || channel_id > TOTAL_CHANNELS) return;
-
+	
+    RelayCommand cmd = event_cmd[event_id - 1];
+	  
     // Iterate through all modules and relays
     for (uint8_t m = 0; m < RELAY_MODULE_COUNT; m++) {
         for (uint8_t r = 0; r < RELAY_PER_MODULE; r++) {
             
-            if (event_id == EVENT_POROG_NORMAL) {
-                // Service event: find relay configured for this channel
-                // Check threshold events (1-3) for this channel
-                if (modules[m].relays[r].reactions.reaction[EVENT_POROG_1-1][channel_id-1] ||
-                    modules[m].relays[r].reactions.reaction[EVENT_POROG_2-1][channel_id-1] ||
-                    modules[m].relays[r].reactions.reaction[EVENT_POROG_3-1][channel_id-1]) {
-                    
-                    // Found relay for this channel - turn it OFF
-                    callback(modules[m].module_id, modules[m].relays[r].relay_id, RELAY_CMD_OFF);
-                }
-            }
-            else {
+//            if (event_id == EVENT_POROG_NORMAL) {
+//                // Service event: find relay configured for this channel
+//                // Check threshold events (1-3) for this channel
+//                if (modules[m].relays[r].reactions.reaction[EVENT_POROG_1-1][channel_id-1] ||
+//                    modules[m].relays[r].reactions.reaction[EVENT_POROG_2-1][channel_id-1] ||
+//                    modules[m].relays[r].reactions.reaction[EVENT_POROG_3-1][channel_id-1]) {
+//                    
+//                    // Found relay for this channel - turn it OFF
+//                    callback(modules[m].module_id, modules[m].relays[r].relay_id, RELAY_CMD_OFF);
+//                }
+//            }
+            //else {
                 // Regular event: execute if reaction is configured
-                RelayCommand cmd = event_cmd[event_id - 1];
+              
                 if (modules[m].relays[r].reactions.reaction[event_id-1][channel_id-1]) {
                     callback(modules[m].module_id, modules[m].relays[r].relay_id, cmd);
                 }
-            }
+            //}
         }
     }
 }
@@ -175,16 +177,28 @@ void apply_relay_event_block_bits(RelaysEvent_t *cmd)
         set_reaction(cmd->module_id, cmd->relays_id,
                      EVENT_POROG_1, ch,
                      (cmd->warning & (1 << i)) ? 1 : 0);
+			
+			  set_reaction(cmd->module_id, cmd->relays_id,
+                     EVENT_POROG_NORMAL, ch,
+                     (cmd->normal & (1 << i)) ? 1 : 0);
 
         // Set EVENT_POROG_2 reaction based on alarm_1 bit field
         set_reaction(cmd->module_id, cmd->relays_id,
                      EVENT_POROG_2, ch,
                      (cmd->alarm_1 & (1 << i)) ? 1 : 0);
-
+			
+          set_reaction(cmd->module_id, cmd->relays_id,
+                     EVENT_POROG_NORMAL, ch,
+                     (cmd->normal & (1 << i)) ? 1 : 0);
         // Set EVENT_POROG_3 reaction based on alarm_2 bit field
         set_reaction(cmd->module_id, cmd->relays_id,
                      EVENT_POROG_3, ch,
                      (cmd->alarm_2 & (1 << i)) ? 1 : 0);
+										 
+				 set_reaction(cmd->module_id, cmd->relays_id,
+                     EVENT_POROG_NORMAL, ch,
+                     (cmd->normal & (1 << i)) ? 1 : 0);
+										 						 
 
         // Set EVENT_ERROR_485 reaction based on error bit field
         set_reaction(cmd->module_id, cmd->relays_id,

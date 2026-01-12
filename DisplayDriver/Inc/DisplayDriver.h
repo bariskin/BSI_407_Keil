@@ -109,6 +109,7 @@ typedef struct {
 	uint16_t alarm_1;     // только 10 младших бит
 	uint16_t alarm_2;     // только 10 младших бит
 	uint16_t error;       // только 10 младших бит
+  uint16_t normal;      // только 10 младших бит
 } RelaysEvent_t;
 
  /* ------------------------External variables -------------------------*/

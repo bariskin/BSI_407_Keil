@@ -43,7 +43,7 @@ extern "C" {
 
 /* Relay Configuration Size Calculations */
 /** Size of reaction matrix for one relay (excluding EVENT_POROG_NORMAL) */
-#define RELAY_REACTION_SIZE_BYTES  ((EVENT_COUNT - 1) * MAX_CHANNELS)
+#define RELAY_REACTION_SIZE_BYTES  (EVENT_COUNT  * MAX_CHANNELS)
 
 /** Size of relay identifier */
 #define RELAY_ID_SIZE              1
