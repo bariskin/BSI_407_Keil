@@ -39,7 +39,7 @@ extern "C" {
 #define AT24_ACK_TIMEOUT_MS  20             /**< ACK polling timeout in milliseconds */
 
 /* Memory Address Configuration */
-#define EXTERN_EEPROM_ADDR   0x0001         /**< Starting address for relay configuration storage */
+#define EXTERN_EEPROM_ADDR   1         /**< Starting address for relay configuration storage */
 
 /* Relay Configuration Size Calculations */
 /** Size of reaction matrix for one relay (excluding EVENT_POROG_NORMAL) */

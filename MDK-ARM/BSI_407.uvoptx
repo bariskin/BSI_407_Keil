@@ -200,22 +200,6 @@
         <Bp>
           <Number>3</Number>
           <Type>0</Type>
-          <LineNumber>246</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134272936</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Core/Src/freertos.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\BSI_407\../Core/Src/freertos.c\246</Expression>
-        </Bp>
-        <Bp>
-          <Number>4</Number>
-          <Type>0</Type>
           <LineNumber>214</LineNumber>
           <EnabledFlag>1</EnabledFlag>
           <Address>0</Address>
@@ -230,7 +214,7 @@
           <Expression></Expression>
         </Bp>
         <Bp>
-          <Number>5</Number>
+          <Number>4</Number>
           <Type>0</Type>
           <LineNumber>250</LineNumber>
           <EnabledFlag>1</EnabledFlag>
@@ -246,7 +230,7 @@
           <Expression></Expression>
         </Bp>
         <Bp>
-          <Number>6</Number>
+          <Number>5</Number>
           <Type>0</Type>
           <LineNumber>314</LineNumber>
           <EnabledFlag>1</EnabledFlag>

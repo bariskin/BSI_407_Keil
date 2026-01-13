@@ -134,6 +134,7 @@ HAL_StatusTypeDef Modules_SaveToEEPROM(void)
   * @note   Reads entire configuration in single operation
   * @note   Verifies EEPROM readiness before reading
   */
+
 HAL_StatusTypeDef Modules_LoadFromEEPROM(void)
 {
     /* Verify EEPROM is ready for communication */
@@ -143,8 +144,28 @@ HAL_StatusTypeDef Modules_LoadFromEEPROM(void)
     /* Read entire modules array from EEPROM */
     if (AT24_Read(EXTERN_EEPROM_ADDR, (uint8_t *)modules, MODULES_EEPROM_SIZE) != HAL_OK)
     {
+        init_system(MAX_CHANNELS); // Инициализируем систему, если чтение не удалось
         return HAL_ERROR;
     }
+    
+    /* Проверка на первое использование (вся память = 0xFF) */
+    uint8_t is_first_use = 1;
+    uint8_t *data = (uint8_t*)modules;
+    
+    for (uint32_t i = 0; i < MODULES_EEPROM_SIZE; i++) {
+        if (data[i] != 0xFF) {
+            is_first_use = 0;
+            break;
+        }
+    }
+    
+    if (is_first_use) {
+        /* Память чистая - инициализируем систему */
+        init_system(MAX_CHANNELS);
+        /* Сохраняем инициализированную конфигурацию */
+        return Modules_SaveToEEPROM();
+    }
+    
     return HAL_OK;
 }
 /************************ (C) COPYRIGHT  OnWert *****END OF FILE****/
