@@ -45,7 +45,7 @@ extern "C" {
 #define EVENT_COUNT         5
 
 /** Maximum number of channels supported by the system */
-#define MAX_CHANNELS        50
+#define MAX_CHANNELS        40
 
 /** Magic word for flash memory validation */
 #define MODULES_FLASH_MAGIC    0xDEADBEEF /**< Identifies valid relay configuration in memory */

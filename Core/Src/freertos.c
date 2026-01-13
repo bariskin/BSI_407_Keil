@@ -238,18 +238,22 @@ void relay_callback(uint8_t module_id,
                     uint8_t relay_id,
                     RelayCommand cmd)
 {
-	  RS485_RD_HIGH_MASTER2;
+	 RS485_RD_HIGH_MASTER2;
+	
+	if (relay_id >= 1 && relay_id <= 4)
+	 {
 	
     if (cmd == RELAY_CMD_ON)
 		  {
-				//Send_Modbus_Command_DMA(module_id, 0xFF);
+			
 				Send_Modbus_Command_DMA(module_id, relay_id, RELAY_CMD_ON);
 			}   
     else	 
 		  {
-				 //Send_Modbus_Command_DMA(module_id, 0x00);
+		
 				Send_Modbus_Command_DMA(module_id, relay_id, RELAY_CMD_OFF);
-			}      
+			}     
+		}			
 }
 
 /**

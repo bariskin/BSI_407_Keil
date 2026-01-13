@@ -76,9 +76,7 @@ void set_reaction(uint8_t module_id,
                   uint16_t channel_id,
                   uint8_t enable)
 {
-    // EVENT_POROG_NORMAL is a service event, reactions are not configurable
-    //if (event_id == EVENT_POROG_NORMAL) return;
-    
+   
     // Validate input parameters
     if (module_id < 1 || module_id > RELAY_MODULE_COUNT) return;
     if (relay_id < 1 || relay_id > RELAY_PER_MODULE) return;
@@ -86,12 +84,14 @@ void set_reaction(uint8_t module_id,
     if (channel_id < 1 || channel_id > TOTAL_CHANNELS) return;
 
     // Set reaction configuration
+	  modules[module_id - 1].module_id = module_id;     
+	  modules[module_id - 1].relays[relay_id -1].relay_id = relay_id;
     modules[module_id - 1]
         .relays[relay_id - 1]
         .reactions
         .reaction[event_id - 1][channel_id - 1] = enable;
-}
 
+}
 /**
   * @brief  Process incoming event and trigger configured relay actions
   * @param  event_id:   Event type to process
@@ -114,26 +114,10 @@ void process_event(EventType event_id,
 	  
     // Iterate through all modules and relays
     for (uint8_t m = 0; m < RELAY_MODULE_COUNT; m++) {
-        for (uint8_t r = 0; r < RELAY_PER_MODULE; r++) {
-            
-//            if (event_id == EVENT_POROG_NORMAL) {
-//                // Service event: find relay configured for this channel
-//                // Check threshold events (1-3) for this channel
-//                if (modules[m].relays[r].reactions.reaction[EVENT_POROG_1-1][channel_id-1] ||
-//                    modules[m].relays[r].reactions.reaction[EVENT_POROG_2-1][channel_id-1] ||
-//                    modules[m].relays[r].reactions.reaction[EVENT_POROG_3-1][channel_id-1]) {
-//                    
-//                    // Found relay for this channel - turn it OFF
-//                    callback(modules[m].module_id, modules[m].relays[r].relay_id, RELAY_CMD_OFF);
-//                }
-//            }
-            //else {
-                // Regular event: execute if reaction is configured
-              
+        for (uint8_t r = 0; r < RELAY_PER_MODULE; r++) {              
                 if (modules[m].relays[r].reactions.reaction[event_id-1][channel_id-1]) {
                     callback(modules[m].module_id, modules[m].relays[r].relay_id, cmd);
                 }
-            //}
         }
     }
 }
@@ -172,34 +156,31 @@ void apply_relay_event_block_bits(RelaysEvent_t *cmd)
     for (uint8_t i = 0; i < CHANNEL_BLOCK_SIZE; i++) {
         uint16_t ch = ch_start + i;
         if (ch > TOTAL_CHANNELS) break;
+			
+			uint8_t warning_active = (cmd->warning & (1 << i)) ? 1 : 0;
+      uint8_t alarm1_active  = (cmd->alarm_1 & (1 << i)) ? 1 : 0;
+      uint8_t alarm2_active  = (cmd->alarm_2 & (1 << i)) ? 1 : 0;
+      //uint8_t normal_active  = (cmd->normal  & (1 << i)) ? 1 : 0;
+			
+			/* NORMAL = 1 если активен хотя бы один порог */
+     uint8_t normal_active = warning_active || alarm1_active || alarm2_active;
 
         // Set EVENT_POROG_1 reaction based on warning bit field
         set_reaction(cmd->module_id, cmd->relays_id,
-                     EVENT_POROG_1, ch,
-                     (cmd->warning & (1 << i)) ? 1 : 0);
+                     EVENT_POROG_1, ch,warning_active);
 			
-			  set_reaction(cmd->module_id, cmd->relays_id,
-                     EVENT_POROG_NORMAL, ch,
-                     (cmd->normal & (1 << i)) ? 1 : 0);
 
         // Set EVENT_POROG_2 reaction based on alarm_1 bit field
         set_reaction(cmd->module_id, cmd->relays_id,
-                     EVENT_POROG_2, ch,
-                     (cmd->alarm_1 & (1 << i)) ? 1 : 0);
-			
-          set_reaction(cmd->module_id, cmd->relays_id,
-                     EVENT_POROG_NORMAL, ch,
-                     (cmd->normal & (1 << i)) ? 1 : 0);
+                     EVENT_POROG_2, ch, alarm1_active);
+      
         // Set EVENT_POROG_3 reaction based on alarm_2 bit field
         set_reaction(cmd->module_id, cmd->relays_id,
-                     EVENT_POROG_3, ch,
-                     (cmd->alarm_2 & (1 << i)) ? 1 : 0);
+                     EVENT_POROG_3, ch,alarm2_active);
 										 
 				 set_reaction(cmd->module_id, cmd->relays_id,
-                     EVENT_POROG_NORMAL, ch,
-                     (cmd->normal & (1 << i)) ? 1 : 0);
+                     EVENT_POROG_NORMAL, ch,normal_active);
 										 						 
-
         // Set EVENT_ERROR_485 reaction based on error bit field
         set_reaction(cmd->module_id, cmd->relays_id,
                      EVENT_ERROR_485, ch,
