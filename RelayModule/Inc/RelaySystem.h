@@ -36,7 +36,7 @@ extern "C" {
   */
 
 /** Maximum number of relay modules in the system */
-#define RELAY_MODULE_COUNT  4      /**< Can be increased (8, 16, 32...) */
+#define RELAY_MODULE_COUNT  10     /**< Can be increased (8, 16, 32...) */
 
 /** Number of relays per module */
 #define RELAY_PER_MODULE    4      /**< Relays per single module */
@@ -52,6 +52,8 @@ extern "C" {
 
 /** Block size for channel configuration from display */
 #define CHANNEL_BLOCK_SIZE     10         /**< Information size for 10 channels from display */
+
+#define DELAY_FOR_RELAY_SEND_CMD 50
 
 /**
   * @}

@@ -34,7 +34,7 @@ extern "C" {
 
 /* EEPROM Device Parameters */
 #define AT24_I2C_ADDR        (0x56 << 1)    /**< I2C device address (7-bit address shifted left) */
-#define AT24_PAGE_SIZE       64            /**< EEPROM page size in bytes */
+#define AT24_PAGE_SIZE       128           /**< EEPROM page size in bytes */
 #define AT24_WRITE_DELAY_MS  10             /**< Delay between page writes (internal programming time) */
 #define AT24_ACK_TIMEOUT_MS  20             /**< ACK polling timeout in milliseconds */
 
