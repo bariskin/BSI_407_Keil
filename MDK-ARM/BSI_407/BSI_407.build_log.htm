@@ -27,17 +27,29 @@ Project File Date:  01/12/2026
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'BSI_407'
-compiling RelaySystem.c...
-..\RelayModule\Src\RelaySystem.c(120): error:  #29: expected an expression
-  									osDelay(DELAY_FOR_RELAY_SEND_CMD); /
-..\RelayModule\Src\RelaySystem.c(121): error:  #65: expected a ";"
-                  }
-..\RelayModule\Src\RelaySystem.c: 0 warnings, 2 errors
-compiling at24cm01.c...
-compiling main.c...
 compiling bsp.c...
+compiling HoldingRegisterSlaveHandler.c...
+compiling user_mb_app.c...
+..\FreeModbusSlave\app\user_mb_app.c(64): warning:  #177-D: variable "iRegIndex"  was declared but never referenced
+      USHORT          iRegIndex;
+..\FreeModbusSlave\app\user_mb_app.c(65): warning:  #550-D: variable "pusRegInputBuf"  was set but never used
+      USHORT *        pusRegInputBuf;
+..\FreeModbusSlave\app\user_mb_app.c(66): warning:  #550-D: variable "REG_INPUT_START"  was set but never used
+      USHORT          REG_INPUT_START;
+..\FreeModbusSlave\app\user_mb_app.c(67): warning:  #550-D: variable "REG_INPUT_NREGS"  was set but never used
+      USHORT          REG_INPUT_NREGS;
+..\FreeModbusSlave\app\user_mb_app.c(68): warning:  #550-D: variable "usRegInStart"  was set but never used
+      USHORT          usRegInStart;
+..\FreeModbusSlave\app\user_mb_app.c(120): warning:  #186-D: pointless comparison of unsigned integer with zero
+      if( ( usAddress >= S_REG_HOLDING_START ) &&
+..\FreeModbusSlave\app\user_mb_app.c: 6 warnings, 0 errors
+compiling main.c...
+compiling DisplayDriver.c...
 compiling freertos.c...
-"BSI_407\BSI_407.axf" - 2 Error(s), 0 Warning(s).
+linking...
+Program Size: Code=63632 RO-data=2208 RW-data=888 ZI-data=77376  
+FromELF: creating hex file...
+"BSI_407\BSI_407.axf" - 0 Error(s), 6 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -61,8 +73,7 @@ Package Vendor: Keil
 
    * Component: ARM::CMSIS:CORE:5.5.0
       Include file:  CMSIS\Core\Include\tz_context.h
-Target not created.
-Build Time Elapsed:  00:00:04
+Build Time Elapsed:  00:00:05
 </pre>
 </body>
 </html>

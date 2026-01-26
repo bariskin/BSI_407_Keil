@@ -34,30 +34,30 @@ extern "C" {
  #define HOLDING_REGISTER_SLAVE_IDX_9   (uint16_t)0x0008  // часы
  #define HOLDING_REGISTER_SLAVE_IDX_10  (uint16_t)0x0009  // минуты
  #define HOLDING_REGISTER_SLAVE_IDX_11  (uint16_t)0x000A  // секунды
- #define HOLDING_REGISTER_SLAVE_IDX_12  (uint16_t)0x000B 
- #define HOLDING_REGISTER_SLAVE_IDX_13  (uint16_t)0x000C 
- #define HOLDING_REGISTER_SLAVE_IDX_14  (uint16_t)0x000D 
- #define HOLDING_REGISTER_SLAVE_IDX_15  (uint16_t)0x000E
- #define HOLDING_REGISTER_SLAVE_IDX_16  (uint16_t)0x000F 
- #define HOLDING_REGISTER_SLAVE_IDX_17  (uint16_t)0x0010
- #define HOLDING_REGISTER_SLAVE_IDX_18  (uint16_t)0x0011 
- #define HOLDING_REGISTER_SLAVE_IDX_19  (uint16_t)0x0012 
- #define HOLDING_REGISTER_SLAVE_IDX_20  (uint16_t)0x0013  
- #define HOLDING_REGISTER_SLAVE_IDX_21  (uint16_t)0x0014 
- #define HOLDING_REGISTER_SLAVE_IDX_22  (uint16_t)0x0015 
- #define HOLDING_REGISTER_SLAVE_IDX_23  (uint16_t)0x0016 
- #define HOLDING_REGISTER_SLAVE_IDX_24  (uint16_t)0x0017 
- #define HOLDING_REGISTER_SLAVE_IDX_25  (uint16_t)0x0018 
- #define HOLDING_REGISTER_SLAVE_IDX_26  (uint16_t)0x0019 
- #define HOLDING_REGISTER_SLAVE_IDX_27  (uint16_t)0x001A 
- #define HOLDING_REGISTER_SLAVE_IDX_28  (uint16_t)0x001B 
- #define HOLDING_REGISTER_SLAVE_IDX_29  (uint16_t)0x001C  
- #define HOLDING_REGISTER_SLAVE_IDX_30  (uint16_t)0x001D
- #define HOLDING_REGISTER_SLAVE_IDX_31  (uint16_t)0x001E
- #define HOLDING_REGISTER_SLAVE_IDX_32  (uint16_t)0x001F
- #define HOLDING_REGISTER_SLAVE_IDX_33  (uint16_t)0x0020
- #define HOLDING_REGISTER_SLAVE_IDX_34  (uint16_t)0x0021
- #define HOLDING_REGISTER_SLAVE_IDX_35  (uint16_t)0x0022 
+ #define HOLDING_REGISTER_SLAVE_IDX_12  (uint16_t)0x000B  //sensorIDX
+ #define HOLDING_REGISTER_SLAVE_IDX_13  (uint16_t)0x000C  //SensorStateArray[sensorIDX].SensorSubstanceCode[0]
+ #define HOLDING_REGISTER_SLAVE_IDX_14  (uint16_t)0x000D  //SensorStateArray[sensorIDX].SensorSubstanceCode[1]
+ #define HOLDING_REGISTER_SLAVE_IDX_15  (uint16_t)0x000E  //SensorStateArray[sensorIDX].SensorSubstanceCode[2]
+ #define HOLDING_REGISTER_SLAVE_IDX_16  (uint16_t)0x000F  //SensorStateArray[sensorIDX].SensorSubstanceCode[3]
+ #define HOLDING_REGISTER_SLAVE_IDX_17  (uint16_t)0x0010  //SensorStateArray[sensorIDX].SensorSubstanceCode[4]
+ #define HOLDING_REGISTER_SLAVE_IDX_18  (uint16_t)0x0011  //SensorStateArray[sensorIDX].SensorSubstanceCode[5]
+ #define HOLDING_REGISTER_SLAVE_IDX_19  (uint16_t)0x0012  //SensorStateArray[sensorIDX].SensorSubstanceCode[6]
+ #define HOLDING_REGISTER_SLAVE_IDX_20  (uint16_t)0x0013  //SensorStateArray[sensorIDX].SensorSubstanceCode[7]
+ #define HOLDING_REGISTER_SLAVE_IDX_21  (uint16_t)0x0014  //SensorStateArray[sensorIDX].SensorSubstanceCode[8]
+ #define HOLDING_REGISTER_SLAVE_IDX_22  (uint16_t)0x0015  //SensorStateArray[sensorIDX].SensorSubstanceCode[9]
+ #define HOLDING_REGISTER_SLAVE_IDX_23  (uint16_t)0x0016  //SensorStateArray[sensorIDX].SensorSubstanceCode[10]
+ #define HOLDING_REGISTER_SLAVE_IDX_24  (uint16_t)0x0017  //SensorStateArray[sensorIDX].SensorScaleDimension[0]
+ #define HOLDING_REGISTER_SLAVE_IDX_25  (uint16_t)0x0018  //SensorStateArray[sensorIDX].SensorScaleDimension[1]
+ #define HOLDING_REGISTER_SLAVE_IDX_26  (uint16_t)0x0019  //SensorStateArray[sensorIDX].SensorScaleDimension[2]
+ #define HOLDING_REGISTER_SLAVE_IDX_27  (uint16_t)0x001A  //SensorStateArray[sensorIDX].SensorScaleDimension[3]
+ #define HOLDING_REGISTER_SLAVE_IDX_28  (uint16_t)0x001B  //SensorStateArray[sensorIDX].SensorScaleDimension[4]
+ #define HOLDING_REGISTER_SLAVE_IDX_29  (uint16_t)0x001C  //SensorStateArray[sensorIDX].SensorScaleDimension[5]
+ #define HOLDING_REGISTER_SLAVE_IDX_30  (uint16_t)0x001D  //SensorStateArray[sensorIDX].SensorScaleDimension[6]
+ #define HOLDING_REGISTER_SLAVE_IDX_31  (uint16_t)0x001E  //SensorStateArray[sensorIDX].SensorScaleDimension[7]
+ #define HOLDING_REGISTER_SLAVE_IDX_32  (uint16_t)0x001F  //SensorStateArray[sensorIDX].SensorScaleDimension[8]
+ #define HOLDING_REGISTER_SLAVE_IDX_33  (uint16_t)0x0020  //SensorStateArray[sensorIDX].SensorScaleDimension[9]
+ #define HOLDING_REGISTER_SLAVE_IDX_34  (uint16_t)0x0021  
+ #define HOLDING_REGISTER_SLAVE_IDX_35  (uint16_t)0x0022  
  
  #define HOLDING_REGISTER_SLAVE_IDX_36  (uint16_t)0x0023 
  #define HOLDING_REGISTER_SLAVE_IDX_37  (uint16_t)0x0024 

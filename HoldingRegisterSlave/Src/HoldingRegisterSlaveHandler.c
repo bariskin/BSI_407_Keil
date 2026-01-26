@@ -47,7 +47,7 @@ volatile uint8_t   minute  = 0x00;
 volatile uint8_t   second  = 0x00;
 
 /* ------------------------Locale variables----------------------------*/
-
+uint8_t sensorIDX = 0;
 /* ------------------------Functions-----------------------------------*/
 	void HoldingRegisterFromModbusSlaveStack(uint16_t MBregIdx, uint16_t RegValue)
 	{
@@ -194,6 +194,12 @@ volatile uint8_t   second  = 0x00;
 					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_11] = Get_RTC_Second();
 				}
 				 break; 
+			case 	 HOLDING_REGISTER_SLAVE_IDX_12:
+				
+          holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_12] = RegValue;
+          sensorIDX =  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_12];
+				break;
+				
 		}
 		osDelay(1);	
 	}
@@ -261,79 +267,85 @@ volatile uint8_t   second  = 0x00;
          OutputValue =  Get_RTC_Second();					 
 				 break;
 		 case HOLDING_REGISTER_SLAVE_IDX_12: 
-		     //OutputValue = (uint16_t)745;
-		 break; 
-		 //case  HOLDING_REGISTER_SLAVE_IDX_13 : 
-			  
-		    //OutputValue = holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_13];
-			// break;
-//		 case 		 HOLDING_REGISTER_SLAVE_IDX_14 :
-		
-       // OutputValue = holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_14];
+		     OutputValue = holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_12];;
+		   break; 
+		 case HOLDING_REGISTER_SLAVE_IDX_13 :
+			   OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[0];
+		  break;
+		 case  HOLDING_REGISTER_SLAVE_IDX_14 :
+			   OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[1];
+		  break;
+		 case 	   HOLDING_REGISTER_SLAVE_IDX_15 :
+			   OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[2];
+			  break;
+		 case 	   HOLDING_REGISTER_SLAVE_IDX_16 :
+			   OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[3];
+			  break;
+		 case 	   HOLDING_REGISTER_SLAVE_IDX_17 :
+			   OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[4];
+			  break;
+		 case      HOLDING_REGISTER_SLAVE_IDX_18  :
+			   OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[5];
+			  break;
+		 case 		 HOLDING_REGISTER_SLAVE_IDX_19 :
+			   OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[6];
+			  break;
+		 case   	 HOLDING_REGISTER_SLAVE_IDX_20 :
+			  OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[7];
+			  break;
+		 case HOLDING_REGISTER_SLAVE_IDX_21 :
+			   OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[8];
+			  break;
+		 case HOLDING_REGISTER_SLAVE_IDX_22 :
+			   OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[9];
+			break;
+//		 case HOLDING_REGISTER_SLAVE_IDX_23 :
+//		 		 OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[10];
+//			 break;
+//		  case 	HOLDING_REGISTER_SLAVE_IDX_24 :
+//		 		 OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[11];
+//			 break;
+//			case 	HOLDING_REGISTER_SLAVE_IDX_25 :
+//		 		  OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[12];
+//			 break;
+//			case 	HOLDING_REGISTER_SLAVE_IDX_26 :
+//		 		  OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[13];
+//			 break;
+//			case 	 HOLDING_REGISTER_SLAVE_IDX_27 :
+//		 		 OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[14];
+//			 break;
 		 
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_15 :
-//			 // OutputValue = SensorStateArray[0].SensorSubstanceCode[0];
-//		  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_16 :
-//			  OutputValue = SensorStateArray[0].SensorSubstanceCode[1];
-//		  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_17 :
-//			  OutputValue =  SensorStateArray[0].SensorSubstanceCode[2];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_18 :
-//			 OutputValue =  SensorStateArray[0].SensorSubstanceCode[3];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_19 :
-//			  OutputValue =  SensorStateArray[0].SensorSubstanceCode[4];
-//			  break;
-//		 case      HOLDING_REGISTER_SLAVE_IDX_20  :
-//			  OutputValue =  SensorStateArray[0].SensorSubstanceCode[5];
-//		    //OutputValue  = 722;
-//		 
-//			  break;
-//		 case 		 HOLDING_REGISTER_SLAVE_IDX_21 :
-//			  OutputValue =  SensorStateArray[0].SensorSubstanceCode[6];
-//			  break;
-//		 case   	 HOLDING_REGISTER_SLAVE_IDX_22 :
-//			OutputValue =  SensorStateArray[0].SensorSubstanceCode[7];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_23 :
-//			 OutputValue =  SensorStateArray[0].SensorSubstanceCode[8];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_24 :
-//			  OutputValue = SensorStateArray[0].SensorSubstanceCode[9];
-//			  break;
 //		 /* –азмерность вещества в ascii (10 байт) */
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_25 :
-//			   OutputValue = SensorStateArray[0].SensorScaleDimension[0];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_26 :
-//			   OutputValue = SensorStateArray[0].SensorScaleDimension[1];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_27 :
-//			   OutputValue = SensorStateArray[0].SensorScaleDimension[2];
-//			  break;
-//		 case   	 HOLDING_REGISTER_SLAVE_IDX_28 :
-//		     OutputValue = SensorStateArray[0].SensorScaleDimension[3];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_29 :
-//			   OutputValue = SensorStateArray[0].SensorScaleDimension[4];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_30 :
-//			   OutputValue = SensorStateArray[0].SensorScaleDimension[5];
-//		    break;
-//		 case 	HOLDING_REGISTER_SLAVE_IDX_31 :
-//			   OutputValue = SensorStateArray[0].SensorScaleDimension[6];
-//		    break;
-//		 case HOLDING_REGISTER_SLAVE_IDX_32 :
-//			   OutputValue = SensorStateArray[0].SensorScaleDimension[7];
-//		    break;
-//		 case HOLDING_REGISTER_SLAVE_IDX_33 :
-//			   OutputValue = SensorStateArray[0].SensorScaleDimension[8];
-//		    break;
-//		 case  HOLDING_REGISTER_SLAVE_IDX_34 :
-//			   OutputValue = SensorStateArray[0].SensorScaleDimension[9];
-//		 break;
+		 case 	   HOLDING_REGISTER_SLAVE_IDX_23 :
+			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[0];
+			  break;
+		 case 	   HOLDING_REGISTER_SLAVE_IDX_24 :
+			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[1];
+			  break;
+		 case 	   HOLDING_REGISTER_SLAVE_IDX_25 :
+			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[2];
+			  break;
+		 case   	 HOLDING_REGISTER_SLAVE_IDX_26 :
+		     OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[3];
+			  break;
+		 case 	   HOLDING_REGISTER_SLAVE_IDX_27 :
+			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[4];
+			  break;
+		 case 	   HOLDING_REGISTER_SLAVE_IDX_28 :
+			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[5];
+		    break;
+		 case 	HOLDING_REGISTER_SLAVE_IDX_29 :
+			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[6];
+		    break;
+		 case HOLDING_REGISTER_SLAVE_IDX_30 :
+			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[7];
+		    break;
+		 case HOLDING_REGISTER_SLAVE_IDX_31 :
+			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[8];
+		    break;
+		 case  HOLDING_REGISTER_SLAVE_IDX_32 :
+			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[9];
+		 break;
 //		 case  HOLDING_REGISTER_SLAVE_IDX_35 :   
 //		     /* перва€ часть float значени€  */
 //		    OutputValue = (uint16_t)SensorStateArray[0].Concentration;
@@ -592,8 +604,7 @@ volatile uint8_t   second  = 0x00;
 	             Set_RTC_Second(second);
 							 eMBEnable( );					 
 							 osDelay(10);
-						 }	
-					 
+						 }				 
 	 }
 /************************ (C) COPYRIGHT @OnWert *****END OF FILE****/
 

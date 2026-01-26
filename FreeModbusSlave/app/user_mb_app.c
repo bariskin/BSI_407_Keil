@@ -1,7 +1,8 @@
 #include "user_mb_app.h"
 #include "HoldingRegisterSlaveHandler.h"
-//#include  "stdbool.h"
 
+#include "cmsis_os.h"
+#include "task.h"
 #if (MB_SLAVE_ASCII_ENABLED > 0 || MB_SLAVE_RTU_ENABLED > 0 || MB_SLAVE_TCP_ENABLED > 0)
 
 /*------------------------Slave mode use these variables----------------------*/
@@ -72,25 +73,25 @@ eMBErrorCode eMBRegInputCB(UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNReg
     usRegInStart = usSRegInStart;
 
     /* it already plus one in modbus function method. */
-    usAddress--;
+//    usAddress--;
 
-    if ((usAddress >= REG_INPUT_START) && (usAddress + usNRegs <= REG_INPUT_START + REG_INPUT_NREGS))
-    {
-        iRegIndex = usAddress - usRegInStart;
-        while (usNRegs > 0)
-        {
-					   //InputRegisterToModBusStack(iRegIndex);
-							
-            *pucRegBuffer++ = (UCHAR) (pusRegInputBuf[iRegIndex] >> 8);
-            *pucRegBuffer++ = (UCHAR) (pusRegInputBuf[iRegIndex] & 0xFF);
-            iRegIndex++;
-            usNRegs--;
-        }
-    }
-    else
-    {
-        eStatus = MB_ENOREG;
-    }
+//    if ((usAddress >= REG_INPUT_START) && (usAddress + usNRegs <= REG_INPUT_START + REG_INPUT_NREGS))
+//    {
+//        iRegIndex = usAddress - usRegInStart;
+//        while (usNRegs > 0)
+//        {
+//					   //InputRegisterToModBusStack(iRegIndex);
+//							
+//            *pucRegBuffer++ = (UCHAR) (pusRegInputBuf[iRegIndex] >> 8);
+//            *pucRegBuffer++ = (UCHAR) (pusRegInputBuf[iRegIndex] & 0xFF);
+//            iRegIndex++;
+//            usNRegs--;
+//        }
+//    }
+//    else
+//    {
+//        eStatus = MB_ENOREG;
+//    }
 
     return eStatus;
 #else
@@ -137,6 +138,7 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs,
                     //*pucRegBuffer++ = ( UCHAR )( holdingRegsPart1[iRegIndex] & 0xFF );
                     iRegIndex++;
                     usNRegs--;
+										osDelay(1);	
                 }
                 break;
 
@@ -153,6 +155,7 @@ eMBRegHoldingCB( UCHAR * pucRegBuffer, USHORT usAddress, USHORT usNRegs,
 									
                     iRegIndex++;
                     usNRegs--;
+										osDelay(1);	
                 }
                 break;
                 

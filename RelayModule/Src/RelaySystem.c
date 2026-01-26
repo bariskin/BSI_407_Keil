@@ -117,7 +117,7 @@ void process_event(EventType event_id,
         for (uint8_t r = 0; r < RELAY_PER_MODULE; r++) {              
                 if (modules[m].relays[r].reactions.reaction[event_id-1][channel_id-1]) {
                     callback(modules[m].module_id, modules[m].relays[r].relay_id, cmd);
-									osDelay(DELAY_FOR_RELAY_SEND_CMD); /
+									osDelay(DELAY_FOR_RELAY_SEND_CMD); 
                 }
         }
     }

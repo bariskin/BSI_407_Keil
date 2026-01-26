@@ -163,7 +163,7 @@ extern uint8_t ModBusSlaveDefaultDeviceAddr;
 extern uint8_t ModBusSlaveCurrentDeviceAddr;
 /* USER CODE END Variables */
 osThreadId SlaveModbusTaskHandle;
-uint32_t defaultTaskBuffer[ 256 ];
+uint32_t defaultTaskBuffer[ 256];
 osStaticThreadDef_t defaultTaskControlBlock;
 osThreadId MasterModbusTasHandle;
 uint32_t MasterModbusTasBuffer[ 256 ];
@@ -288,7 +288,7 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* definition and creation of SlaveModbusTask */
-  osThreadStaticDef(SlaveModbusTask, SlaveModbusTaskFunction, osPriorityNormal, 0, 256, defaultTaskBuffer, &defaultTaskControlBlock);
+  osThreadStaticDef(SlaveModbusTask, SlaveModbusTaskFunction, osPriorityBelowNormal, 0, 256, defaultTaskBuffer, &defaultTaskControlBlock);
   SlaveModbusTaskHandle = osThreadCreate(osThread(SlaveModbusTask), NULL);
 
   /* definition and creation of MasterModbusTas */
@@ -357,7 +357,7 @@ void SlaveModbusTaskFunction(void const * argument)
   for(;;)
   {
 		eMBPoll();
-    osDelay(5);
+    osDelay(3);
   }
   /* USER CODE END SlaveModbusTaskFunction */
 }

@@ -152,9 +152,41 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
+          <LineNumber>604</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>134249106</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\BSI_407\../HoldingRegisterSlave/Src/HoldingRegisterSlaveHandler.c\604</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>603</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>134249100</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\BSI_407\../HoldingRegisterSlave/Src/HoldingRegisterSlaveHandler.c\603</Expression>
+        </Bp>
+        <Bp>
+          <Number>2</Number>
+          <Type>0</Type>
           <LineNumber>592</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134249098</Address>
+          <Address>134249088</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -166,11 +198,11 @@
           <Expression>\\BSI_407\../HoldingRegisterSlave/Src/HoldingRegisterSlaveHandler.c\592</Expression>
         </Bp>
         <Bp>
-          <Number>1</Number>
+          <Number>3</Number>
           <Type>0</Type>
-          <LineNumber>591</LineNumber>
+          <LineNumber>587</LineNumber>
           <EnabledFlag>0</EnabledFlag>
-          <Address>134249092</Address>
+          <Address>134249322</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -179,12 +211,12 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\BSI_407\../HoldingRegisterSlave/Src/HoldingRegisterSlaveHandler.c\591</Expression>
+          <Expression>\\BSI_407\../HoldingRegisterSlave/Src/HoldingRegisterSlaveHandler.c\587</Expression>
         </Bp>
         <Bp>
-          <Number>2</Number>
+          <Number>4</Number>
           <Type>0</Type>
-          <LineNumber>580</LineNumber>
+          <LineNumber>576</LineNumber>
           <EnabledFlag>0</EnabledFlag>
           <Address>134249080</Address>
           <ByteObject>0</ByteObject>
@@ -195,13 +227,29 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\BSI_407\../HoldingRegisterSlave/Src/HoldingRegisterSlaveHandler.c\580</Expression>
+          <Expression>\\BSI_407\../HoldingRegisterSlave/Src/HoldingRegisterSlaveHandler.c\576</Expression>
         </Bp>
         <Bp>
-          <Number>3</Number>
+          <Number>5</Number>
           <Type>0</Type>
-          <LineNumber>186</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
+          <LineNumber>588</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>134249328</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\BSI_407\../HoldingRegisterSlave/Src/HoldingRegisterSlaveHandler.c\588</Expression>
+        </Bp>
+        <Bp>
+          <Number>6</Number>
+          <Type>0</Type>
+          <LineNumber>575</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
           <Address>0</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
@@ -209,7 +257,103 @@
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>0</BreakIfRCount>
-          <Filename>startup_stm32f407xx.s</Filename>
+          <Filename>..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>7</Number>
+          <Type>0</Type>
+          <LineNumber>586</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>8</Number>
+          <Type>0</Type>
+          <LineNumber>591</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>9</Number>
+          <Type>0</Type>
+          <LineNumber>599</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>10</Number>
+          <Type>0</Type>
+          <LineNumber>602</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>11</Number>
+          <Type>0</Type>
+          <LineNumber>609</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>12</Number>
+          <Type>0</Type>
+          <LineNumber>610</LineNumber>
+          <EnabledFlag>0</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>..\HoldingRegisterSlave\Src\HoldingRegisterSlaveHandler.c</Filename>
           <ExecCommand></ExecCommand>
           <Expression></Expression>
         </Bp>
@@ -541,6 +685,21 @@
           <count>42</count>
           <WinNumber>2</WinNumber>
           <ItemText>modules</ItemText>
+        </Ww>
+        <Ww>
+          <count>43</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>sensorIDX</ItemText>
+        </Ww>
+        <Ww>
+          <count>44</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>SensorStateArray</ItemText>
+        </Ww>
+        <Ww>
+          <count>45</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>SensorStateArray</ItemText>
         </Ww>
       </WatchWindow2>
       <MemoryWindow1>
@@ -1069,7 +1228,7 @@
 
   <Group>
     <GroupName>FreeModbusSlave</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
