@@ -89,7 +89,7 @@ extern "C" {
 			float SensorWarning;            // Порог 1
 			float SensorAlarm;              // Порог 2
 			float SensorAlarm2;             // Порог 3
-			uint8_t SensorSubstanceCode[16]; //тип газа
+			//uint8_t SensorSubstanceCode[16]; //тип газа
 			uint16_t Concentration_H;
 			uint16_t Concentration_L;
 		  uint16_t DeviceStatus;
@@ -102,7 +102,7 @@ extern "C" {
 			float SensorWarning_2;            // Порог 1
 			float SensorAlarm_2;              // Порог 2
 			float SensorAlarm2_2;             // Порог 3
-			uint8_t SensorSubstanceCode_2[16]; //тип газа
+			//uint8_t SensorSubstanceCode_2[16]; //тип газа
 			uint16_t Concentration_H_2;
 			uint16_t Concentration_L_2;
 		  uint16_t DeviceStatus_2;

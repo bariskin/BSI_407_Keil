@@ -48,6 +48,8 @@ volatile uint8_t   second  = 0x00;
 
 /* ------------------------Locale variables----------------------------*/
 uint8_t sensorIDX = 0;
+uint8_t currentChannel = 1;
+bool isEven = false; 
 /* ------------------------Functions-----------------------------------*/
 	void HoldingRegisterFromModbusSlaveStack(uint16_t MBregIdx, uint16_t RegValue)
 	{
@@ -196,8 +198,11 @@ uint8_t sensorIDX = 0;
 				 break; 
 			case 	 HOLDING_REGISTER_SLAVE_IDX_12:
 				
+			   if(RegValue >=(uint16_t)1)
+				 {					 
           holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_12] = RegValue;
-          sensorIDX =  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_12];
+          currentChannel = RegValue;
+				 }
 				break;
 				
 		}
@@ -266,207 +271,289 @@ uint8_t sensorIDX = 0;
 		 case HOLDING_REGISTER_SLAVE_IDX_11: 
          OutputValue =  Get_RTC_Second();					 
 				 break;
+		 
 		 case HOLDING_REGISTER_SLAVE_IDX_12: 
-		     OutputValue = holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_12];;
+		      
+		      OutputValue = currentChannel;
+		 
+		      sensorIDX  = (currentChannel - 1)/2;
+		 
+		      isEven =  (currentChannel % 2 == 0);
 		   break; 
+		 
 		 case HOLDING_REGISTER_SLAVE_IDX_13 :
-			   OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[0];
+			 
+			 if (!isEven)
+          {
+            OutputValue = SensorStateArray[sensorIDX].Concentration_H;
+          }
+       else
+          {
+            OutputValue = SensorStateArray[sensorIDX].Concentration_H_2;
+          }
+			  
 		  break;
-		 case  HOLDING_REGISTER_SLAVE_IDX_14 :
-			   OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[1];
+		 case  HOLDING_REGISTER_SLAVE_IDX_14:
+			 if (!isEven)
+          {
+			     OutputValue = SensorStateArray[sensorIDX].Concentration_L;
+					}	
+					else
+					{
+					  OutputValue = SensorStateArray[sensorIDX].Concentration_L_2;
+					}
 		  break;
+		                /* SensorScaleDimension */
 		 case 	   HOLDING_REGISTER_SLAVE_IDX_15 :
-			   OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[2];
+	      if (!isEven)
+          {			 
+			      OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension[0];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_15] = SensorStateArray[sensorIDX].SensorScaleDimension[0];
+					}
+				else
+        {
+				    OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension_2[0];
+					  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_15] = SensorStateArray[sensorIDX].SensorScaleDimension_2[0];
+				}	
 			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_16 :
-			   OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[3];
+		  case 	   HOLDING_REGISTER_SLAVE_IDX_16 :
+					if (!isEven)
+          {
+			      OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension[1];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_16] = SensorStateArray[sensorIDX].SensorScaleDimension[1];
+					}
+				 else
+          {
+				    OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension_2[1];
+					  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_16] = SensorStateArray[sensorIDX].SensorScaleDimension_2[1];
+				  }
 			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_17 :
-			   OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[4];
+		  case 	   HOLDING_REGISTER_SLAVE_IDX_17 :
+				 if (!isEven)
+          {
+			      OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension[2];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_17] = SensorStateArray[sensorIDX].SensorScaleDimension[2];
+					}
+				else
+         {
+				    OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension_2[2];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_17] = SensorStateArray[sensorIDX].SensorScaleDimension_2[2];
+				 }
 			  break;
-		 case      HOLDING_REGISTER_SLAVE_IDX_18  :
-			   OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[5];
+			case HOLDING_REGISTER_SLAVE_IDX_18 :
+				 if (!isEven)
+          {
+			      OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension[3];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_18] = SensorStateArray[sensorIDX].SensorScaleDimension[3];
+					}
+				 else
+          {
+				    OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension_2[3];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_18] = SensorStateArray[sensorIDX].SensorScaleDimension_2[3];
+				  }
 			  break;
-		 case 		 HOLDING_REGISTER_SLAVE_IDX_19 :
-			   OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[6];
+			case 	   HOLDING_REGISTER_SLAVE_IDX_19 :
+			 if (!isEven)
+          {
+			      OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension[4];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_19] = SensorStateArray[sensorIDX].SensorScaleDimension[4];
+					}
+				 else
+          {
+				    OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension_2[4];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_19] = SensorStateArray[sensorIDX].SensorScaleDimension_2[4];
+				  }
+    
+         break;
+
+			case 	   HOLDING_REGISTER_SLAVE_IDX_20 :
+				 if (!isEven)
+          {
+			      OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension[5];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_20] = SensorStateArray[sensorIDX].SensorScaleDimension[5];
+					}
+				 else
+          {
+				    OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension_2[5];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_20] = SensorStateArray[sensorIDX].SensorScaleDimension_2[5];
+				  }
+    
 			  break;
-		 case   	 HOLDING_REGISTER_SLAVE_IDX_20 :
-			  OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[7];
+			case 	   HOLDING_REGISTER_SLAVE_IDX_21 :
+					if (!isEven)
+          {
+			      OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension[6];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_21] = SensorStateArray[sensorIDX].SensorScaleDimension[6];
+					}
+				 else
+          {
+				    OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension_2[6];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_21] = SensorStateArray[sensorIDX].SensorScaleDimension_2[6];
+				  }
 			  break;
-		 case HOLDING_REGISTER_SLAVE_IDX_21 :
-			   OutputValue =  SensorStateArray[sensorIDX].SensorSubstanceCode[8];
+			case HOLDING_REGISTER_SLAVE_IDX_22 :
+			    if (!isEven)
+           {
+			      OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension[7];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_22] = SensorStateArray[sensorIDX].SensorScaleDimension[7];
+					 }
+				  else
+          {
+				    OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension_2[7];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_22] = SensorStateArray[sensorIDX].SensorScaleDimension_2[7];
+				  }
 			  break;
-		 case HOLDING_REGISTER_SLAVE_IDX_22 :
-			   OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[9];
-			break;
-//		 case HOLDING_REGISTER_SLAVE_IDX_23 :
-//		 		 OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[10];
-//			 break;
-//		  case 	HOLDING_REGISTER_SLAVE_IDX_24 :
-//		 		 OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[11];
-//			 break;
-//			case 	HOLDING_REGISTER_SLAVE_IDX_25 :
-//		 		  OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[12];
-//			 break;
-//			case 	HOLDING_REGISTER_SLAVE_IDX_26 :
-//		 		  OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[13];
-//			 break;
-//			case 	 HOLDING_REGISTER_SLAVE_IDX_27 :
-//		 		 OutputValue = SensorStateArray[sensorIDX].SensorSubstanceCode[14];
-//			 break;
+			case 	HOLDING_REGISTER_SLAVE_IDX_23 :
+				  if (!isEven)
+           {
+			      OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension[8];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_23] = SensorStateArray[sensorIDX].SensorScaleDimension[8];
+					 }
+				  else
+          {
+				    OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension_2[8];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_23] = SensorStateArray[sensorIDX].SensorScaleDimension_2[8];
+				  }
+			  break;
+			case 	HOLDING_REGISTER_SLAVE_IDX_24 :
+					if (!isEven)
+           {
+			      OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension[9];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_24] = SensorStateArray[sensorIDX].SensorScaleDimension[9];
+					 }
+				  else
+          {
+				    OutputValue =  SensorStateArray[sensorIDX].SensorScaleDimension_2[9];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_24] = SensorStateArray[sensorIDX].SensorScaleDimension_2[9];
+				  }
+			  break;
 		 
-//		 /* Размерность вещества в ascii (10 байт) */
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_23 :
-			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[0];
+		            /* SensorGas */
+	 
+		 case  HOLDING_REGISTER_SLAVE_IDX_25 :
+			 	 if (!isEven)
+         {
+			     OutputValue =  SensorStateArray[sensorIDX ].SensorGas[0];
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_25] = SensorStateArray[sensorIDX].SensorGas[0];
+				 }
+				else
+         {
+				   OutputValue =  SensorStateArray[sensorIDX ].SensorGas_2[0];
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_25] = SensorStateArray[sensorIDX].SensorGas_2[0];
+				 }
 			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_24 :
-			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[1];
+		 case HOLDING_REGISTER_SLAVE_IDX_26 :
+			 	 if (!isEven)
+         {
+			     OutputValue =  SensorStateArray[sensorIDX].SensorGas[1];
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_26] = SensorStateArray[sensorIDX].SensorGas[1];
+				 }
+				else
+         {
+				  OutputValue =  SensorStateArray[sensorIDX].SensorGas_2[1];
+					holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_26] = SensorStateArray[sensorIDX].SensorGas_2[1];
+				 }
 			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_25 :
-			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[2];
+		 case  HOLDING_REGISTER_SLAVE_IDX_27 :
+			 	 if (!isEven)
+          {
+			     OutputValue =  SensorStateArray[sensorIDX].SensorGas[2];
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_27] = SensorStateArray[sensorIDX].SensorGas[2];
+					}
+				else
+         {
+				  OutputValue =  SensorStateArray[sensorIDX].SensorGas_2[2];
+					holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_27] = SensorStateArray[sensorIDX].SensorGas_2[2];
+				 }
 			  break;
-		 case   	 HOLDING_REGISTER_SLAVE_IDX_26 :
-		     OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[3];
+		 case  HOLDING_REGISTER_SLAVE_IDX_28  :
+			 	 if (!isEven)
+          {
+			     OutputValue =  SensorStateArray[sensorIDX].SensorGas[3];
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_28] = SensorStateArray[sensorIDX].SensorGas[3];
+					}
+				else
+          {
+				   OutputValue =  SensorStateArray[sensorIDX].SensorGas_2[3];
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_28] = SensorStateArray[sensorIDX].SensorGas_2[3];
+				  }
 			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_27 :
-			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[4];
+		 case  HOLDING_REGISTER_SLAVE_IDX_29 :
+			 	 if (!isEven)
+          {
+			     OutputValue =  SensorStateArray[sensorIDX].SensorGas[4];
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_29] = SensorStateArray[sensorIDX].SensorGas[4];
+					}
+				 else
+         {
+				  OutputValue =  SensorStateArray[sensorIDX].SensorGas_2[4];
+					holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_29] = SensorStateArray[sensorIDX].SensorGas_2[4];
+				 }
 			  break;
-		 case 	   HOLDING_REGISTER_SLAVE_IDX_28 :
-			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[5];
-		    break;
-		 case 	HOLDING_REGISTER_SLAVE_IDX_29 :
-			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[6];
-		    break;
-		 case HOLDING_REGISTER_SLAVE_IDX_30 :
-			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[7];
-		    break;
-		 case HOLDING_REGISTER_SLAVE_IDX_31 :
-			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[8];
-		    break;
-		 case  HOLDING_REGISTER_SLAVE_IDX_32 :
-			   OutputValue = SensorStateArray[sensorIDX].SensorScaleDimension[9];
-		 break;
-//		 case  HOLDING_REGISTER_SLAVE_IDX_35 :   
-//		     /* первая часть float значения  */
-//		    OutputValue = (uint16_t)SensorStateArray[0].Concentration;
-//			 break;
-//		 case 		 HOLDING_REGISTER_SLAVE_IDX_36 :
-//		    /* вторая  часть float значения  */
-//		
-//		    //OutputValue = 9
-//			  break;
-//		 /*       Код вещества в ascii (10 байт) */
-//		 
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_37 :
-//			  OutputValue = SensorStateArray[1].SensorSubstanceCode[0];
-//		  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_38 :
-//			  OutputValue = SensorStateArray[1].SensorSubstanceCode[1];
-//		  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_39 :
-//			  OutputValue =  SensorStateArray[1].SensorSubstanceCode[2];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_40 :
-//			 OutputValue =  SensorStateArray[1].SensorSubstanceCode[3];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_41 :
-//			  OutputValue =  SensorStateArray[1].SensorSubstanceCode[4];
-//			  break;
-//		 case      HOLDING_REGISTER_SLAVE_IDX_42  :
-//			  OutputValue =  SensorStateArray[1].SensorSubstanceCode[5];
-//			  break;
-//		 case 		 HOLDING_REGISTER_SLAVE_IDX_43 :
-//			  OutputValue =  SensorStateArray[1].SensorSubstanceCode[6];
-//			  break;
-//		 case   	 HOLDING_REGISTER_SLAVE_IDX_44 :
-//			OutputValue =  SensorStateArray[1].SensorSubstanceCode[7];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_45 :
-//			 OutputValue =  SensorStateArray[1].SensorSubstanceCode[8];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_46 :
-//			  OutputValue = SensorStateArray[1].SensorSubstanceCode[9];
-//			  break;
+		 case  HOLDING_REGISTER_SLAVE_IDX_30 :
+			 	 if (!isEven)
+          {
+			     OutputValue =  SensorStateArray[sensorIDX].SensorGas[5];
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_30] = SensorStateArray[sensorIDX].SensorGas[5];
+					}
+					else
+          {
+				   OutputValue =  SensorStateArray[sensorIDX].SensorGas_2[5];
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_30] = SensorStateArray[sensorIDX].SensorGas_2[5];
+				  }
+			  break;
+		 	 case  HOLDING_REGISTER_SLAVE_IDX_31 :
+				 	if (!isEven)
+          {
+			      OutputValue =  SensorStateArray[sensorIDX].SensorGas[6];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_31] = SensorStateArray[sensorIDX].SensorGas[6];
+					}
+				 else
+          {
+				   OutputValue =  SensorStateArray[sensorIDX].SensorGas_2[6];
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_31] = SensorStateArray[sensorIDX].SensorGas_2[6];
+				  }
+			  break;
 		 
-//		 /* Размерность вещества в ascii (10 байт) */
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_47 :
-//			   OutputValue = SensorStateArray[1].SensorScaleDimension[0];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_48 :
-//			   OutputValue = SensorStateArray[1].SensorScaleDimension[1];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_49 :
-//			   OutputValue = SensorStateArray[1].SensorScaleDimension[2];
-//			  break;
-//		 case   	 HOLDING_REGISTER_SLAVE_IDX_50 :
-//		     OutputValue = SensorStateArray[1].SensorScaleDimension[3];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_51 :
-//			   OutputValue = SensorStateArray[1].SensorScaleDimension[4];
-//			  break;
-//		 case 	   HOLDING_REGISTER_SLAVE_IDX_52:
-//			   OutputValue = SensorStateArray[1].SensorScaleDimension[5];
-//		    break;
-//		 case 	HOLDING_REGISTER_SLAVE_IDX_53 :
-//			   OutputValue = SensorStateArray[1].SensorScaleDimension[6];
-//		    break;
-//		 case HOLDING_REGISTER_SLAVE_IDX_54 :
-//			   OutputValue = SensorStateArray[1].SensorScaleDimension[7];
-//		    break;
-//		 case HOLDING_REGISTER_SLAVE_IDX_55 :
-//			   OutputValue = SensorStateArray[1].SensorScaleDimension[8];
-//		    break;
-//		 case  HOLDING_REGISTER_SLAVE_IDX_56 :
-//			   OutputValue = SensorStateArray[1].SensorScaleDimension[9];
-//		 break;
-		 	 
-		
-//		   /* ============ FLOAT ЗНАЧЕНИЯ ДЛЯ 46 КАНАЛОВ ============ */
-//      // Регистры 13-14: Float значение первого датчика
-//    else if (MBregIdx == HOLDING_REGISTER_SLAVE_IDX_13 || 
-//             MBregIdx == HOLDING_REGISTER_SLAVE_IDX_14)
-//     {
-//        uint16_t offset = MBregIdx - HOLDING_REGISTER_SLAVE_IDX_13;
-//        uint8_t sensor_idx = offset / 2;      
-//        uint8_t float_part = offset % 2;       
-//    
-//        if (sensor_idx < TOTAL_CHANNEL)
-//          {
-//           float concentration = SensorStateArray[sensor_idx].Concentration;
-//           uint16_t *float_ptr = (uint16_t*)&concentration;
-//           return float_ptr[float_part];
-//          }
-//     }
-//		   
-//		    // Массив из  TOTAL_CHANNEL каналов: SubstanceCode (10 байт на датчик)
-//    else if (MBregIdx >= SUBSTANCE_START && 
-//             MBregIdx < SUBSTANCE_START + TOTAL_CHANNEL * 10)
-//     {
-//        uint16_t offset = MBregIdx - SUBSTANCE_START;
-//        uint8_t sensor_idx = offset / 10;
-//        uint8_t byte_idx = offset % 10;
-//        
-//        if (sensor_idx < TOTAL_CHANNEL)
-//        {
-//            return SensorStateArray[sensor_idx].SensorSubstanceCode[byte_idx];
-//        }
-//     }
-//		
-//     // Массив из TOTAL_CHANNEL каналов: ScaleDimension (10 байт на датчик)
-//    else if (MBregIdx >= SCALE_START && 
-//             MBregIdx < SCALE_START + TOTAL_CHANNEL * 10)
-//    {
-//        uint16_t offset = MBregIdx - SCALE_START;
-//        uint8_t sensor_idx = offset / 10;
-//        uint8_t byte_idx = offset % 10;
-//        
-//        if (sensor_idx < TOTAL_CHANNEL)
-//        {
-//            return SensorStateArray[sensor_idx].SensorScaleDimension[byte_idx];
-//        }
-//    }		 
+			 case HOLDING_REGISTER_SLAVE_IDX_32 :
+					if (!isEven)
+          {
+			     OutputValue =  SensorStateArray[sensorIDX].SensorGas[7];
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_32] = SensorStateArray[sensorIDX].SensorGas[7];
+					}
+				  else
+          {
+				   OutputValue =  SensorStateArray[sensorIDX].SensorGas_2[7];
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_32] = SensorStateArray[sensorIDX].SensorGas_2[7];
+				  }
+			  break;
 		 
-    		
+				case HOLDING_REGISTER_SLAVE_IDX_33 :
+					if (!isEven)
+          {
+			      OutputValue =  SensorStateArray[sensorIDX].SensorGas[8];
+						holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_33] = SensorStateArray[sensorIDX].SensorGas[8];
+					}
+				 else
+          {
+				   OutputValue =  SensorStateArray[sensorIDX].SensorGas_2[8];
+					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_33] = SensorStateArray[sensorIDX].SensorGas_2[8];
+				  }
+			  break;
+		 
+				case  HOLDING_REGISTER_SLAVE_IDX_34 :
+					if (!isEven)
+            {
+			       OutputValue =  SensorStateArray[sensorIDX].SensorGas[9];
+						 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_34] = SensorStateArray[sensorIDX].SensorGas[9];
+						}
+				 else
+           {
+				     OutputValue =  SensorStateArray[sensorIDX].SensorGas_2[9];
+						 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_34] = SensorStateArray[sensorIDX].SensorGas_2[9];
+				   }
+			  break;
+		 
 	} 
 		osDelay(1);	
 		return	OutputValue;	

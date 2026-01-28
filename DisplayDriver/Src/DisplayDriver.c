@@ -256,14 +256,14 @@ void parseRelayBytes(const uint8_t *data, uint16_t *relayModuleCmd) {
 	 	 SendNextionCommand("page%d.ch%d.txt=\"Канал %d\"", page, pos, nextChannel); 
 		
 		
-	   SendNextionCommand("page%d.val%d.txt=\"%s\"", page, pos, value_str);
-		 SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].SensorGas);
-	   SendNextionCommand("page%d.ran%d.txt=\"%s\"", page, pos, scale_max_str);
+	   SendNextionCommand("page%d.val%d.txt=\"%s\"", page, pos, value_str);                                        //Concentration
+		 SendNextionCommand("page%d.gas%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].SensorGas); // Gas
+	   SendNextionCommand("page%d.ran%d.txt=\"%s\"", page, pos, scale_max_str);                                    // Scale Max
 		 SendNextionCommand("page%d.poz%d.txt=\"%s\"", page, pos,device[nextChannel].posit);
 	   SendNextionCommand("page%d.por1%d.txt=\"%s\"", page, pos, por1_str);
 		 SendNextionCommand("page%d.por2%d.txt=\"%s\"", page, pos, por2_str);	
 		 SendNextionCommand("page%d.por3%d.txt=\"%s\"", page, pos, por3_str);	
-		 SendNextionCommand("page%d.unit%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].SensorScaleDimension);
+		 SendNextionCommand("page%d.unit%d.txt=\"%s\"", page, pos, SensorStateArray[currentModbusIdx - 1].SensorScaleDimension); //SensorScaleDimension
 		 SendNextionCommand("page%d.mod%d.txt=\"%s\"", page, pos,  SensorStateArray[currentModbusIdx - 1].DeviceModelCode);
 
 		 snprintf(value_str2, sizeof(value_str2), "%.2f", SensorStateArray[currentModbusIdx - 1].Concentration_2);
@@ -651,7 +651,6 @@ void HandleDisplayCommands(uint8_t* displayresponse, uint8_t *arrDisplayRX, uint
             break;
             
         case 0x10: // Второй ответ после старта дисплея (0x10 0xFF 0xFF 0xFF)
-            //InitNextionDisplayWithDeviceData(numberOfDevices);
             processed_without_channel = 1;
             break;
 				

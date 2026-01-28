@@ -98,7 +98,7 @@ void initSensorStateArray(uint8_t numberdevices)
 		{
 		 SensorStateArray[i].SensorModBudAddr     = 0x00;	
 
-     memset((void *)SensorStateArray[i].SensorSubstanceCode, 0, sizeof(SensorStateArray[i].SensorSubstanceCode));
+     //memset((void *)SensorStateArray[i].SensorSubstanceCode, 0, sizeof(SensorStateArray[i].SensorSubstanceCode));
 		 memset((void *)SensorStateArray[i].DeviceModelCode, 0, sizeof(SensorStateArray[i].DeviceModelCode)); 
 		 SensorStateArray[i].SensorScaleMax       = 0;
 		 memset((void *)SensorStateArray[i].SensorGas, 0, sizeof(SensorStateArray[i].SensorGas));
@@ -115,7 +115,7 @@ void initSensorStateArray(uint8_t numberdevices)
 		 SensorStateArray[i].CalibrationStatus    = 0x00;	
 			
 
-     memset((void *)SensorStateArray[i].SensorSubstanceCode_2, 0, sizeof(SensorStateArray[i].SensorSubstanceCode_2));
+     //memset((void *)SensorStateArray[i].SensorSubstanceCode_2, 0, sizeof(SensorStateArray[i].SensorSubstanceCode_2));
 		 memset((void *)SensorStateArray[i].DeviceModelCode_2, 0, sizeof(SensorStateArray[i].DeviceModelCode_2)); 
 		 SensorStateArray[i].SensorScaleMax_2       = 0;
 		 memset((void *)SensorStateArray[i].SensorGas_2, 0, sizeof(SensorStateArray[i].SensorGas_2));
