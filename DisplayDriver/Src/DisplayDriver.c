@@ -181,7 +181,7 @@ void parseRelayBytes(const uint8_t *data, uint16_t *relayModuleCmd) {
 		huart3.Instance->CR1 &= ~USART_CR1_RXNEIE;// прием выключить
     huart3.Instance->CR1 |= USART_CR1_TXEIE;
     	
-    osDelay(45); // Задержка между командами
+    osDelay(10); // Задержка между командами
 }
 
  void InitNextionDisplayWithDeviceData(uint8_t numberOfdevices){

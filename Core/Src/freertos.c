@@ -977,7 +977,7 @@ void InputHandlerFunction(void const * argument)
 			 timeCounter = 0;
    		 UpdateDisplayTime();
 		 }
-    osDelay(50);
+    osDelay(20);
   }
   /* USER CODE END InputHandlerFunction */
 }
