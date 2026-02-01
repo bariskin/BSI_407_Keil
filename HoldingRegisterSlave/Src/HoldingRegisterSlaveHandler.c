@@ -29,7 +29,7 @@ extern osThreadId SlaveEventTaskHandle;
 
 
 extern SensorState_t  SensorStateArray[NUMBER_SLAVE_DEVICES]; 
-
+extern SensorInfo_t   SensorInfo;
 
 /* ------------------------Global variables----------------------------*/
 volatile uint32_t  MB_BaudRateValue = 0x00000000;
@@ -49,6 +49,7 @@ volatile uint8_t   second  = 0x00;
 /* ------------------------Locale variables----------------------------*/
 uint8_t sensorIDX = 0;
 uint8_t currentChannel = 1;
+uint8_t oldCurrentChannel = 0;
 bool isEven = false; 
 /* ------------------------Functions-----------------------------------*/
 	void HoldingRegisterFromModbusSlaveStack(uint16_t MBregIdx, uint16_t RegValue)
@@ -159,6 +160,7 @@ bool isEven = false;
 				}
 		     
 				 break; 
+				/* hour */
 		 case HOLDING_REGISTER_SLAVE_IDX_9: 
 			 
 		     if(RegValue >= 1  && RegValue <= 23 )
@@ -172,6 +174,7 @@ bool isEven = false;
 				}
 			 
 				 break;
+				/* minute */
 		 case HOLDING_REGISTER_SLAVE_IDX_10: 	
 			 
 			   if(RegValue >= 1  && RegValue <= 59 )
@@ -183,7 +186,8 @@ bool isEven = false;
 				{
 				  holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_10] = Get_RTC_Minute();
 				}
-				 break;		
+				 break;	
+        /* second */				
 		 case HOLDING_REGISTER_SLAVE_IDX_11: 	
 			 
 			   if(RegValue >= 1  && RegValue <= 59 )
@@ -196,12 +200,13 @@ bool isEven = false;
 					 holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_11] = Get_RTC_Second();
 				}
 				 break; 
+				/* channelID */
 			case 	 HOLDING_REGISTER_SLAVE_IDX_12:
 				
-			   if(RegValue >=(uint16_t)1)
+			   if(RegValue >=(uint16_t)1 && RegValue <= SensorInfo.count * 2)
 				 {					 
-          holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_12] = RegValue;
-          currentChannel = RegValue;
+           holdingRegsPart1[HOLDING_REGISTER_SLAVE_IDX_12] = RegValue;
+           currentChannel = RegValue;
 				 }
 				break;
 				
@@ -275,9 +280,12 @@ bool isEven = false;
 		 case HOLDING_REGISTER_SLAVE_IDX_12: 
 		      
 		      OutputValue = currentChannel;
-		 
-		      sensorIDX  = (currentChannel - 1)/2;
-		 
+		      if(oldCurrentChannel != currentChannel)
+					{
+		       sensorIDX  = GetSensorIdxByChannel(currentChannel,(SensorState_t *)&SensorStateArray);
+					 oldCurrentChannel = currentChannel;
+					}
+		    
 		      isEven =  (currentChannel % 2 == 0);
 		   break; 
 		 

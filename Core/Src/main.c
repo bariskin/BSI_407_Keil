@@ -177,7 +177,6 @@ int main(void)
 	 
 	 /* установка количества слайв устройств */ 
 	 setNumberDevices(&NumberSlaveDevices, NUMBER_SLAVE_DEVICES);
-	 
    /* ************* Initializes  RX and TX ring buffers ***** */    
 	 RING_Init(&ring_Rx, ring_buffer_RX, CIRC_BUF_RX_SIZE );         /*! Init RX buffer for UART3: display */
       

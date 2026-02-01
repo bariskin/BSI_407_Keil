@@ -547,7 +547,7 @@ void HoldingHandlerFunction(void const * argument)
 											/* ************************************* */	
 											 
 									   /* получение modbus адреса  первого активного датчика на линии */
-								     ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusAddrs[0];  
+								     ModBusSlaveCurrentDeviceAddr = SensorInfo.modbusDevices[0].modbusAddr;  
                     /* вывести окна активных дачтичиков  и перейти на постоянный опрос */
 								   }				
 				        }	

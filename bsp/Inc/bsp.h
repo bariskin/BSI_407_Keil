@@ -70,6 +70,8 @@ extern "C" {
   typedef struct
 	  {
 			uint8_t SensorModBudAddr;
+			uint8_t channelID1;
+			uint8_t channelID2;
 			
 			bool WasConnected;
 			uint16_t NotResponsCounter;
@@ -89,11 +91,11 @@ extern "C" {
 			float SensorWarning;            // Порог 1
 			float SensorAlarm;              // Порог 2
 			float SensorAlarm2;             // Порог 3
-			//uint8_t SensorSubstanceCode[16]; //тип газа
 			uint16_t Concentration_H;
 			uint16_t Concentration_L;
 		  uint16_t DeviceStatus;
 			float  Concentration;
+		
 	/* Для второго датчика по тому же адресу modbus  */	  
 			uint8_t DeviceModelCode_2[10];
 			float SensorScaleMax_2;
@@ -102,7 +104,6 @@ extern "C" {
 			float SensorWarning_2;            // Порог 1
 			float SensorAlarm_2;              // Порог 2
 			float SensorAlarm2_2;             // Порог 3
-			//uint8_t SensorSubstanceCode_2[16]; //тип газа
 			uint16_t Concentration_H_2;
 			uint16_t Concentration_L_2;
 		  uint16_t DeviceStatus_2;
@@ -121,9 +122,14 @@ extern "C" {
 		
 		
 typedef struct {
+    uint8_t modbusAddr;
+    uint8_t channelID1;
+    uint8_t channelID2;
+} ModbusDeviceInfo_t;		
+		
+typedef struct {
    uint8_t count;
-	 uint8_t realChannelNum;
-   uint8_t modbusAddrs[NUMBER_SLAVE_DEVICES];
+   ModbusDeviceInfo_t modbusDevices[NUMBER_SLAVE_DEVICES];
  } SensorInfo_t; 
 		
 typedef struct
@@ -205,8 +211,10 @@ typedef enum
     HAL_StatusTypeDef hex_to_ascii_minimal(char* hex_str, char* ascii_buf);
 		void SendTimeToNextion(uint8_t day, uint8_t month, uint16_t year, uint8_t hour, uint8_t minute);
 		void UpdateDisplayTime(void);
-		uint8_t findSensorID(uint8_t addrArr[], int size, uint8_t addrValue, uint8_t sensorNumber); 
+		uint8_t findSensorID(SensorInfo_t *sensorinfo, int size, uint8_t addrValue, uint8_t sensorNumber);
 		uint8_t Convert12To24(uint8_t hours_12, uint8_t timeFormat);
+    uint8_t GetSensorIdxByChannel(uint8_t channelID, SensorState_t *stateArray);
+
  /**
   * @}
   */

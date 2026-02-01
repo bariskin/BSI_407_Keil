@@ -97,7 +97,6 @@ void initSensorStateArray(uint8_t numberdevices)
 		for(int i = 0; i < numberdevices; i++)
 		{
 		 SensorStateArray[i].SensorModBudAddr     = 0x00;	
-
 		 memset((void *)SensorStateArray[i].DeviceModelCode, 0, sizeof(SensorStateArray[i].DeviceModelCode)); 
 		 SensorStateArray[i].SensorScaleMax       = 0;
 		 memset((void *)SensorStateArray[i].SensorGas, 0, sizeof(SensorStateArray[i].SensorGas));
@@ -133,6 +132,7 @@ void initSensorStateArray(uint8_t numberdevices)
 				
 		}
   }
+
 /**
  * @brief Reads and processes current sensor state from Modbus input registers
  * @param slaveaddr Slave device address (1-based index)
@@ -445,8 +445,8 @@ void readCurrentSensorValue(uint8_t slaveaddr, uint16_t RegInputBuff[MB_MASTER_T
 		  requestConcetration2 = false;
 		
 		}
-		sensorID =  findSensorID(SensorInfo.modbusAddrs,SensorInfo.count, slaveaddr,1);
-  	sensorID2 = findSensorID(SensorInfo.modbusAddrs,SensorInfo.count, slaveaddr,2);
+		sensorID =  findSensorID((SensorInfo_t *)&SensorInfo,SensorInfo.count, slaveaddr,1);
+  	sensorID2 = findSensorID((SensorInfo_t *)&SensorInfo,SensorInfo.count, slaveaddr,2);
    /* *********** проверка налични€ датчика на линии начало ************ */	
 		 // first sensor
 			if(sensor->ErrorState && sensor->WasConnected) // был ранее подключен, а сейчас пропал
@@ -956,7 +956,7 @@ void setNextActiveDeviceAddr_(uint8_t *currentAddr, uint8_t countsensores)
 		}      
 		
 		//берем следующий modbus адрес из списка 
-     *currentAddr = SensorInfo.modbusAddrs[currentIdx];
+     *currentAddr = SensorInfo.modbusDevices[currentIdx].modbusAddr;
      currentIdx++;
 		// если весь список прошли начинаем сначала
     if(currentIdx ==  countsensores)	
@@ -977,7 +977,13 @@ void setNextActiveDeviceAddr_(uint8_t *currentAddr, uint8_t countsensores)
 					sensor->SensorModBudAddr = i + 1; // modbus адрес активного датчика 		
 					/* формирование массива адресов активных датчиков и количества датчиков*/
 					sensorinfo->count++;	
-					sensorinfo->modbusAddrs[IdxActiveAddr] = sensor->SensorModBudAddr; 
+					sensorinfo->modbusDevices[IdxActiveAddr].modbusAddr = sensor->SensorModBudAddr; 
+					/* формирование значений channelID */
+					sensorinfo->modbusDevices[IdxActiveAddr].channelID1 = 2 * IdxActiveAddr + 1;
+				  sensorinfo->modbusDevices[IdxActiveAddr].channelID2 = 2 * IdxActiveAddr + 2;
+						/* перенос в общую структуру  значений channelID */
+					SensorStateArray[i].channelID1 = 2 * IdxActiveAddr + 1;
+					SensorStateArray[i].channelID2 = 2 * IdxActiveAddr + 2;
 					IdxActiveAddr++;
 				  osDelay(1);	
         }
@@ -1426,9 +1432,9 @@ HAL_StatusTypeDef hex_to_ascii_minimal(char* hex_str, char* ascii_buf)
 }
 
 
-uint8_t findSensorID(uint8_t addrArr[], int size, uint8_t addrValue, uint8_t sensorNumber) {
+uint8_t findSensorID(SensorInfo_t *sensorinfo, int size, uint8_t addrValue, uint8_t sensorNumber) {
     for (int i = 0; i < size; i++) {
-        if (addrArr[i] == addrValue) {
+        if (sensorinfo[i].modbusDevices->modbusAddr == addrValue) {
             // ƒл€ i-го адреса:
             // ѕервый датчик имеет ID = i * 2 + 1
             // ¬торой датчик имеет ID = i * 2 + 2
@@ -1504,4 +1510,19 @@ uint8_t Convert12To24(uint8_t hours_12, uint8_t timeFormat)
             return hours_12 + 12; // 01Е11 PM > 13Е23
     }
 }
+
+uint8_t GetSensorIdxByChannel(uint8_t channelID, SensorState_t *stateArray)
+{
+	   SensorState_t* sensor = &SensorStateArray[0];
+  
+    for (uint8_t i = 0; i < NUMBER_SLAVE_DEVICES; i++)
+    {
+        if (sensor[i].channelID1 == channelID || sensor[i].channelID2 == channelID)
+        {           
+          return i;               
+        }
+		}
+    return 0; // не найден
+}
+
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/

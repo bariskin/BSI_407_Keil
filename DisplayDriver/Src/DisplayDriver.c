@@ -234,7 +234,7 @@ void parseRelayBytes(const uint8_t *data, uint16_t *relayModuleCmd) {
      char value_str[20], scale_max_str[20], por1_str[20], por2_str[20], por3_str[20];
 	   char value_str2[20], scale_max_str2[20], por1_str2[20], por2_str2[20], por3_str2[20];
 	 // получение очередного активного modbus addr
-	  uint8_t currentModbusIdx = SensorInfo.modbusAddrs[nextAddr - 1];
+	  uint8_t currentModbusIdx = SensorInfo.modbusDevices[nextAddr - 1].modbusAddr;
 	 
 	  snprintf(value_str, sizeof(value_str), "%.2f", SensorStateArray[currentModbusIdx - 1].Concentration);
 	  snprintf(scale_max_str, sizeof(scale_max_str), "%.2f", SensorStateArray[currentModbusIdx - 1].SensorScaleMax);
@@ -853,7 +853,7 @@ uint32_t bytes_to_uint32(const unsigned char bytes[4]) {
 // при соответстви одндому Modbus адресу двух дачтиков 
 uint8_t get_modbus_address(int device_id, int count) {
     int idx = (device_id - 1) / 2;
-    return (idx >= 0 && idx < count) ? SensorInfo.modbusAddrs[idx] : 0;
+    return (idx >= 0 && idx < count) ? SensorInfo.modbusDevices[idx].modbusAddr : 0;
 }
 
 // Функция возвращает 1 для четного, 0 для нечетного
