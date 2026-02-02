@@ -1513,16 +1513,15 @@ uint8_t Convert12To24(uint8_t hours_12, uint8_t timeFormat)
 
 uint8_t GetSensorIdxByChannel(uint8_t channelID, SensorState_t *stateArray)
 {
-	   SensorState_t* sensor = &SensorStateArray[0];
-  
     for (uint8_t i = 0; i < NUMBER_SLAVE_DEVICES; i++)
     {
-        if (sensor[i].channelID1 == channelID || sensor[i].channelID2 == channelID)
-        {           
-          return i;               
+        if (stateArray[i].channelID1 == channelID ||
+            stateArray[i].channelID2 == channelID)
+        {
+            return i;
         }
-		}
-    return 0; // не найден
+    }
+    return 0; // не найден (лучше, чем 0)
 }
 
 /************************ (C) COPYRIGHT ONWERT *****END OF FILE****/
